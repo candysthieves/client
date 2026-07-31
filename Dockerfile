@@ -1,5 +1,5 @@
 #Устанавливаем зависимости
-FROM node:20.11-alpine as dependencies
+FROM node:24-alpine3.24 as dependencies
 WORKDIR /app
 RUN npm install -g pnpm
 COPY package*.json ./

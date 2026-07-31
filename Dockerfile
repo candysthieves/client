@@ -8,14 +8,14 @@ RUN pnpm install
 #Билдим приложение
 #Кэширование зависимостей — если файлы в проекте изменились,
 #но package.json остался неизменным, то стейдж с установкой зависимостей повторно не выполняется, что экономит время.
-FROM node:20.11-alpine as builder
+FROM node:24-alpine3.24 as builder
 WORKDIR /app
 COPY . .
 COPY --from=dependencies /app/node_modules ./node_modules
 RUN pnpm run build:production
 
 #Стейдж запуска
-FROM node:20.11-alpine as runner
+FROM node:24-alpine3.24 as runner
 USER node
 WORKDIR /app
 ENV NODE_ENV production

@@ -1,0 +1,26 @@
+#Устанавливаем зависимости
+FROM node:24-alpine3.24 as dependencies
+WORKDIR /app
+RUN npm install -g pnpm
+COPY package*.json ./
+RUN pnpm install --ignore-scripts && pnpm approve-builds --yes
+
+#Билдим приложение
+#Кэширование зависимостей — если файлы в проекте изменились,
+#но package.json остался неизменным, то стейдж с установкой зависимостей повторно не выполняется, что экономит время.
+FROM node:24-alpine3.24 as builder
+WORKDIR /app
+RUN npm install -g pnpm
+COPY . .
+COPY --from=dependencies /app/node_modules ./node_modules
+RUN pnpm run build:production
+
+#Стейдж запуска
+FROM node:24-alpine3.24 as runner
+RUN npm install -g pnpm
+USER node
+WORKDIR /app
+ENV NODE_ENV production
+COPY --from=builder /app/ ./
+EXPOSE 3000
+CMD ["pnpm", "start"]

@@ -25,29 +25,30 @@ Developed by team [ ...**team name**... ]:
 **Back-end:**
 [Lumos app API repository](https://github.com/candysthieves/api)
 
-*	[VladSapozhnik](https://github.com/VladSapozhnik)  - Vladislav Sapozhnik (**Main**)
-*   [ChiteS33](https://github.com/ChiteS33)  - Anatolij Novik
+- [VladSapozhnik](https://github.com/VladSapozhnik) - Vladislav Sapozhnik (**Main**)
+- [ChiteS33](https://github.com/ChiteS33) - Anatolij Novik
 
 ### Key Pages:
-- Auth 🖥️:
-  * 🔐 Sign In
-  * ✍️ Sign Up
-  * 📜 Terms of Service
-  * 🔒 Privacy Policy
-  * ❓ Forgot Password
-  * 📧 Password recovery
-  * 🔑 Create New Password
 
--   Main Page 🏠
--	* 🌐 main page (unauthorized user)
--	* 🏠 main page (authorized user)
-     * 📝main page (Post)
+- Auth 🖥️:
+  - 🔐 Sign In
+  - ✍️ Sign Up
+  - 📜 Terms of Service
+  - 🔒 Privacy Policy
+  - ❓ Forgot Password
+  - 📧 Password recovery
+  - 🔑 Create New Password
+
+- Main Page 🏠
+- - 🌐 main page (unauthorized user)
+- - 🏠 main page (authorized user)
+  - 📝main page (Post)
 
 - Profile Settings ⚙️
-  *  ✏️ General information
-  *  📱 Devices
-  *	🔒 Account Management
-  *	💳 My payments
+  - ✏️ General information
+  - 📱 Devices
+  - 🔒 Account Management
+  - 💳 My payments
 
 - 🧑 My profile
 - ☺️ User Profile
@@ -62,21 +63,22 @@ Developed by team [ ...**team name**... ]:
   ...
 
 ### Key Pages Super Admin:
-	...
+
+    ...
 
 ## Technology Stack 💻📚
 
-*   TypeScript
-*   Next.js 16 (App Router)
-*   TanStack Query
-*   React Hook Form
-*   Zod validation
-*   ESLint
-*   Prettier
-*   Stylelint
-*   Radix UI
-*   SCSS
-* ...
+- TypeScript
+- Next.js 16 (App Router)
+- TanStack Query
+- React Hook Form
+- Zod validation
+- ESLint
+- Prettier
+- Stylelint
+- Radix UI
+- SCSS
+- ...
 
 ## Deploy 🌐
 
@@ -129,10 +131,10 @@ Follow these steps to run the application locally:
     pnpm install --legacy-peer-deps
     ```
 
-5.  **Configure environment variables:** [ *TODO: check if it will be necessary in the future*]
+5.  **Configure environment variables:** [ _TODO: check if it will be necessary in the future_]
 
-  *   Create a `.env` file in the root directory based on the `.env.example` file.
-  *   Fill in the required credentials in the `.env` file.
+- Create a `.env` file in the root directory based on the `.env.example` file.
+- Fill in the required credentials in the `.env` file.
 
 6.  **Start the development server:**
 
@@ -142,60 +144,60 @@ Follow these steps to run the application locally:
 
 7.  **Access the application:**
 
-  *   Open your browser and navigate to the link provided in the CLI.
+- Open your browser and navigate to the link provided in the CLI.
 
 ## Available Scripts ⚙️
 
-*   **`build`:** 📦 Builds the application for production.
+- **`build`:** 📦 Builds the application for production.
 
-    ```bash
-    pnpm run build
-    ```
+  ```bash
+  pnpm run build
+  ```
 
-*   **`dev`:** 💻 Starts the Next.js development server.
+- **`dev`:** 💻 Starts the Next.js development server.
 
-    ```bash
-    pnpm run dev
-    ```
+  ```bash
+  pnpm run dev
+  ```
 
-*   **`stylelint:check`:** 🎨 Checks SCSS files for stylelint errors.
+- **`stylelint:check`:** 🎨 Checks SCSS files for stylelint errors.
 
-    ```bash
-    pnpm run stylelint:check
-    ```
+  ```bash
+  pnpm run stylelint:check
+  ```
 
-*   **`stylelint:fix`:** 🔧 Automatically fixes SCSS stylelint errors.
+- **`stylelint:fix`:** 🔧 Automatically fixes SCSS stylelint errors.
 
-    ```bash
-    pnpm run stylelint:fix
-    ```
+  ```bash
+  pnpm run stylelint:fix
+  ```
 
-*   **`format:check`:** ✅ Checks code formatting with Prettier.
+- **`format:check`:** ✅ Checks code formatting with Prettier.
 
-    ```bash
-    pnpm run format:check
-    ```
+  ```bash
+  pnpm run format:check
+  ```
 
-*   **`format:fix`:** ✨ Automatically formats code with Prettier.
+- **`format:fix`:** ✨ Automatically formats code with Prettier.
 
-    ```bash
-    pnpm run format:fix
-    ```
+  ```bash
+  pnpm run format:fix
+  ```
 
-*   **`lint:check`:** 🔍 Runs ESLint to check for code quality issues.
+- **`lint:check`:** 🔍 Runs ESLint to check for code quality issues.
 
-    ```bash
-    pnpm run lint:check
-    ```
+  ```bash
+  pnpm run lint:check
+  ```
 
-*   **`lint:fix`:** 🐛 Automatically fixes ESLint errors.
+- **`lint:fix`:** 🐛 Automatically fixes ESLint errors.
 
-    ```bash
-    pnpm run lint:fix
-    ```
+  ```bash
+  pnpm run lint:fix
+  ```
 
-*   **`preview`:** 👀 Starts a local server to preview the production build.
+- **`preview`:** 👀 Starts a local server to preview the production build.
 
-    ```bash
-    pnpm run preview
-    ```
+  ```bash
+  pnpm run preview
+  ```

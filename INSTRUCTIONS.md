@@ -41,11 +41,10 @@ Use pnpm for all project commands because the repository includes `pnpm-lock.yam
 - `pnpm lint`: run ESLint for .jsx,.js,.tsx,.ts files.
 - `pnpm lint:check`: run ESLint.
 
-[//]: # (- `pnpm lint:code`: run ESLint.)
+[//]: # '- `pnpm lint:code`: run ESLint.'
+[//]: # '- `pnpm lint:styles`: run Stylelint for CSS files.'
+[//]: # '- `pnpm lint:fix`: fix auto-fixable ESLint and Stylelint issues.'
 
-[//]: # (- `pnpm lint:styles`: run Stylelint for CSS files.)
-
-[//]: # (- `pnpm lint:fix`: fix auto-fixable ESLint and Stylelint issues.)
 - `pnpm format`: format files with Prettier.
 - `pnpm format:check`: check Prettier formatting without writing files.
 - `pnpm type:check`: run TypeScript with `tsc --noEmit`.

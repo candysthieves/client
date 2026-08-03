@@ -6,15 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "build:production": "pnpm build",
+    "type:check": "tsc -b --noEmit",
     "start": "next start",
-    "lint": "pnpm lint:code && pnpm lint:styles",
-    "lint:code": "eslint .",
-    "lint:styles": "stylelint \"**/*.css\"",
-    "lint:fix": "eslint . --fix && stylelint \"**/*.css\" --fix",
-    "format": "prettier . --write",
+    "stylelint:check": "npx stylelint \"**/*.{css,scss}\"",
+    "stylelint:fix": "stylelint --fix src/{,*/}*.{scss,css} --allow-empty-input",
+    "lint": "eslint src --ext .jsx,.js,.tsx,.ts  --no-error-on-unmatched-pattern --fix",
+    "lint:check": "eslint .",
+    "format": "prettier . --write .",
     "format:check": "prettier . --check",
-    "typecheck": "tsc --noEmit",
-    "check": "pnpm typecheck && pnpm lint && pnpm format:check"
+    "check": "pnpm type:check && pnpm lint:check && pnpm format:check",
+    "prepare": "husky"
   },
   "dependencies": {
     "next": "16.2.10",

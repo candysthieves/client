@@ -26,6 +26,7 @@ _Include any screenshots that help demonstrate the changes._
 
 #### ✔️Additional Notes
 
-**After the _Pull-request_ is approved, and before it is closed and merged to _develop_ branch, increment the project's patch version.**
+**After the _Pull-request_ is approved, and before it is closed and merged to _develop_ branch, increment the project's
+patch version.**
 
 _Any additional information that might be helpful for the reviewer._

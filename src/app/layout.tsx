@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import '@candy.thieves/ui-kit-lumos/dist/index.css'
 import './globals.css'
 
 export const metadata: Metadata = {

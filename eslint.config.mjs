@@ -41,6 +41,7 @@ export default defineConfig([
     'build/**',
     'coverage/**',
     '.vercel/**',
+    'commitlint.config.js',
     'next-env.d.ts',
   ]),
   {

@@ -7,18 +7,16 @@
 3. Use branch names in this format:
 
 ```text
-<type>/<issue-number>-<short-description>
+<change-type>/<id task>-<short-task-description>
 ```
 
 Use English, lowercase words, and hyphens.
 
 Examples:
 
-- `feature/243-auth-login-form`
-- `fix/287-feed-post-sorting`
-- `refactor/301-profile-layout`
-- `docs/315-comments-guidelines`
-- `test/326-posts-validation`
+- `feat/SCRUM-27-implement-the-registration-page`
+- `fix/SCRUM-28-change-the-sign-in-page`
+- `chore/SCRUM-30-add-configs-to-the-project`
 
 Do not commit directly to `main` or `dev`.
 
@@ -27,22 +25,20 @@ Do not commit directly to `main` or `dev`.
 Use Conventional Commits in this format:
 
 ```text
-<type>(<scope>): <description>
-
+<id task> <type>: <subject>
 Refs: #<issue-number>
 ```
 
 Examples:
 
 ```text
-feat(auth): add login form
+SCRUM-27 feat: create registration form
 
 Refs: #243
 ```
 
 ```text
-fix(feed): resolve post sorting error
-
+SCRUM-30 chore: add-configs-to-the-project
 Refs: #287
 ```
 

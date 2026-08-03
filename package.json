@@ -6,14 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "build:production": "pnpm build",
-    "type:check": "tsc -b --noEmit",
     "start": "next start",
+
     "stylelint:check": "npx stylelint \"**/*.{css,scss}\"",
     "stylelint:fix": "stylelint --fix src/{,*/}*.{scss,css} --allow-empty-input",
     "lint": "eslint src --ext .jsx,.js,.tsx,.ts  --no-error-on-unmatched-pattern --fix",
     "lint:check": "eslint .",
     "format": "prettier . --write .",
     "format:check": "prettier . --check",
+    "type:check": "tsc -b --noEmit",
     "check": "pnpm type:check && pnpm lint:check && pnpm format:check",
     "prepare": "husky"
   },

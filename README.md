@@ -1,80 +1,201 @@
-# Client
+# Lumos Application
 
-Client is the frontend application for a social network. It uses Next.js 16, the App Router, TypeScript, React, and
-pnpm. During the first development stage, treat the project as a client-side SPA: keep rendering behavior, state,
-navigation, and data loading on the client unless a task explicitly requires server-side functionality.
+**Welcome to the Lumos application!**
 
-## Requirements
+**Description:**
+This is a platform for creating and publishing short photo stories with a focus on visual aesthetics and instant feedback. Users can upload their photos, apply dynamic filters, share moments in real time, as well as express their thoughts and emotions, and take part in discussions. Additionally, users can subscribe to accounts they find interesting and like unconventional posts. The app also features a built-in messenger for communication.
+
+**The app's goal** is to bring together creative and artistic people who need a light, inspiring environment without being overwhelmed by ads, so they can quickly find an audience and receive high-quality feedback from like-minded individuals.
+
+Developed by team [ ...**team name**... ]:
+
+**PM** - _Yana Korotenko_
+
+**Team-lead** - _Vladislav Kravchenko_
+
+**Front-end:**
+[Lumos app Client repository](https://github.com/candysthieves/client)
+
+- [Vikastgn](https://github.com/Vikastgn) - Viktoriya Stognieva (**Main**)
+- [Intrstng](https://github.com/intrstng) - Andrei Babich
+- [hoakiin](https://github.com/hoakiin) - Ekaterina Olesik
+- [VladSkij](https://github.com/VladSkij) - Vladislav Skalskij
+- [tymanskaya](https://github.com/tymanskaya) - Ekaterina Tymanskaya
+
+**Back-end:**
+[Lumos app API repository](https://github.com/candysthieves/api)
+
+*	[VladSapozhnik](https://github.com/VladSapozhnik)  - Vladislav Sapozhnik (**Main**)
+*   [ChiteS33](https://github.com/ChiteS33)  - Anatolij Novik
+
+### Key Pages:
+- Auth 🖥️:
+  * 🔐 Sign In
+  * ✍️ Sign Up
+  * 📜 Terms of Service
+  * 🔒 Privacy Policy
+  * ❓ Forgot Password
+  * 📧 Password recovery
+  * 🔑 Create New Password
+
+-   Main Page 🏠
+-	* 🌐 main page (unauthorized user)
+-	* 🏠 main page (authorized user)
+     * 📝main page (Post)
+
+- Profile Settings ⚙️
+  *  ✏️ General information
+  *  📱 Devices
+  *	🔒 Account Management
+  *	💳 My payments
+
+- 🧑 My profile
+- ☺️ User Profile
+- 🤝 Friend profile
+
+- 📊 Statistics
+- ❤️Favorites
+
+- 📰Feed
+- 💬Messenger
+- 🔎Search
+  ...
+
+### Key Pages Super Admin:
+	...
+
+## Technology Stack 💻📚
+
+*   TypeScript
+*   Next.js 16 (App Router)
+*   TanStack Query
+*   React Hook Form
+*   Zod validation
+*   ESLint
+*   Prettier
+*   Stylelint
+*   Radix UI
+*   SCSS
+* ...
+
+## Deploy 🌐
+
+[Lumos app deploy link](https://lumosapp.net/)
+
+## 🔗 Related Projects
+
+[UI-kit Lumos npm-package](https://www.npmjs.com/package/@candy.thieves/ui-kit-lumos) — a UI component library (UI-kit) for the **Lumos** application
+
+[UI-kit Lumos repository](https://github.com/candysthieves/lumos-ui-kit) — UI-kit library repository for the **Lumos** application
+
+[Figma Design](https://www.figma.com/design/UehOuThHVruUR8jcC22FXS/Inctagram?m=auto&t=DixPh2DJFl4iZtwB-6) — mockups and design system
+
+## Getting Started (Client)🚀
+
+### Requirements
 
 - Node.js installed locally.
 - pnpm installed locally.
 
-Exact Node.js and pnpm versions are not pinned in this repository.
+Follow these steps to run the application locally:
 
-## Setup
+1.  **Clone the repository:**
 
-Clone the repository and install dependencies:
+    ```bash
+    https://github.com/candysthieves/client.git
+    ```
 
-```bash
-git clone <repository-url>
-cd <repository-directory>
-pnpm install
-```
+2.  **Navigate to the project directory:**
 
-Start the development server:
+    ```bash
+    cd client
+    ```
 
-```bash
-pnpm dev
-```
+3.  **Switch to the `develop` branch:**
 
-Open <http://localhost:3000>.
+    ```bash
+    git checkout develop
+    ```
 
-## Scripts
+4.  **Install dependencies:**
 
-Use pnpm for all project commands because the repository includes `pnpm-lock.yaml`.
+    ```bash
+    pnpm install
+    ```
 
-- `pnpm dev`: start the Next.js development server.
-- `pnpm build`: create a production build and run Next.js compile-time checks.
-- `pnpm start`: serve the production build after `pnpm build`.
-- `pnpm lint`: run ESLint and Stylelint.
-- `pnpm lint:code`: run ESLint.
-- `pnpm lint:styles`: run Stylelint for CSS files.
-- `pnpm lint:fix`: fix auto-fixable ESLint and Stylelint issues.
-- `pnpm format`: format files with Prettier.
-- `pnpm format:check`: check Prettier formatting without writing files.
-- `pnpm typecheck`: run TypeScript with `tsc --noEmit`.
-- `pnpm check`: run type checking, linting, and Prettier format checks.
+    If you have problems with running the script, use the following command in the CLI:
 
-## Project Structure
+    ```bash
+    pnpm install --legacy-peer-deps
+    ```
 
-```text
-.
-+-- agent-docs/              # Task-specific guidance for AI-assisted work
-+-- public/                  # Static assets served from the web root
-+-- src/
-|   +-- app/
-|       +-- globals.css      # Global CSS variables, resets, and element defaults
-|       +-- layout.tsx       # Root App Router layout
-|       +-- page.tsx         # Home route
-+-- AGENTS.md                # Navigation notes for AI agents
-+-- CONTRIBUTING.md          # Team workflow and contribution rules
-+-- eslint.config.mjs        # ESLint configuration
-+-- next.config.ts           # Next.js configuration
-+-- package.json             # Dependencies and scripts
-+-- pnpm-lock.yaml           # pnpm lockfile
-+-- pnpm-workspace.yaml      # pnpm workspace settings
-+-- prettier.config.mjs      # Prettier configuration
-+-- stylelint.config.mjs     # Stylelint configuration
-+-- tsconfig.json            # TypeScript configuration
-```
+5.  **Configure environment variables:** [ *TODO: check if it will be necessary in the future*]
 
-## Environment Variables
+  *   Create a `.env` file in the root directory based on the `.env.example` file.
+  *   Fill in the required credentials in the `.env` file.
 
-Do not commit secrets or local environment files. Put local runtime configuration in `.env.local`.
+6.  **Start the development server:**
 
-This repository does not currently include `.env.example`. If required environment variables are added, document them in
-`.env.example` and keep secret values out of version control.
+    ```bash
+    pnpm run dev
+    ```
 
-## Contributing
+7.  **Access the application:**
 
-Read [CONTRIBUTING.md](./CONTRIBUTING.md) before creating branches, commits, or pull requests.
+  *   Open your browser and navigate to the link provided in the CLI.
+
+## Available Scripts ⚙️
+
+*   **`build`:** 📦 Builds the application for production.
+
+    ```bash
+    pnpm run build
+    ```
+
+*   **`dev`:** 💻 Starts the Next.js development server.
+
+    ```bash
+    pnpm run dev
+    ```
+
+*   **`stylelint:check`:** 🎨 Checks SCSS files for stylelint errors.
+
+    ```bash
+    pnpm run stylelint:check
+    ```
+
+*   **`stylelint:fix`:** 🔧 Automatically fixes SCSS stylelint errors.
+
+    ```bash
+    pnpm run stylelint:fix
+    ```
+
+*   **`format:check`:** ✅ Checks code formatting with Prettier.
+
+    ```bash
+    pnpm run format:check
+    ```
+
+*   **`format:fix`:** ✨ Automatically formats code with Prettier.
+
+    ```bash
+    pnpm run format:fix
+    ```
+
+*   **`lint:check`:** 🔍 Runs ESLint to check for code quality issues.
+
+    ```bash
+    pnpm run lint:check
+    ```
+
+*   **`lint:fix`:** 🐛 Automatically fixes ESLint errors.
+
+    ```bash
+    pnpm run lint:fix
+    ```
+
+*   **`preview`:** 👀 Starts a local server to preview the production build.
+
+    ```bash
+    pnpm run preview
+    ```

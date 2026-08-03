@@ -4,7 +4,7 @@ This file is a short navigation guide for AI agents. It does not replace the tea
 
 Before making changes, read:
 
-- [README.md](./README.md)
+- [INSTRUCTIONS.md](./INSTRUCTIONS.md)
 - [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## Project Context

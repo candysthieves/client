@@ -43,9 +43,22 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
     "postcss": "^8.5.19",
     "prettier": "^3.9.5",
     "stylelint": "^17.14.0",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "**/*.{jsx,js,tsx,ts}": [
+      "eslint --quiet --fix"
+    ],
+    "**/*.{css,scss}": [
+      "stylelint --fix --allow-empty-input"
+    ],
+    "**/*": [
+      "prettier --write --ignore-unknown"
+    ]
   }
 }

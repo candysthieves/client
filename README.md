@@ -7,7 +7,7 @@ This is a platform for creating and publishing short photo stories with a focus 
 
 🎯 **The app's goal** is to bring together creative and artistic people who need a light, inspiring environment without being overwhelmed by ads, so they can quickly find an audience and receive high-quality feedback from like-minded individuals.
 
-🍭 Developed by team **Candys Thieves**:
+🍭 Developed by team **Candy Thieves**:
 
 **PM** - _Yana Korotenko_
 

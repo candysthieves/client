@@ -160,6 +160,12 @@ Follow these steps to run the application locally:
   pnpm run dev
   ```
 
+- **`dev:host`:** 🛡️ Starts the Next.js development server and binds the server to the specified hostname with experimental HTTPS support in development mode.
+
+  ```bash
+  pnpm run dev:host
+  ```
+
 - **`stylelint:check`:** 🎨 Checks SCSS files for stylelint errors.
 
   ```bash

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:host": "next dev --hostname dev.lumosapp.net --port 3000 --experimental-https",
     "build": "next build",
     "build:production": "pnpm build",
     "start": "next start",

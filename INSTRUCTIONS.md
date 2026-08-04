@@ -34,6 +34,7 @@ Open <http://localhost:3000>.
 Use pnpm for all project commands because the repository includes `pnpm-lock.yaml`.
 
 - `pnpm dev`: start the Next.js development server.
+- `pnpm dev:host`: start the Next.js development server and binds the server to the specified hostname with experimental HTTPS support in development mode.
 - `pnpm build`: create a production build and run Next.js compile-time checks.
 - `pnpm start`: serve the production build after `pnpm build`.
 - `pnpm stylelint:check`: start stylelint check for CSS, SCSS files.

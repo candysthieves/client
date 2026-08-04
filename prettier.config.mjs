@@ -1,15 +1,8 @@
+import prettierConfig from '@it-incubator/prettier-config';
+
 /** @type {import("prettier").Config} */
-const prettierConfig = {
-  arrowParens: 'always',
-  bracketSpacing: true,
-  tabWidth: 2,
-  useTabs: false,
-  singleQuote: true,
-  semi: true,
-  trailingComma: 'all',
-  printWidth: 120,
-  endOfLine: 'lf',
-  proseWrap: 'always',
+const config = {
+  ...prettierConfig,
 };
 
-export default prettierConfig;
+export default config;

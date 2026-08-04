@@ -1,19 +1,20 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from 'next'
+import '@candy.thieves/ui-kit-lumos/dist/index.css'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Client',
   description: 'Client application',
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang={'en'}>
       <body>{children}</body>
     </html>
-  );
+  )
 }

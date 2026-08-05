@@ -22,7 +22,6 @@
     "@candy.thieves/ui-kit-lumos": "^0.0.11",
     "@eslint/js": "^10.0.1",
     "@next/eslint-plugin-next": "^16.2.12",
-    "clsx": "^2.1.1",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-perfectionist": "^5.10.0",
     "eslint-plugin-react": "^7.37.5",

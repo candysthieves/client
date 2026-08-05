@@ -1,11 +1,11 @@
 'use client'
 
-import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, clsx, Typography } from '@candy.thieves/ui-kit-lumos'
 
 const Test = () => {
   return (
     <div>
-      <Typography variant={'h2'} color={'green'}>
+      <Typography variant={'h2'} color={'green'} className={clsx('text-center')}>
         How to use UI-kit components
       </Typography>
 

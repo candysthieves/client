@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "dev:host": "next dev --hostname dev.lumosapp.net --port 3000 --experimental-https",
+    "dev:no-tls": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 pnpm dev:host",
     "build": "next build",
     "build:production": "pnpm build",
     "start": "next start",
-    "stylelint:check": "npx stylelint \"**/*.{css,scss}\"",
+    "stylelint:check": "npx stylelint \"src/**/*.{scss,css}\" --allow-empty-input",
     "stylelint:fix": "stylelint --fix src/{,*/}*.{scss,css} --allow-empty-input",
     "lint": "eslint src --ext .jsx,.js,.tsx,.ts  --no-error-on-unmatched-pattern --fix",
     "lint:check": "eslint .",
@@ -19,7 +20,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@candy.thieves/ui-kit-lumos": "^0.0.11",
+    "@candy.thieves/ui-kit-lumos": "^0.0.15",
     "@eslint/js": "^10.0.1",
     "@next/eslint-plugin-next": "^16.2.12",
     "eslint-plugin-import": "^2.32.0",
@@ -30,6 +31,8 @@
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-hook-form": "^7.84.0",
+    "sass": "^1.102.0",
     "typescript-eslint": "^8.65.0"
   },
   "devDependencies": {
@@ -41,6 +44,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "eslint-config-prettier": "^10.1.8",

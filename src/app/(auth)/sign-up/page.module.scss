@@ -1,0 +1,38 @@
+@use '@/styles/mixins' as *;
+
+.triggerContent {
+  @include flex(flex, none, none);
+
+  flex-direction: column;
+
+  // gap: 1.5rem;
+}
+
+.triggerControls {
+  @include flex(flex, flex-end, center);
+
+  width: 100%;
+  margin-top: 1.125rem;
+}
+
+// Temporary added:
+
+.name {
+  margin-bottom: 1rem;
+}
+
+.email {
+  margin-bottom: 2rem;
+}
+
+.termsBlock {
+  margin: 2rem;
+}
+
+.terms {
+  color: var(--color-light-100);
+}
+
+.errorInput {
+  border: 1px solid var(--color-danger-500);
+}

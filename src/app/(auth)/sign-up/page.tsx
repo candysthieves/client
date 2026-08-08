@@ -3,12 +3,14 @@
 import { Button, clsx, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { ToastError } from '@/components'
 import { ApiError, registration, RegistrationDto } from '@/lib/api'
 import { isErrorResponse, mapRegistrationError } from '@/lib/utils'
 import s from './page.module.scss'
 
 export default function SignUpPage() {
   const [isOpen, setIsOpen] = useState(false)
+  // const { showError } = useToast()
 
   const {
     register,
@@ -45,6 +47,7 @@ export default function SignUpPage() {
     } catch (error) {
       if (error instanceof ApiError && isErrorResponse(error.data)) {
         mapRegistrationError(error, setError)
+        ToastError({ messages: error.data.errorsMessages })
         return
       }
       throw error

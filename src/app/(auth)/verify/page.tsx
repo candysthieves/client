@@ -22,12 +22,11 @@ export default async function VerifyPage({ searchParams }: Props) {
     console.log('BEFORE CONFIRMATION', code)
     await registrationConfirmation({ code })
     console.log('AFTER CONFIRMATION', code)
-    // redirect('/congratulations') // проверить работает ли
+    redirect('/congratulations') // проверить работает ли
   } catch (error) {
     console.log('CONFIRMATION ERROR', error)
     if (error instanceof ApiError) {
       const redirectTo = mapRegistrationConfirmationError(error)
-
       if (redirectTo) {
         redirect(redirectTo)
       }

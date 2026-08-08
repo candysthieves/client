@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:host": "next dev --hostname dev.lumosapp.net --port 3000 --experimental-https",
+    "dev:no-tls": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 pnpm dev:host",
     "build": "next build",
     "build:production": "pnpm build",
     "start": "next start",
@@ -21,6 +22,7 @@
   "dependencies": {
     "@candy.thieves/ui-kit-lumos": "^0.0.11",
     "@eslint/js": "^10.0.1",
+    "@hookform/resolvers": "^5.7.1",
     "@next/eslint-plugin-next": "^16.2.12",
     "clsx": "^2.1.1",
     "eslint-plugin-import": "^2.32.0",
@@ -31,7 +33,9 @@
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "typescript-eslint": "^8.65.0"
+    "react-hook-form": "^7.84.0",
+    "typescript-eslint": "^8.65.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
@@ -42,6 +46,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "eslint-config-prettier": "^10.1.8",
@@ -49,6 +54,7 @@
     "lint-staged": "^17.3.0",
     "postcss": "^8.5.19",
     "prettier": "^3.9.5",
+    "sass": "^1.102.0",
     "stylelint": "^17.14.0",
     "typescript": "^5"
   },

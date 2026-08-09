@@ -8,7 +8,7 @@ and data loading with a client-side approach unless the task explicitly requests
   files as the app grows.
 - Use `next/link` for internal navigation.
 - Use `next/image` for images when the Next.js image component fits the use case.
-- Use CSS Modules for route or component styles and keep `globals.css` limited to resets, variables, and element
+- Use SCSS Modules for route or component styles and keep `src/styles/index.scss` limited to resets, variables, and element
   defaults.
 - Prefer accessible HTML controls, clear focus states, and responsive layouts that work at mobile and desktop widths.
 - Do not add SEO metadata, Open Graph images, server data loading, Server Actions, or API routes unless the task

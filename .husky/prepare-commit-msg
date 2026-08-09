@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+BRANCH=$(git branch --show-current)
+JIRA=$(echo "$BRANCH" | grep -oE '[A-Z]+-[0-9]+' | head -1)
+
+if [ -n "$JIRA" ] && ! grep -qE '^[A-Z]+-[0-9]+' "$1"; then
+  sed -i.bak "1s/^/$JIRA /" "$1"
+  rm -f "$1.bak"
+fi

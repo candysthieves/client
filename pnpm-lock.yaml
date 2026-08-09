@@ -47,9 +47,6 @@ importers:
       react-hot-toast:
         specifier: ^2.6.0
         version: 2.6.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      sass:
-        specifier: ^1.102.0
-        version: 1.102.0
       typescript-eslint:
         specifier: ^8.65.0
         version: 8.65.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.9.3)
@@ -102,6 +99,9 @@ importers:
       prettier:
         specifier: ^3.9.5
         version: 3.9.5
+      sass:
+        specifier: ^1.102.0
+        version: 1.102.0
       stylelint:
         specifier: ^17.14.0
         version: 17.14.0(typescript@5.9.3)

@@ -1,0 +1,163 @@
+@use 'sass:list';
+
+$desktop-width: 1280px;
+$tablet-width: 768px;
+$mobile-width: 360px;
+$container-width: 1156px;
+$content-width: 972px;
+$modal-width-xs: 366px;
+$modal-width-s: 378px;
+$modal-width-m: 492px;
+$modal-width-l: 644px;
+$modal-width-xl: 972px;
+$container-padding-tablet: 30px;
+$container-padding-mobile: 15px;
+
+@mixin typography($fontSize, $lineHeight, $fontWeight, $fontFamily: var(--font-family-primary)) {
+  margin: 0;
+
+  font-family: $fontFamily !important;
+  font-size: $fontSize !important;
+  font-weight: $fontWeight !important;
+  line-height: $lineHeight !important;
+}
+
+@mixin flex($display, $justify-content: none, $align-items: none) {
+  display: $display;
+  align-items: $align-items;
+  justify-content: $justify-content;
+}
+
+@mixin width-height($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+@mixin top-left($top: none, $left: $top) {
+  top: $top;
+  left: $left;
+}
+
+@mixin top-right($top: none, $right: $top) {
+  top: $top;
+  right: $right;
+}
+
+/**
+ * This mixin is for vendor prefixes.
+ *
+ * @example
+ * // Basic usage with multiple prefixes
+ * .element {
+ *   @include prefix(transform, rotate(45deg), (webkit, moz, ms));
+ * }
+ *
+ * // Output:
+ * // .element {
+ * //   -webkit-transform: rotate(45deg);
+ * //   -moz-transform: rotate(45deg);
+ * //   -ms-transform: rotate(45deg);
+ * //   transform: rotate(45deg);
+ * // }
+ */
+@mixin prefix($property, $value, $prefixes: ()) {
+  @each $prefix in $prefixes {
+    #{'-' + $prefix + '-' + $property}: $value;
+  }
+
+  #{$property}: $value;
+}
+
+@mixin transition-basic($properties...) {
+  $transitions: ();
+
+  @each $property in $properties {
+    $transitions: list.append(
+      $transitions,
+      $property var(--transition-duration-basic) var(--transition-function-basic),
+      comma
+    );
+  }
+
+  transition: $transitions;
+}
+
+@mixin media-desktop {
+  @media (max-width: $desktop-width) {
+    @content;
+  }
+}
+
+@mixin media-tablet {
+  @media (max-width: $tablet-width) {
+    @content;
+  }
+}
+
+@mixin media-mobile {
+  @media (max-width: $mobile-width) {
+    @content;
+  }
+}
+
+@mixin no-hover-mobile {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+/**
+ * Creates a responsive container with centered content and responsive padding.
+ *
+ * @example
+ * // Basic usage:
+ * .container {
+ *   @include container;
+ * }
+ *
+ * // Output:
+ * // .container {
+ * //   max-width: 1156px;
+ * //   margin: 0 auto;
+ * // }
+ * // @media (max-width: 768px) {
+ * //   .container {
+ * //     padding: 0 30px;
+ * //   }
+ * // }
+ * // @media (max-width: 360px) {
+ * //   .container {
+ * //     padding: 0 15px;
+ * //   }
+ * // }
+ */
+@mixin container($max-width: $desktop-width) {
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 0 4rem 0 3.75rem;
+
+  @include media-tablet {
+    padding: 0 $container-padding-tablet;
+  }
+
+  @include media-mobile {
+    padding: 0 $container-padding-mobile;
+  }
+}
+
+/**
+ * Creates a responsive centered wrapper for content with a max-width.
+ *
+ * @mixin content
+ * @param {number} $max-width [$content-width] - The maximum width of the content
+ *
+ * @example
+ * // Basic usage:
+ * article {
+ *   @include container;
+ * }
+ */
+@mixin content($max-width: $content-width) {
+  max-width: $max-width;
+  margin: 0 auto;
+}

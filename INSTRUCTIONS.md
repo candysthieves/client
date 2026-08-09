@@ -35,6 +35,7 @@ Use pnpm for all project commands because the repository includes `pnpm-lock.yam
 
 - `pnpm dev`: start the Next.js development server.
 - `pnpm dev:host`: start the Next.js development server and binds the server to the specified hostname with experimental HTTPS support in development mode.
+- `pnpm dev:no-tls`: starts the Next.js development server script with no TLS certification checks `NODE_TLS_REJECT_UNAUTHORIZED=0`,
 - `pnpm build`: create a production build and run Next.js compile-time checks.
 - `pnpm start`: serve the production build after `pnpm build`.
 - `pnpm stylelint:check`: start stylelint check for CSS, SCSS files.
@@ -55,9 +56,10 @@ Use pnpm for all project commands because the repository includes `pnpm-lock.yam
 +-- public/                  # Static assets served from the web root
 +-- src/
 |   +-- app/
-|       +-- globals.css      # Global CSS variables, resets, and element defaults
 |       +-- layout.tsx       # Root App Router layout
 |       +-- page.tsx         # Home route
+|   +-- styles/
+|       +-- index.scss       # Global SCSS variables, resets, and element defaults
 +-- AGENTS.md                # Navigation notes for AI agents
 +-- CONTRIBUTING.md          # Team workflow and contribution rules
 +-- eslint.config.mjs        # ESLint configuration

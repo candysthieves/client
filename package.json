@@ -51,6 +51,7 @@
     "lint-staged": "^17.3.0",
     "postcss": "^8.5.19",
     "prettier": "^3.9.5",
+    "sass": "^1.102.0",
     "stylelint": "^17.14.0",
     "typescript": "^5"
   },

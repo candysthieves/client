@@ -72,3 +72,6 @@ export default function EmailVerificationExpiredPage() {
     </>
   )
 }
+
+// email-verification-expired
+// verification-expired

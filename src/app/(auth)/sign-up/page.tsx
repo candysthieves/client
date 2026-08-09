@@ -10,8 +10,6 @@ import s from './page.module.scss'
 
 export default function SignUpPage() {
   const [isOpen, setIsOpen] = useState(false)
-  // const { showError } = useToast()
-
   const {
     register,
     setError,

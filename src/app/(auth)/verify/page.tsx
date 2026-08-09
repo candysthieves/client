@@ -15,14 +15,14 @@ export default async function VerifyPage({ searchParams }: Props) {
    * If user opened link /verify  by himself without code
    */
   if (!code) {
-    redirect('/email-verification-expired')
+    redirect('/verification-expired')
   }
   console.log('VERIFY PAGE RENDER', code)
   try {
     console.log('BEFORE CONFIRMATION', code)
     await registrationConfirmation({ code })
     console.log('AFTER CONFIRMATION', code)
-    redirect('/congratulations') // проверить работает ли
+    redirect('/verification-success') // проверить работает ли
   } catch (error) {
     console.log('CONFIRMATION ERROR', error)
     if (error instanceof ApiError) {
@@ -37,13 +37,13 @@ export default async function VerifyPage({ searchParams }: Props) {
 }
 // if (error instanceof ApiError && error.data.code === 'TOKEN_EXPIRED') { // если export class ApiError<T = unknown>
 //   // уточнить у бэкенд и как будет называться error.data.code при expired и будут ли другие например TOKEN_INVALID, TOKEN_ALREADY_USED
-//   redirect('/email-verification-expired')
+//   redirect('/verification-expired')
 // }
 // if (error instanceof ApiError &&
 //   error.status === 400 &&
 //   error.data.code === 'TOKEN_EXPIRED') { // бэкенд должен гарантировать { "code": "TOKEN_EXPIRED" }
 //   // уточнить у бэкенд и как будет называться error.data.code при expired и будут ли другие например TOKEN_INVALID, TOKEN_ALREADY_USED
-//   redirect('/email-verification-expired')
+//   redirect('/verification-expired')
 // }
 //
 //     throw error

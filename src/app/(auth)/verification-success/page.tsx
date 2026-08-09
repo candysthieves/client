@@ -22,3 +22,6 @@ export default function CongratulationsPage() {
     </div>
   )
 }
+
+// congratulations
+// verification-success

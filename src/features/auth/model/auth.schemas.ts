@@ -1,13 +1,16 @@
 import { z } from 'zod'
-
-const passwordPattern =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!"#$%&'()*+,\-./:;<=>?@[\\\]^_{|}~]+$/
+import {
+  PASSWORD_PATTERN,
+  PASSWORD_PATTERN_MESSAGE,
+  USERNAME_PATTERN,
+  USERNAME_PATTERN_MESSAGE,
+} from './constants'
 
 export const usernameSchema = z
   .string()
-  .min(6, 'Minimum number of characters 6')
-  .max(30, 'Maximum number of characters 30')
-  .regex(/^[A-Za-z0-9_-]+$/, 'Username can contain only A-Z, a-z, 0-9, _ and -')
+  .min(6, 'username must be longer than or equal to 6 characters')
+  .max(30, 'username must be shorter than or equal to 30 characters')
+  .regex(USERNAME_PATTERN, USERNAME_PATTERN_MESSAGE)
 
 export const emailSchema = z
   .string()
@@ -16,19 +19,18 @@ export const emailSchema = z
 
 export const passwordBaseSchema = z
   .string()
-  .min(6, 'Minimum number of characters 6')
-  .max(20, 'Maximum number of characters 20')
+  .min(6, 'password must be longer than or equal to 6 characters')
+  .max(20, 'password must be shorter than or equal to 20 characters')
 
-export const passwordSchema = passwordBaseSchema.regex(
-  passwordPattern,
-  `Password must contain 0-9, a-z, A-Z, ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \\ ] ^ _ { | } ~`
-)
+export const passwordSchema = passwordBaseSchema.regex(PASSWORD_PATTERN, PASSWORD_PATTERN_MESSAGE)
 
-export const recaptchaTokenSchema = z.string().min(1, 'reCAPTCHA token is required')
+export const recaptchaTokenSchema = z.string().min(1, 'recaptchaToken should not be empty')
 
-export const recoveryCodeSchema = z.string().uuid('Invalid recovery code')
+export const recoveryCodeSchema = z.string().min(1, 'Recovery code is required')
 
-export const termsAcceptedSchema = z.literal(true)
+export const termsAcceptedSchema = z.literal(true, {
+  error: 'isTermsAccepted must be equal to true',
+})
 
 export const loginSchema = z.object({
   email: emailSchema,
@@ -48,7 +50,9 @@ export const registrationSchema = z
     path: ['passwordConfirmation'],
   })
 
-export const registrationConfirmationSchema = z.object({}).strict()
+export const registrationConfirmationSchema = z.object({
+  code: z.string().min(1, 'Confirmation code is required'),
+})
 
 export const resendConfirmationEmailSchema = z.object({
   email: emailSchema,
@@ -88,14 +92,3 @@ export const apiErrorResponseSchema = z.object({
     })
   ),
 })
-
-export type AccessTokenResponse = z.infer<typeof accessTokenResponseSchema>
-export type ApiErrorResponse = z.infer<typeof apiErrorResponseSchema>
-export type LoginRequest = z.infer<typeof loginSchema>
-export type LoginResponse = z.infer<typeof loginResponseSchema>
-export type NewPasswordRequest = z.infer<typeof newPasswordSchema>
-export type PasswordRecoveryRequest = z.infer<typeof passwordRecoverySchema>
-export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirmationSchema>
-export type RegistrationRequest = z.infer<typeof registrationSchema>
-export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEmailSchema>
-export type ValidatePasswordRecoveryCodeRequest = z.infer<typeof validatePasswordRecoveryCodeSchema>

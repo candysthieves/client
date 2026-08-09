@@ -9,7 +9,7 @@
     "build": "next build",
     "build:production": "pnpm build",
     "start": "next start",
-    "stylelint:check": "npx stylelint \"**/*.{css,scss}\"",
+    "stylelint:check": "npx stylelint \"src/**/*.{scss,css}\" --allow-empty-input",
     "stylelint:fix": "stylelint --fix src/{,*/}*.{scss,css} --allow-empty-input",
     "lint": "eslint src --ext .jsx,.js,.tsx,.ts  --no-error-on-unmatched-pattern --fix",
     "lint:check": "eslint .",

@@ -1,77 +1,70 @@
 'use client'
 
-import { Button, clsx, Typography } from '@candy.thieves/ui-kit-lumos'
-import { useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { ApiError, ResendConfirmationEmailDto } from '@/lib/api'
-import { resendConfirmationEmail } from '@/lib/api/auth'
-import { isErrorResponse, mapRegistrationError } from '@/lib/utils'
+import { Button, FormInput, Typography } from '@candy.thieves/ui-kit-lumos'
+import Image from 'next/image'
+import { useForm } from 'react-hook-form'
 import s from './page.module.scss'
 
-export default function EmailVerificationExpiredPage() {
-  const [isLoading, setIsLoading] = useState(false)
+type FormValues = {
+  email: string
+}
 
-  const {
-    register,
-    setError,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm<ResendConfirmationEmailDto>({
-    mode: 'all',
+export default function VerificationExpiredPage() {
+  const { control, handleSubmit } = useForm<FormValues>({
+    defaultValues: {
+      email: '',
+    },
   })
 
-  const onSubmit: SubmitHandler<ResendConfirmationEmailDto> = async data => {
-    setIsLoading(true)
-    try {
-      await resendConfirmationEmail(data)
-      // show Alert snackbar message "Verification email has been sent"
-    } catch (error) {
-      if (error instanceof ApiError && isErrorResponse(error.data)) {
-        mapRegistrationError(error, setError)
-        // show Alert snackbar message "Verification email error: ..."
-        return
-      }
-    } finally {
-      setIsLoading(false)
-    }
+  const onSubmit = (data: FormValues) => {
+    console.log(data.email)
   }
 
   return (
-    <>
-      <h1>Email verification link expired</h1>
-      <p>Looks like the verification link has expired. Not to worry, we can send the link again</p>
-
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{ display: 'flex', flexDirection: 'column', width: '30rem', color: '#000' }}
+    <div className={s.container}>
+      <Typography
+        variant={'h1'}
+        color={"var(--color-text-primary)"}
+        align={'center'}
+        mt={'2.2rem'}
+        mb={'1.25rem'}
       >
-        <Typography variant={'caption1'} color={'var(--color-light-100)'}>
-          {'Email'}
-        </Typography>
+        Email verification link expired
+      </Typography>
 
-        {/* TODO: error={!!errors?.email} - add this in the future to input an delete clsx className condition*/}
-        <input
-          type={'email'}
-          id={'emailSignUp'}
-          className={clsx(s.email, !!errors?.email && s.errorInput)}
-          {...register('email')}
+      <Typography
+        variant={'subtitle1'}
+        color={'white'}
+        align={'center'}
+        mx={'auto'}
+        className={s.caption}
+      >
+        Looks like the verification link has expired. Not to worry, we can send the link again
+      </Typography>
+
+      <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
+        <FormInput
+          control={control}
+          name={'email'}
+          type={"email"}
+          placeholder={'example@mail.com'}
+          label={'Enter'}
         />
-        {errors?.email && (
-          <Typography variant={'body2'} color={'var(--color-danger-500)'}>
-            {errors.email.message}
-          </Typography>
-        )}
-
-        {/* TODO: Also add a "disabled" state for the loading period — when the POST request with form data is sending,
-            change isLoading from using useState
-        */}
-        <Button type={'submit'} variant={'primary'} disabled={!isValid}>
-          {isLoading ? 'Sending...' : 'Resend verification link'}
-        </Button>
+        <div className={s.submit}>
+          <Button type={'submit'} fullWidth>
+            Resend verification link
+          </Button>
+        </div>
       </form>
-    </>
+
+      <Image
+        className={s.image}
+        src={'/auth/verification-expired.svg'}
+        width={473}
+        height={352}
+        alt={''}
+        aria-hidden
+      />
+    </div>
   )
 }
-
-// email-verification-expired
-// verification-expired

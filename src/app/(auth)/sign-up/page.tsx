@@ -29,7 +29,7 @@ export default function SignUpPage() {
   // useEffect is a temporary solution to render new errors field values
   useEffect(() => {
     console.table(errors)
-  }, [errors.email, errors.username])
+  }, [errors, errors.email, errors.username])
 
   const openModal = () => setIsOpen(true)
   const closeModal = () => {

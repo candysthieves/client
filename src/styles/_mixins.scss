@@ -131,9 +131,10 @@ $container-padding-mobile: 15px;
  * //   }
  * // }
  */
-@mixin container($max-width: $container-width) {
+@mixin container($max-width: $desktop-width) {
   max-width: $max-width;
   margin: 0 auto;
+  padding: 0 4rem 0 3.75rem;
 
   @include media-tablet {
     padding: 0 $container-padding-tablet;

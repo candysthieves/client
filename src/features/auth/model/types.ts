@@ -1,0 +1,24 @@
+import { z } from 'zod'
+import {
+  accessTokenResponseSchema,
+  apiErrorResponseSchema,
+  loginResponseSchema,
+  loginSchema,
+  newPasswordSchema,
+  passwordRecoverySchema,
+  registrationConfirmationSchema,
+  registrationSchema,
+  resendConfirmationEmailSchema,
+  validatePasswordRecoveryCodeSchema,
+} from './auth.schemas'
+
+export type AccessTokenResponse = z.infer<typeof accessTokenResponseSchema>
+export type ApiErrorResponse = z.infer<typeof apiErrorResponseSchema>
+export type LoginRequest = z.infer<typeof loginSchema>
+export type LoginResponse = z.infer<typeof loginResponseSchema>
+export type NewPasswordRequest = z.infer<typeof newPasswordSchema>
+export type PasswordRecoveryRequest = z.infer<typeof passwordRecoverySchema>
+export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirmationSchema>
+export type RegistrationRequest = z.infer<typeof registrationSchema>
+export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEmailSchema>
+export type ValidatePasswordRecoveryCodeRequest = z.infer<typeof validatePasswordRecoveryCodeSchema>

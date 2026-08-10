@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ClientButton } from '@/components'
 import s from './page.module.css'
+import { TestToasts } from './TestToasts'
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <Link href={'/sign-up'}>
         <ClientButton>Sign up</ClientButton>
       </Link>
+      <TestToasts />
     </main>
   )
 }

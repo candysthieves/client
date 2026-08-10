@@ -1,85 +1,113 @@
 'use client'
 
+import type { FieldError as RHFError } from 'react-hook-form'
+import { Alert, type FieldError as UIError } from '@candy.thieves/ui-kit-lumos'
 import toast from 'react-hot-toast'
 
 type ToastMessageProps = {
+  duration?: number
   message: string
   title?: string
-  duration?: number
 }
 
 type ToastErrorProps = {
-  messages: string | { field: string; message: string }[]
-  title?: string
   duration?: number
+  messages: RHFError[] | string | UIError[]
+  title?: string
 }
 
 export const ToastSuccess = ({
+  duration = 5000,
   message,
   title = 'Success',
-  duration = 3000,
 }: ToastMessageProps) => {
-  toast.success(t => {
-    t.duration = duration
+  const toastId = Math.random().toString()
 
-    return (
-      <div className={'flex flex-col gap-1'}>
-        <p className={'font-semibold'}>{title}</p>
-        <div className={'text-sm'}>{message}</div>
+  toast.custom(
+    () => (
+      <div style={{ pointerEvents: 'auto' }}>
+        <Alert variant={'success'} title={title} onClose={() => toast.remove(toastId)}>
+          {message}
+        </Alert>
       </div>
-    )
-  })
+    ),
+    {
+      id: toastId,
+      duration,
+      position: 'bottom-left',
+    }
+  )
 }
 
 export const ToastWarning = ({
+  duration = 5000,
   message,
   title = 'Warning',
-  duration = 3000,
 }: ToastMessageProps) => {
-  toast(
-    t => {
-      t.duration = duration
+  const toastId = Math.random().toString()
 
-      return (
-        <div className={'flex flex-col gap-1'}>
-          <p className={'font-semibold'}>{title}</p>
-          <div className={'text-sm'}>{message}</div>
-        </div>
-      )
-    },
+  toast.custom(
+    () => (
+      <div style={{ pointerEvents: 'auto' }}>
+        <Alert variant={'warning'} title={title} onClose={() => toast.remove(toastId)}>
+          {message}
+        </Alert>
+      </div>
+    ),
     {
-      icon: '⚠️',
+      id: toastId,
+      duration,
+      position: 'bottom-left', // 👈 По центру сверху
     }
   )
 }
 
 export const ToastError = ({
+  duration = 5000,
   messages,
   title = 'Validation error',
-  duration = 3000,
 }: ToastErrorProps) => {
-  const isFieldErrors = Array.isArray(messages) && messages.length > 0 && 'field' in messages[0]
+  const toastId = Math.random().toString()
 
-  toast.error(t => {
-    t.duration = duration
+  const formattedMessages = Array.isArray(messages)
+    ? messages.map((err, index) => {
+        if (typeof err === 'string') {
+          return { field: `field_${index}`, message: err }
+        }
 
-    return (
-      <div className={'flex flex-col gap-1'}>
-        <p className={'font-semibold'}>{title}</p>
-        {typeof messages === 'string' ? (
-          <div className={'text-sm'}>{messages}</div>
-        ) : isFieldErrors ? (
-          <ul className={'list-disc pl-4'}>
-            {messages.map((err, index) => (
-              <li key={index} className={'text-sm'}>
-                <span className={'font-medium capitalize'}>{err.field}:</span> {err.message}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className={'text-sm'}>No message provided</div>
-        )}
+        const fieldName =
+          'field' in err && err.field
+            ? err.field
+            : 'ref' in err && err.ref?.name
+              ? err.ref.name
+              : `field_${index}`
+
+        return {
+          field: fieldName,
+          message: err.message || 'Error',
+        }
+      })
+    : messages
+
+  return toast.custom(
+    () => (
+      <div
+        style={{
+          pointerEvents: 'auto',
+          display: 'flex',
+          justifyContent: 'flex-end',
+          width: '100%',
+        }}
+      >
+        <Alert variant={'error'} title={title} onClose={() => toast.remove(toastId)}>
+          {formattedMessages}
+        </Alert>
       </div>
-    )
-  })
+    ),
+    {
+      id: toastId,
+      duration,
+      position: 'bottom-right', // 👈 Только ошибки справа сверху
+    }
+  )
 }

@@ -11,7 +11,7 @@
     "start": "next start",
     "stylelint:check": "npx stylelint \"src/**/*.{scss,css}\" --allow-empty-input",
     "stylelint:fix": "stylelint --fix src/{,*/}*.{scss,css} --allow-empty-input",
-    "lint": "eslint src --ext .jsx,.js,.tsx,.ts  --no-error-on-unmatched-pattern --fix",
+    "lint": "eslint src --ext .jsx,.js,.tsx,.ts --no-error-on-unmatched-pattern --fix",
     "lint:check": "eslint .",
     "format": "prettier . --write .",
     "format:check": "prettier . --check",
@@ -58,7 +58,7 @@
   },
   "lint-staged": {
     "**/*.{jsx,js,tsx,ts}": [
-      "eslint --quiet --fix"
+      "eslint src --ext .jsx,.js,.tsx,.ts --fix --quiet --no-error-on-unmatched-pattern"
     ],
     "**/*.{css,scss}": [
       "stylelint --fix --allow-empty-input"

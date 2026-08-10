@@ -1,0 +1,36 @@
+@use '@/styles/mixins' as *;
+
+.container {
+  @include container;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.button {
+  width: 100%;
+  max-width: 11.375rem;
+  margin: 3.375rem auto 4.5rem;
+
+  @include media-mobile {
+    order: 2;
+    max-width: none;
+    margin: 2.875rem auto 0;
+  }
+}
+
+.image {
+  display: block;
+  margin: 0 auto;
+
+  @include media-tablet {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+  }
+
+  @include media-mobile {
+    order: 1;
+    margin-top: 4rem;
+  }
+}

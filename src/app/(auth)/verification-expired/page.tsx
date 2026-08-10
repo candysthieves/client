@@ -1,16 +1,14 @@
 'use client'
 
 import { Button, FormInput, Typography } from '@candy.thieves/ui-kit-lumos'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { ApiError, resendConfirmationEmail, ResendConfirmationEmailDto } from '@/lib/api'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { ApiError, resendConfirmationEmail } from '@/lib/api'
+import { ResendConfirmationEmailRequest, resendConfirmationEmailSchema } from '@/lib/model'
 import { isErrorResponse, mapRegistrationError } from '@/lib/utils'
 import s from './page.module.scss'
-
-type FormValues = {
-  email: string
-}
 
 export default function VerificationExpiredPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -20,11 +18,12 @@ export default function VerificationExpiredPage() {
     setError,
     handleSubmit,
     formState: { isValid },
-  } = useForm<ResendConfirmationEmailDto>({
+  } = useForm<ResendConfirmationEmailRequest>({
     mode: 'all',
+    resolver: zodResolver(resendConfirmationEmailSchema),
   })
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit: SubmitHandler<ResendConfirmationEmailRequest> = async data => {
     setIsLoading(true)
     try {
       await resendConfirmationEmail(data)

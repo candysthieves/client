@@ -7,6 +7,7 @@ import s from './page.module.scss'
 
 export default function VerificationSuccessPage() {
   const router = useRouter()
+
   const handleSignIn = () => {
     router.replace('/sign-in')
   }

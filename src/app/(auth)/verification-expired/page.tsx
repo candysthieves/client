@@ -22,24 +22,36 @@ export default function VerificationExpiredPage() {
 
   return (
     <div className={s.container}>
-      <Typography variant={'h1'} color={'white'} align={"center"} mt={"2.188rem"} mb={"1.25rem"}>
+      <Typography
+        variant={'h1'}
+        color={"var(--color-text-primary)"}
+        align={'center'}
+        mt={'2.2rem'}
+        mb={'1.25rem'}
+      >
         Email verification link expired
       </Typography>
 
       <Typography
         variant={'subtitle1'}
         color={'white'}
-        align={"center"}
-        mx={"auto"}
+        align={'center'}
+        mx={'auto'}
         className={s.caption}
       >
         Looks like the verification link has expired. Not to worry, we can send the link again
       </Typography>
 
       <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
-        <FormInput control={control} name={"email"} placeholder={"example@mail.com"} label={"Enter"} />
+        <FormInput
+          control={control}
+          name={'email'}
+          type={"email"}
+          placeholder={'example@mail.com'}
+          label={'Enter'}
+        />
         <div className={s.submit}>
-          <Button type={"submit"} fullWidth>
+          <Button type={'submit'} fullWidth>
             Resend verification link
           </Button>
         </div>
@@ -47,10 +59,10 @@ export default function VerificationExpiredPage() {
 
       <Image
         className={s.image}
-        src={"/auth/verification-expired.svg"}
+        src={'/auth/verification-expired.svg'}
         width={473}
         height={352}
-        alt={""}
+        alt={''}
         aria-hidden
       />
     </div>

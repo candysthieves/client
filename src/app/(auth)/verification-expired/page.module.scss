@@ -1,4 +1,4 @@
-@use '../../../styles/mixins' as *;
+@use '@/styles/mixins' as *;
 
 .container {
   @include container;
@@ -29,4 +29,10 @@
 .image {
   display: block;
   margin: 0 auto;
+
+  @include media-tablet {
+    width: 100%;
+    max-width: 330px;
+    height: auto;
+  }
 }

@@ -1,4 +1,4 @@
-@use '../../../styles/mixins' as *;
+@use '@/styles/mixins' as *;
 
 .container {
   @include container;
@@ -21,8 +21,4 @@
 
 .content {
   @include content;
-}
-
-.text {
-  max-width: 59.875rem;
 }

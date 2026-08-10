@@ -18,7 +18,7 @@ export default function TermsOfServicePage() {
           Terms of Service
         </Typography>
 
-        <div className={s.text}>
+        <div>
           <Typography variant={'body1'}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
             incididunt ut labore et dolore magna aliqua. Fames ac turpis egestas integer eget

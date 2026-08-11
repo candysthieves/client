@@ -1,10 +1,11 @@
 'use client'
 
-import { Button, FormInput, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { FormInput } from '@/components/FormInput'
 import { ApiError, resendConfirmationEmail } from '@/lib/api'
 import { ResendConfirmationEmailRequest, resendConfirmationEmailSchema } from '@/lib/model'
 import { isErrorResponse, mapRegistrationError } from '@/lib/utils'

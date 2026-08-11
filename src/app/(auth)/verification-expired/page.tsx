@@ -1,30 +1,49 @@
 'use client'
 
 import { Button, FormInput, Typography } from '@candy.thieves/ui-kit-lumos'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
-import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { ApiError, resendConfirmationEmail } from '@/lib/api'
+import { ResendConfirmationEmailRequest, resendConfirmationEmailSchema } from '@/lib/model'
+import { isErrorResponse, mapRegistrationError } from '@/lib/utils'
 import s from './page.module.scss'
 
-type FormValues = {
-  email: string
-}
-
 export default function VerificationExpiredPage() {
-  const { control, handleSubmit } = useForm<FormValues>({
-    defaultValues: {
-      email: '',
-    },
+  const [isLoading, setIsLoading] = useState(false)
+
+  const {
+    control,
+    setError,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<ResendConfirmationEmailRequest>({
+    mode: 'all',
+    resolver: zodResolver(resendConfirmationEmailSchema),
   })
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data.email)
+  const onSubmit: SubmitHandler<ResendConfirmationEmailRequest> = async data => {
+    setIsLoading(true)
+    try {
+      await resendConfirmationEmail(data)
+      // show Alert snackbar message "Verification email has been sent"
+    } catch (error) {
+      if (error instanceof ApiError && isErrorResponse(error.data)) {
+        mapRegistrationError(error, setError)
+        // show Alert snackbar message "Verification email error: ..."
+        return
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <div className={s.container}>
       <Typography
         variant={'h1'}
-        color={"var(--color-text-primary)"}
+        color={'var(--color-text-primary)'}
         align={'center'}
         mt={'2.2rem'}
         mb={'1.25rem'}
@@ -46,13 +65,14 @@ export default function VerificationExpiredPage() {
         <FormInput
           control={control}
           name={'email'}
-          type={"email"}
+          type={'email'}
           placeholder={'example@mail.com'}
           label={'Enter'}
         />
         <div className={s.submit}>
-          <Button type={'submit'} fullWidth>
-            Resend verification link
+          {/* TODO: "disabled" state for the loading period — when the POST request with form data is sending, change isLoading from using useState */}
+          <Button type={'submit'} fullWidth disabled={!isValid || isLoading}>
+            {isLoading ? 'Sending...' : 'Resend verification link'}
           </Button>
         </div>
       </form>
@@ -68,3 +88,6 @@ export default function VerificationExpiredPage() {
     </div>
   )
 }
+
+// email-verification-expired
+// verification-expired

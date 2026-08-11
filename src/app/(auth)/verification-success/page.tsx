@@ -2,15 +2,21 @@
 
 import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import s from './page.module.scss'
 
 export default function VerificationSuccessPage() {
+  const router = useRouter()
+
+  const handleSignIn = () => {
+    router.replace('/sign-in')
+  }
+
   return (
     <div className={s.container}>
       <Typography
         variant={'h1'}
-        color={"var(--color-text-primary)"}
+        color={'var(--color-text-primary)'}
         align={'center'}
         mt={'2.2rem'}
         mb={'1.25rem'}
@@ -23,7 +29,7 @@ export default function VerificationSuccessPage() {
       </Typography>
 
       <div className={s.button}>
-        <Button as={Link} href={'#'} fullWidth>
+        <Button onClick={handleSignIn} fullWidth>
           Sign in
         </Button>
       </div>
@@ -39,3 +45,6 @@ export default function VerificationSuccessPage() {
     </div>
   )
 }
+
+// congratulations
+// verification-success

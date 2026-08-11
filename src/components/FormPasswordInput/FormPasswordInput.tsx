@@ -1,4 +1,4 @@
-import { PasswordInput, PasswordInputProps } from '@candy.thieves/ui-kit-lumos'
+import { PasswordInput, type PasswordInputProps } from '@candy.thieves/ui-kit-lumos'
 import { type Control, Controller, type FieldPath, type FieldValues } from 'react-hook-form'
 
 export type FormPasswordInputProps<T extends FieldValues> = {

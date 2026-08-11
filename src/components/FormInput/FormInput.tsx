@@ -1,4 +1,4 @@
-import { Input, InputProps } from '@candy.thieves/ui-kit-lumos'
+import { Input, type InputProps } from '@candy.thieves/ui-kit-lumos'
 import { type Control, Controller, type FieldPath, type FieldValues } from 'react-hook-form'
 
 export type FormInputProps<T extends FieldValues> = {

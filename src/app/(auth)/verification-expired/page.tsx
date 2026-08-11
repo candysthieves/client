@@ -1,8 +1,9 @@
 'use client'
 
-import { Button, FormInput, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'
+import { FormInput } from '@/components/FormInput'
 import s from './page.module.scss'
 
 type FormValues = {
@@ -24,7 +25,7 @@ export default function VerificationExpiredPage() {
     <div className={s.container}>
       <Typography
         variant={'h1'}
-        color={"var(--color-text-primary)"}
+        color={'var(--color-text-primary)'}
         align={'center'}
         mt={'2.2rem'}
         mb={'1.25rem'}
@@ -46,7 +47,7 @@ export default function VerificationExpiredPage() {
         <FormInput
           control={control}
           name={'email'}
-          type={"email"}
+          type={'email'}
           placeholder={'example@mail.com'}
           label={'Enter'}
         />

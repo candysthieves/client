@@ -10,7 +10,7 @@ export default function VerificationSuccessPage() {
     <div className={s.container}>
       <Typography
         variant={'h1'}
-        color={"var(--color-text-primary)"}
+        color={'var(--color-text-primary)'}
         align={'center'}
         mt={'2.2rem'}
         mb={'1.25rem'}

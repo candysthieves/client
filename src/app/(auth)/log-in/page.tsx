@@ -1,18 +1,13 @@
 'use client'
 
-import {
-  Button,
-  FormInput,
-  GithubRepo,
-  Google,
-  PasswordInput,
-  Typography,
-} from '@candy.thieves/ui-kit-lumos'
+import { Button, GithubRepo, Google, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { ApiError, login } from '@/app/lib/api'
 import { isErrorResponse } from '@/app/lib/isErrorResponse'
+import { FormInput } from '@/components/FormInput'
+import { FormPasswordInput } from '@/components/FormPasswordInput'
 import { ToastError } from '@/components/Toast/Toast'
 import { type LoginRequest, loginSchema } from '@/features/auth/model'
 import s from './log-in-form.module.scss'
@@ -21,7 +16,6 @@ export default function LogInForm() {
   const router = useRouter()
 
   const {
-    register,
     control,
     handleSubmit,
     setError,
@@ -90,11 +84,12 @@ export default function LogInForm() {
             error={errors.email?.message}
           />
 
-          <PasswordInput
+          <FormPasswordInput
+            control={control}
+            name={'password'}
             label={'Password'}
             placeholder={'**********'}
             error={errors.password?.message}
-            {...register('password')}
           />
         </div>
 

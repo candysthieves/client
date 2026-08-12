@@ -89,6 +89,8 @@ export const ToastError = ({
       })
     : messages
 
+  const isMessagesArray = Array.isArray(formattedMessages)
+
   return toast.custom(
     () => (
       <div
@@ -99,15 +101,20 @@ export const ToastError = ({
           width: '100%',
         }}
       >
-        <Alert variant={'error'} title={title} onClose={() => toast.remove(toastId)}>
-          {formattedMessages}
+        <Alert
+          variant={'error'}
+          title={title}
+          onClose={() => toast.remove(toastId)}
+          errors={isMessagesArray ? formattedMessages : undefined}
+        >
+          {isMessagesArray ? undefined : formattedMessages}
         </Alert>
       </div>
     ),
     {
       id: toastId,
       duration,
-      position: 'bottom-right', // 👈 Только ошибки справа сверху
+      position: 'bottom-right',
     }
   )
 }

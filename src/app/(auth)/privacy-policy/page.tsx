@@ -1,3 +1,5 @@
+'use client'
+
 import { ArrowBackOutline, clsx, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import s from './page.module.scss'

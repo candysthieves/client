@@ -62,7 +62,12 @@ export default function LogInForm() {
   return (
     <div className={s.pageWrapper}>
       <form onSubmit={handleSubmit(onSubmit)} className={s.formContainer}>
-        <Typography variant={'h1'} className={s.title}>
+        <Typography
+          variant={'h1'}
+          color={'var(--color-text-primary)'}
+          align={'center'}
+          mb={'1.25rem'}
+        >
           Sign In
         </Typography>
 
@@ -76,20 +81,22 @@ export default function LogInForm() {
           </a>
         </div>
 
-        <FormInput
-          placeholder={'Epam@epam.com'}
-          control={control}
-          name={'email'}
-          label={'Email'}
-          error={errors.email?.message}
-        />
+        <div className={s.fieldsGroup}>
+          <FormInput
+            placeholder={'Epam@epam.com'}
+            control={control}
+            name={'email'}
+            label={'Email'}
+            error={errors.email?.message}
+          />
 
-        <PasswordInput
-          label={'Password'}
-          placeholder={'**********'}
-          error={errors.password?.message}
-          {...register('password')}
-        />
+          <PasswordInput
+            label={'Password'}
+            placeholder={'**********'}
+            error={errors.password?.message}
+            {...register('password')}
+          />
+        </div>
 
         <Typography
           href={'#forgot'}

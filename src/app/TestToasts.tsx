@@ -1,6 +1,6 @@
 'use client'
 
-import { ToastSuccess, ToastWarning, ToastError } from '@/components' // проверь путь к тостам
+import { ToastSuccess, ToastWarning, ToastError } from '@/components' // check the path to toasts
 
 export const TestToasts = () => {
   return (
@@ -9,8 +9,8 @@ export const TestToasts = () => {
         type={'button'}
         onClick={() =>
           ToastSuccess({
-            title: 'Успех',
-            message: 'Операция прошла успешно!',
+            title: 'Success',
+            message: 'Operation completed successfully!',
           })
         }
       >
@@ -21,8 +21,8 @@ export const TestToasts = () => {
         type={'button'}
         onClick={() =>
           ToastWarning({
-            title: 'Внимание',
-            message: 'Предупреждающее сообщение',
+            title: 'Warning',
+            message: 'Warning message',
           })
         }
       >
@@ -33,15 +33,15 @@ export const TestToasts = () => {
         type={'button'}
         onClick={() =>
           ToastError({
-            title: 'Ошибка формы',
+            title: 'Form Error',
             messages: [
-              { type: 'required', message: 'Имя пользователя обязательно' },
-              { type: 'minLength', message: 'Пароль слишком короткий' },
+              { type: 'required', message: 'Username is required' },
+              { type: 'minLength', message: 'Password is too short' },
             ],
           })
         }
       >
-        Error (Массив)
+        Error (Array)
       </button>
     </div>
   )

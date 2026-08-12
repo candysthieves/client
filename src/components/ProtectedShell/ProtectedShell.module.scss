@@ -29,9 +29,15 @@
 }
 
 .contentGuest {
-  display: flex;
-  justify-content: center;
   margin-left: 0;
+
+  .contentInner {
+    @include container;
+  }
+}
+
+.contentInner {
+  @include content;
 }
 
 .bottomNavigation {

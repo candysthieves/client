@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { LogOut, Menu, Sidebar } from '@candy.thieves/ui-kit-lumos'
+import { clsx, LogOut, Menu, Sidebar } from '@candy.thieves/ui-kit-lumos'
 import { usePathname } from 'next/navigation'
 import { isAuthenticated } from '@/shared/config/isAuthenticated'
 import { mobileMenuItems } from '@/shared/navigation/mobileMenuItems'
@@ -26,7 +26,15 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
         </aside>
       )}
 
-      <main className={`${s.content} ${!isAuthenticated ? s.contentGuest : ''}`}>{children}</main>
+      <main
+        className={clsx(s.content, {
+          [s.contentGuest]: !isAuthenticated,
+        })}
+      >
+        <div className={`${s.contentInner} ${!isAuthenticated ? s.contentInnerGuest : ''}`}>
+          {children}
+        </div>
+      </main>
 
       {isAuthenticated && (
         <div className={s.bottomNavigation}>

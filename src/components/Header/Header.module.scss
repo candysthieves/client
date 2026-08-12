@@ -1,0 +1,8 @@
+.header {
+  position: sticky;
+  z-index: 200;
+  top: 0;
+
+  height: 60px;
+  border-bottom: 1px solid var(--color-dark-300);
+}

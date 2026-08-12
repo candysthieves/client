@@ -1,0 +1,47 @@
+@use '@/styles/mixins' as *;
+
+.layout {
+  min-height: calc(100vh - 4.5rem);
+}
+
+.sidebar {
+  display: none;
+
+  @media (min-width: $tablet-width) {
+    position: fixed;
+    z-index: 100;
+    top: 3.75rem;
+    bottom: 0;
+    left: 3.75rem;
+
+    display: block;
+  }
+}
+
+.content {
+  min-width: 0;
+  padding-bottom: 4.75rem;
+
+  @media (min-width: $tablet-width) {
+    margin-left: 13.75rem;
+    padding-bottom: 0;
+  }
+}
+
+.contentGuest {
+  display: flex;
+  justify-content: center;
+  margin-left: 0;
+}
+
+.bottomNavigation {
+  position: fixed;
+  z-index: 100;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  @media (min-width: $tablet-width) {
+    display: none;
+  }
+}

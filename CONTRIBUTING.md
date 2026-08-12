@@ -71,6 +71,6 @@ Do not mix functional changes, refactoring, dependency updates, and mass formatt
 - Use PascalCase for exported components and camelCase for variables.
 - Prefer the `@/*` path alias for imports from `src`.
 - Use CSS Modules for component or route-specific styles.
-- Keep `globals.css` limited to global CSS variables, resets, and element defaults.
+- Keep `src/styles/index.scss` limited to global CSS variables, resets, and element defaults.
 - Follow ESLint, Prettier, and Stylelint. Run project scripts through pnpm instead of global tools.
 - Follow `.editorconfig`: UTF-8, LF line endings, two-space indentation, final newline, and trimmed trailing whitespace.

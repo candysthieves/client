@@ -9,7 +9,7 @@
     "build": "next build",
     "build:production": "pnpm build",
     "start": "next start",
-    "stylelint:check": "npx stylelint \"**/*.{css,scss}\"",
+    "stylelint:check": "npx stylelint \"src/**/*.{scss,css}\" --allow-empty-input",
     "stylelint:fix": "stylelint --fix src/{,*/}*.{scss,css} --allow-empty-input",
     "lint": "eslint src --ext .jsx,.js,.tsx,.ts  --no-error-on-unmatched-pattern --fix",
     "lint:check": "eslint .",
@@ -33,8 +33,7 @@
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-hook-form": "^7.84.0",
-    "react-hot-toast": "^2.6.0",
+    "react-hook-form": "^7.85.0",
     "typescript-eslint": "^8.65.0",
     "zod": "^4.4.3"
   },

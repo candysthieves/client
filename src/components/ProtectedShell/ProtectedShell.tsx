@@ -13,33 +13,35 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   const activeSidebarId = sidebarItems.find(item => item.href === pathname)?.id ?? ''
   const activeMobileMenuId = mobileMenuItems.find(item => item.href === pathname)?.id ?? ''
 
+  const content = (
+    <main className={clsx(s.content, { [s.contentAuthenticated]: isAuthenticated })}>
+      {children}
+    </main>
+  )
+
   return (
     <div className={s.layout}>
-      {isAuthenticated && (
-        <aside className={s.sidebar}>
-          <Sidebar
-            activeId={activeSidebarId}
-            items={sidebarItems}
-            logOutIcon={<LogOut />}
-            onLogout={() => undefined}
-          />
-        </aside>
-      )}
+      {isAuthenticated ? (
+        <>
+          <div className={s.container}>
+            <aside className={s.sidebar}>
+              <Sidebar
+                activeId={activeSidebarId}
+                items={sidebarItems}
+                logOutIcon={<LogOut />}
+                onLogout={() => undefined}
+              />
+            </aside>
 
-      <main
-        className={clsx(s.content, {
-          [s.contentGuest]: !isAuthenticated,
-        })}
-      >
-        <div className={`${s.contentInner} ${!isAuthenticated ? s.contentInnerGuest : ''}`}>
-          {children}
-        </div>
-      </main>
+            {content}
+          </div>
 
-      {isAuthenticated && (
-        <div className={s.bottomNavigation}>
-          <Menu activeId={activeMobileMenuId} items={mobileMenuItems} />
-        </div>
+          <div className={s.bottomNavigation}>
+            <Menu activeId={activeMobileMenuId} items={mobileMenuItems} />
+          </div>
+        </>
+      ) : (
+        content
       )}
     </div>
   )

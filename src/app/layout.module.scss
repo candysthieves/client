@@ -1,4 +1,7 @@
 .progress {
-  position: relative;
+  position: fixed;
   z-index: 200;
+  top: 60px;
+  right: 0;
+  left: 0;
 }

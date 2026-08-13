@@ -1,9 +1,10 @@
 import type { UseFormSetError } from 'react-hook-form'
-import type { ApiError, ErrorResponse, RegistrationDto } from '@/lib/api'
+import type { ApiError, ErrorResponse } from '@/lib/api'
+import { RegistrationRequest } from '@/lib/model'
 
 export function mapRegistrationError(
   error: ApiError<ErrorResponse>,
-  setError: UseFormSetError<RegistrationDto>
+  setError: UseFormSetError<RegistrationRequest>
 ): void {
   for (const { field, message } of error.data.errorsMessages) {
     switch (field) {

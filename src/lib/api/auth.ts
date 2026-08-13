@@ -1,22 +1,25 @@
 import { request } from '@/lib/api/request'
-import { ResendConfirmationEmailRequest } from '@/lib/model'
-import { RegistrationConfirmationDto, RegistrationDto } from './types'
+import {
+  RegistrationConfirmationRequest,
+  RegistrationRequest,
+  ResendConfirmationEmailRequest,
+} from '@/lib/model'
 
-export const registration = (data: RegistrationDto) =>
-  request<void>('/api/auth/registration', {
+export const registration = (data: RegistrationRequest) =>
+  request<void>('/auth/registration', {
     method: 'POST',
     body: JSON.stringify(data),
   })
 
-export const registrationConfirmation = (data: RegistrationConfirmationDto) =>
+export const registrationConfirmation = (data: RegistrationConfirmationRequest) =>
   // or token
-  request<void>('/api/auth/registration-confirmation', {
+  request<void>('/auth/registration-confirmation', {
     method: 'POST',
     body: JSON.stringify(data), // почему body в swagger пустое, какие ответы приходят при TOKEN expired
   })
 
 export const resendConfirmationEmail = (data: ResendConfirmationEmailRequest) =>
-  request<void>('/api/auth/resend-confirmation-email', {
+  request<void>('/auth/resend-confirmation-email', {
     method: 'POST',
     body: JSON.stringify(data),
   })

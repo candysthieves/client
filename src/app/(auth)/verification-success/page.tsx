@@ -41,6 +41,7 @@ export default function VerificationSuccessPage() {
         height={300}
         alt={''}
         aria-hidden
+        loading={'eager'}
       />
     </div>
   )

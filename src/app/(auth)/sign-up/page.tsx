@@ -1,10 +1,12 @@
 'use client'
 
 import { Button, clsx, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { ToastError } from '@/components'
-import { ApiError, registration, RegistrationDto } from '@/lib/api'
+import { ApiError, registration } from '@/lib/api'
+import { RegistrationRequest, registrationSchema } from '@/lib/model'
 import { isErrorResponse, mapRegistrationError } from '@/lib/utils'
 import s from './page.module.scss'
 
@@ -17,10 +19,11 @@ export default function SignUpPage() {
     reset,
     watch,
     formState: { errors, isValid },
-  } = useForm<RegistrationDto>({
+  } = useForm<RegistrationRequest>({
     mode: 'all',
+    resolver: zodResolver(registrationSchema),
     defaultValues: {
-      isTermsAccepted: true,
+      isTermsAccepted: false,
     },
   })
 
@@ -37,7 +40,7 @@ export default function SignUpPage() {
     setIsOpen(false)
   }
 
-  const onSubmit: SubmitHandler<RegistrationDto> = async data => {
+  const onSubmit: SubmitHandler<RegistrationRequest> = async data => {
     try {
       await registration(data)
       // router.push('/login') ??

@@ -1,17 +1,3 @@
-export type RegistrationDto = {
-  // use type from schema
-  username: string
-  email: string
-  password: string
-  passwordConfirmation: string
-  isTermsAccepted: boolean
-}
-
-export type RegistrationConfirmationDto = {
-  // use type from schema
-  code: string
-}
-
 export type ErrorResponse = {
   // use type from schema
   errorsMessages: {

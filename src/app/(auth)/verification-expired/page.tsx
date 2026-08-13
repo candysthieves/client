@@ -85,6 +85,7 @@ export default function VerificationExpiredPage() {
         height={352}
         alt={''}
         aria-hidden
+        loading={'eager'}
       />
     </div>
   )

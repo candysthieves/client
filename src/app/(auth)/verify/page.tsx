@@ -1,40 +1,48 @@
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useCallback, useEffect } from 'react'
 import { ApiError, registrationConfirmation } from '@/lib/api'
 import { mapRegistrationConfirmationError } from '@/lib/utils/mapRegistrationConfirmationError'
 
-type Props = {
-  searchParams: Promise<{
-    code?: string
-  }>
-}
+export default function VerifyPage() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const code = searchParams.get('code')
 
-export default async function VerifyPage({ searchParams }: Props) {
-  const { code } = await searchParams // or token
-
-  /**
-   * If user opened link /verify  by himself without code
-   */
-  if (!code) {
-    redirect('/verification-expired')
-  }
-  console.log('VERIFY PAGE RENDER', code)
-  try {
-    console.log('BEFORE CONFIRMATION', code)
-    await registrationConfirmation({ code })
-    console.log('AFTER CONFIRMATION', code)
-    redirect('/verification-success') // проверить работает ли
-  } catch (error) {
-    console.log('CONFIRMATION ERROR', error)
-    if (error instanceof ApiError) {
-      const redirectTo = mapRegistrationConfirmationError(error)
-      if (redirectTo) {
-        redirect(redirectTo)
-      }
+  const handleVerification = useCallback(async () => {
+    /**
+     * If user opened link /verify by himself without code
+     */
+    if (!code) {
+      router.replace('/verification-expired')
+      return
     }
 
-    throw error
-  }
+    try {
+      await registrationConfirmation({ code })
+      router.replace('/verification-success')
+    } catch (error) {
+      if (error instanceof ApiError) {
+        const redirectTo = mapRegistrationConfirmationError(error)
+        if (redirectTo) {
+          router.replace(redirectTo)
+          return
+        }
+      }
+      // здесь уже можно показать generic error
+      console.error(error)
+      throw error
+    }
+  }, [code, router])
+
+  useEffect(() => {
+    handleVerification()
+  }, [handleVerification])
+
+  return null
 }
+
 // if (error instanceof ApiError && error.data.code === 'TOKEN_EXPIRED') { // если export class ApiError<T = unknown>
 //   // уточнить у бэкенд и как будет называться error.data.code при expired и будут ли другие например TOKEN_INVALID, TOKEN_ALREADY_USED
 //   redirect('/verification-expired')

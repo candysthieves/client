@@ -1,10 +1,4 @@
-// export type ErrorResponse = {
-//   // use type from schema
-//   errorsMessages: {
-//     field: string
-//     message: string
-//   }[]
-// }
+export type Draft = string
 
 // LoginDto - use type from schema
 // PasswordRecoveryDto - use type from schema

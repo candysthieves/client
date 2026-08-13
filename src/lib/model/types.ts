@@ -24,3 +24,5 @@ export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirm
 export type RegistrationRequest = z.infer<typeof registrationSchema>
 export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEmailSchema>
 export type ValidatePasswordRecoveryCodeRequest = z.infer<typeof validatePasswordRecoveryCodeSchema>
+export type RegistrationField = keyof RegistrationRequest
+export type LoginField = 'credentials' | 'email'

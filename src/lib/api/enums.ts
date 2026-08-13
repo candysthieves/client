@@ -28,12 +28,36 @@ export enum ErrorStatus {
   SessionAccessForbidden = 83,
 }
 
-// EmailAlreadyConfirmed = 20,
-//   EmailNotExists = 21,
-//   EmailNotConfirmed = 22,
-//   EmailAlreadyExists = 23,
-//   UsernameAlreadyExists = 30,
-//   UserNotFound = 33,
-//   InvalidCredentials = 51,
-//   RecaptchaInvalid = 52,
-//   PasswordsNotMatch = 53,
+//   EmailAlreadyExists = 23, register
+//   UsernameAlreadyExists = 30, register
+//   PasswordsNotMatch = 53, register
+
+//   EmailNotExists = 21, verify / login
+//   EmailAlreadyConfirmed = 20 verify
+
+//   EmailNotConfirmed = 22, login
+//   UserNotFound = 33, login
+//   InvalidCredentials = 51, login
+//   RecaptchaInvalid = 52, forgot password
+
+// {
+//   "code": 51,
+//   "errorsMessages": [{
+//   "field": "credentials",
+//   "message": "Invalid email or password"
+// }]
+// }
+// {
+//   "code": 22,
+//   "errorsMessages": [{
+//   "field": "email",
+//   "message": "Email is not confirmed"
+// }]
+// }
+// {
+//   "code": 20,
+//   "errorsMessages": [{
+//   "field": "email",
+//   "message": "Email already confirmed"
+// }]
+// }

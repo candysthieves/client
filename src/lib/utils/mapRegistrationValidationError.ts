@@ -4,7 +4,10 @@ import { ErrorStatus } from '@/lib/api/enums'
 import { RegistrationRequest, VALIDATION_ERROR_COMMON_MESSAGE } from '@/lib/model'
 import { isErrorResponse } from './isErrorResponse'
 
-export function mapRegistrationError(
+/**
+ * Form validation common error:
+ */
+export function mapRegistrationValidationError(
   error: ApiError,
   setError: UseFormSetError<RegistrationRequest>
 ): boolean {
@@ -31,6 +34,7 @@ export function mapRegistrationError(
         break
     }
   }
-
   return true
 }
+
+// ValidationError = 50

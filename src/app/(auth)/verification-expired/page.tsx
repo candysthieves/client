@@ -5,10 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { ToastError } from '@/components'
 import { FormInput } from '@/components/FormInput'
 import { ApiError, resendConfirmationEmail } from '@/lib/api'
 import { ResendConfirmationEmailRequest, resendConfirmationEmailSchema } from '@/lib/model'
-import { isErrorResponse, mapRegistrationError } from '@/lib/utils'
+import { isErrorResponse, mapRegistrationValidationError } from '@/lib/utils'
+import { mapConfirmationEmailDomainError } from '@/lib/utils/mapConfirmationEmailDomainError'
 import s from './page.module.scss'
 
 export default function VerificationExpiredPage() {
@@ -31,7 +33,24 @@ export default function VerificationExpiredPage() {
       // show Alert snackbar message "Verification email has been sent"
     } catch (error) {
       if (error instanceof ApiError && isErrorResponse(error.data)) {
-        mapRegistrationError(error, setError)
+        const isValidationError = mapRegistrationValidationError(error, setError)
+        const isDomainError = mapConfirmationEmailDomainError(error, setError)
+
+        if (isValidationError) {
+          ToastError({
+            title: 'Validation Error',
+            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
+            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
+          })
+          return
+        } else if (isDomainError) {
+          // Show domain errors
+          ToastError({
+            title: 'Domain Error',
+            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
+            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
+          })
+        }
         // show Alert snackbar message "Verification email error: ..."
         return
       }

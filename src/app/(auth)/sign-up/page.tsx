@@ -6,12 +6,12 @@ import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { ToastError } from '@/components'
 import { ApiError, registration } from '@/lib/api'
+import { RegistrationRequest, registrationSchema } from '@/lib/model'
 import {
-  RegistrationRequest,
-  registrationSchema,
-  VALIDATION_ERROR_COMMON_MESSAGE,
-} from '@/lib/model'
-import { isErrorResponse, mapRegistrationError } from '@/lib/utils'
+  isErrorResponse,
+  mapRegistrationDomainError,
+  mapRegistrationValidationError,
+} from '@/lib/utils'
 import s from './page.module.scss'
 
 export default function SignUpPage() {
@@ -25,7 +25,7 @@ export default function SignUpPage() {
     formState: { errors, isValid },
   } = useForm<RegistrationRequest>({
     mode: 'all',
-    // resolver: zodResolver(registrationSchema),
+    resolver: zodResolver(registrationSchema),
     defaultValues: {
       isTermsAccepted: false,
     },
@@ -51,15 +51,23 @@ export default function SignUpPage() {
       openModal()
     } catch (error) {
       if (error instanceof ApiError && isErrorResponse(error.data)) {
-        const isValidationError = mapRegistrationError(error, setError)
+        const isValidationError = mapRegistrationValidationError(error, setError)
+        const isDomainError = mapRegistrationDomainError(error, setError)
 
         if (isValidationError) {
           ToastError({
+            title: 'Validation Error',
             messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
             // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
           })
-
           return
+        } else if (isDomainError) {
+          // Show domain errors
+          ToastError({
+            title: 'Domain Error',
+            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
+            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
+          })
         }
       }
       throw error
@@ -101,7 +109,7 @@ export default function SignUpPage() {
 
           {/* TODO: error={!!errors?.email} - add this in the future to input an delete clsx className condition*/}
           <input
-            type={'text'}
+            type={'email'}
             id={'emailSignUp'}
             className={clsx(s.email, !!errors?.email && s.errorInput)}
             {...register('email')}

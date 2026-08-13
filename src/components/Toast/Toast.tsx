@@ -142,11 +142,7 @@ export const ToastWarning = ({
   )
 }
 
-export const ToastError = ({
-  duration = 3000,
-  messages,
-  title = 'Validation error',
-}: ToastErrorProps) => {
+export const ToastError = ({ duration = 3000, messages, title = 'Error' }: ToastErrorProps) => {
   const formattedMessages =
     typeof messages === 'string'
       ? messages

@@ -1,3 +1,5 @@
 export { isErrorResponse } from './isErrorResponse'
+export * from './isValidField'
 export { mapRegistrationConfirmationError } from './mapRegistrationConfirmationError'
-export { mapRegistrationError } from './mapRegistrationError'
+export { mapRegistrationValidationError } from './mapRegistrationValidationError'
+export { mapRegistrationDomainError } from './mapRegistrationDomainError'

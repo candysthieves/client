@@ -27,3 +27,13 @@ export enum ErrorStatus {
   SessionUserMismatch = 82,
   SessionAccessForbidden = 83,
 }
+
+// EmailAlreadyConfirmed = 20,
+//   EmailNotExists = 21,
+//   EmailNotConfirmed = 22,
+//   EmailAlreadyExists = 23,
+//   UsernameAlreadyExists = 30,
+//   UserNotFound = 33,
+//   InvalidCredentials = 51,
+//   RecaptchaInvalid = 52,
+//   PasswordsNotMatch = 53,

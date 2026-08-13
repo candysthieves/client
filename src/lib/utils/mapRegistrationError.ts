@@ -1,12 +1,23 @@
-import type { UseFormSetError } from 'react-hook-form'
-import type { ApiError, ErrorResponse } from '@/lib/api'
-import { RegistrationRequest } from '@/lib/model'
+import { UseFormSetError } from 'react-hook-form'
+import { ApiError } from '@/lib/api'
+import { ErrorStatus } from '@/lib/api/enums'
+import { RegistrationRequest, VALIDATION_ERROR_COMMON_MESSAGE } from '@/lib/model'
+import { isErrorResponse } from './isErrorResponse'
 
 export function mapRegistrationError(
-  error: ApiError<ErrorResponse>,
+  error: ApiError,
   setError: UseFormSetError<RegistrationRequest>
-): void {
-  for (const { field, message } of error.data.errorsMessages) {
+): boolean {
+  if (!isErrorResponse(error.data)) {
+    return false
+  }
+
+  if (error.data.code !== ErrorStatus.ValidationError) {
+    return false
+  }
+
+  // for (const { field, message } of error.data.errorsMessages) {
+  for (const { field } of error.data.errorsMessages) {
     switch (field) {
       case 'email':
       case 'username':
@@ -14,9 +25,12 @@ export function mapRegistrationError(
       case 'passwordConfirmation':
         setError(field, {
           type: 'server',
-          message,
+          // message,
+          message: VALIDATION_ERROR_COMMON_MESSAGE,
         })
         break
     }
   }
+
+  return true
 }

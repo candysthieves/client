@@ -6,7 +6,11 @@ import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { ToastError } from '@/components'
 import { ApiError, registration } from '@/lib/api'
-import { RegistrationRequest, registrationSchema } from '@/lib/model'
+import {
+  RegistrationRequest,
+  registrationSchema,
+  VALIDATION_ERROR_COMMON_MESSAGE,
+} from '@/lib/model'
 import { isErrorResponse, mapRegistrationError } from '@/lib/utils'
 import s from './page.module.scss'
 
@@ -21,7 +25,7 @@ export default function SignUpPage() {
     formState: { errors, isValid },
   } = useForm<RegistrationRequest>({
     mode: 'all',
-    resolver: zodResolver(registrationSchema),
+    // resolver: zodResolver(registrationSchema),
     defaultValues: {
       isTermsAccepted: false,
     },
@@ -47,9 +51,16 @@ export default function SignUpPage() {
       openModal()
     } catch (error) {
       if (error instanceof ApiError && isErrorResponse(error.data)) {
-        mapRegistrationError(error, setError)
-        ToastError({ messages: error.data.errorsMessages })
-        return
+        const isValidationError = mapRegistrationError(error, setError)
+
+        if (isValidationError) {
+          ToastError({
+            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
+            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
+          })
+
+          return
+        }
       }
       throw error
     }
@@ -90,7 +101,7 @@ export default function SignUpPage() {
 
           {/* TODO: error={!!errors?.email} - add this in the future to input an delete clsx className condition*/}
           <input
-            type={'email'}
+            type={'text'}
             id={'emailSignUp'}
             className={clsx(s.email, !!errors?.email && s.errorInput)}
             {...register('email')}

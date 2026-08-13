@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { ErrorStatus } from '@/lib/api/enums'
 import {
   PASSWORD_PATTERN,
   PASSWORD_PATTERN_MESSAGE,
@@ -91,11 +92,12 @@ export const accessTokenResponseSchema = z.object({
 
 export const loginResponseSchema = accessTokenResponseSchema
 
+export const errorMessageSchema = z.object({
+  field: z.string(),
+  message: z.string(),
+})
+
 export const apiErrorResponseSchema = z.object({
-  errorsMessages: z.array(
-    z.object({
-      field: z.string(),
-      message: z.string(),
-    })
-  ),
+  code: z.enum(ErrorStatus),
+  errorsMessages: z.array(errorMessageSchema),
 })

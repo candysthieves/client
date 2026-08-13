@@ -1,5 +1,5 @@
-import { Recaptcha, type RecaptchaProps } from '@candy.thieves/ui-kit-lumos'
 import { useController, type Control, type FieldValues, type Path } from 'react-hook-form'
+import { Recaptcha, type RecaptchaProps } from '@/components/Recaptcha'
 
 export type FormRecaptchaProps<T extends FieldValues> = Omit<
   RecaptchaProps,

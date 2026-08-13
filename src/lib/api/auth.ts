@@ -4,29 +4,29 @@ import type {
   RegistrationConfirmationRequest,
   RegistrationRequest,
   ResendConfirmationEmailRequest,
-} from '@/features/auth/model'
+} from '@/lib/model'
 import { request } from './request'
 
 export const login = (data: LoginRequest) =>
-  request<LoginResponse>('/api/auth/login', {
+  request<LoginResponse>('/auth/login', {
     method: 'POST',
     body: JSON.stringify(data),
   })
 
 export const registration = (data: RegistrationRequest) =>
-  request<void>('/api/auth/registration', {
+  request<void>('/auth/registration', {
     method: 'POST',
     body: JSON.stringify(data),
   })
 
 export const registrationConfirmation = (data: RegistrationConfirmationRequest) =>
-  request<void>('/api/auth/registration-confirmation', {
+  request<void>('/auth/registration-confirmation', {
     method: 'POST',
     body: JSON.stringify(data),
   })
 
 export const resendConfirmationEmail = (data: ResendConfirmationEmailRequest) =>
-  request<void>('/api/auth/resend-confirmation-email', {
+  request<void>('/auth/resend-confirmation-email', {
     method: 'POST',
     body: JSON.stringify(data),
   })

@@ -2,15 +2,16 @@
 
 import { Button, GithubRepo, Google, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { ApiError, login } from '@/app/lib/api'
-import { isErrorResponse } from '@/app/lib/isErrorResponse'
 import { FormInput } from '@/components/FormInput'
 import { FormPasswordInput } from '@/components/FormPasswordInput'
 import { ToastError } from '@/components/Toast/Toast'
-import { type LoginRequest, loginSchema } from '@/features/auth/model'
-import s from './log-in-form.module.scss'
+import { ApiError, login } from '@/lib/api'
+import { type LoginRequest, loginSchema } from '@/lib/model'
+import { isErrorResponse } from '@/lib/utils'
+import s from './sign-in-form.module.scss'
 
 export default function LogInForm() {
   const router = useRouter()
@@ -31,8 +32,10 @@ export default function LogInForm() {
 
   const onSubmit = async (data: LoginRequest) => {
     try {
-      await login(data)
-      router.push('/account')
+      const response = await login(data)
+
+      localStorage.setItem('accessToken', response.accessToken)
+      router.push('/profile')
     } catch (error) {
       if (error instanceof ApiError && isErrorResponse(error.data)) {
         error.data.errorsMessages.forEach(({ field, message }) => {
@@ -93,18 +96,14 @@ export default function LogInForm() {
           />
         </div>
 
-        <Typography
-          href={'#forgot'}
-          variant={'body1'}
-          color={'var(--color-light-900)'}
-          align={'right'}
-          className={s.forgotPassword}
-        >
-          Forgot Password
-        </Typography>
+        <Link href={'/forgot-password'} className={s.forgotPassword}>
+          <Typography variant={'body1'} color={'var(--color-light-900)'} align={'right'}>
+            Forgot Password
+          </Typography>
+        </Link>
 
         <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
-          {isSubmitting ? 'Signing In...' : 'Sign In'}
+          Sign In
         </Button>
 
         <div className={s.footer}>
@@ -112,7 +111,7 @@ export default function LogInForm() {
             Don&apos;t have an account?
           </Typography>
 
-          <Button as={'button'} disabled={false} onClick={() => {}} variant={'text'}>
+          <Button as={Link} href={'/sign-up'} variant={'text'}>
             Sign Up
           </Button>
         </div>

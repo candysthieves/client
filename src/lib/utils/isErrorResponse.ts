@@ -1,4 +1,4 @@
-import type { ApiErrorResponse } from '@/features/auth/model'
+import type { ApiErrorResponse } from '@/lib/model'
 
 export const isErrorResponse = (value: unknown): value is ApiErrorResponse => {
   return (

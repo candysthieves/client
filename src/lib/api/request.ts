@@ -1,15 +1,16 @@
+import { NEXT_PUBLIC_API_URL } from '@/constants'
 import { ApiError } from './apiError'
 
 export async function request<T>(input: string, init?: RequestInit): Promise<T> {
-  const isRelativeUrl = input.startsWith('/')
+  const accessToken =
+    typeof window !== 'undefined' ? localStorage.getItem('accessToken') : undefined
 
-  const url =
-    typeof window === 'undefined' && isRelativeUrl ? `${process.env.APP_URL}${input}` : input
-
-  const response = await fetch(url, {
+  const response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, {
     ...init,
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
+      ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       ...init?.headers,
     },
   })

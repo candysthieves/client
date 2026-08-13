@@ -1,7 +1,7 @@
 'use client'
 
 import toast from 'react-hot-toast'
-import type { ApiErrorResponse } from '@/features/auth/model'
+import type { ApiErrorResponse } from '@/lib/model'
 import s from './Toast.module.scss'
 
 type ToastMessageProps = {
@@ -67,9 +67,9 @@ export const ToastError = ({
           <div className={s.message}>{messages}</div>
         ) : isFieldErrors ? (
           <ul className={s.list}>
-            {messages.map(({ field, message }, index) => (
-              <li key={`${field}-${index}`} className={s.message}>
-                <span className={s.field}>{field}:</span> {message}
+            {messages.map(({ message }, index) => (
+              <li key={`${message}-${index}`} className={s.message}>
+                {message}
               </li>
             ))}
           </ul>

@@ -17,7 +17,7 @@ export default function SignUpPage() {
     formState: { errors, isSubmitting, isValid },
   } = useForm<RegistrationRequest>({
     resolver: zodResolver(registrationSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
     defaultValues: {
       username: '',
       email: '',

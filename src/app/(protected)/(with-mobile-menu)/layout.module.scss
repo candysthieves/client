@@ -1,0 +1,21 @@
+@use '@/styles/mixins' as *;
+
+.container {
+  @media (max-width: $tablet-width) {
+    padding-bottom: 4.75rem;
+  }
+}
+
+.bottomNavigation {
+  position: fixed;
+  z-index: 100;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: none;
+
+  @media (max-width: $tablet-width) {
+    display: block;
+  }
+}

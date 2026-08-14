@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { LinearProgress } from '@candy.thieves/ui-kit-lumos'
 import '@candy.thieves/ui-kit-lumos/dist/index.css'
 import '../styles/index.scss'
-import { Header } from '@/components/Header'
+import { AppHeader } from '@/components/AppHeader'
 import s from './layout.module.scss'
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang={'en'}>
       <body>
-        <Header />
+        <AppHeader />
         <LinearProgress className={s.progress} size={'sm'} />
         {children}
       </body>

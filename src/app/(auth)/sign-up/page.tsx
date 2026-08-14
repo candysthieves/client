@@ -122,7 +122,7 @@ export default function SignUpPage() {
           <Typography variant={'subtitle1'} color={'var(--color-light-100)'} align={'center'}>
             Do you have an account?
           </Typography>
-          <Button as={Link} href={'/sign-in'} variant={'text'} fullWidth>
+          <Button type={'button'} variant={'text'} fullWidth disabled>
             Sign In
           </Button>
         </div>

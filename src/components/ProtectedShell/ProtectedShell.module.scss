@@ -5,7 +5,8 @@
 }
 
 .container {
-  @include container;
+  display: block;
+  width: 100%;
 }
 
 .sidebar {
@@ -21,19 +22,18 @@
 }
 
 .content {
-  @include content;
+  @include container;
 
   min-width: 0;
 }
 
 .contentAuthenticated {
-  margin-left: 12.875rem;
-
-  @media (max-width: $desktop-width) {
-    margin-left: max(10.25rem, calc(50vw - 27.125rem));
-  }
+  max-width: none;
+  margin-right: 3.75rem;
+  margin-left: calc(3.75rem + 10.25rem + 1.5rem);
+  padding: 0;
 
   @media (max-width: $tablet-width) {
-    margin-left: auto;
+    @include container;
   }
 }

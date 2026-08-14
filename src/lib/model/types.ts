@@ -22,3 +22,15 @@ export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirm
 export type RegistrationRequest = z.infer<typeof registrationSchema>
 export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEmailSchema>
 export type ValidatePasswordRecoveryCodeRequest = z.infer<typeof validatePasswordRecoveryCodeSchema>
+
+export const VALID_LOGIN_FIELDS = ['email', 'password'] as const
+export const VALID_REGISTRATION_FIELDS = [
+  'username',
+  'email',
+  'password',
+  'passwordConfirmation',
+  'isTermsAccepted',
+] as const
+
+export type LoginField = (typeof VALID_LOGIN_FIELDS)[number]
+export type RegistrationField = (typeof VALID_REGISTRATION_FIELDS)[number]

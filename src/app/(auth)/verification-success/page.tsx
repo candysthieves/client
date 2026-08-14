@@ -1,5 +1,3 @@
-'use client'
-
 import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -10,7 +8,7 @@ export default function VerificationSuccessPage() {
     <div className={s.container}>
       <Typography
         variant={'h1'}
-        color={"var(--color-text-primary)"}
+        color={'var(--color-text-primary)'}
         align={'center'}
         mt={'2.2rem'}
         mb={'1.25rem'}

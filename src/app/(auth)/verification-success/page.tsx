@@ -1,5 +1,3 @@
-'use client'
-
 import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import Link from 'next/link'

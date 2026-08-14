@@ -4,17 +4,19 @@ import { Button, GithubRepo, Google, Typography } from '@candy.thieves/ui-kit-lu
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { FormInput } from '@/components/FormInput'
 import { FormPasswordInput } from '@/components/FormPasswordInput'
 import { ToastError } from '@/components/Toast/Toast'
 import { ApiError, login } from '@/lib/api'
 import { type LoginRequest, loginSchema } from '@/lib/model'
-import { isErrorResponse } from '@/lib/utils'
+import { isErrorResponse, mapLoginDomainError, mapLoginValidationError } from '@/lib/utils'
 import s from './sign-in-form.module.scss'
 
 export default function LogInForm() {
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     control,
@@ -30,29 +32,36 @@ export default function LogInForm() {
     },
   })
 
-  const onSubmit = async (data: LoginRequest) => {
+  const onSubmit: SubmitHandler<LoginRequest> = async data => {
     try {
+      setIsLoading(true)
       const response = await login(data)
 
       localStorage.setItem('accessToken', response.accessToken)
-      router.push('/profile')
+      router.replace('/profile')
     } catch (error) {
       if (error instanceof ApiError && isErrorResponse(error.data)) {
-        error.data.errorsMessages.forEach(({ field, message }) => {
-          if (field === 'email' || field === 'password') {
-            setError(field, { message })
-          }
-        })
+        const isValidationError = mapLoginValidationError(error, setError)
+        const isDomainError = mapLoginDomainError(error, setError)
 
-        ToastError({
-          messages: error.data.errorsMessages,
-        })
-        return
+        if (isValidationError) {
+          ToastError({
+            title: 'Validation Error',
+            messages: error.data.errorsMessages,
+          })
+          return
+        } else if (isDomainError) {
+          ToastError({
+            title: 'Domain Error',
+            messages: error.data.errorsMessages,
+          })
+          return
+        }
       }
 
-      ToastError({
-        messages: 'Network error. Please try again later',
-      })
+      throw error
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -79,21 +88,26 @@ export default function LogInForm() {
         </div>
 
         <div className={s.fieldsGroup}>
-          <FormInput
-            placeholder={'Epam@epam.com'}
-            control={control}
-            name={'email'}
-            label={'Email'}
-            error={errors.email?.message}
-          />
+          <div className={s.fieldControl}>
+            <FormInput
+              placeholder={'Epam@epam.com'}
+              control={control}
+              name={'email'}
+              label={'Email'}
+              type={'email'}
+              error={errors.email?.message}
+            />
+          </div>
 
-          <FormPasswordInput
-            control={control}
-            name={'password'}
-            label={'Password'}
-            placeholder={'**********'}
-            error={errors.password?.message}
-          />
+          <div className={s.fieldControl}>
+            <FormPasswordInput
+              control={control}
+              name={'password'}
+              label={'Password'}
+              placeholder={'**********'}
+              error={errors.password?.message}
+            />
+          </div>
         </div>
 
         <Link href={'/forgot-password'} className={s.forgotPassword}>
@@ -102,7 +116,7 @@ export default function LogInForm() {
           </Typography>
         </Link>
 
-        <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
+        <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting || isLoading}>
           Sign In
         </Button>
 

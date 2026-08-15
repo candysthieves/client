@@ -1,191 +1,190 @@
 'use client'
 
-import { Button, clsx, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, GithubRepo, Google, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { ToastError } from '@/components'
-import { ApiError, registration } from '@/lib/api'
+import Link from 'next/link'
+import { useEffect } from 'react'
+import { type SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import { FormCheckbox } from '@/components/FormCheckbox'
+import { FormInput } from '@/components/FormInput'
+import { FormPasswordInput } from '@/components/FormPasswordInput'
 import { RegistrationRequest, registrationSchema } from '@/lib/model'
-import {
-  isErrorResponse,
-  mapRegistrationDomainError,
-  mapRegistrationValidationError,
-} from '@/lib/utils'
 import s from './page.module.scss'
 
+const SIGN_UP_DRAFT_KEY = 'sign-up-form-draft'
+
+const getSignUpDraft = (): Partial<RegistrationRequest> | undefined => {
+  try {
+    const draft = sessionStorage.getItem(SIGN_UP_DRAFT_KEY)
+
+    return draft ? (JSON.parse(draft) as Partial<RegistrationRequest>) : undefined
+  } catch {
+    return undefined
+  }
+}
+
 export default function SignUpPage() {
-  const [isOpen, setIsOpen] = useState(false)
   const {
-    register,
-    setError,
+    control,
     handleSubmit,
     reset,
-    watch,
-    formState: { errors, isValid },
+    subscribe,
+    trigger,
+    formState: { errors, isSubmitting, isValid },
   } = useForm<RegistrationRequest>({
-    mode: 'all',
     resolver: zodResolver(registrationSchema),
+    mode: 'onChange',
     defaultValues: {
-      isTermsAccepted: false,
+      username: '',
+      email: '',
+      password: '',
+      passwordConfirmation: '',
     },
   })
 
-  const emailValue = watch('email')
+  const password = useWatch({ control, name: 'password' })
 
-  // useEffect is a temporary solution to render new errors field values
   useEffect(() => {
-    console.table(errors)
-  }, [errors, errors.email, errors.username])
+    const draft = getSignUpDraft()
 
-  const openModal = () => setIsOpen(true)
-  const closeModal = () => {
-    reset() // check
-    setIsOpen(false)
-  }
-
-  const onSubmit: SubmitHandler<RegistrationRequest> = async data => {
-    try {
-      await registration(data)
-      // router.push('/login') ??
-      openModal()
-    } catch (error) {
-      if (error instanceof ApiError && isErrorResponse(error.data)) {
-        const isValidationError = mapRegistrationValidationError(error, setError)
-        const isDomainError = mapRegistrationDomainError(error, setError)
-
-        if (isValidationError) {
-          ToastError({
-            title: 'Validation Error',
-            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
-            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
-          })
-          return
-        } else if (isDomainError) {
-          // Show domain errors
-          ToastError({
-            title: 'Domain Error',
-            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
-            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
-          })
-        }
-      }
-      throw error
+    if (draft) {
+      reset(draft)
     }
-  }
+  }, [reset])
 
-  const onClickHandler = () => {
-    closeModal()
-  }
+  useEffect(() => {
+    return subscribe({
+      formState: { values: true },
+      callback: ({ values }) => {
+        const draft: Partial<RegistrationRequest> = {
+          username: values.username,
+          email: values.email,
+          password: values.password,
+          passwordConfirmation: values.passwordConfirmation,
+        }
+
+        if (values.isTermsAccepted) {
+          draft.isTermsAccepted = values.isTermsAccepted
+        }
+
+        sessionStorage.setItem(SIGN_UP_DRAFT_KEY, JSON.stringify(draft))
+      },
+    })
+  }, [subscribe])
+
+  useEffect(() => {
+    if (password) {
+      void trigger('passwordConfirmation')
+    }
+  }, [password, trigger])
+
+  const onSubmit: SubmitHandler<RegistrationRequest> = async () => {}
 
   return (
-    <>
-      <div>
-        {/*Temporary jsx code starts here*/}
-        <Typography variant={'h2'}>{'Sign up'}</Typography>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          style={{ display: 'flex', flexDirection: 'column', width: '30rem', color: '#000' }}
-        >
-          <Typography variant={'caption1'} color={'var(--color-light-100)'}>
-            {'User name'}
-          </Typography>
+    <main className={s.page}>
+      <form className={s.card} onSubmit={handleSubmit(onSubmit)} noValidate>
+        <Typography variant={'h1'} color={'var(--color-light-100)'} align={'center'}>
+          Sign Up
+        </Typography>
 
-          {/* TODO: error={!!errors?.username} - add this in the future to input an delete clsx className condition*/}
-          <input
-            type={'text'}
-            id={'username'}
-            className={clsx(s.name, !!errors?.username && s.errorInput)}
-            {...register('username')}
-          />
-          {errors?.username && (
-            <Typography variant={'body1'} color={'var(--color-danger-500)'}>
-              {errors.username.message}
-            </Typography>
-          )}
-          <Typography variant={'caption1'} color={'var(--color-light-100)'}>
-            {'Email'}
-          </Typography>
+        <div className={s.socials} aria-label={'Sign up with social account'}>
+          <button className={s.socialButton} type={'button'} aria-label={'Sign up with Google'}>
+            <Google />
+          </button>
+          <button className={s.socialButton} type={'button'} aria-label={'Sign up with GitHub'}>
+            <GithubRepo />
+          </button>
+        </div>
 
-          {/* TODO: error={!!errors?.email} - add this in the future to input an delete clsx className condition*/}
-          <input
-            type={'email'}
-            id={'emailSignUp'}
-            className={clsx(s.email, !!errors?.email && s.errorInput)}
-            {...register('email')}
-          />
-          {errors?.email && (
-            <Typography variant={'body2'} color={'var(--color-danger-500)'}>
-              {errors.email.message}
-            </Typography>
-          )}
-
-          <label htmlFor={'passwordSignUp'}>Password</label>
-
-          {/* TODO: change to type={'password'} */}
-          <input
-            id={'passwordSignUp'}
-            type={'text'}
-            defaultValue={'qwQW12!@'}
-            className={clsx(s.email, !!errors?.password && s.errorInput)}
-            {...register('password')}
-            autoComplete={'current-password'}
-          />
-          {errors?.password && (
-            <Typography variant={'body2'} color={'var(--color-danger-500)'}>
-              {errors.password.message}
-            </Typography>
-          )}
-
-          <label htmlFor={'passwordConfirmation'}>{'Confirm password'}</label>
-
-          {/* TODO: change to type={'password'} */}
-          <input
-            id={'passwordConfirmation'}
-            type={'text'}
-            defaultValue={'qwQW12!@'}
-            className={clsx(s.email, !!errors?.passwordConfirmation && s.errorInput)}
-            {...register('passwordConfirmation')}
-          />
-          {errors?.passwordConfirmation && (
-            <Typography variant={'body2'} color={'var(--color-danger-500)'}>
-              {errors.passwordConfirmation.message}
-            </Typography>
-          )}
-
-          <div className={s.termsBlock}>
-            <input type={'checkbox'} id={'isTermsAccepted'} {...register('isTermsAccepted')} />
-            <label htmlFor={'isTermsAccepted'} className={s.terms}>
-              I agree to the Terms of Service and Privacy Policy
-            </label>
+        <div className={s.fields}>
+          <div className={s.field}>
+            <FormInput
+              control={control}
+              name={'username'}
+              label={'Username'}
+              placeholder={'Epam11'}
+              autoComplete={'username'}
+              aria-invalid={Boolean(errors.username)}
+            />
           </div>
-          {/* TODO: Also add a "disabled" state for the loading period — when the POST request with form data is sending */}
-          <Button type={'submit'} variant={'primary'} disabled={!isValid}>
-            Submit sign-up form
-          </Button>
-        </form>
-      </div>
-      {/*Temporary jsx code ends here*/}
 
-      <Modal
-        open={isOpen}
-        onClose={closeModal}
-        modalTitle={'Email sent'}
-        size={'s'}
-        showHeader
-        showCloseButton
-      >
-        <div className={s.triggerContent}>
-          <Typography variant={'subtitle1'} color={'var(--color-light-100)'}>
-            We have sent a link to confirm your email to {emailValue}
-          </Typography>
-          <div className={s.triggerControls}>
-            <Button variant={'primary'} onClick={onClickHandler}>
-              Ok
-            </Button>
+          <div className={s.field}>
+            <FormInput
+              control={control}
+              name={'email'}
+              label={'Email'}
+              type={'email'}
+              placeholder={'Epam@epam.com'}
+              autoComplete={'email'}
+              aria-invalid={Boolean(errors.email)}
+            />
+          </div>
+
+          <div className={s.field}>
+            <FormPasswordInput
+              control={control}
+              name={'password'}
+              label={'Password'}
+              placeholder={'******************'}
+              autoComplete={'new-password'}
+              aria-invalid={Boolean(errors.password)}
+            />
+          </div>
+
+          <div className={s.field}>
+            <FormPasswordInput
+              control={control}
+              name={'passwordConfirmation'}
+              label={'Password confirmation'}
+              placeholder={'******************'}
+              autoComplete={'new-password'}
+              aria-invalid={Boolean(errors.passwordConfirmation)}
+            />
           </div>
         </div>
-      </Modal>
-    </>
+
+        <div className={s.agreement}>
+          <FormCheckbox
+            control={control}
+            name={'isTermsAccepted'}
+            aria-invalid={Boolean(errors.isTermsAccepted)}
+            label={
+              <span className={s.agreementText}>
+                I agree to the{' '}
+                <Link className={s.legalLink} href={'/terms'}>
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link className={s.legalLink} href={'/privacy-policy'}>
+                  Privacy Policy
+                </Link>
+              </span>
+            }
+          />
+          {errors.isTermsAccepted && (
+            <Typography
+              className={s.error}
+              variant={'caution-error'}
+              color={'var(--color-danger-500)'}
+            >
+              {errors.isTermsAccepted.message}
+            </Typography>
+          )}
+        </div>
+
+        <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
+          Sign Up
+        </Button>
+
+        <div className={s.footer}>
+          <Typography variant={'subtitle1'} color={'var(--color-light-100)'} align={'center'}>
+            Do you have an account?
+          </Typography>
+          <Button type={'button'} variant={'text'} fullWidth disabled>
+            Sign In
+          </Button>
+        </div>
+      </form>
+    </main>
   )
 }

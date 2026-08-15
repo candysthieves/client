@@ -2,8 +2,11 @@ packages:
   - .
 
 allowBuilds:
+  '@parcel/watcher': true
   sharp: true
   unrs-resolver: true
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+minimumReleaseAgeExclude:
+  - '@candy.thieves/ui-kit-lumos@0.0.30'

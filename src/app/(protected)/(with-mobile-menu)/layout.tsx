@@ -12,8 +12,8 @@ export default function WithMobileMenuLayout({ children }: { children: ReactNode
   const activeMobileMenuId = mobileMenuItems.find(item => item.href === pathname)?.id ?? ''
 
   return (
-    <div className={s.container}>
-      {children}
+    <div className={s.layout}>
+      <div className={s.container}>{children}</div>
 
       <div className={s.bottomNavigation}>
         <Menu activeId={activeMobileMenuId} items={mobileMenuItems} />

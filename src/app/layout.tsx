@@ -17,9 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang={'en'}>
-      <body>
+      <body className={s.body}>
         <AppHeader />
-        <LinearProgress className={s.progress} size={'sm'} />
+        <LinearProgress size={'sm'} />
         {children}
       </body>
     </html>

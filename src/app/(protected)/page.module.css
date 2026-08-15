@@ -20,6 +20,6 @@
 }
 
 .sampleBlock {
-  height: 2rem;
+  height: 10rem;
   background-color: var(--color-dark-300);
 }

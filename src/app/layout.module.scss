@@ -1,7 +1,5 @@
-.progress {
-  position: fixed;
-  z-index: 10;
-  top: 60px;
-  right: 0;
-  left: 0;
+.body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }

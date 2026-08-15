@@ -33,8 +33,8 @@ export const refreshToken = () =>
   })
 
 // method: 'GET'
+// How to use: const user = await authMe()
 export const authMe = () => request<UserResponse>('/auth/me')
-// const user = await authMe()
 
 export const logout = () =>
   request<void>('/auth/logout', {

@@ -1,14 +1,11 @@
-.errorBorder {
+.widget {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.errorBorder {
   padding: 0.5rem;
   border: 1px solid var(--color-danger-500);
-}
-
-.expiredMessage {
-  display: block;
-}
-
-.errorMessage {
-  margin-top: 0.8rem;
 }

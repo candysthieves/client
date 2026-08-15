@@ -1,0 +1,50 @@
+@use '@/styles/mixins' as *;
+
+.container {
+  @include container;
+
+  display: flex;
+  justify-content: center;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 23.625rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-dark-300);
+  border-radius: 0.125rem;
+
+  background: var(--color-dark-500);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.hint {
+  @include typography(0.875rem, 1.5rem, 500);
+
+  margin-top: 0.5rem !important;
+}
+
+.hintWithError {
+  margin-top: 1rem !important;
+}
+
+.sentMessage {
+  margin-top: 1rem !important;
+}
+
+.backLink {
+  display: block;
+  margin: 0 auto;
+}
+
+.recaptcha {
+  display: flex;
+  justify-content: center;
+}

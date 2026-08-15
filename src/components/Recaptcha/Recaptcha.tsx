@@ -31,10 +31,12 @@ export const Recaptcha = forwardRef<ReCAPTCHA, RecaptchaProps>(
     },
     ref
   ) => {
+    const showError = Boolean(errorMessage) && !expiredMessage
+
     return (
       <div className={className}>
-        <div className={clsx({ [s.errorBorder]: errorMessage })}>
-          {expiredMessage && <span className={s.expiredMessage}>{expiredMessage}</span>}
+        <div className={clsx(s.widget, { [s.errorBorder]: showError })}>
+          {expiredMessage && <Typography variant={'caution-error'}>{expiredMessage}</Typography>}
 
           <ReCAPTCHA
             ref={ref}
@@ -45,11 +47,7 @@ export const Recaptcha = forwardRef<ReCAPTCHA, RecaptchaProps>(
             theme={theme}
           />
 
-          {errorMessage && (
-            <Typography variant={'caution-error'} className={s.errorMessage}>
-              {errorMessage}
-            </Typography>
-          )}
+          {showError && <Typography variant={'caution-error'}>{errorMessage}</Typography>}
         </div>
       </div>
     )

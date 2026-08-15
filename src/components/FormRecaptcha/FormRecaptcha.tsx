@@ -3,7 +3,7 @@ import { Recaptcha, type RecaptchaProps } from '@/components/Recaptcha'
 
 export type FormRecaptchaProps<T extends FieldValues> = Omit<
   RecaptchaProps,
-  'errorMessage' | 'onChange'
+  'errorMessage' | 'onChange' | 'onExpired'
 > & {
   control: Control<T>
   name: Path<T>
@@ -22,5 +22,12 @@ export const FormRecaptcha = <T extends FieldValues>({
     name,
   })
 
-  return <Recaptcha {...props} onChange={onChange} errorMessage={error?.message} />
+  return (
+    <Recaptcha
+      {...props}
+      onChange={onChange}
+      onExpired={() => onChange('')}
+      errorMessage={error?.message}
+    />
+  )
 }

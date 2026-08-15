@@ -24,7 +24,7 @@ export const passwordBaseSchema = z
 
 export const passwordSchema = passwordBaseSchema.regex(PASSWORD_PATTERN, PASSWORD_PATTERN_MESSAGE)
 
-export const recaptchaTokenSchema = z.string().min(1, 'recaptchaToken should not be empty')
+export const recaptchaTokenSchema = z.string().min(1, 'Please verify that you are not a robot')
 
 export const recoveryCodeSchema = z.string().min(1, 'Recovery code is required')
 

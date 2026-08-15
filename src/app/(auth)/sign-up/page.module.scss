@@ -72,18 +72,13 @@
 }
 
 .error {
-  @include top-left(calc(100% + 0.25rem), 0);
-
-  position: absolute;
+  margin-top: 0.25rem;
 }
 
 .agreement {
-  position: relative;
-
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-
   margin: 0.75rem 0;
 }
 

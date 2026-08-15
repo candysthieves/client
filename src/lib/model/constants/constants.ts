@@ -5,9 +5,10 @@ export const USERNAME_PATTERN = /^[A-Za-z0-9_-]+$/
 export const PASSWORD_PATTERN =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!"#$%&'()*+,\-./:;<=>?@[\\\]^_{|}~]+$/
 
-export const USERNAME_PATTERN_MESSAGE = 'username must match /^[A-Za-z0-9_-]+$/ regular expression'
+export const USERNAME_PATTERN_MESSAGE =
+  'Username may only include letters, numbers, underscores, and hyphens'
 
-export const PASSWORD_PATTERN_MESSAGE = `Password must contain 0-9, a-z, A-Z, ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \\ ] ^ _ { | } ~ `
+export const PASSWORD_PATTERN_MESSAGE = `Password must contain at least one uppercase letter, one lowercase letter, one number and one special character`
 
 export const VALIDATION_ERROR_COMMON_MESSAGE = 'Please check the data input'
 

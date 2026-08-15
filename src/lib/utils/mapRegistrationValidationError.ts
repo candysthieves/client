@@ -26,6 +26,7 @@ export function mapRegistrationValidationError(
       case 'username':
       case 'password':
       case 'passwordConfirmation':
+      case 'isTermsAccepted':
         setError(field, {
           type: 'server',
           // message,

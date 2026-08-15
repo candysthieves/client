@@ -64,24 +64,26 @@
 .fields {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 0.875rem;
 }
 
 .field {
-  min-height: 4.625rem;
+  min-height: 5.625rem;
 }
 
 .error {
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: var(--color-danger-500);
+  @include top-left(calc(100% + 0.25rem), 0);
+
+  position: absolute;
 }
 
 .agreement {
+  position: relative;
+
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+
   margin: 0.75rem 0;
 }
 

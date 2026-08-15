@@ -3,7 +3,8 @@
 import { Button, GithubRepo, Google, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { type SubmitHandler, useForm } from 'react-hook-form'
+import { useEffect } from 'react'
+import { type SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { FormCheckbox } from '@/components/FormCheckbox'
 import { FormInput } from '@/components/FormInput'
 import { FormPasswordInput } from '@/components/FormPasswordInput'
@@ -14,6 +15,7 @@ export default function SignUpPage() {
   const {
     control,
     handleSubmit,
+    trigger,
     formState: { errors, isSubmitting, isValid },
   } = useForm<RegistrationRequest>({
     resolver: zodResolver(registrationSchema),
@@ -25,6 +27,14 @@ export default function SignUpPage() {
       passwordConfirmation: '',
     },
   })
+
+  const password = useWatch({ control, name: 'password' })
+
+  useEffect(() => {
+    if (password) {
+      void trigger('passwordConfirmation')
+    }
+  }, [password, trigger])
 
   const onSubmit: SubmitHandler<RegistrationRequest> = async () => {}
 
@@ -110,7 +120,13 @@ export default function SignUpPage() {
             }
           />
           {errors.isTermsAccepted && (
-            <span className={s.error}>{errors.isTermsAccepted.message}</span>
+            <Typography
+              className={s.error}
+              variant={'caution-error'}
+              color={'var(--color-danger-500)'}
+            >
+              {errors.isTermsAccepted.message}
+            </Typography>
           )}
         </div>
 

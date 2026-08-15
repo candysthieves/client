@@ -16,8 +16,6 @@
 //     </Button>
 //   )
 // }
-//
-// // REDIRECT_URL точно совпадает с тем, что вы указан в Google Cloud Console:
 
 import { Button, Google } from '@candy.thieves/ui-kit-lumos'
 import { NEXT_PUBLIC_API_URL } from '@/constants'

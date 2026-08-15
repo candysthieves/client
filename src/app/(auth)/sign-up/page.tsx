@@ -11,10 +11,24 @@ import { FormPasswordInput } from '@/components/FormPasswordInput'
 import { type RegistrationRequest, registrationSchema } from '@/features/auth/model'
 import s from './page.module.scss'
 
+const SIGN_UP_DRAFT_KEY = 'sign-up-form-draft'
+
+const getSignUpDraft = (): Partial<RegistrationRequest> | undefined => {
+  try {
+    const draft = sessionStorage.getItem(SIGN_UP_DRAFT_KEY)
+
+    return draft ? (JSON.parse(draft) as Partial<RegistrationRequest>) : undefined
+  } catch {
+    return undefined
+  }
+}
+
 export default function SignUpPage() {
   const {
     control,
     handleSubmit,
+    reset,
+    subscribe,
     trigger,
     formState: { errors, isSubmitting, isValid },
   } = useForm<RegistrationRequest>({
@@ -29,6 +43,34 @@ export default function SignUpPage() {
   })
 
   const password = useWatch({ control, name: 'password' })
+
+  useEffect(() => {
+    const draft = getSignUpDraft()
+
+    if (draft) {
+      reset(draft)
+    }
+  }, [reset])
+
+  useEffect(() => {
+    return subscribe({
+      formState: { values: true },
+      callback: ({ values }) => {
+        const draft: Partial<RegistrationRequest> = {
+          username: values.username,
+          email: values.email,
+          password: values.password,
+          passwordConfirmation: values.passwordConfirmation,
+        }
+
+        if (values.isTermsAccepted) {
+          draft.isTermsAccepted = values.isTermsAccepted
+        }
+
+        sessionStorage.setItem(SIGN_UP_DRAFT_KEY, JSON.stringify(draft))
+      },
+    })
+  }, [subscribe])
 
   useEffect(() => {
     if (password) {

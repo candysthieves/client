@@ -1,7 +1,6 @@
 'use client'
 
-import { Typography } from '@candy.thieves/ui-kit-lumos'
-import clsx from 'clsx'
+import { clsx, Typography } from '@candy.thieves/ui-kit-lumos'
 import { forwardRef } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import s from './Recaptcha.module.scss'

@@ -1,8 +1,7 @@
 'use client'
 
-import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, clsx, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
-import clsx from 'clsx'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'

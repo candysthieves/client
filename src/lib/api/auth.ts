@@ -1,8 +1,11 @@
 import { request } from '@/lib/api/request'
 import {
+  ACCESS_TOKEN_LS_KEY,
+  AccessTokenResponse,
   RegistrationConfirmationRequest,
   RegistrationRequest,
   ResendConfirmationEmailRequest,
+  UserResponse,
 } from '@/lib/model'
 
 export const registration = (data: RegistrationRequest) =>
@@ -24,7 +27,20 @@ export const resendConfirmationEmail = (data: ResendConfirmationEmailRequest) =>
     body: JSON.stringify(data),
   })
 
+export const refreshToken = () =>
+  request<AccessTokenResponse>('/auth/refresh-token', {
+    method: 'POST',
+  })
+
+// method: 'GET'
+export const authMe = () => request<UserResponse>('/auth/me')
+// const user = await authMe()
+
+export const logout = () =>
+  request<void>('/auth/logout', {
+    method: 'POST',
+  })
+
 // login()
-// logout()
 // passwordRecovery()
 // newPassword()

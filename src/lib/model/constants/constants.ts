@@ -32,3 +32,5 @@ export const VALID_REGISTRATION_FIELDS: RegistrationField[] = [
 ]
 
 export const VALID_LOGIN_FIELDS: string[] = ['email', 'credentials']
+
+export const ACCESS_TOKEN_LS_KEY = 'accessToken'

@@ -8,7 +8,7 @@ export const PASSWORD_PATTERN =
 export const USERNAME_PATTERN_MESSAGE =
   'Username may only include letters, numbers, underscores, and hyphens'
 
-export const PASSWORD_PATTERN_MESSAGE = `Password must contain at least one uppercase letter, one lowercase letter, one number and one special character`
+export const PASSWORD_PATTERN_MESSAGE = `Password must contain at least one uppercase / lowercase letter, one digit and may have one special character`
 
 export const VALIDATION_ERROR_COMMON_MESSAGE = 'Please check the data input'
 

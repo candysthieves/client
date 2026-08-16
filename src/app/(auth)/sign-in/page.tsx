@@ -4,19 +4,24 @@ import { Button, GithubRepo, Google, Typography } from '@candy.thieves/ui-kit-lu
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { GitHubButton, GoogleButton } from '@/components'
 import { FormInput } from '@/components/FormInput'
 import { FormPasswordInput } from '@/components/FormPasswordInput'
-import { ToastError } from '@/components/Toast/Toast'
+import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
 import { ApiError, login } from '@/lib/api'
-import { type LoginRequest, loginSchema } from '@/lib/model'
+import {
+  ACCESS_TOKEN_LS_KEY,
+  type LoginRequest,
+  loginSchema,
+  SIGN_IN_SUCCESS_MESSAGE,
+  SIGN_IN_SUCCESS_TITLE,
+} from '@/lib/model'
 import { isErrorResponse, mapLoginDomainError, mapLoginValidationError } from '@/lib/utils'
-import s from './sign-in-form.module.scss'
+import s from './page.module.scss'
 
-export default function LogInForm() {
+export default function SignInForm() {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
 
   const {
     control,
@@ -25,7 +30,7 @@ export default function LogInForm() {
     formState: { errors, isValid, isSubmitting },
   } = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
     defaultValues: {
       email: '',
       password: '',
@@ -34,10 +39,16 @@ export default function LogInForm() {
 
   const onSubmit: SubmitHandler<LoginRequest> = async data => {
     try {
-      setIsLoading(true)
+      // setIsLoading(true)
       const response = await login(data)
 
-      localStorage.setItem('accessToken', response.accessToken)
+      localStorage.setItem(ACCESS_TOKEN_LS_KEY, response.accessToken)
+
+      ToastSuccess({
+        title: SIGN_IN_SUCCESS_TITLE,
+        message: SIGN_IN_SUCCESS_MESSAGE,
+      })
+
       router.replace('/profile')
     } catch (error) {
       if (error instanceof ApiError && isErrorResponse(error.data)) {
@@ -49,24 +60,24 @@ export default function LogInForm() {
             title: 'Validation Error',
             messages: error.data.errorsMessages,
           })
-          return
         } else if (isDomainError) {
           ToastError({
             title: 'Domain Error',
             messages: error.data.errorsMessages,
           })
-          return
         }
+        return
+      } else {
+        throw error // Проброс в глобальный error handler всех остальных ошибок не связанных с Validation / Domain errors - позже будет доработка логики
       }
-
-      throw error
-    } finally {
-      setIsLoading(false)
     }
+    // finally {
+    //   setIsLoading(false)
+    // }
   }
 
   return (
-    <div className={s.pageWrapper}>
+    <main className={s.pageWrapper}>
       <form onSubmit={handleSubmit(onSubmit)} className={s.formContainer}>
         <Typography
           variant={'h1'}
@@ -78,28 +89,21 @@ export default function LogInForm() {
         </Typography>
 
         <div className={s.socialsContainer}>
-          <a href={'https://vash-backend.com'} className={s.socialButton}>
-            <Google />
-          </a>
-
-          <a href={'https://vash-backend.com'} className={`${s.socialButton} ${s.githubIcon}`}>
-            <GithubRepo />
-          </a>
+          <GoogleButton />
+          <GitHubButton />
         </div>
 
         <div className={s.fieldsGroup}>
-          <div className={s.fieldControl}>
-            <FormInput
-              placeholder={'Epam@epam.com'}
-              control={control}
-              name={'email'}
-              label={'Email'}
-              type={'email'}
-              error={errors.email?.message}
-            />
-          </div>
+          <FormInput
+            placeholder={'Epam@epam.com'}
+            control={control}
+            name={'email'}
+            label={'Email'}
+            type={'email'}
+            error={errors.email?.message}
+          />
 
-          <div className={s.fieldControl}>
+          <div className={s.passwordFieldControl}>
             <FormPasswordInput
               control={control}
               name={'password'}
@@ -116,7 +120,7 @@ export default function LogInForm() {
           </Typography>
         </Link>
 
-        <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting || isLoading}>
+        <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
           Sign In
         </Button>
 
@@ -130,6 +134,6 @@ export default function LogInForm() {
           </Button>
         </div>
       </form>
-    </div>
+    </main>
   )
 }

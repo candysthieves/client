@@ -10,6 +10,7 @@ import {
   registrationConfirmationSchema,
   registrationSchema,
   resendConfirmationEmailSchema,
+  userResponseSchema,
   validatePasswordRecoveryCodeSchema,
 } from './auth.schemas'
 
@@ -24,14 +25,8 @@ export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirm
 export type RegistrationRequest = z.infer<typeof registrationSchema>
 export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEmailSchema>
 export type ValidatePasswordRecoveryCodeRequest = z.infer<typeof validatePasswordRecoveryCodeSchema>
-export type RegistrationField = keyof RegistrationRequest
+export type UserResponse = z.infer<typeof userResponseSchema>
+export type RegistrationErrorField = keyof RegistrationRequest
+export type LoginErrorField = 'credentials' | 'email'
 export type LoginField = keyof LoginRequest
-
-export const VALID_LOGIN_FIELDS = ['email', 'password'] as const
-export const VALID_REGISTRATION_FIELDS = [
-  'username',
-  'email',
-  'password',
-  'passwordConfirmation',
-  'isTermsAccepted',
-] as const
+// export type AuthType = 'github' | 'google'

@@ -3,7 +3,7 @@
 .page {
   @include flex(flex, center, center);
 
-  min-height: 100vh;
+  min-height: 100vh; // check when be layout with header added
   background-color: var(--color-dark-900);
 }
 
@@ -16,7 +16,7 @@
   background-color: var(--color-dark-500);
 
   @include media-tablet {
-    margin: 1.125rem 0 1.75rem;
+    margin-top: 1.125rem;
     padding: 0;
     border: none;
     background-color: transparent;
@@ -37,11 +37,11 @@
 .fields {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: $spacing-error;
 }
 
-.field {
-  min-height: 5.625rem;
+.passwordField {
+  margin-bottom: $spacing-error;
 }
 
 .error {
@@ -54,7 +54,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.2rem;
+  margin-bottom: $spacing-checkbox-error;
 }
 
 .legalLink {

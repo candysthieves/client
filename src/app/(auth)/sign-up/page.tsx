@@ -111,41 +111,35 @@ export default function SignUpPage() {
         </div>
 
         <div className={s.fields}>
-          <div className={s.field}>
-            <FormInput
-              control={control}
-              name={'username'}
-              label={'Username'}
-              placeholder={'Epam11'}
-              autoComplete={'username'}
-              aria-invalid={Boolean(errors.username)}
-            />
-          </div>
+          <FormInput
+            control={control}
+            name={'username'}
+            label={'Username'}
+            placeholder={'Epam11'}
+            autoComplete={'username'}
+            aria-invalid={Boolean(errors.username)}
+          />
 
-          <div className={s.field}>
-            <FormInput
-              control={control}
-              name={'email'}
-              label={'Email'}
-              type={'email'}
-              placeholder={'Epam@epam.com'}
-              autoComplete={'email'}
-              aria-invalid={Boolean(errors.email)}
-            />
-          </div>
+          <FormInput
+            control={control}
+            name={'email'}
+            label={'Email'}
+            type={'email'}
+            placeholder={'Epam@epam.com'}
+            autoComplete={'email'}
+            aria-invalid={Boolean(errors.email)}
+          />
 
-          <div className={s.field}>
-            <FormPasswordInput
-              control={control}
-              name={'password'}
-              label={'Password'}
-              placeholder={'******************'}
-              autoComplete={'new-password'}
-              aria-invalid={Boolean(errors.password)}
-            />
-          </div>
+          <FormPasswordInput
+            control={control}
+            name={'password'}
+            label={'Password'}
+            placeholder={'******************'}
+            autoComplete={'new-password'}
+            aria-invalid={Boolean(errors.password)}
+          />
 
-          <div className={s.field}>
+          <div className={s.passwordField}>
             <FormPasswordInput
               control={control}
               name={'passwordConfirmation'}
@@ -177,7 +171,8 @@ export default function SignUpPage() {
             }
           />
           {errors?.isTermsAccepted && (
-            <Typography className={s.error} variant={'caution-error'}>
+            // <Typography className={s.error} variant={'caution-error'}>
+            <Typography className={s.error} variant={'form-error'}>
               {errors.isTermsAccepted.message}
             </Typography>
           )}
@@ -191,7 +186,12 @@ export default function SignUpPage() {
           {/*<Typography variant={'caption1'} align={'center'}>*/}
           {/*  Have you already registered but didn&#39;t receive the confirmation email?*/}
           {/*</Typography>*/}
-          <Button as={'a'} variant={'text'} href={'/verification-expired'} className={s.resendLink}>
+          <Button
+            as={Link}
+            variant={'text'}
+            href={'/verification-expired'}
+            className={s.resendLink}
+          >
             <Typography variant={'caption1'} align={'center'}>
               Resend the registration confirmation link
             </Typography>
@@ -200,7 +200,7 @@ export default function SignUpPage() {
           <Typography variant={'subtitle1'} color={'var(--color-light-100)'} align={'center'}>
             Do you have an account?
           </Typography>
-          <Button as={'a'} variant={'text'} href={'/sign-in'}>
+          <Button as={Link} variant={'text'} href={'/sign-in'}>
             Sign In
           </Button>
         </div>

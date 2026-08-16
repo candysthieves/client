@@ -1,3 +1,4 @@
 export { ToastContainer } from './Toast/ToastContainer'
-export * from './Toast/Toast'
-export { ClientButton } from './ClientButton/ClientButton'
+export * from './Toast'
+export { GoogleButton } from './GoogleButton'
+export { GitHubButton } from './GitHubButton'

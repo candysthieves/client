@@ -101,3 +101,12 @@ export const apiErrorResponseSchema = z.object({
   code: z.enum(ErrorStatus),
   errorsMessages: z.array(errorMessageSchema),
 })
+
+export const userResponseSchema = z.object({
+  id: z.string(),
+  email: emailSchema,
+  username: usernameSchema,
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  isEmailConfirmed: z.boolean(),
+})

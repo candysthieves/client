@@ -20,9 +20,10 @@ export default function RootLayout({
   return (
     <html lang={'en'}>
       <body className={s.body}>
+        <AppHeader />
+        <LinearProgress size={'sm'} />
+
         <AuthProvider>
-          <AppHeader />
-          <LinearProgress size={'sm'} />
           <ToastContainer />
           {children}
         </AuthProvider>

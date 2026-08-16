@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, clsx, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, clsx, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -12,6 +12,8 @@ import s from './page.module.scss'
 
 export default function ForgotPasswordPage() {
   const [isSent, setIsSent] = useState(false)
+  const [sentEmail, setSentEmail] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const {
     control,
@@ -28,8 +30,10 @@ export default function ForgotPasswordPage() {
 
   const onSubmit = (data: PasswordRecoveryRequest) => {
     // On a "user not found" response, call setError('email', { message: "User with this email doesn't exist" })
-    // and setIsSent(false) instead of setIsSent(true).
+    // and setIsSent(false) instead of setIsSent(true)/setIsModalOpen(true).
+    setSentEmail(data.email)
     setIsSent(true)
+    setIsModalOpen(true)
   }
 
   return (
@@ -90,6 +94,23 @@ export default function ForgotPasswordPage() {
           )}
         </form>
       </div>
+
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        size={'s'}
+        showHeader
+        modalTitle={'Email sent'}
+        className={s.modal}
+      >
+        <Typography variant={'body1'} color={'var(--color-light-100)'} mb={'1.5rem'}>
+          We have sent a link to confirm your email to {sentEmail}
+        </Typography>
+
+        <div className={s.modalActions}>
+          <Button onClick={() => setIsModalOpen(false)}>OK</Button>
+        </div>
+      </Modal>
     </div>
   )
 }

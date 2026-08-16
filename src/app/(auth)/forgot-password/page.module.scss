@@ -4,14 +4,25 @@
   @include container;
 
   display: flex;
+  align-items: center;
   justify-content: center;
+
+  min-height: 100vh;
   padding-top: 3rem;
   padding-bottom: 3rem;
+
+  // @include container sets asymmetric left/right padding (3.75rem/4rem) for
+  // typical page content; equalize it here so the centered card lines up with
+  // the modal, which centers against the raw viewport.
+  @media (width >= 769px) {
+    padding-right: 4rem;
+    padding-left: 4rem;
+  }
 }
 
 .card {
   width: 100%;
-  max-width: 23.5rem;
+  max-width: 23.625rem;
   padding: 1.5rem;
   border: 1px solid var(--color-dark-300);
   border-radius: 0.125rem;
@@ -47,4 +58,17 @@
 .recaptcha {
   display: flex;
   justify-content: center;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal {
+  position: fixed !important;
+  inset: 50% auto auto 50% !important;
+  transform: translate(-50%, -50%) !important;
+
+  border-radius: 0.125rem !important;
 }

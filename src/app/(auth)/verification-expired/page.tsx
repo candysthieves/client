@@ -51,8 +51,9 @@ export default function VerificationExpiredPage() {
             // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
           })
         }
-        // show Alert snackbar message "Verification email error: ..."
         return
+      } else {
+        throw error // Проброс в глобальный error handler всех остальных ошибок не связанных с Validation / Domain errors - позже будет доработка логики
       }
     } finally {
       setIsLoading(false)

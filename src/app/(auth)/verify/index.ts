@@ -1,0 +1,1 @@
+export { VerifyContent } from './VerifyContent'

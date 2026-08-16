@@ -83,7 +83,6 @@ export default function SignUpPage() {
             messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
             // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
           })
-          return
         } else if (isDomainError) {
           // Show domain errors
           ToastError({
@@ -92,8 +91,10 @@ export default function SignUpPage() {
             // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
           })
         }
+        return
+      } else {
+        throw error // Проброс в глобальный error handler всех остальных ошибок не связанных с Validation / Domain errors - позже будет доработка логики
       }
-      throw error
     }
   }
 

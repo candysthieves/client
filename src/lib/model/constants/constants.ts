@@ -1,4 +1,9 @@
-import { LoginErrorField, LoginField, RegistrationErrorField } from '@/lib/model'
+import {
+  LoginErrorField,
+  LoginField,
+  PasswordRecoveryField,
+  RegistrationErrorField,
+} from '@/lib/model'
 
 export const USERNAME_PATTERN = /^[A-Za-z0-9_-]+$/
 
@@ -24,6 +29,9 @@ export const DOMAIN_RESEND_EMAIL_NOT_EXISTS_ERROR_MESSAGE = 'Email does not exis
 
 export const DOMAIN_RESEND_EMAIL_ALREADY_CONFIRMED_ERROR_MESSAGE = 'Email is already confirmed'
 
+export const DOMAIN_PASSWORD_RECOVERY_RECAPTCHA_INVALID_MESSAGE =
+  'Please verify that you are not a robot'
+
 export const VALID_REGISTRATION_FIELDS: RegistrationErrorField[] = [
   'email',
   'username',
@@ -34,6 +42,11 @@ export const VALID_REGISTRATION_FIELDS: RegistrationErrorField[] = [
 
 export const VALID_LOGIN_FIELDS: LoginField[] = ['email', 'password'] as const
 export const VALID_LOGIN_ERROR_FIELDS: LoginErrorField[] = ['email', 'credentials'] as const
+
+export const VALID_PASSWORD_RECOVERY_FIELDS: PasswordRecoveryField[] = [
+  'email',
+  'recaptchaToken',
+] as const
 
 export const ACCESS_TOKEN_LS_KEY = 'accessToken'
 

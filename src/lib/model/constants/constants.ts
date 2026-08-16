@@ -1,5 +1,3 @@
-import { RegistrationField } from '@/lib/model'
-
 export const USERNAME_PATTERN = /^[A-Za-z0-9_-]+$/
 
 export const PASSWORD_PATTERN =
@@ -23,13 +21,3 @@ export const DOMAIN_LOGIN_NOT_FOUND_ERROR_MESSAGE = 'User or email is not found'
 export const DOMAIN_RESEND_EMAIL_NOT_EXISTS_ERROR_MESSAGE = 'Email does not exist in base'
 
 export const DOMAIN_RESEND_EMAIL_ALREADY_CONFIRMED_ERROR_MESSAGE = 'Email is already confirmed'
-
-export const VALID_REGISTRATION_FIELDS: RegistrationField[] = [
-  'email',
-  'username',
-  'password',
-  'passwordConfirmation',
-  'isTermsAccepted',
-]
-
-export const VALID_LOGIN_FIELDS: string[] = ['email', 'credentials']

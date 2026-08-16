@@ -2,11 +2,15 @@ import { NEXT_PUBLIC_API_URL } from '@/constants'
 import { ApiError } from './apiError'
 
 export async function request<T>(input: string, init?: RequestInit): Promise<T> {
+  const accessToken =
+    typeof window !== 'undefined' ? localStorage.getItem('accessToken') : undefined
+
   const response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, {
     ...init,
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
+      ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       ...init?.headers,
     },
   })
@@ -20,7 +24,7 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
     } catch {
       errorData = undefined
     }
-    console.log(errorData)
+
     throw new ApiError(response.status, errorData)
   }
 

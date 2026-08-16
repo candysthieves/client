@@ -1,9 +1,17 @@
 import { request } from '@/lib/api/request'
 import {
+  LoginRequest,
+  LoginResponse,
   RegistrationConfirmationRequest,
   RegistrationRequest,
   ResendConfirmationEmailRequest,
 } from '@/lib/model'
+
+export const login = (data: LoginRequest) =>
+  request<LoginResponse>('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
 
 export const registration = (data: RegistrationRequest) =>
   request<void>('/auth/registration', {

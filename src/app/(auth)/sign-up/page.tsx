@@ -1,35 +1,34 @@
 'use client'
 
-import { Button, GithubRepo, Google, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { type SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import { ToastError } from '@/components'
 import { FormCheckbox } from '@/components/FormCheckbox'
 import { FormInput } from '@/components/FormInput'
 import { FormPasswordInput } from '@/components/FormPasswordInput'
-import { type RegistrationRequest, registrationSchema } from '@/features/auth/model'
+import { GitHubButton } from '@/components/GitHubButton'
+import { GoogleButton } from '@/components/GoogleButton'
+import { ApiError, registration } from '@/lib/api'
+import { RegistrationRequest, registrationSchema } from '@/lib/model'
+import {
+  isErrorResponse,
+  mapRegistrationDomainError,
+  mapRegistrationValidationError,
+} from '@/lib/utils'
 import s from './page.module.scss'
 
-const SIGN_UP_DRAFT_KEY = 'sign-up-form-draft'
-
-const getSignUpDraft = (): Partial<RegistrationRequest> | undefined => {
-  try {
-    const draft = sessionStorage.getItem(SIGN_UP_DRAFT_KEY)
-
-    return draft ? (JSON.parse(draft) as Partial<RegistrationRequest>) : undefined
-  } catch {
-    return undefined
-  }
-}
-
 export default function SignUpPage() {
+  const [isOpen, setIsOpen] = useState(false)
+
   const {
     control,
     handleSubmit,
     reset,
-    subscribe,
     trigger,
+    setError,
     formState: { errors, isSubmitting, isValid },
   } = useForm<RegistrationRequest>({
     resolver: zodResolver(registrationSchema),
@@ -39,46 +38,65 @@ export default function SignUpPage() {
       email: '',
       password: '',
       passwordConfirmation: '',
+      isTermsAccepted: false,
     },
   })
 
+  const emailValue = useWatch({ control, name: 'email' })
+
+  const openModal = () => setIsOpen(true)
+
+  const closeModal = () => {
+    reset() // check
+    // router.push('/sign-in') ??
+    setIsOpen(false)
+  }
+
+  const onClickHandler = () => {
+    closeModal()
+  }
+
   const password = useWatch({ control, name: 'password' })
+  const passwordConfirmation = useWatch({
+    control,
+    name: 'passwordConfirmation',
+  })
 
   useEffect(() => {
-    const draft = getSignUpDraft()
-
-    if (draft) {
-      reset(draft)
-    }
-  }, [reset])
-
-  useEffect(() => {
-    return subscribe({
-      formState: { values: true },
-      callback: ({ values }) => {
-        const draft: Partial<RegistrationRequest> = {
-          username: values.username,
-          email: values.email,
-          password: values.password,
-          passwordConfirmation: values.passwordConfirmation,
-        }
-
-        if (values.isTermsAccepted) {
-          draft.isTermsAccepted = values.isTermsAccepted
-        }
-
-        sessionStorage.setItem(SIGN_UP_DRAFT_KEY, JSON.stringify(draft))
-      },
-    })
-  }, [subscribe])
-
-  useEffect(() => {
-    if (password) {
+    if (password && passwordConfirmation) {
       void trigger('passwordConfirmation')
     }
-  }, [password, trigger])
+  }, [password, passwordConfirmation, trigger])
 
-  const onSubmit: SubmitHandler<RegistrationRequest> = async () => {}
+  const onSubmit: SubmitHandler<RegistrationRequest> = async data => {
+    try {
+      await registration(data)
+      openModal()
+    } catch (error) {
+      if (error instanceof ApiError && isErrorResponse(error.data)) {
+        const isValidationError = mapRegistrationValidationError(error, setError)
+        const isDomainError = mapRegistrationDomainError(error, setError)
+
+        if (isValidationError) {
+          ToastError({
+            title: 'Validation Error',
+            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
+            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
+          })
+        } else if (isDomainError) {
+          // Show domain errors
+          ToastError({
+            title: 'Domain Error',
+            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
+            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
+          })
+        }
+        return
+      } else {
+        throw error // Проброс в глобальный error handler всех остальных ошибок не связанных с Validation / Domain errors - позже будет доработка логики
+      }
+    }
+  }
 
   return (
     <main className={s.page}>
@@ -88,12 +106,8 @@ export default function SignUpPage() {
         </Typography>
 
         <div className={s.socials} aria-label={'Sign up with social account'}>
-          <button className={s.socialButton} type={'button'} aria-label={'Sign up with Google'}>
-            <Google />
-          </button>
-          <button className={s.socialButton} type={'button'} aria-label={'Sign up with GitHub'}>
-            <GithubRepo />
-          </button>
+          <GoogleButton />
+          <GitHubButton />
         </div>
 
         <div className={s.fields}>
@@ -149,24 +163,21 @@ export default function SignUpPage() {
             name={'isTermsAccepted'}
             aria-invalid={Boolean(errors.isTermsAccepted)}
             label={
-              <span className={s.agreementText}>
-                I agree to the{' '}
+              <>
+                <Typography variant={'caption1'}>I agree to the </Typography>
                 <Link className={s.legalLink} href={'/terms'}>
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link className={s.legalLink} href={'/privacy-policy'}>
-                  Privacy Policy
+                  <Typography variant={'caption1'}>Terms of Service</Typography>
                 </Link>
-              </span>
+                <Typography variant={'caption2'}> and </Typography>
+
+                <Link className={s.legalLink} href={'/privacy-policy'}>
+                  <Typography variant={'caption1'}>Privacy Policy</Typography>
+                </Link>
+              </>
             }
           />
-          {errors.isTermsAccepted && (
-            <Typography
-              className={s.error}
-              variant={'caution-error'}
-              color={'var(--color-danger-500)'}
-            >
+          {errors?.isTermsAccepted && (
+            <Typography className={s.error} variant={'form-error'}>
               {errors.isTermsAccepted.message}
             </Typography>
           )}
@@ -177,14 +188,43 @@ export default function SignUpPage() {
         </Button>
 
         <div className={s.footer}>
+          {/*<Typography variant={'caption1'} align={'center'}>*/}
+          {/*  Have you already registered but didn&#39;t receive the confirmation email?*/}
+          {/*</Typography>*/}
+          <Button as={'a'} variant={'text'} href={'/verification-expired'} className={s.resendLink}>
+            <Typography variant={'caption1'} align={'center'}>
+              Resend the registration confirmation link
+            </Typography>
+          </Button>
+
           <Typography variant={'subtitle1'} color={'var(--color-light-100)'} align={'center'}>
             Do you have an account?
           </Typography>
-          <Button type={'button'} variant={'text'} fullWidth disabled>
+          <Button as={'a'} variant={'text'} href={'/sign-in'}>
             Sign In
           </Button>
         </div>
       </form>
+
+      <Modal
+        open={isOpen}
+        onClose={closeModal}
+        modalTitle={'Email sent'}
+        size={'s'}
+        showHeader
+        showCloseButton
+      >
+        <div className={s.triggerContent}>
+          <Typography variant={'subtitle1'} color={'var(--color-light-100)'}>
+            We have sent a link to confirm your email to {emailValue}
+          </Typography>
+          <div className={s.triggerControls}>
+            <Button variant={'primary'} onClick={onClickHandler}>
+              Ok
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </main>
   )
 }

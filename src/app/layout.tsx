@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import '@candy.thieves/ui-kit-lumos/dist/index.css'
 import '../styles/index.scss'
+import { ToastContainer } from '@/components'
 
 export const metadata: Metadata = {
   title: 'Client',
@@ -14,7 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang={'en'}>
-      <body>{children}</body>
+      <body>
+        <ToastContainer />
+        {children}
+      </body>
     </html>
   )
 }

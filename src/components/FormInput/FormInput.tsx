@@ -1,3 +1,5 @@
+'use client'
+
 import { Input, type InputProps } from '@candy.thieves/ui-kit-lumos'
 import { type Control, Controller, type FieldPath, type FieldValues } from 'react-hook-form'
 

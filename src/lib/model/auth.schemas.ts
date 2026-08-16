@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { ErrorStatus } from '@/lib/api/enums'
 import {
   PASSWORD_PATTERN,
   PASSWORD_PATTERN_MESSAGE,
@@ -8,8 +9,8 @@ import {
 
 export const usernameSchema = z
   .string()
-  .min(6, 'username must be longer than or equal to 6 characters')
-  .max(30, 'username must be shorter than or equal to 30 characters')
+  .min(6, 'Username must be longer than or equal to 6 characters')
+  .max(30, 'Username must be shorter than or equal to 30 characters')
   .regex(USERNAME_PATTERN, USERNAME_PATTERN_MESSAGE)
 
 export const emailSchema = z
@@ -19,8 +20,8 @@ export const emailSchema = z
 
 export const passwordBaseSchema = z
   .string()
-  .min(6, 'password must be longer than or equal to 6 characters')
-  .max(20, 'password must be shorter than or equal to 20 characters')
+  .min(6, 'Password must be longer than or equal to 6 characters')
+  .max(20, 'Password must be shorter than or equal to 20 characters')
 
 export const passwordSchema = passwordBaseSchema.regex(PASSWORD_PATTERN, PASSWORD_PATTERN_MESSAGE)
 
@@ -28,8 +29,12 @@ export const recaptchaTokenSchema = z.string().min(1, 'recaptchaToken should not
 
 export const recoveryCodeSchema = z.string().min(1, 'Recovery code is required')
 
-export const termsAcceptedSchema = z.literal(true, {
-  error: 'isTermsAccepted must be equal to true',
+// export const termsAcceptedSchema = z.literal(true, {
+//   error: 'isTermsAccepted must be equal to true',
+// })
+
+export const termsAcceptedSchema = z.boolean().refine(val => val === true, {
+  message: 'You must accept the terms and conditions',
 })
 
 export const loginSchema = z.object({
@@ -51,7 +56,10 @@ export const registrationSchema = z
   })
 
 export const registrationConfirmationSchema = z.object({
-  code: z.string().min(1, 'Confirmation code is required'),
+  code: z
+    .string()
+    .min(36, 'Confirmation code must be exactly 36 characters')
+    .max(36, 'Confirmation code must be exactly 36 characters'),
 })
 
 export const resendConfirmationEmailSchema = z.object({
@@ -84,11 +92,12 @@ export const accessTokenResponseSchema = z.object({
 
 export const loginResponseSchema = accessTokenResponseSchema
 
+export const errorMessageSchema = z.object({
+  field: z.string(),
+  message: z.string(),
+})
+
 export const apiErrorResponseSchema = z.object({
-  errorsMessages: z.array(
-    z.object({
-      field: z.string(),
-      message: z.string(),
-    })
-  ),
+  code: z.enum(ErrorStatus),
+  errorsMessages: z.array(errorMessageSchema),
 })

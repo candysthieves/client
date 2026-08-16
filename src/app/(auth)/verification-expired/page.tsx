@@ -60,7 +60,6 @@ export default function VerificationExpiredPage() {
             messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
             // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
           })
-          return
         } else if (isDomainError) {
           // Show domain errors
           ToastError({

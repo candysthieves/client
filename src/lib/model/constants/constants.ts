@@ -30,8 +30,8 @@ export const VALID_REGISTRATION_FIELDS: RegistrationField[] = [
   'password',
   'passwordConfirmation',
   'isTermsAccepted',
-]
+] as const
 
-export const VALID_LOGIN_FIELDS: string[] = ['email', 'credentials']
+export const VALID_LOGIN_FIELDS = ['email', 'password'] as const
 
 export const ACCESS_TOKEN_LS_KEY = 'accessToken'

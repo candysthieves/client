@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FormInput } from '@/components/FormInput'
 import { FormRecaptcha } from '@/components/FormRecaptcha'
-import { passwordRecoverySchema, type PasswordRecoveryRequest } from '@/features/auth/model'
+import { passwordRecoverySchema, type PasswordRecoveryRequest } from '@/lib/model'
 import s from './page.module.scss'
 
 export default function ForgotPasswordPage() {

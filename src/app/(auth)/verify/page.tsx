@@ -37,23 +37,8 @@ export default function VerifyPage() {
   }, [code, router])
 
   useEffect(() => {
-    handleVerification()
+    void handleVerification()
   }, [handleVerification])
 
   return null
 }
-
-// if (error instanceof ApiError && error.data.code === 'TOKEN_EXPIRED') { // если export class ApiError<T = unknown>
-//   // уточнить у бэкенд и как будет называться error.data.code при expired и будут ли другие например TOKEN_INVALID, TOKEN_ALREADY_USED
-//   redirect('/verification-expired')
-// }
-// if (error instanceof ApiError &&
-//   error.status === 400 &&
-//   error.data.code === 'TOKEN_EXPIRED') { // бэкенд должен гарантировать { "code": "TOKEN_EXPIRED" }
-//   // уточнить у бэкенд и как будет называться error.data.code при expired и будут ли другие например TOKEN_INVALID, TOKEN_ALREADY_USED
-//   redirect('/verification-expired')
-// }
-//
-//     throw error
-//   }
-// }

@@ -42,5 +42,6 @@ export const logout = () =>
   })
 
 // login()
+// logout()
 // passwordRecovery()
 // newPassword()

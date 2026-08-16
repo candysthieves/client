@@ -25,7 +25,12 @@ import s from './GitHubButton.module.scss'
 
 export const GitHubButton = () => {
   return (
-    <Button as={'a'} href={`${NEXT_PUBLIC_API_URL}/auth/github`} className={s.gitHubButton}>
+    <Button
+      as={'a'}
+      href={`${NEXT_PUBLIC_API_URL}/auth/github`}
+      className={s.gitHubButton}
+      aria-label={'Sign up with GitHub'}
+    >
       <GithubRepo size={36} color={'var(--color-light-100)'} />
     </Button>
   )

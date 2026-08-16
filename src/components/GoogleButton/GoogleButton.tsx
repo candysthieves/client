@@ -16,8 +16,6 @@
 //     </Button>
 //   )
 // }
-//
-// // REDIRECT_URL точно совпадает с тем, что вы указан в Google Cloud Console:
 
 import { Button, Google } from '@candy.thieves/ui-kit-lumos'
 import { NEXT_PUBLIC_API_URL } from '@/constants'
@@ -25,7 +23,12 @@ import s from './GoogleButton.module.scss'
 
 export const GoogleButton = () => {
   return (
-    <Button as={'a'} href={`${NEXT_PUBLIC_API_URL}/auth/google`} className={s.googleButton}>
+    <Button
+      as={'a'}
+      href={`${NEXT_PUBLIC_API_URL}/auth/google`}
+      className={s.googleButton}
+      aria-label={'Sign up with Google'}
+    >
       <Google size={36} />
     </Button>
   )

@@ -9,8 +9,8 @@ import {
 
 export const usernameSchema = z
   .string()
-  .min(6, 'username must be longer than or equal to 6 characters')
-  .max(30, 'username must be shorter than or equal to 30 characters')
+  .min(6, 'Username must be longer than or equal to 6 characters')
+  .max(30, 'Username must be shorter than or equal to 30 characters')
   .regex(USERNAME_PATTERN, USERNAME_PATTERN_MESSAGE)
 
 export const emailSchema = z
@@ -20,8 +20,8 @@ export const emailSchema = z
 
 export const passwordBaseSchema = z
   .string()
-  .min(6, 'password must be longer than or equal to 6 characters')
-  .max(20, 'password must be shorter than or equal to 20 characters')
+  .min(6, 'Password must be longer than or equal to 6 characters')
+  .max(20, 'Password must be shorter than or equal to 20 characters')
 
 export const passwordSchema = passwordBaseSchema.regex(PASSWORD_PATTERN, PASSWORD_PATTERN_MESSAGE)
 

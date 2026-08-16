@@ -1,10 +1,16 @@
 'use client'
 
-import { Button, clsx, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { type SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { ToastError } from '@/components'
+import { FormCheckbox } from '@/components/FormCheckbox'
+import { FormInput } from '@/components/FormInput'
+import { FormPasswordInput } from '@/components/FormPasswordInput'
+import { GitHubButton } from '@/components/GitHubButton'
+import { GoogleButton } from '@/components/GoogleButton'
 import { ApiError, registration } from '@/lib/api'
 import { RegistrationRequest, registrationSchema } from '@/lib/model'
 import {
@@ -16,38 +22,55 @@ import s from './page.module.scss'
 
 export default function SignUpPage() {
   const [isOpen, setIsOpen] = useState(false)
+
   const {
-    register,
-    setError,
+    control,
     handleSubmit,
     reset,
-    watch,
-    formState: { errors, isValid },
+    trigger,
+    setError,
+    formState: { errors, isSubmitting, isValid },
   } = useForm<RegistrationRequest>({
-    mode: 'all',
     resolver: zodResolver(registrationSchema),
+    mode: 'onChange',
     defaultValues: {
+      username: '',
+      email: '',
+      password: '',
+      passwordConfirmation: '',
       isTermsAccepted: false,
     },
   })
 
-  const emailValue = watch('email')
-
-  // useEffect is a temporary solution to render new errors field values
-  useEffect(() => {
-    console.table(errors)
-  }, [errors, errors.email, errors.username])
+  const emailValue = useWatch({ control, name: 'email' })
 
   const openModal = () => setIsOpen(true)
+
   const closeModal = () => {
     reset() // check
+    // router.push('/sign-in') ??
     setIsOpen(false)
   }
+
+  const onClickHandler = () => {
+    closeModal()
+  }
+
+  const password = useWatch({ control, name: 'password' })
+  const passwordConfirmation = useWatch({
+    control,
+    name: 'passwordConfirmation',
+  })
+
+  useEffect(() => {
+    if (password && passwordConfirmation) {
+      void trigger('passwordConfirmation')
+    }
+  }, [password, passwordConfirmation, trigger])
 
   const onSubmit: SubmitHandler<RegistrationRequest> = async data => {
     try {
       await registration(data)
-      // router.push('/login') ??
       openModal()
     } catch (error) {
       if (error instanceof ApiError && isErrorResponse(error.data)) {
@@ -60,7 +83,6 @@ export default function SignUpPage() {
             messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
             // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
           })
-          return
         } else if (isDomainError) {
           // Show domain errors
           ToastError({
@@ -69,103 +91,120 @@ export default function SignUpPage() {
             // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
           })
         }
+        return
+      } else {
+        throw error // Проброс в глобальный error handler всех остальных ошибок не связанных с Validation / Domain errors - позже будет доработка логики
       }
-      throw error
     }
   }
 
-  const onClickHandler = () => {
-    closeModal()
-  }
-
   return (
-    <>
-      <div>
-        {/*Temporary jsx code starts here*/}
-        <Typography variant={'h2'}>{'Sign up'}</Typography>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          style={{ display: 'flex', flexDirection: 'column', width: '30rem', color: '#000' }}
-        >
-          <Typography variant={'caption1'} color={'var(--color-light-100)'}>
-            {'User name'}
-          </Typography>
+    <main className={s.page}>
+      <form className={s.card} onSubmit={handleSubmit(onSubmit)} noValidate>
+        <Typography variant={'h1'} color={'var(--color-light-100)'} align={'center'}>
+          Sign Up
+        </Typography>
 
-          {/* TODO: error={!!errors?.username} - add this in the future to input an delete clsx className condition*/}
-          <input
-            type={'text'}
-            id={'username'}
-            className={clsx(s.name, !!errors?.username && s.errorInput)}
-            {...register('username')}
-          />
-          {errors?.username && (
-            <Typography variant={'body1'} color={'var(--color-danger-500)'}>
-              {errors.username.message}
-            </Typography>
-          )}
-          <Typography variant={'caption1'} color={'var(--color-light-100)'}>
-            {'Email'}
-          </Typography>
+        <div className={s.socials} aria-label={'Sign up with social account'}>
+          <GoogleButton />
+          <GitHubButton />
+        </div>
 
-          {/* TODO: error={!!errors?.email} - add this in the future to input an delete clsx className condition*/}
-          <input
-            type={'email'}
-            id={'emailSignUp'}
-            className={clsx(s.email, !!errors?.email && s.errorInput)}
-            {...register('email')}
-          />
-          {errors?.email && (
-            <Typography variant={'body2'} color={'var(--color-danger-500)'}>
-              {errors.email.message}
-            </Typography>
-          )}
-
-          <label htmlFor={'passwordSignUp'}>Password</label>
-
-          {/* TODO: change to type={'password'} */}
-          <input
-            id={'passwordSignUp'}
-            type={'text'}
-            defaultValue={'qwQW12!@'}
-            className={clsx(s.email, !!errors?.password && s.errorInput)}
-            {...register('password')}
-            autoComplete={'current-password'}
-          />
-          {errors?.password && (
-            <Typography variant={'body2'} color={'var(--color-danger-500)'}>
-              {errors.password.message}
-            </Typography>
-          )}
-
-          <label htmlFor={'passwordConfirmation'}>{'Confirm password'}</label>
-
-          {/* TODO: change to type={'password'} */}
-          <input
-            id={'passwordConfirmation'}
-            type={'text'}
-            defaultValue={'qwQW12!@'}
-            className={clsx(s.email, !!errors?.passwordConfirmation && s.errorInput)}
-            {...register('passwordConfirmation')}
-          />
-          {errors?.passwordConfirmation && (
-            <Typography variant={'body2'} color={'var(--color-danger-500)'}>
-              {errors.passwordConfirmation.message}
-            </Typography>
-          )}
-
-          <div className={s.termsBlock}>
-            <input type={'checkbox'} id={'isTermsAccepted'} {...register('isTermsAccepted')} />
-            <label htmlFor={'isTermsAccepted'} className={s.terms}>
-              I agree to the Terms of Service and Privacy Policy
-            </label>
+        <div className={s.fields}>
+          <div className={s.field}>
+            <FormInput
+              control={control}
+              name={'username'}
+              label={'Username'}
+              placeholder={'Epam11'}
+              autoComplete={'username'}
+              aria-invalid={Boolean(errors.username)}
+            />
           </div>
-          {/* TODO: Also add a "disabled" state for the loading period — when the POST request with form data is sending */}
-          <Button type={'submit'} variant={'primary'} disabled={!isValid}>
-            Submit sign-up form
+
+          <div className={s.field}>
+            <FormInput
+              control={control}
+              name={'email'}
+              label={'Email'}
+              type={'email'}
+              placeholder={'Epam@epam.com'}
+              autoComplete={'email'}
+              aria-invalid={Boolean(errors.email)}
+            />
+          </div>
+
+          <div className={s.field}>
+            <FormPasswordInput
+              control={control}
+              name={'password'}
+              label={'Password'}
+              placeholder={'******************'}
+              autoComplete={'new-password'}
+              aria-invalid={Boolean(errors.password)}
+            />
+          </div>
+
+          <div className={s.field}>
+            <FormPasswordInput
+              control={control}
+              name={'passwordConfirmation'}
+              label={'Password confirmation'}
+              placeholder={'******************'}
+              autoComplete={'new-password'}
+              aria-invalid={Boolean(errors.passwordConfirmation)}
+            />
+          </div>
+        </div>
+
+        <div className={s.agreement}>
+          <FormCheckbox
+            control={control}
+            name={'isTermsAccepted'}
+            aria-invalid={Boolean(errors.isTermsAccepted)}
+            label={
+              <>
+                <Typography variant={'caption1'}>I agree to the </Typography>
+                <Link className={s.legalLink} href={'/terms'}>
+                  <Typography variant={'caption1'}>Terms of Service</Typography>
+                </Link>
+                <Typography variant={'caption2'}> and </Typography>
+
+                <Link className={s.legalLink} href={'/privacy-policy'}>
+                  <Typography variant={'caption1'}>Privacy Policy</Typography>
+                </Link>
+              </>
+            }
+          />
+          {errors?.isTermsAccepted && (
+            <Typography className={s.error} variant={'form-error'}>
+              {errors.isTermsAccepted.message}
+            </Typography>
+          )}
+        </div>
+
+        <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
+          Sign Up
+        </Button>
+
+        <div className={s.footer}>
+          {/*<Typography variant={'caption1'} align={'center'}>*/}
+          {/*  Have you already registered but didn&#39;t receive the confirmation email?*/}
+          {/*</Typography>*/}
+          <Button as={'a'} variant={'text'} href={'/verification-expired'} className={s.resendLink}>
+            <Typography variant={'caption1'} align={'center'}>
+              Resend the registration confirmation link
+            </Typography>
           </Button>
-        </form>
-      </div>
-      {/*Temporary jsx code ends here*/}
+
+          <Typography variant={'subtitle1'} color={'var(--color-light-100)'} align={'center'}>
+            Do you have an account?
+          </Typography>
+          <Button as={'a'} variant={'text'} href={'/sign-in'}>
+            Sign In
+          </Button>
+        </div>
+      </form>
 
       <Modal
         open={isOpen}
@@ -186,6 +225,6 @@ export default function SignUpPage() {
           </div>
         </div>
       </Modal>
-    </>
+    </main>
   )
 }

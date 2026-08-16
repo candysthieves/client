@@ -36,3 +36,8 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
 
   return JSON.parse(text) as T
 }
+
+// CORS
+// https://lumosapp.net/api/v1
+// https://dev.lumosapp.net:3000/api/v1
+// http://localhost:3000/api/v1

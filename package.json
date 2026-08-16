@@ -11,7 +11,7 @@
     "start": "next start",
     "stylelint:check": "npx stylelint \"src/**/*.{scss,css}\" --allow-empty-input",
     "stylelint:fix": "stylelint --fix src/{,*/}*.{scss,css} --allow-empty-input",
-    "lint": "eslint src --ext .jsx,.js,.tsx,.ts  --no-error-on-unmatched-pattern --fix",
+    "lint": "eslint src --ext .jsx,.js,.tsx,.ts --no-error-on-unmatched-pattern --fix",
     "lint:check": "eslint .",
     "format": "prettier . --write .",
     "format:check": "prettier . --check",
@@ -20,7 +20,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@candy.thieves/ui-kit-lumos": "^0.0.30",
+    "@candy.thieves/ui-kit-lumos": "^0.0.32",
     "@eslint/js": "^10.0.1",
     "@hookform/resolvers": "^5.7.1",
     "@next/eslint-plugin-next": "^16.2.12",
@@ -60,7 +60,7 @@
   },
   "lint-staged": {
     "**/*.{jsx,js,tsx,ts}": [
-      "eslint --quiet --fix"
+      "eslint src --ext .jsx,.js,.tsx,.ts --fix --quiet --no-error-on-unmatched-pattern"
     ],
     "**/*.{css,scss}": [
       "stylelint --fix --allow-empty-input"

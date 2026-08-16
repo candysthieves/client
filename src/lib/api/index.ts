@@ -1,4 +1,4 @@
+export * from './request'
 export * from './apiError'
 export * from './auth'
-export * from './enums'
-export * from './request'
+export * from './types'

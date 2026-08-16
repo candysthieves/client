@@ -7,3 +7,6 @@ export function mapRegistrationConfirmationError(error: ApiError): null | string
 
   return null
 }
+
+// У подтверждения почты сейчас в Swagger нет никакого тела ошибки, кроме обычного 400.
+// Поэтому пока mapper пока простой.

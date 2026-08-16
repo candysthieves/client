@@ -29,7 +29,10 @@
   background-color: var(--color-dark-500);
 
   @include media-tablet {
-    padding: 1.25rem 1rem;
+    margin: 1.125rem 0 1.75rem;
+    padding: 0;
+    border: none;
+    background-color: transparent;
   }
 }
 
@@ -38,6 +41,10 @@
 
   gap: 3.75rem;
   margin: 0.825rem 0 1.5rem;
+
+  @include media-tablet {
+    margin-bottom: 0.75rem;
+  }
 }
 
 .fields {

@@ -2,15 +2,10 @@ import { UseFormSetError } from 'react-hook-form'
 import { ApiError } from '@/lib/api'
 import { ErrorStatus } from '@/lib/api/enums'
 import {
-  DOMAIN_LOGIN_EMAIL_CONFIRM_ERROR_MESSAGE,
-  DOMAIN_LOGIN_ERROR_MESSAGE,
-  DOMAIN_LOGIN_NOT_FOUND_ERROR_MESSAGE,
   DOMAIN_RESEND_EMAIL_ALREADY_CONFIRMED_ERROR_MESSAGE,
   DOMAIN_RESEND_EMAIL_NOT_EXISTS_ERROR_MESSAGE,
-  LoginRequest,
   ResendConfirmationEmailRequest,
 } from '@/lib/model'
-import { isValidLoginField } from '@/lib/utils/isValidField'
 import { isErrorResponse } from './isErrorResponse'
 
 /**
@@ -21,6 +16,10 @@ export function mapConfirmationEmailDomainError(
   setError: UseFormSetError<ResendConfirmationEmailRequest>
 ): boolean {
   if (!isErrorResponse(error.data)) {
+    return false
+  }
+
+  if (!error.data.errorsMessages.length) {
     return false
   }
 

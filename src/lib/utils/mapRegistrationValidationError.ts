@@ -15,6 +15,10 @@ export function mapRegistrationValidationError(
     return false
   }
 
+  if (!error.data.errorsMessages.length) {
+    return false
+  }
+
   if (error.data.code !== ErrorStatus.ValidationError) {
     return false
   }

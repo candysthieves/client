@@ -21,6 +21,10 @@ export function mapLoginDomainError(
     return false
   }
 
+  if (!error.data.errorsMessages.length) {
+    return false
+  }
+
   const { field } = error.data.errorsMessages[0]
 
   if (!isValidLoginField(field)) {

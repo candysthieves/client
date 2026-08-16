@@ -138,8 +138,9 @@
 // //     ↓
 // // setUser(null) // or something else
 
+import { ToastSuccess } from '@/components'
 import { NEXT_PUBLIC_API_URL } from '@/constants'
-import { ACCESS_TOKEN_LS_KEY } from '@/lib/model'
+import { ACCESS_TOKEN_LS_KEY, SIGN_IN_SUCCESS_MESSAGE, SIGN_IN_SUCCESS_TITLE } from '@/lib/model'
 import { isErrorResponse, refreshAccessToken } from '@/lib/utils'
 import { ApiError } from './apiError'
 
@@ -282,9 +283,13 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
 // const handleLogout = async () => {
 //   try {
 //     await logout()
+//       ToastWarning({
+//         title: 'Signed out successfully',
+//         message: 'You have been successfully signed out. See you soon!',
+//       })
 //   } finally {
-//     localStorage.removeItem('accessToken')
-//     setUser(null) // or something else
+//     localStorage.removeItem(ACCESS_TOKEN_LS_KEY)
+//     // setUser(null) // or something else
 //     router.replace('/login')
 //   }
 // }

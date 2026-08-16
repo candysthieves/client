@@ -4,8 +4,8 @@ import { Button, GithubRepo, Google, Typography } from '@candy.thieves/ui-kit-lu
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { GitHubButton, GoogleButton } from '@/components'
 import { FormInput } from '@/components/FormInput'
 import { FormPasswordInput } from '@/components/FormPasswordInput'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
@@ -89,30 +89,21 @@ export default function SignInForm() {
         </Typography>
 
         <div className={s.socialsContainer}>
-          <a href={'https://vash-backend.com'} className={s.socialButton}>
-            <Google />
-          </a>
-
-          <a href={'https://vash-backend.com'} className={`${s.socialButton} ${s.githubIcon}`}>
-            <GithubRepo />
-          </a>
-          {/*<GoogleButton />*/}
-          {/*<GitHubButton />*/}
+          <GoogleButton />
+          <GitHubButton />
         </div>
 
         <div className={s.fieldsGroup}>
-          <div className={s.fieldControl}>
-            <FormInput
-              placeholder={'Epam@epam.com'}
-              control={control}
-              name={'email'}
-              label={'Email'}
-              type={'email'}
-              error={errors.email?.message}
-            />
-          </div>
+          <FormInput
+            placeholder={'Epam@epam.com'}
+            control={control}
+            name={'email'}
+            label={'Email'}
+            type={'email'}
+            error={errors.email?.message}
+          />
 
-          <div className={s.fieldControl}>
+          <div className={s.passwordFieldControl}>
             <FormPasswordInput
               control={control}
               name={'password'}

@@ -13,6 +13,10 @@ $modal-width-xl: 972px;
 $container-padding-tablet: 30px;
 $container-padding-mobile: 15px;
 
+// Forms:
+$spacing-error: 1.75rem;
+$spacing-checkbox-error: 1.25rem;
+
 @mixin typography($fontSize, $lineHeight, $fontWeight, $fontFamily: var(--font-family-primary)) {
   margin: 0;
 

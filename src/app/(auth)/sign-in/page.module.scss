@@ -2,7 +2,7 @@
 
 .pageWrapper {
   @include flex(flex, center, center);
-  @include width-height(100%, 100vh);
+  @include width-height(100%, 100vh); // check when the layout with header be added
 
   background-color: var(--color-dark-900);
 }
@@ -15,7 +15,6 @@
   gap: 1rem;
 
   box-sizing: border-box;
-  min-height: 31.5rem;
   padding: 1.5rem;
   border: 1px solid var(--color-dark-300);
   border-radius: 4px;
@@ -25,16 +24,23 @@
   input {
     outline: none !important;
   }
+
+  @include media-tablet {
+    margin-top: 1.125rem;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+  }
 }
 
 .fieldsGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: $spacing-error;
 }
 
-.fieldControl {
-  min-height: 5.875rem;
+.passwordFieldControl {
+  margin-bottom: 0.75rem;
 }
 
 .socialsContainer {
@@ -43,39 +49,6 @@
   gap: 3.75rem;
   width: 100%;
   margin: -0.5rem 0 0;
-}
-
-.socialButton {
-  @include flex(flex, center, center);
-  @include width-height(2.25rem);
-
-  cursor: pointer;
-
-  box-sizing: border-box;
-  padding: 0;
-  border-radius: 50% !important;
-
-  background-color: transparent;
-
-  @include transition-basic(background-color, border-color);
-
-  svg {
-    @include width-height(2.25rem);
-
-    display: block;
-  }
-}
-
-.githubIcon {
-  svg {
-    fill: var(--color-light-100) !important;
-
-    path,
-    circle,
-    rect {
-      fill: var(--color-light-100) !important;
-    }
-  }
 }
 
 .forgotPassword {
@@ -89,10 +62,10 @@
   text-align: right;
   text-decoration: none;
 
-  @include transition-basic(color);
+  @include transition-basic(opacity);
 
   &:hover {
-    color: var(--color-light-100);
+    opacity: 0.8;
   }
 }
 

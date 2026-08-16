@@ -2,10 +2,12 @@ import { request } from '@/lib/api/request'
 import {
   LoginRequest,
   LoginResponse,
+  NewPasswordRequest,
   PasswordRecoveryRequest,
   RegistrationConfirmationRequest,
   RegistrationRequest,
   ResendConfirmationEmailRequest,
+  ValidatePasswordRecoveryCodeRequest,
 } from '@/lib/model'
 
 export const login = (data: LoginRequest) =>
@@ -39,6 +41,20 @@ export const passwordRecovery = (data: PasswordRecoveryRequest) =>
     body: JSON.stringify(data),
   })
 
-// login()
+export const validatePasswordRecoveryCode = ({
+  recoveryCode,
+}: ValidatePasswordRecoveryCodeRequest) =>
+  request<void>(
+    `/auth/password-recovery/validate?recoveryCode=${encodeURIComponent(recoveryCode)}`,
+    {
+      method: 'GET',
+    }
+  )
+
+export const newPassword = (data: NewPasswordRequest) =>
+  request<void>('/auth/new-password', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
+
 // logout()
-// newPassword()

@@ -9,6 +9,6 @@ export const isValidRegistrationField = (field: string): field is RegistrationFi
   return VALID_REGISTRATION_FIELDS.includes(field as RegistrationField)
 }
 
-export const isValidLoginField = (field: string): boolean => {
-  return VALID_LOGIN_FIELDS.includes(field)
+export const isValidLoginField = (field: string): field is LoginField => {
+  return VALID_LOGIN_FIELDS.includes(field as LoginField)
 }

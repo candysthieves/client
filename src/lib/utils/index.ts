@@ -4,3 +4,6 @@ export { mapRegistrationConfirmationError } from './mapRegistrationConfirmationE
 export { mapRegistrationValidationError } from './mapRegistrationValidationError'
 export { mapRegistrationDomainError } from './mapRegistrationDomainError'
 export { refreshAccessToken } from './refreshAccessToken'
+export { mapConfirmationEmailDomainError } from './mapConfirmationEmailDomainError'
+export { mapLoginDomainError } from './mapLoginDomainError'
+export { mapLoginValidationError } from './mapLoginValidationError'

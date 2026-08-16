@@ -1,0 +1,25 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.title {
+  margin: 0;
+  font-weight: var(--font-weight-semi-bold);
+}
+
+.message {
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-m);
+}
+
+.list {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.field {
+  font-weight: var(--font-weight-medium);
+  text-transform: capitalize;
+}

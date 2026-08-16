@@ -29,3 +29,13 @@ export type UserResponse = z.infer<typeof userResponseSchema>
 export type RegistrationField = keyof RegistrationRequest
 export type LoginField = 'credentials' | 'email'
 // export type AuthType = 'github' | 'google'
+// export type LoginField = keyof LoginRequest
+
+export const VALID_LOGIN_FIELDS = ['email', 'password'] as const
+export const VALID_REGISTRATION_FIELDS = [
+  'username',
+  'email',
+  'password',
+  'passwordConfirmation',
+  'isTermsAccepted',
+] as const

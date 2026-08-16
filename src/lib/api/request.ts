@@ -6,7 +6,8 @@ import { ApiError } from './apiError'
 let refreshPromise: null | Promise<string> = null
 
 export async function request<T>(input: string, init?: RequestInit): Promise<T> {
-  const accessToken = localStorage.getItem(ACCESS_TOKEN_LS_KEY)
+  const accessToken =
+    typeof window !== 'undefined' ? localStorage.getItem(ACCESS_TOKEN_LS_KEY) : undefined
 
   let response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, {
     ...init,

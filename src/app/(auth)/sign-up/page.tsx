@@ -177,7 +177,7 @@ export default function SignUpPage() {
             }
           />
           {errors?.isTermsAccepted && (
-            <Typography className={s.error} variant={'form-error'}>
+            <Typography className={s.error} variant={'caution-error'}>
               {errors.isTermsAccepted.message}
             </Typography>
           )}

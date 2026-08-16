@@ -1,0 +1,38 @@
+@use '@/styles/mixins' as *;
+
+.container {
+  @include container;
+}
+
+.caption {
+  max-width: 18.375rem;
+
+  @include media-mobile {
+    max-width: none;
+  }
+}
+
+.form {
+  width: 100%;
+  max-width: 15rem;
+  margin: 1.875rem auto 0;
+
+  @include media-mobile {
+    max-width: none;
+  }
+}
+
+.submit {
+  margin: 1.8rem auto 2.25rem;
+}
+
+.image {
+  display: block;
+  margin: 0 auto;
+
+  @include media-tablet {
+    width: 100%;
+    max-width: 330px;
+    height: auto;
+  }
+}

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { ErrorStatus } from '@/lib/api/enums'
 import {
   PASSWORD_PATTERN,
   PASSWORD_PATTERN_MESSAGE,
@@ -28,8 +29,12 @@ export const recaptchaTokenSchema = z.string().min(1, 'RecaptchaToken should not
 
 export const recoveryCodeSchema = z.string().min(1, 'Recovery code is required')
 
-export const termsAcceptedSchema = z.literal(true, {
-  error: 'IsTermsAccepted must be equal to true',
+// export const termsAcceptedSchema = z.literal(true, {
+//   error: 'isTermsAccepted must be equal to true',
+// })
+
+export const termsAcceptedSchema = z.boolean().refine(val => val === true, {
+  message: 'You must accept the terms and conditions',
 })
 
 export const loginSchema = z.object({
@@ -51,7 +56,10 @@ export const registrationSchema = z
   })
 
 export const registrationConfirmationSchema = z.object({
-  code: z.string().min(1, 'Confirmation code is required'),
+  code: z
+    .string()
+    .min(36, 'Confirmation code must be exactly 36 characters')
+    .max(36, 'Confirmation code must be exactly 36 characters'),
 })
 
 export const resendConfirmationEmailSchema = z.object({
@@ -84,12 +92,12 @@ export const accessTokenResponseSchema = z.object({
 
 export const loginResponseSchema = accessTokenResponseSchema
 
+export const errorMessageSchema = z.object({
+  field: z.string(),
+  message: z.string(),
+})
+
 export const apiErrorResponseSchema = z.object({
-  code: z.number().optional(),
-  errorsMessages: z.array(
-    z.object({
-      field: z.string(),
-      message: z.string(),
-    })
-  ),
+  code: z.enum(ErrorStatus),
+  errorsMessages: z.array(errorMessageSchema),
 })

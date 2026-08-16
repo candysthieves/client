@@ -1,11 +1,11 @@
-import type {
+import { request } from '@/lib/api/request'
+import {
   LoginRequest,
   LoginResponse,
   RegistrationConfirmationRequest,
   RegistrationRequest,
   ResendConfirmationEmailRequest,
 } from '@/lib/model'
-import { request } from './request'
 
 export const login = (data: LoginRequest) =>
   request<LoginResponse>('/auth/login', {
@@ -20,9 +20,10 @@ export const registration = (data: RegistrationRequest) =>
   })
 
 export const registrationConfirmation = (data: RegistrationConfirmationRequest) =>
+  // or token
   request<void>('/auth/registration-confirmation', {
     method: 'POST',
-    body: JSON.stringify(data),
+    body: JSON.stringify(data), // почему body в swagger пустое, какие ответы приходят при TOKEN expired
   })
 
 export const resendConfirmationEmail = (data: ResendConfirmationEmailRequest) =>
@@ -30,3 +31,8 @@ export const resendConfirmationEmail = (data: ResendConfirmationEmailRequest) =>
     method: 'POST',
     body: JSON.stringify(data),
   })
+
+// login()
+// logout()
+// passwordRecovery()
+// newPassword()

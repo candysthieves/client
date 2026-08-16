@@ -1,0 +1,22 @@
+@use '@/styles/mixins' as *;
+
+.googleButton {
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+
+  @include width-height(2.25rem);
+  @include flex(flex, center, center);
+  @include transition-basic(opacity);
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus-visible {
+    border-radius: 2px;
+    outline: 2px solid var(--color-accent-700);
+    outline-offset: 2px;
+  }
+}

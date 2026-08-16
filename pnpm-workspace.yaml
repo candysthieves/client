@@ -8,3 +8,5 @@ allowBuilds:
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+minimumReleaseAgeExclude:
+  - '@candy.thieves/ui-kit-lumos@0.0.30'

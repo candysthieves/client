@@ -1,5 +1,6 @@
 import type { UseFormSetError } from 'react-hook-form'
-import { ApiError, ErrorStatus } from '@/lib/api'
+import { ApiError } from '@/lib/api'
+import { ErrorStatus } from '@/lib/api/enums'
 import { LoginRequest } from '@/lib/model'
 import { isValidLoginField } from '@/lib/utils/isValidField'
 import { isErrorResponse } from './isErrorResponse'

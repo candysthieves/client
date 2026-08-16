@@ -1,8 +1,8 @@
 'use client'
 
+import { Alert } from '@candy.thieves/ui-kit-lumos'
 import toast from 'react-hot-toast'
-import type { ApiErrorResponse } from '@/lib/model'
-import s from './Toast.module.scss'
+import { ErrorMessageResponse } from '@/lib/model'
 
 type ToastMessageProps = {
   duration?: number
@@ -12,7 +12,7 @@ type ToastMessageProps = {
 
 type ToastErrorProps = {
   duration?: number
-  messages: ApiErrorResponse['errorsMessages'] | string
+  messages: ErrorMessageResponse[] | string
   title?: string
 }
 
@@ -21,14 +21,18 @@ export const ToastSuccess = ({
   message,
   title = 'Success',
 }: ToastMessageProps) => {
-  toast.success(
-    () => (
-      <div className={s.content}>
-        <p className={s.title}>{title}</p>
-        <div className={s.message}>{message}</div>
+  toast.custom(
+    t => (
+      <div style={{ pointerEvents: 'auto' }}>
+        <Alert variant={'success'} title={title} onClose={() => toast.remove(t.id)}>
+          {message}
+        </Alert>
       </div>
     ),
-    { duration }
+    {
+      duration,
+      position: 'bottom-left',
+    }
   )
 }
 
@@ -37,47 +41,55 @@ export const ToastWarning = ({
   message,
   title = 'Warning',
 }: ToastMessageProps) => {
-  toast(
-    () => (
-      <div className={s.content}>
-        <p className={s.title}>{title}</p>
-        <div className={s.message}>{message}</div>
+  toast.custom(
+    t => (
+      <div style={{ pointerEvents: 'auto' }}>
+        <Alert variant={'warning'} title={title} onClose={() => toast.remove(t.id)}>
+          {message}
+        </Alert>
       </div>
     ),
     {
       duration,
-      icon: '!',
+      position: 'bottom-left',
     }
   )
 }
 
-export const ToastError = ({
-  duration = 3000,
-  messages,
-  title = 'Validation error',
-}: ToastErrorProps) => {
-  const isFieldErrors = Array.isArray(messages) && messages.length > 0 && 'field' in messages[0]
+export const ToastError = ({ duration = 3000, messages, title = 'Error' }: ToastErrorProps) => {
+  const formattedMessages =
+    typeof messages === 'string'
+      ? messages
+      : messages.map(({ field, message }) => ({
+          field,
+          message,
+        }))
 
-  toast.error(
-    () => (
-      <div className={s.content}>
-        <p className={s.title}>{title}</p>
+  const isMessagesArray = Array.isArray(formattedMessages)
 
-        {typeof messages === 'string' ? (
-          <div className={s.message}>{messages}</div>
-        ) : isFieldErrors ? (
-          <ul className={s.list}>
-            {messages.map(({ message }, index) => (
-              <li key={`${message}-${index}`} className={s.message}>
-                {message}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className={s.message}>No message provided</div>
-        )}
+  return toast.custom(
+    t => (
+      <div
+        style={{
+          pointerEvents: 'auto',
+          display: 'flex',
+          justifyContent: 'flex-end',
+          width: '100%',
+        }}
+      >
+        <Alert
+          variant={'error'}
+          title={title}
+          onClose={() => toast.remove(t.id)}
+          errors={isMessagesArray ? formattedMessages : undefined}
+        >
+          {isMessagesArray ? undefined : formattedMessages}
+        </Alert>
       </div>
     ),
-    { duration }
+    {
+      duration,
+      position: 'bottom-right',
+    }
   )
 }

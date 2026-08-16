@@ -23,7 +23,7 @@
 }
 
 .submit {
-  margin: 1.8rem auto 2.25rem;
+  margin: 2rem auto 2.25rem;
 }
 
 .image {
@@ -35,4 +35,17 @@
     max-width: 330px;
     height: auto;
   }
+}
+
+.triggerContent {
+  @include flex(flex, none, none);
+
+  flex-direction: column;
+}
+
+.triggerControls {
+  @include flex(flex, flex-end, center);
+
+  width: 100%;
+  margin-top: 1.125rem;
 }

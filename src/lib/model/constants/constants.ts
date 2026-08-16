@@ -36,3 +36,6 @@ export const VALID_LOGIN_FIELDS: LoginField[] = ['email', 'password'] as const
 export const VALID_LOGIN_ERROR_FIELDS: LoginErrorField[] = ['email', 'credentials'] as const
 
 export const ACCESS_TOKEN_LS_KEY = 'accessToken'
+
+export const SIGN_IN_SUCCESS_TITLE = 'Welcome to Lumos!'
+export const SIGN_IN_SUCCESS_MESSAGE = 'Authentication Successful'

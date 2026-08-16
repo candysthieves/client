@@ -1,0 +1,114 @@
+@use '@/styles/mixins' as *;
+
+.pageWrapper {
+  @include flex(flex, center, center);
+  @include width-height(100%, 100vh);
+
+  background-color: var(--color-dark-900);
+}
+
+.formContainer {
+  @include flex(flex);
+  @include width-height(23.625rem, auto);
+
+  flex-direction: column;
+  gap: 1rem;
+
+  box-sizing: border-box;
+  min-height: 31.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-dark-300);
+  border-radius: 4px;
+
+  background-color: var(--color-dark-500);
+
+  input {
+    outline: none !important;
+  }
+}
+
+.fieldsGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.fieldControl {
+  min-height: 5.875rem;
+}
+
+.socialsContainer {
+  @include flex(flex, center, center);
+
+  gap: 3.75rem;
+  width: 100%;
+  margin: -0.5rem 0 0;
+}
+
+.socialButton {
+  @include flex(flex, center, center);
+  @include width-height(2.25rem);
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+  padding: 0;
+  border-radius: 50% !important;
+
+  background-color: transparent;
+
+  @include transition-basic(background-color, border-color);
+
+  svg {
+    @include width-height(2.25rem);
+
+    display: block;
+  }
+}
+
+.githubIcon {
+  svg {
+    fill: var(--color-light-100) !important;
+
+    path,
+    circle,
+    rect {
+      fill: var(--color-light-100) !important;
+    }
+  }
+}
+
+.forgotPassword {
+  cursor: pointer;
+
+  align-self: flex-end;
+
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+
+  text-align: right;
+  text-decoration: none;
+
+  @include transition-basic(color);
+
+  &:hover {
+    color: var(--color-light-100);
+  }
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  align-items: center;
+}
+
+.formContainer input:-webkit-autofill,
+.formContainer input:-webkit-autofill:hover,
+.formContainer input:-webkit-autofill:focus,
+.formContainer input:-webkit-autofill:active {
+  box-shadow: 0 0 0 1000px var(--color-dark-500) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+
+  -webkit-text-fill-color: var(--color-light-100) !important;
+}

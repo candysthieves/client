@@ -1,0 +1,15 @@
+/* Temporary styles */
+.container {
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.title {
+  margin-bottom: 1.5rem;
+
+  font-size: 3rem;
+  font-weight: bold;
+  color: #1a202c;
+  text-align: center;
+}

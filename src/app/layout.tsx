@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { LinearProgress } from '@candy.thieves/ui-kit-lumos'
 import '@candy.thieves/ui-kit-lumos/dist/index.css'
 import '../styles/index.scss'
+import { ToastContainer } from '@/components'
 import { AppHeader } from '@/components/AppHeader'
 import s from './layout.module.scss'
 
@@ -20,6 +21,8 @@ export default function RootLayout({
       <body className={s.body}>
         <AppHeader />
         <LinearProgress size={'sm'} />
+
+        <ToastContainer />
         {children}
       </body>
     </html>

@@ -22,6 +22,7 @@ import { NEXT_PUBLIC_API_URL } from '@/constants'
 import s from './GoogleButton.module.scss'
 
 export const GoogleButton = () => {
+  console.log('NEXT_PUBLIC_API_URL', NEXT_PUBLIC_API_URL)
   return (
     <Button
       as={'a'}

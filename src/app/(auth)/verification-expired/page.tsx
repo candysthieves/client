@@ -1,10 +1,10 @@
 'use client'
 
-import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
 import { useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { ToastError } from '@/components'
 import { FormInput } from '@/components/FormInput'
 import { ApiError, resendConfirmationEmail } from '@/lib/api'
@@ -14,23 +14,41 @@ import { mapConfirmationEmailDomainError } from '@/lib/utils/mapConfirmationEmai
 import s from './page.module.scss'
 
 export default function VerificationExpiredPage() {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const {
     control,
     setError,
     handleSubmit,
-    formState: { isValid },
+    reset,
+    formState: { isValid, isSubmitting },
   } = useForm<ResendConfirmationEmailRequest>({
     mode: 'all',
     resolver: zodResolver(resendConfirmationEmailSchema),
+    defaultValues: {
+      email: '',
+    },
   })
 
+  const emailValue = useWatch({ control, name: 'email' })
+
+  const openModal = () => setIsOpen(true)
+
+  const closeModal = () => {
+    reset() // check
+    // router.push('/sign-in') ??
+    setIsOpen(false)
+  }
+
+  const onClickHandler = () => {
+    closeModal()
+  }
+
   const onSubmit: SubmitHandler<ResendConfirmationEmailRequest> = async data => {
-    setIsLoading(true)
+    // setIsLoading(true)
     try {
       await resendConfirmationEmail(data)
-      // show Alert snackbar message "Verification email has been sent"
+      openModal()
     } catch (error) {
       if (error instanceof ApiError && isErrorResponse(error.data)) {
         const isValidationError = mapRegistrationValidationError(error, setError)
@@ -55,13 +73,13 @@ export default function VerificationExpiredPage() {
       } else {
         throw error // Проброс в глобальный error handler всех остальных ошибок не связанных с Validation / Domain errors - позже будет доработка логики
       }
-    } finally {
-      setIsLoading(false)
+      // } finally {
+      //   setIsLoading(false)
     }
   }
 
   return (
-    <div className={s.container}>
+    <main className={s.container}>
       <Typography
         variant={'h1'}
         color={'var(--color-text-primary)'}
@@ -92,8 +110,8 @@ export default function VerificationExpiredPage() {
         />
         <div className={s.submit}>
           {/* TODO: "disabled" state for the loading period — when the POST request with form data is sending, change isLoading from using useState */}
-          <Button type={'submit'} fullWidth disabled={!isValid || isLoading}>
-            {isLoading ? 'Sending...' : 'Resend verification link'}
+          <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
+            {isSubmitting ? 'Sending...' : 'Resend verification link'}
           </Button>
         </div>
       </form>
@@ -107,7 +125,27 @@ export default function VerificationExpiredPage() {
         aria-hidden
         loading={'eager'}
       />
-    </div>
+
+      <Modal
+        open={isOpen}
+        onClose={closeModal}
+        modalTitle={'Email sent'}
+        size={'s'}
+        showHeader
+        showCloseButton
+      >
+        <div className={s.triggerContent}>
+          <Typography variant={'subtitle1'} color={'var(--color-light-100)'}>
+            We have sent a link to confirm your email again to {emailValue}
+          </Typography>
+          <div className={s.triggerControls}>
+            <Button variant={'primary'} onClick={onClickHandler}>
+              Ok
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </main>
   )
 }
 

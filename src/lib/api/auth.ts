@@ -1,10 +1,13 @@
 import { request } from '@/lib/api/request'
 import {
+  ACCESS_TOKEN_LS_KEY,
+  AccessTokenResponse,
   LoginRequest,
   LoginResponse,
   RegistrationConfirmationRequest,
   RegistrationRequest,
   ResendConfirmationEmailRequest,
+  UserResponse,
 } from '@/lib/model'
 
 export const login = (data: LoginRequest) =>
@@ -30,6 +33,20 @@ export const resendConfirmationEmail = (data: ResendConfirmationEmailRequest) =>
   request<void>('/auth/resend-confirmation-email', {
     method: 'POST',
     body: JSON.stringify(data),
+  })
+
+export const refreshToken = () =>
+  request<AccessTokenResponse>('/auth/refresh-token', {
+    method: 'POST',
+  })
+
+// method: 'GET'
+// How to use: const user = await authMe()
+export const authMe = () => request<UserResponse>('/auth/me')
+
+export const logout = () =>
+  request<void>('/auth/logout', {
+    method: 'POST',
   })
 
 // login()

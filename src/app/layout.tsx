@@ -4,6 +4,7 @@ import '@candy.thieves/ui-kit-lumos/dist/index.css'
 import '../styles/index.scss'
 import { ToastContainer } from '@/components'
 import { AppHeader } from '@/components/AppHeader'
+import { AuthProvider } from '@/providers/AuthProvider'
 import s from './layout.module.scss'
 
 export const metadata: Metadata = {
@@ -19,12 +20,34 @@ export default function RootLayout({
   return (
     <html lang={'en'}>
       <body className={s.body}>
-        <AppHeader />
-        <LinearProgress size={'sm'} />
-
-        <ToastContainer />
-        {children}
+        <AuthProvider>
+          <AppHeader />
+          <LinearProgress size={'sm'} />
+          <ToastContainer />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   )
 }
+
+// // на любой клиентской странице получить user и проверить authorized
+// добавить useAuth и защиту маршрутов
+// 'use client'
+//
+// import { useContext } from 'react'
+// import { AuthContext } from '@/app/providers/AuthProvider'
+//
+// export default function ProfilePage() {
+//   const { user, isLoading } = useContext(AuthContext)
+//
+//   if (isLoading) {
+//     return <div>Loading...</div>
+//   }
+//
+//   if (!user) {
+//     return <div>Not authorized</div>
+//   }
+//
+//   return <div>Hello, {user.username}</div>
+// }

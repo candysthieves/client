@@ -7,7 +7,7 @@ import {
   DOMAIN_LOGIN_NOT_FOUND_ERROR_MESSAGE,
   LoginRequest,
 } from '@/lib/model'
-import { isValidLoginField } from '@/lib/utils/isValidField'
+import { isValidErrorLoginField, isValidLoginField } from '@/lib/utils/isValidField'
 import { isErrorResponse } from './isErrorResponse'
 
 /**
@@ -26,8 +26,9 @@ export function mapLoginDomainError(
   }
 
   const { field } = error.data.errorsMessages[0]
-
-  if (!isValidLoginField(field) && field !== 'credentials') {
+  console.log(field, isValidErrorLoginField(field))
+  // if (!isValidLoginField(field) && field !== 'credentials') {
+  if (!isValidErrorLoginField(field)) {
     return false
   }
 

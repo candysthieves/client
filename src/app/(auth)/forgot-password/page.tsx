@@ -1,7 +1,7 @@
 'use client'
 
 import type ReCAPTCHA from 'react-google-recaptcha'
-import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, clsx, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRef, useState } from 'react'
@@ -9,9 +9,8 @@ import { type SubmitHandler, useForm } from 'react-hook-form'
 import { FormInput } from '@/components/FormInput'
 import { FormRecaptcha } from '@/components/FormRecaptcha'
 import { ToastError } from '@/components/Toast/Toast'
-import { NEXT_PUBLIC_RECAPTCHA_SITE_KEY } from '@/constants'
 import { ApiError, passwordRecovery } from '@/lib/api'
-import { type PasswordRecoveryRequest, passwordRecoverySchema } from '@/lib/model'
+import { passwordRecoverySchema, type PasswordRecoveryRequest } from '@/lib/model'
 import {
   isErrorResponse,
   mapPasswordRecoveryDomainError,
@@ -30,9 +29,9 @@ export default function ForgotPasswordPage() {
     handleSubmit,
     setError,
     setValue,
-    formState: { isValid, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<PasswordRecoveryRequest>({
-    mode: 'onChange',
+    mode: 'onSubmit',
     resolver: zodResolver(passwordRecoverySchema),
     defaultValues: {
       email: '',
@@ -57,14 +56,16 @@ export default function ForgotPasswordPage() {
           // the widget so it must be solved again before the next submit.
           setValue('recaptchaToken', '')
           recaptchaRef.current?.reset()
+        }
 
-          ToastError({
-            title: 'Domain Error',
-            messages: error.data.errorsMessages,
-          })
-        } else if (isValidationError) {
+        if (isValidationError) {
           ToastError({
             title: 'Validation Error',
+            messages: error.data.errorsMessages,
+          })
+        } else if (isDomainError) {
+          ToastError({
+            title: 'Domain Error',
             messages: error.data.errorsMessages,
           })
         }
@@ -75,16 +76,8 @@ export default function ForgotPasswordPage() {
     }
   }
 
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
-
-  const onClickHandler = () => {
-    closeModal()
-  }
-
   return (
-    <main className={s.container}>
+    <div className={s.container}>
       <div className={s.card}>
         <Typography variant={'h1'} align={'center'} mb={'1.5rem'}>
           Forgot Password
@@ -93,21 +86,23 @@ export default function ForgotPasswordPage() {
         {/* eslint-disable-next-line react-hooks/refs -- recaptchaRef.current is only read inside
         the async onSubmit handler (real submit event), never during render; the linter can't see
         into react-hook-form's handleSubmit to know it doesn't invoke the callback synchronously */}
-        <form className={s.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
           <div>
-            <div className={s.inputBlock}>
-              <FormInput
-                control={control}
-                name={'email'}
-                type={'email'}
-                placeholder={'Epam@epam.com'}
-                label={'Email'}
-              />
+            <FormInput
+              control={control}
+              name={'email'}
+              type={'email'}
+              placeholder={'Epam@epam.com'}
+              label={'Email'}
+            />
 
-              <Typography variant={'body2'} color={'var(--color-light-900)'}>
-                Enter your email address and we will send you further instructions
-              </Typography>
-            </div>
+            <Typography
+              variant={'body2'}
+              color={'var(--color-light-900)'}
+              className={clsx(s.hint, errors.email && s.hintWithError)}
+            >
+              Enter your email address and we will send you further instructions
+            </Typography>
 
             {isSent && (
               <Typography
@@ -122,7 +117,7 @@ export default function ForgotPasswordPage() {
             )}
           </div>
 
-          <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
+          <Button type={'submit'} fullWidth disabled={isSubmitting}>
             {isSent ? 'Send Link Again' : 'Send Link'}
           </Button>
 
@@ -138,7 +133,7 @@ export default function ForgotPasswordPage() {
               control={control}
               name={'recaptchaToken'}
               className={s.recaptcha}
-              siteKey={NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+              siteKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
             />
           )}
         </form>
@@ -146,7 +141,7 @@ export default function ForgotPasswordPage() {
 
       <Modal
         open={isModalOpen}
-        onClose={closeModal}
+        onClose={() => setIsModalOpen(false)}
         size={'s'}
         showHeader
         modalTitle={'Email sent'}
@@ -157,9 +152,9 @@ export default function ForgotPasswordPage() {
         </Typography>
 
         <div className={s.modalActions}>
-          <Button onClick={onClickHandler}>OK</Button>
+          <Button onClick={() => setIsModalOpen(false)}>OK</Button>
         </div>
       </Modal>
-    </main>
+    </div>
   )
 }

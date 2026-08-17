@@ -18,9 +18,6 @@ export const PASSWORD_PATTERN_MESSAGE = `Password must contain at least one uppe
 export const VALIDATION_ERROR_COMMON_MESSAGE = 'Please check the data input'
 
 export const DOMAIN_ERROR_COMMON_MESSAGE = 'Please check the data input'
-export const DOMAIN_ERROR_EMAIL_ALREADY_EXISTS_MESSAGE = 'Email already exists'
-export const DOMAIN_ERROR_USERNAME_ALREADY_EXISTS_MESSAGE = 'Username already exists'
-export const DOMAIN_ERROR_PASSWORDS_DONT_MATCH_MESSAGE = 'Passwords do not match'
 
 export const DOMAIN_LOGIN_EMAIL_CONFIRM_ERROR_MESSAGE = 'Email is not confirmed'
 
@@ -34,8 +31,6 @@ export const DOMAIN_RESEND_EMAIL_ALREADY_CONFIRMED_ERROR_MESSAGE = 'Email is alr
 
 export const DOMAIN_PASSWORD_RECOVERY_RECAPTCHA_INVALID_MESSAGE =
   'Please verify that you are not a robot'
-
-export const DOMAIN_PASSWORD_RECOVERY_RECAPTCHA_INVALID_CODE_MESSAGE = 'Recovery code is required'
 
 export const VALID_REGISTRATION_FIELDS: RegistrationErrorField[] = [
   'email',

@@ -5,7 +5,6 @@ import {
   DOMAIN_PASSWORD_RECOVERY_RECAPTCHA_INVALID_MESSAGE,
   PasswordRecoveryRequest,
 } from '@/lib/model'
-import { isValidPasswordRecoveryField, isValidRegistrationField } from '@/lib/utils/isValidField'
 import { isErrorResponse } from './isErrorResponse'
 
 /**
@@ -16,16 +15,6 @@ export function mapPasswordRecoveryDomainError(
   setError: UseFormSetError<PasswordRecoveryRequest>
 ): boolean {
   if (!isErrorResponse(error.data)) {
-    return false
-  }
-
-  if (!error.data.errorsMessages.length) {
-    return false
-  }
-
-  const { field } = error.data.errorsMessages[0]
-
-  if (!isValidPasswordRecoveryField(field)) {
     return false
   }
 

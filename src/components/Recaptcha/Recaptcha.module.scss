@@ -1,12 +1,8 @@
 .widget {
   position: relative;
-
   display: inline-flex;
   flex-direction: column;
-  gap: 0.75rem;
-
-  box-sizing: border-box;
-  min-height: 6.25rem;
+  gap: 1rem;
 }
 
 .errorBorder {

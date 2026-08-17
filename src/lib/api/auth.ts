@@ -4,6 +4,7 @@ import {
   AccessTokenResponse,
   LoginRequest,
   LoginResponse,
+  PasswordRecoveryRequest,
   RegistrationConfirmationRequest,
   RegistrationRequest,
   ResendConfirmationEmailRequest,
@@ -35,6 +36,12 @@ export const resendConfirmationEmail = (data: ResendConfirmationEmailRequest) =>
     body: JSON.stringify(data),
   })
 
+export const passwordRecovery = (data: PasswordRecoveryRequest) =>
+  request<void>('/auth/password-recovery', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
+
 export const refreshToken = () =>
   request<AccessTokenResponse>('/auth/refresh-token', {
     method: 'POST',
@@ -51,5 +58,4 @@ export const logout = () =>
 
 // login()
 // logout()
-// passwordRecovery()
 // newPassword()

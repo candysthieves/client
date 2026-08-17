@@ -2,8 +2,6 @@
 FROM node:24-alpine3.24 as dependencies
 WORKDIR /app
 RUN npm install -g pnpm
-ENV NEXT_PUBLIC_API_URL=https://lumosapp.net/api/v1
-ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LclLHUtAAAAAEO0UcvZn9iuW92ENQUDa6ByDR96
 COPY package*.json ./
 RUN pnpm install --ignore-scripts && pnpm approve-builds --yes
 
@@ -13,6 +11,8 @@ RUN pnpm install --ignore-scripts && pnpm approve-builds --yes
 FROM node:24-alpine3.24 as builder
 WORKDIR /app
 RUN npm install -g pnpm
+ENV NEXT_PUBLIC_API_URL=https://lumosapp.net/api/v1
+ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LclLHUtAAAAAEO0UcvZn9iuW92ENQUDa6ByDR96
 COPY . .
 COPY --from=dependencies /app/node_modules ./node_modules
 RUN pnpm run build:production

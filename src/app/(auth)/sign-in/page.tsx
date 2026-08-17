@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, GithubRepo, Google, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -29,7 +29,7 @@ export default function SignInForm() {
     setError,
     formState: { errors, isValid, isSubmitting },
   } = useForm<LoginRequest>({
-    // resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchema),
     mode: 'onChange',
     defaultValues: {
       email: '',
@@ -99,8 +99,7 @@ export default function SignInForm() {
             control={control}
             name={'email'}
             label={'Email'}
-            // type={'email'}
-            type={'text'}
+            type={'email'}
             error={errors.email?.message}
           />
 

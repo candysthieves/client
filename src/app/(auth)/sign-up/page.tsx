@@ -31,7 +31,7 @@ export default function SignUpPage() {
     setError,
     formState: { errors, isSubmitting, isValid },
   } = useForm<RegistrationRequest>({
-    // resolver: zodResolver(registrationSchema),
+    resolver: zodResolver(registrationSchema),
     mode: 'onChange',
     defaultValues: {
       username: '',

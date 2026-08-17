@@ -2,15 +2,15 @@
 
 import type ReCAPTCHA from 'react-google-recaptcha'
 import { Button, clsx, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
-import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRef, useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { FormInput } from '@/components/FormInput'
 import { FormRecaptcha } from '@/components/FormRecaptcha'
 import { ToastError } from '@/components/Toast/Toast'
+import { NEXT_PUBLIC_RECAPTCHA_SITE_KEY } from '@/constants'
 import { ApiError, passwordRecovery } from '@/lib/api'
-import { passwordRecoverySchema, type PasswordRecoveryRequest } from '@/lib/model'
+import { type PasswordRecoveryRequest } from '@/lib/model'
 import {
   isErrorResponse,
   mapPasswordRecoveryDomainError,
@@ -32,7 +32,7 @@ export default function ForgotPasswordPage() {
     formState: { errors, isSubmitting },
   } = useForm<PasswordRecoveryRequest>({
     mode: 'onSubmit',
-    resolver: zodResolver(passwordRecoverySchema),
+    // resolver: zodResolver(passwordRecoverySchema),
     defaultValues: {
       email: '',
       recaptchaToken: '',
@@ -91,7 +91,8 @@ export default function ForgotPasswordPage() {
             <FormInput
               control={control}
               name={'email'}
-              type={'email'}
+              // type={'email'}
+              type={'text'}
               placeholder={'Epam@epam.com'}
               label={'Email'}
             />
@@ -133,7 +134,7 @@ export default function ForgotPasswordPage() {
               control={control}
               name={'recaptchaToken'}
               className={s.recaptcha}
-              siteKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+              siteKey={NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
             />
           )}
         </form>

@@ -29,7 +29,7 @@ export default function SignInForm() {
     setError,
     formState: { errors, isValid, isSubmitting },
   } = useForm<LoginRequest>({
-    resolver: zodResolver(loginSchema),
+    // resolver: zodResolver(loginSchema),
     mode: 'onChange',
     defaultValues: {
       email: '',
@@ -99,7 +99,8 @@ export default function SignInForm() {
             control={control}
             name={'email'}
             label={'Email'}
-            type={'email'}
+            // type={'email'}
+            type={'text'}
             error={errors.email?.message}
           />
 

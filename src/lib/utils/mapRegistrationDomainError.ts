@@ -1,7 +1,12 @@
 import { UseFormSetError } from 'react-hook-form'
 import { ApiError } from '@/lib/api'
 import { ErrorStatus } from '@/lib/api/enums'
-import { DOMAIN_ERROR_COMMON_MESSAGE, RegistrationRequest } from '@/lib/model'
+import {
+  DOMAIN_ERROR_EMAIL_ALREADY_EXISTS_MESSAGE,
+  DOMAIN_ERROR_PASSWORDS_DONT_MATCH_MESSAGE,
+  DOMAIN_ERROR_USERNAME_ALREADY_EXISTS_MESSAGE,
+  RegistrationRequest,
+} from '@/lib/model'
 import { isValidRegistrationField } from '@/lib/utils/isValidField'
 import { isErrorResponse } from './isErrorResponse'
 
@@ -28,13 +33,28 @@ export function mapRegistrationDomainError(
 
   switch (error.data.code) {
     case ErrorStatus.EmailAlreadyExists:
-    case ErrorStatus.UsernameAlreadyExists:
-    case ErrorStatus.PasswordsNotMatch:
-      setError(field, {
+      setError('email', {
         type: 'server',
-        message: DOMAIN_ERROR_COMMON_MESSAGE,
+        message: DOMAIN_ERROR_EMAIL_ALREADY_EXISTS_MESSAGE,
       })
       return true
+    case ErrorStatus.UsernameAlreadyExists:
+      setError('username', {
+        type: 'server',
+        message: DOMAIN_ERROR_USERNAME_ALREADY_EXISTS_MESSAGE,
+      })
+      return true
+    case ErrorStatus.PasswordsNotMatch:
+      setError('passwordConfirmation', {
+        type: 'server',
+        message: DOMAIN_ERROR_PASSWORDS_DONT_MATCH_MESSAGE,
+      })
+      return true
+    // setError(field, {
+    //   type: 'server',
+    //   message,
+    // })
+    // return true
 
     default:
       return false

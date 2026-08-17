@@ -30,7 +30,7 @@ export default function ForgotPasswordPage() {
     handleSubmit,
     setError,
     setValue,
-    formState: { isSubmitting },
+    formState: { isValid, isSubmitting },
   } = useForm<PasswordRecoveryRequest>({
     mode: 'onChange',
     resolver: zodResolver(passwordRecoverySchema),
@@ -122,7 +122,7 @@ export default function ForgotPasswordPage() {
             )}
           </div>
 
-          <Button type={'submit'} fullWidth disabled={isSubmitting}>
+          <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
             {isSent ? 'Send Link Again' : 'Send Link'}
           </Button>
 

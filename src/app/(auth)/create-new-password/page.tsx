@@ -92,28 +92,25 @@ export default function CreateNewPasswordPage() {
       router.push('/sign-in')
     } catch (error) {
       if (error instanceof ApiError && isErrorResponse(error.data)) {
-        const domainError = mapNewPasswordDomainError(error)
-
-        if (domainError === 'recovery-link-expired') {
-          router.replace('/recovery-link-expired')
-          return
-        }
-
         const isValidationError = mapNewPasswordValidationError(error, setError)
+        const isDomainError = mapNewPasswordDomainError(error, setError)
 
-        if (isValidationError) {
+        if (isDomainError) {
+          ToastError({
+            title: 'Email verification Error',
+            messages: 'Email verification link invalid. Resend verification link',
+          })
+          router.replace('/recovery-link-expired')
+        } else if (isValidationError) {
           ToastError({
             title: 'Validation Error',
             messages: error.data.errorsMessages,
           })
         }
         return
+      } else {
+        throw error // Проброс в глобальный error handler всех остальных ошибок не связанных с Validation / Domain errors - позже будет доработка логики
       }
-
-      ToastError({
-        title: 'Error',
-        messages: 'Something went wrong. Please try again later.',
-      })
     }
   }
 

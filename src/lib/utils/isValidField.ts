@@ -5,7 +5,6 @@ import {
   RegistrationErrorField,
   VALID_LOGIN_ERROR_FIELDS,
   NewPasswordField,
-  RegistrationField,
   VALID_LOGIN_FIELDS,
   VALID_PASSWORD_RECOVERY_FIELDS,
   VALID_NEW_PASSWORD_FIELDS,

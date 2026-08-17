@@ -1,23 +1,9 @@
 @use '@/styles/mixins' as *;
 
 .container {
-  @include container;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex(flex, center, center);
 
   min-height: 100vh;
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-
-  // @include container sets asymmetric left/right padding (3.75rem/4rem) for
-  // typical page content; equalize it here so the centered card lines up with
-  // the modal, which centers against the raw viewport.
-  @media (width >= 769px) {
-    padding-right: 4rem;
-    padding-left: 4rem;
-  }
 }
 
 .card {
@@ -28,22 +14,25 @@
   border-radius: 0.125rem;
 
   background: var(--color-dark-500);
+
+  @include media-tablet {
+    margin-top: 1.125rem;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+  }
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem; // change back to 1.5rem to show is sent message
 }
 
-.hint {
-  @include typography(0.9rem, 1.5rem, 500);
-
-  margin-top: 0.5rem !important;
-}
-
-.hintWithError {
-  margin-top: 1rem !important;
+.inputBlock {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-error;
 }
 
 .sentMessage {
@@ -66,9 +55,9 @@
 }
 
 .modal {
+  // Delete?
   position: fixed !important;
   inset: 50% auto auto 50% !important;
   transform: translate(-50%, -50%) !important;
-
   border-radius: 0.125rem !important;
 }

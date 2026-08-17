@@ -1,7 +1,7 @@
 'use client'
 
 import type ReCAPTCHA from 'react-google-recaptcha'
-import { Button, clsx, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRef, useState } from 'react'
@@ -30,9 +30,9 @@ export default function ForgotPasswordPage() {
     handleSubmit,
     setError,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<PasswordRecoveryRequest>({
-    mode: 'onSubmit',
+    mode: 'onChange',
     resolver: zodResolver(passwordRecoverySchema),
     defaultValues: {
       email: '',
@@ -99,7 +99,7 @@ export default function ForgotPasswordPage() {
               <FormInput
                 control={control}
                 name={'email'}
-                type={'text'}
+                type={'email'}
                 placeholder={'Epam@epam.com'}
                 label={'Email'}
               />

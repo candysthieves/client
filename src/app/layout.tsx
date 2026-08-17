@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
+import { LinearProgress } from '@candy.thieves/ui-kit-lumos'
 import '@candy.thieves/ui-kit-lumos/dist/index.css'
 import '../styles/index.scss'
 import { ToastContainer } from '@/components'
+import { AppHeader } from '@/components/AppHeader'
 import { AuthProvider } from '@/providers/AuthProvider'
 
 export const metadata: Metadata = {
@@ -17,6 +19,9 @@ export default function RootLayout({
   return (
     <html lang={'en'}>
       <body>
+        <AppHeader />
+        <LinearProgress size={'sm'} />
+
         <AuthProvider>
           <ToastContainer />
           {children}

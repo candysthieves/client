@@ -26,6 +26,10 @@ option {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+
+  min-height: 100vh;
   margin: 0;
   padding: 0;
 
@@ -34,4 +38,16 @@ body {
   color: var(--color-light-100);
 
   background-color: var(--color-dark-900);
+}
+
+ul {
+  margin: 0;
+}
+
+[class*='_overlay_'] {
+  animation: none !important;
+}
+
+[role='dialog'] {
+  animation: none !important;
 }

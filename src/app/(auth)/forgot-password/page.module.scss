@@ -69,6 +69,15 @@
   position: fixed !important;
   inset: 50% auto auto 50% !important;
   transform: translate(-50%, -50%) !important;
-
   border-radius: 0.125rem !important;
+}
+
+.card input:-webkit-autofill,
+.card input:-webkit-autofill:hover,
+.card input:-webkit-autofill:focus,
+.card input:-webkit-autofill:active {
+  box-shadow: 0 0 0 1000px var(--color-dark-500) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+
+  -webkit-text-fill-color: var(--color-light-100) !important;
 }

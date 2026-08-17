@@ -1,6 +1,7 @@
 import {
   LoginErrorField,
   LoginField,
+  NewPasswordField,
   PasswordRecoveryField,
   RegistrationErrorField,
 } from '@/lib/model'
@@ -46,6 +47,12 @@ export const VALID_LOGIN_ERROR_FIELDS: LoginErrorField[] = ['email', 'credential
 export const VALID_PASSWORD_RECOVERY_FIELDS: PasswordRecoveryField[] = [
   'email',
   'recaptchaToken',
+] as const
+
+export const VALID_NEW_PASSWORD_FIELDS: NewPasswordField[] = [
+  'recoveryCode',
+  'newPassword',
+  'newPasswordConfirmation',
 ] as const
 
 export const ACCESS_TOKEN_LS_KEY = 'accessToken'

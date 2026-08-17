@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, GithubRepo, Google, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'

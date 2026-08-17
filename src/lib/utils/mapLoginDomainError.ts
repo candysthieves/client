@@ -26,7 +26,7 @@ export function mapLoginDomainError(
   }
 
   const { field } = error.data.errorsMessages[0]
-
+  console.log(field, isValidErrorLoginField(field))
   // if (!isValidLoginField(field) && field !== 'credentials') {
   if (!isValidErrorLoginField(field)) {
     return false

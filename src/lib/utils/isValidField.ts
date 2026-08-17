@@ -1,11 +1,9 @@
 import {
   LoginErrorField,
   LoginField,
-  PasswordRecoveryField,
   RegistrationErrorField,
   VALID_LOGIN_ERROR_FIELDS,
   VALID_LOGIN_FIELDS,
-  VALID_PASSWORD_RECOVERY_FIELDS,
   VALID_REGISTRATION_FIELDS,
 } from '@/lib/model'
 
@@ -24,9 +22,4 @@ export const isValidErrorLoginField = (field: string): field is LoginErrorField 
 // используем для setError соотвествующего поля формы sign-in при Validation Error
 export const isValidLoginField = (field: string): field is LoginField => {
   return VALID_LOGIN_FIELDS.includes(field as LoginField)
-}
-
-// используем для setError соотвествующего поля формы forgot password при Validation / Domain Error
-export const isValidPasswordRecoveryField = (field: string): field is PasswordRecoveryField => {
-  return VALID_PASSWORD_RECOVERY_FIELDS.includes(field as PasswordRecoveryField)
 }

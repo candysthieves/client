@@ -1,8 +1,6 @@
 import { z } from 'zod'
 import { ErrorStatus } from '@/lib/api/enums'
 import {
-  DOMAIN_PASSWORD_RECOVERY_RECAPTCHA_INVALID_CODE_MESSAGE,
-  DOMAIN_PASSWORD_RECOVERY_RECAPTCHA_INVALID_MESSAGE,
   PASSWORD_PATTERN,
   PASSWORD_PATTERN_MESSAGE,
   USERNAME_PATTERN,
@@ -27,13 +25,9 @@ export const passwordBaseSchema = z
 
 export const passwordSchema = passwordBaseSchema.regex(PASSWORD_PATTERN, PASSWORD_PATTERN_MESSAGE)
 
-export const recaptchaTokenSchema = z
-  .string()
-  .min(1, DOMAIN_PASSWORD_RECOVERY_RECAPTCHA_INVALID_MESSAGE)
+export const recaptchaTokenSchema = z.string().min(1, 'RecaptchaToken should not be empty')
 
-export const recoveryCodeSchema = z
-  .string()
-  .min(1, DOMAIN_PASSWORD_RECOVERY_RECAPTCHA_INVALID_CODE_MESSAGE)
+export const recoveryCodeSchema = z.string().min(1, 'Recovery code is required')
 
 // export const termsAcceptedSchema = z.literal(true, {
 //   error: 'isTermsAccepted must be equal to true',

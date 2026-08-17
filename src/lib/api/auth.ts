@@ -4,11 +4,13 @@ import {
   AccessTokenResponse,
   LoginRequest,
   LoginResponse,
+  NewPasswordRequest,
   PasswordRecoveryRequest,
   RegistrationConfirmationRequest,
   RegistrationRequest,
   ResendConfirmationEmailRequest,
   UserResponse,
+  ValidatePasswordRecoveryCodeRequest,
 } from '@/lib/model'
 
 export const login = (data: LoginRequest) =>
@@ -38,6 +40,22 @@ export const resendConfirmationEmail = (data: ResendConfirmationEmailRequest) =>
 
 export const passwordRecovery = (data: PasswordRecoveryRequest) =>
   request<void>('/auth/password-recovery', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
+
+export const validatePasswordRecoveryCode = ({
+  recoveryCode,
+}: ValidatePasswordRecoveryCodeRequest) =>
+  request<void>(
+    `/auth/password-recovery/validate?recoveryCode=${encodeURIComponent(recoveryCode)}`,
+    {
+      method: 'GET',
+    }
+  )
+
+export const newPassword = (data: NewPasswordRequest) =>
+  request<void>('/auth/new-password', {
     method: 'POST',
     body: JSON.stringify(data),
   })

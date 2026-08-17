@@ -31,3 +31,18 @@ export type LoginErrorField = 'credentials' | 'email'
 export type LoginField = keyof LoginRequest
 export type PasswordRecoveryField = keyof PasswordRecoveryRequest
 // export type AuthType = 'github' | 'google'
+export type NewPasswordField = keyof NewPasswordRequest
+
+export const VALID_LOGIN_FIELDS = ['email', 'password'] as const
+export const VALID_NEW_PASSWORD_FIELDS = [
+  'recoveryCode',
+  'newPassword',
+  'newPasswordConfirmation',
+] as const
+export const VALID_REGISTRATION_FIELDS = [
+  'username',
+  'email',
+  'password',
+  'passwordConfirmation',
+  'isTermsAccepted',
+] as const

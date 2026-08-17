@@ -35,3 +35,11 @@ body {
 
   background-color: var(--color-dark-900);
 }
+
+[class*='_overlay_'] {
+  animation: none !important;
+}
+
+[role='dialog'] {
+  animation: none !important;
+}

@@ -1,13 +1,13 @@
 import type { UseFormSetError } from 'react-hook-form'
 import { ApiError } from '@/lib/api'
 import { ErrorStatus } from '@/lib/api/enums'
-import { LoginRequest, VALIDATION_ERROR_COMMON_MESSAGE } from '@/lib/model'
-import { isValidLoginField } from '@/lib/utils/isValidField'
+import { PasswordRecoveryRequest, VALIDATION_ERROR_COMMON_MESSAGE } from '@/lib/model'
+import { isValidPasswordRecoveryField } from '@/lib/utils/isValidField'
 import { isErrorResponse } from './isErrorResponse'
 
-export function mapLoginValidationError(
+export function mapPasswordRecoveryValidationError(
   error: ApiError,
-  setError: UseFormSetError<LoginRequest>
+  setError: UseFormSetError<PasswordRecoveryRequest>
 ): boolean {
   if (!isErrorResponse(error.data)) {
     return false
@@ -24,7 +24,7 @@ export function mapLoginValidationError(
   let hasValidationError = false
 
   error.data.errorsMessages.forEach(({ field }) => {
-    if (isValidLoginField(field)) {
+    if (isValidPasswordRecoveryField(field)) {
       setError(field, {
         type: 'server',
         // message,

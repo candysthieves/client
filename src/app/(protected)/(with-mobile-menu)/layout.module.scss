@@ -1,0 +1,23 @@
+@use '@/styles/mixins' as *;
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.container {
+  @include container;
+
+  flex: 1;
+}
+
+.bottomNavigation {
+  display: none;
+
+  @media (max-width: $tablet-width) {
+    display: block;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+}

@@ -2,27 +2,19 @@
 
 import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
-import { type MouseEvent, useState } from 'react'
 import { ToastWarning } from '@/components/Toast/Toast'
 import { logout } from '@/lib/api/auth'
 import { ACCESS_TOKEN_LS_KEY } from '@/lib/model/constants/constants'
 import s from './LogoutModal.module.css'
 
 type LogoutModalProps = {
-  trigger: (onClick: (e?: MouseEvent<HTMLButtonElement>) => void) => React.ReactNode
+  open: boolean
+  onClose: () => void
   onSuccess?: () => void
 }
 
-export const LogoutModal = ({ trigger, onSuccess }: LogoutModalProps) => {
-  const [isOpen, setIsOpen] = useState(false)
+export const LogoutModal = ({ open, onClose, onSuccess }: LogoutModalProps) => {
   const router = useRouter()
-
-  const openModal = (e?: MouseEvent<HTMLButtonElement>) => {
-    e?.preventDefault()
-    setIsOpen(true)
-  }
-
-  const closeModal = () => setIsOpen(false)
 
   const handleLogout = async () => {
     try {
@@ -40,10 +32,9 @@ export const LogoutModal = ({ trigger, onSuccess }: LogoutModalProps) => {
 
   return (
     <>
-      {trigger(openModal)}
       <Modal
-        open={isOpen}
-        onClose={closeModal}
+        open={open}
+        onClose={onClose}
         modalTitle={'Log Out'}
         size={'s'}
         showHeader
@@ -57,7 +48,7 @@ export const LogoutModal = ({ trigger, onSuccess }: LogoutModalProps) => {
             <Button variant={'primary'} onClick={handleLogout}>
               Ok
             </Button>
-            <Button variant={'secondary'} onClick={closeModal}>
+            <Button variant={'secondary'} onClick={onClose}>
               Cancel
             </Button>
           </div>

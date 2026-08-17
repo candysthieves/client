@@ -42,7 +42,7 @@ export const LogoutModal = ({ open, onClose, onSuccess }: LogoutModalProps) => {
       >
         <div className={s.content}>
           <Typography variant={'subtitle1'} color={'var(--color-light-100)'}>
-            Are you really want to log out of your account?
+            Do you really want to log out of your account?
           </Typography>
           <div className={s.controls}>
             <Button variant={'primary'} onClick={handleLogout}>

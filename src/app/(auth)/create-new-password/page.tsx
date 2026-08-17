@@ -19,7 +19,7 @@ import s from './page.module.scss'
 export default function CreateNewPasswordPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const recoveryCode = searchParams.get('code') ?? searchParams.get('recoveryCode') ?? ''
+  const recoveryCode = searchParams.get('recoveryCode') ?? ''
   const [isCheckingCode, setIsCheckingCode] = useState(true)
 
   const {
@@ -119,7 +119,7 @@ export default function CreateNewPasswordPage() {
   }
 
   return (
-    <div className={s.page}>
+    <main className={s.page}>
       <form className={s.card} onSubmit={handleSubmit(onSubmit)} noValidate>
         <Typography
           variant={'h1'}
@@ -162,6 +162,6 @@ export default function CreateNewPasswordPage() {
           </Button>
         </div>
       </form>
-    </div>
+    </main>
   )
 }

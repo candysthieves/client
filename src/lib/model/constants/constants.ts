@@ -57,3 +57,9 @@ export const ACCESS_TOKEN_LS_KEY = 'accessToken'
 
 export const SIGN_IN_SUCCESS_TITLE = 'Welcome to Lumos!'
 export const SIGN_IN_SUCCESS_MESSAGE = 'Authentication Successful'
+
+export const VALID_NEW_PASSWORD_FIELDS = [
+  'recoveryCode',
+  'newPassword',
+  'newPasswordConfirmation',
+] as const

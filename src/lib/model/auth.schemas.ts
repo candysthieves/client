@@ -85,7 +85,7 @@ export const newPasswordSchema = z
   .object({
     recoveryCode: recoveryCodeSchema,
     newPassword: passwordSchema,
-    newPasswordConfirmation: passwordSchema,
+    newPasswordConfirmation: passwordBaseSchema,
   })
   .refine(({ newPassword, newPasswordConfirmation }) => newPassword === newPasswordConfirmation, {
     message: 'Passwords must match',

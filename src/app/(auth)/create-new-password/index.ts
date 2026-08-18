@@ -1,1 +1,1 @@
-export { CreateNewPasswordContent } from './CreateNewPasswordContent'
+export { VerifyNewPasswordContent } from './VerifyNewPasswordContent'

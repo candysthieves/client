@@ -1,11 +1,13 @@
+'use client'
+
 import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { ToastError } from '@/components'
 import { FormPasswordInput } from '@/components/FormPasswordInput'
-import { ApiError, newPassword as createNewPassword, validatePasswordRecoveryCode } from '@/lib/api'
+import { ApiError, newPassword as createNewPassword } from '@/lib/api'
 import { newPasswordSchema, type NewPasswordRequest } from '@/lib/model'
 import {
   isErrorResponse,
@@ -14,11 +16,10 @@ import {
 } from '@/lib/utils'
 import s from './page.module.scss'
 
-export const CreateNewPasswordContent = () => {
+export const NewPasswordContent = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const recoveryCode = searchParams.get('recoveryCode') ?? ''
-  const [isCheckingCode, setIsCheckingCode] = useState(true)
 
   const {
     control,
@@ -38,45 +39,6 @@ export const CreateNewPasswordContent = () => {
 
   const newPassword = useWatch({ control, name: 'newPassword' })
   const newPasswordConfirmation = useWatch({ control, name: 'newPasswordConfirmation' })
-
-  useEffect(() => {
-    let isMounted = true
-
-    const checkRecoveryCode = async () => {
-      if (!recoveryCode) {
-        router.replace('/recovery-link-expired')
-        return
-      }
-
-      try {
-        await validatePasswordRecoveryCode({ recoveryCode })
-
-        if (isMounted) {
-          setIsCheckingCode(false)
-        }
-      } catch (error) {
-        if (error instanceof ApiError) {
-          router.replace('/recovery-link-expired')
-          return
-        }
-
-        if (isMounted) {
-          setIsCheckingCode(false)
-        }
-
-        ToastError({
-          title: 'Error',
-          messages: 'Something went wrong. Please try again later.',
-        })
-      }
-    }
-
-    void checkRecoveryCode()
-
-    return () => {
-      isMounted = false
-    }
-  }, [recoveryCode, router])
 
   useEffect(() => {
     if (newPassword && newPasswordConfirmation) {
@@ -107,13 +69,9 @@ export const CreateNewPasswordContent = () => {
         }
         return
       } else {
-        throw error // Проброс в глобальный error handler всех остальных ошибок не связанных с Validation / Domain errors - позже будет доработка логики
+        throw error
       }
     }
-  }
-
-  if (isCheckingCode) {
-    return null
   }
 
   return (
@@ -129,7 +87,7 @@ export const CreateNewPasswordContent = () => {
         </Typography>
 
         <div className={s.fields}>
-          <div className={s.field}>
+          <div>
             <FormPasswordInput
               control={control}
               name={'newPassword'}
@@ -139,7 +97,7 @@ export const CreateNewPasswordContent = () => {
             />
           </div>
 
-          <div className={s.field}>
+          <div>
             <FormPasswordInput
               control={control}
               name={'newPasswordConfirmation'}
@@ -150,12 +108,14 @@ export const CreateNewPasswordContent = () => {
           </div>
         </div>
 
-        <Typography variant={'body2'} color={'var(--color-light-900)'} className={s.description}>
-          Your password must be between 6 and 20 characters
-        </Typography>
+        <div className={s.descriptionWrapper}>
+          <Typography variant={'body2'} color={'var(--color-light-900)'} className={s.description}>
+            Your password must be between 6 and 20 characters
+          </Typography>
+        </div>
 
         <div className={s.submit}>
-          <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting || isCheckingCode}>
+          <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
             Create new password
           </Button>
         </div>

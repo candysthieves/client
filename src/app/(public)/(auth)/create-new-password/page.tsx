@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense } from 'react'
-import { VerifyNewPasswordContent } from '@/app/(auth)/create-new-password/VerifyNewPasswordContent'
+import { VerifyNewPasswordContent } from '@/app/(public)/(auth)/create-new-password/VerifyNewPasswordContent'
 
 export default function CreateNewPasswordPage() {
   return (

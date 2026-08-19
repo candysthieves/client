@@ -5,10 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
-import { ToastError } from '@/components'
+import { ToastError, ToastSuccess } from '@/components'
 import { FormPasswordInput } from '@/components/FormPasswordInput'
 import { ApiError, newPassword as createNewPassword } from '@/lib/api'
-import { newPasswordSchema, type NewPasswordRequest } from '@/lib/model'
+import { type NewPasswordRequest, newPasswordSchema } from '@/lib/model'
 import {
   isErrorResponse,
   mapNewPasswordDomainError,
@@ -46,10 +46,21 @@ export const NewPasswordContent = () => {
     }
   }, [newPassword, newPasswordConfirmation, trigger])
 
+  useEffect(() => {
+    if (!recoveryCode) {
+      router.replace('/password-recovery-link-expired')
+    }
+  }, [recoveryCode, router])
+
   const onSubmit: SubmitHandler<NewPasswordRequest> = async data => {
     try {
       await createNewPassword(data)
-      router.push('/sign-in')
+      router.replace('/sign-in')
+
+      ToastSuccess({
+        title: 'Password updated',
+        message: 'You have successfully changed your password',
+      })
     } catch (error) {
       if (error instanceof ApiError && isErrorResponse(error.data)) {
         const isValidationError = mapNewPasswordValidationError(error, setError)
@@ -60,7 +71,7 @@ export const NewPasswordContent = () => {
             title: 'Email verification Error',
             messages: 'Email verification link invalid. Resend verification link',
           })
-          router.replace('/recovery-link-expired')
+          router.replace('/password-recovery-link-expired')
         } else if (isValidationError) {
           ToastError({
             title: 'Validation Error',
@@ -72,6 +83,10 @@ export const NewPasswordContent = () => {
         throw error
       }
     }
+  }
+
+  if (!recoveryCode) {
+    return null
   }
 
   return (

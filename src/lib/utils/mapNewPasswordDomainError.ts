@@ -30,9 +30,6 @@ export function mapNewPasswordDomainError(
         message: DOMAIN_ERROR_PASSWORDS_DONT_MATCH_MESSAGE,
       })
       return true
-    case ErrorStatus.RecoveryCodeExpired:
-    case ErrorStatus.RecoveryCodeInvalid:
-      return true
 
     default:
       return false

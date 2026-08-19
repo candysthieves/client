@@ -3,15 +3,16 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { ApiError, validatePasswordRecoveryCode } from '@/lib/api'
+import { mapNewPasswordConfirmationError } from '@/lib/utils/mapNewPasswordConfirmationError'
 
 export const VerifyNewPasswordContent = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const recoveryCode = searchParams.get('recoveryCode') ?? searchParams.get('code')
+  const recoveryCode = searchParams.get('recoveryCode') ?? ''
 
   const handleVerification = useCallback(async () => {
     if (!recoveryCode) {
-      router.replace('/recovery-link-expired')
+      router.replace('/password-recovery-link-expired')
       return
     }
 
@@ -20,10 +21,12 @@ export const VerifyNewPasswordContent = () => {
       router.replace(`/new-password?recoveryCode=${encodeURIComponent(recoveryCode)}`)
     } catch (error) {
       if (error instanceof ApiError) {
-        router.replace('/recovery-link-expired')
+        const redirectTo = mapNewPasswordConfirmationError(error)
+        if (typeof redirectTo === 'string') {
+          router.replace(redirectTo)
+        }
         return
       }
-
       console.error(error)
       throw error
     }

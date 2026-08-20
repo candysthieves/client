@@ -18,8 +18,3 @@
   color: var(--color-light-500);
   text-align: center;
 }
-
-.sampleBlock {
-  height: 10rem;
-  background-color: var(--color-dark-300);
-}

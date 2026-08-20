@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { LinearProgress } from '@candy.thieves/ui-kit-lumos'
 import '@candy.thieves/ui-kit-lumos/dist/index.css'
 import '../styles/index.scss'
-import { ToastContainer } from '@/components'
+import { HeaderWrapper, ToastContainer } from '@/components'
 import { AppHeader } from '@/components/AppHeader'
 import { AuthProvider } from '@/providers/AuthProvider'
 
@@ -19,8 +19,10 @@ export default function RootLayout({
   return (
     <html lang={'en'}>
       <body>
-        <AppHeader />
-        <LinearProgress size={'sm'} />
+        <HeaderWrapper>
+          <AppHeader />
+          <LinearProgress size={'sm'} />
+        </HeaderWrapper>
 
         <AuthProvider>
           <ToastContainer />

@@ -33,8 +33,7 @@ body {
 
   min-height: 100vh;
   margin: 0;
-  padding: 0;
-  padding-top: $header-height;
+  padding: $header-height 0 0 0;
 
   font-family: var(--font-family-primary), sans-serif;
   line-height: var(--line-height-m);

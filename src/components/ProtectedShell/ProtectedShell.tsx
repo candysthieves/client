@@ -16,7 +16,7 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   return (
     <div className={s.layout}>
       {isAuthenticated ? (
-        <div className={clsx(s.container, { [s.containerAuthenticated]: isAuthenticated })}>
+        <div className={clsx(s.container, s.containerAuthenticated)}>
           <aside className={s.sidebar}>
             <Sidebar
               activeId={activeSidebarId}

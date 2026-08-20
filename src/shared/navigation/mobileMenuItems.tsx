@@ -1,6 +1,5 @@
+import type { ReactNode } from 'react'
 import {
-  Bookmark,
-  BookmarkOutline,
   Home,
   HomeOutline,
   MessageCircle,
@@ -11,10 +10,7 @@ import {
   PlusSquareOutline,
   Search,
   SearchOutline,
-  TrendingUp,
-  TrendingUpOutline,
 } from '@candy.thieves/ui-kit-lumos'
-import { ReactNode } from 'react'
 
 type NavigationItem = {
   id: string

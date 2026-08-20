@@ -54,3 +54,10 @@ ul {
 [role='dialog'] {
   animation: none !important;
 }
+
+// react-remove-scroll (Radix Dialog scroll lock) zeroes body padding-top
+// assuming it is a scrollbar gap compensation, which collapses the space
+// reserved for the fixed header and shifts the layout on modal open.
+html body[data-scroll-locked] {
+  padding-top: $header-height !important;
+}

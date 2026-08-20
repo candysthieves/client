@@ -1,1 +1,0 @@
-export { HeaderWrapper } from './HeaderWrapper'

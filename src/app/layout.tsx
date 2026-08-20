@@ -2,9 +2,10 @@ import type { Metadata } from 'next'
 import { LinearProgress } from '@candy.thieves/ui-kit-lumos'
 import '@candy.thieves/ui-kit-lumos/dist/index.css'
 import '../styles/index.scss'
-import { HeaderWrapper, ToastContainer } from '@/components'
+import { ToastContainer } from '@/components'
 import { AppHeader } from '@/components/AppHeader'
 import { AuthProvider } from '@/providers/AuthProvider'
+import s from './layout.module.scss'
 
 export const metadata: Metadata = {
   title: 'Client',
@@ -19,10 +20,10 @@ export default function RootLayout({
   return (
     <html lang={'en'}>
       <body>
-        <HeaderWrapper>
+        <div className={s.headerWrapper}>
           <AppHeader />
-          <LinearProgress size={'sm'} />
-        </HeaderWrapper>
+          <LinearProgress size={"sm"} className={s.progress} />
+        </div>
 
         <AuthProvider>
           <ToastContainer />

@@ -2,13 +2,14 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
+import { ToastError } from '@/components'
 import { ApiError, registrationConfirmation } from '@/lib/api'
 import { mapRegistrationConfirmationError } from '@/lib/utils'
 
 export const VerifyContent = () => {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const code = searchParams.get('code')
+  const code = searchParams.get('code') ?? ''
 
   const handleVerification = useCallback(async () => {
     /**
@@ -25,7 +26,7 @@ export const VerifyContent = () => {
     } catch (error) {
       if (error instanceof ApiError) {
         const redirectTo = mapRegistrationConfirmationError(error)
-        if (redirectTo) {
+        if (typeof redirectTo === 'string') {
           router.replace(redirectTo)
           return
         }
@@ -42,3 +43,6 @@ export const VerifyContent = () => {
 
   return null
 }
+
+// ConfirmationCodeExpired = 40,
+// ConfirmationCodeInvalid = 41,

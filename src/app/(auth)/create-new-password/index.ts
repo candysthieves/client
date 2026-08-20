@@ -1,1 +1,0 @@
-export { CreateNewPasswordContent } from './CreateNewPasswordContent'

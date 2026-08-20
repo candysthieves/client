@@ -36,11 +36,11 @@
 .fields {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: $spacing-error;
 }
 
-.field {
-  min-height: 5.625rem;
+.descriptionWrapper {
+  margin: $spacing-error 0 0;
 }
 
 .description {

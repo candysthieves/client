@@ -1,12 +1,12 @@
 'use client'
 
 import { Suspense } from 'react'
-import { CreateNewPasswordContent } from '@/app/(auth)/create-new-password/CreateNewPasswordContent'
+import { VerifyNewPasswordContent } from '@/app/(public)/(auth)/create-new-password/VerifyNewPasswordContent'
 
 export default function CreateNewPasswordPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <CreateNewPasswordContent />
+      <VerifyNewPasswordContent />
     </Suspense>
   )
 }

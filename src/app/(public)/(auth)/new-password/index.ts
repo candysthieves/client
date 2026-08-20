@@ -1,0 +1,1 @@
+export { NewPasswordContent } from './NewPasswordContent'

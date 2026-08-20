@@ -14,16 +14,12 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   const activeSidebarId = sidebarItems.find(item => item.href === pathname)?.id ?? ''
   const [logoutOpen, setLogoutOpen] = useState(false)
 
-  const content = (
-    <main className={clsx(s.content, { [s.contentAuthenticated]: isAuthenticated })}>
-      {children}
-    </main>
-  )
+  const content = <main className={s.content}>{children}</main>
 
   return (
     <div className={s.layout}>
       {isAuthenticated ? (
-        <div className={s.container}>
+        <div className={clsx(s.container, s.containerAuthenticated)}>
           <aside className={s.sidebar}>
             <Sidebar
               activeId={activeSidebarId}

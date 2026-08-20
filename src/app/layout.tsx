@@ -5,6 +5,7 @@ import '../styles/index.scss'
 import { ToastContainer } from '@/components'
 import { AppHeader } from '@/components/AppHeader'
 import { AuthProvider } from '@/providers/AuthProvider'
+import s from './layout.module.scss'
 
 export const metadata: Metadata = {
   title: 'Client',
@@ -19,8 +20,10 @@ export default function RootLayout({
   return (
     <html lang={'en'}>
       <body>
-        <AppHeader />
-        <LinearProgress size={'sm'} />
+        <div className={s.headerWrapper}>
+          <AppHeader />
+          <LinearProgress size={"sm"} className={s.progress} />
+        </div>
 
         <AuthProvider>
           <ToastContainer />

@@ -2,12 +2,12 @@ import { UseFormSetError } from 'react-hook-form'
 import { ApiError } from '@/lib/api'
 import { ErrorStatus } from '@/lib/api/enums'
 import {
-  DOMAIN_LOGIN_EMAIL_CONFIRM_ERROR_MESSAGE,
+  DOMAIN_EMAIL_CONFIRM_ERROR_MESSAGE,
   DOMAIN_LOGIN_ERROR_MESSAGE,
   DOMAIN_LOGIN_NOT_FOUND_ERROR_MESSAGE,
   LoginRequest,
 } from '@/lib/model'
-import { isValidErrorLoginField, isValidLoginField } from '@/lib/utils/isValidField'
+import { isValidErrorLoginField } from '@/lib/utils/isValidField'
 import { isErrorResponse } from './isErrorResponse'
 
 /**
@@ -36,7 +36,7 @@ export function mapLoginDomainError(
     case ErrorStatus.EmailNotConfirmed:
       setError('email', {
         type: 'server',
-        message: DOMAIN_LOGIN_EMAIL_CONFIRM_ERROR_MESSAGE,
+        message: DOMAIN_EMAIL_CONFIRM_ERROR_MESSAGE,
       })
       return true
 

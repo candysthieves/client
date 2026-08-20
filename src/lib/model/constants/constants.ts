@@ -21,20 +21,20 @@ export const DOMAIN_ERROR_COMMON_MESSAGE = 'Please check the data input'
 export const DOMAIN_ERROR_EMAIL_ALREADY_EXISTS_MESSAGE = 'Email already exists'
 export const DOMAIN_ERROR_USERNAME_ALREADY_EXISTS_MESSAGE = 'Username already exists'
 export const DOMAIN_ERROR_PASSWORDS_DONT_MATCH_MESSAGE = 'Passwords do not match'
-
-export const DOMAIN_LOGIN_EMAIL_CONFIRM_ERROR_MESSAGE = 'Email is not confirmed'
-
+export const DOMAIN_EMAIL_CONFIRM_ERROR_MESSAGE = 'Email is not confirmed'
 export const DOMAIN_LOGIN_ERROR_MESSAGE = 'Invalid email or password'
-
 export const DOMAIN_LOGIN_NOT_FOUND_ERROR_MESSAGE = 'User or email is not found'
-
 export const DOMAIN_RESEND_EMAIL_NOT_EXISTS_ERROR_MESSAGE = 'Email does not exist in base'
-
 export const DOMAIN_RESEND_EMAIL_ALREADY_CONFIRMED_ERROR_MESSAGE = 'Email is already confirmed'
+
+export const EMAIL_VERIFICATION_ERROR_TITLE = 'Confirmation Email link Error'
+export const EMAIL_VERIFICATION_CODE_INVALID_ERROR_MESSAGE =
+  'Confirmation Email link code is invalid'
+export const EMAIL_VERIFICATION_CODE_EXPIRED_ERROR_MESSAGE =
+  'Confirmation Email link code is expired'
 
 export const DOMAIN_PASSWORD_RECOVERY_RECAPTCHA_INVALID_MESSAGE =
   'Please verify that you are not a robot'
-
 export const DOMAIN_PASSWORD_RECOVERY_RECAPTCHA_INVALID_CODE_MESSAGE = 'Recovery code is required'
 
 export const VALID_REGISTRATION_FIELDS: RegistrationErrorField[] = [
@@ -57,3 +57,9 @@ export const ACCESS_TOKEN_LS_KEY = 'accessToken'
 
 export const SIGN_IN_SUCCESS_TITLE = 'Welcome to Lumos!'
 export const SIGN_IN_SUCCESS_MESSAGE = 'Authentication Successful'
+
+export const VALID_NEW_PASSWORD_FIELDS = [
+  'recoveryCode',
+  'newPassword',
+  'newPasswordConfirmation',
+] as const

@@ -2,14 +2,14 @@ import { ToastError } from '@/components'
 import { ApiError } from '@/lib/api'
 import { ErrorStatus } from '@/lib/api/enums'
 import {
-  DOMAIN_RESEND_EMAIL_ALREADY_CONFIRMED_ERROR_MESSAGE,
   EMAIL_VERIFICATION_CODE_EXPIRED_ERROR_MESSAGE,
   EMAIL_VERIFICATION_CODE_INVALID_ERROR_MESSAGE,
   EMAIL_VERIFICATION_ERROR_TITLE,
 } from '@/lib/model'
 import { isErrorResponse } from '@/lib/utils/isErrorResponse'
+import { isValidNewPasswordField } from '@/lib/utils/isValidField'
 
-export function mapRegistrationConfirmationError(error: ApiError): false | string {
+export function mapNewPasswordConfirmationError(error: ApiError): false | string {
   if (error.status === 400) {
     if (!isErrorResponse(error.data)) {
       return false
@@ -21,29 +21,22 @@ export function mapRegistrationConfirmationError(error: ApiError): false | strin
 
     const { field } = error.data.errorsMessages[0]
 
-    if (field !== 'code' && field !== 'email') {
+    if (!isValidNewPasswordField(field)) {
       return false
     }
 
-    const REDIRECT_ROUTE = '/verification-expired'
+    const REDIRECT_ROUTE = '/password-recovery-link-expired'
 
     switch (error.data.code) {
       case ErrorStatus.ValidationError:
-      case ErrorStatus.ConfirmationCodeInvalid:
+      case ErrorStatus.RecoveryCodeInvalid:
         ToastError({
           title: EMAIL_VERIFICATION_ERROR_TITLE,
           messages: EMAIL_VERIFICATION_CODE_INVALID_ERROR_MESSAGE,
         })
         return REDIRECT_ROUTE
 
-      case ErrorStatus.EmailAlreadyConfirmed:
-        ToastError({
-          title: EMAIL_VERIFICATION_ERROR_TITLE,
-          messages: DOMAIN_RESEND_EMAIL_ALREADY_CONFIRMED_ERROR_MESSAGE,
-        })
-        return REDIRECT_ROUTE
-
-      case ErrorStatus.ConfirmationCodeExpired:
+      case ErrorStatus.RecoveryCodeExpired:
         ToastError({
           title: EMAIL_VERIFICATION_ERROR_TITLE,
           messages: EMAIL_VERIFICATION_CODE_EXPIRED_ERROR_MESSAGE,

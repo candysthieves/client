@@ -46,3 +46,11 @@ body {
 ul {
   margin: 0;
 }
+
+[class*='_overlay_'] {
+  animation: none !important;
+}
+
+[role='dialog'] {
+  animation: none !important;
+}

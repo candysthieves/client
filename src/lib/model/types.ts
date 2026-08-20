@@ -31,3 +31,4 @@ export type LoginErrorField = 'credentials' | 'email'
 export type LoginField = keyof LoginRequest
 export type PasswordRecoveryField = keyof PasswordRecoveryRequest
 // export type AuthType = 'github' | 'google'
+export type NewPasswordField = keyof NewPasswordRequest

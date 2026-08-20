@@ -1,3 +1,5 @@
+@use './mixins' as *;
+
 html {
   box-sizing: border-box;
   font-size: 100%;
@@ -32,7 +34,7 @@ body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  padding-top: 3.75rem;
+  padding-top: $header-height;
 
   font-family: var(--font-family-primary), sans-serif;
   line-height: var(--line-height-m);

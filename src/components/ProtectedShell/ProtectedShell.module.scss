@@ -20,17 +20,15 @@
 
 .sidebar {
   position: sticky;
-  top: 3.75rem;
+  top: $header-height;
   flex-shrink: 0;
-  height: calc(100vh - 3.75rem);
+  height: calc(100vh - $header-height);
 
-  @media (max-width: $tablet-width) {
+  @include media-tablet {
     display: none;
   }
 }
 
 .content {
-  width: 100%;
-  max-width: $content-width;
-  margin: 0 auto;
+  @include content;
 }

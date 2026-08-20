@@ -3,6 +3,7 @@
 $desktop-width: 1280px;
 $tablet-width: 768px;
 $mobile-width: 360px;
+$header-height: 3.75rem;
 $container-width: 1156px;
 $content-width: 972px;
 $modal-width-xs: 366px;
@@ -162,6 +163,7 @@ $spacing-checkbox-error: 1.25rem;
  * }
  */
 @mixin content($max-width: $content-width) {
+  width: 100%;
   max-width: $max-width;
   margin: 0 auto;
 }

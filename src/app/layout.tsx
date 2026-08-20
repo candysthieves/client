@@ -2,9 +2,10 @@ import type { Metadata } from 'next'
 import { LinearProgress } from '@candy.thieves/ui-kit-lumos'
 import '@candy.thieves/ui-kit-lumos/dist/index.css'
 import '../styles/index.scss'
+import { ReactNode } from 'react'
 import { ToastContainer } from '@/components'
 import { AppHeader } from '@/components/AppHeader'
-import { AuthProvider } from '@/providers/AuthProvider'
+import { QueryProviders } from '@/providers'
 
 export const metadata: Metadata = {
   title: 'Client',
@@ -14,18 +15,19 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: ReactNode
 }>) {
   return (
     <html lang={'en'}>
       <body>
-        <AppHeader />
-        <LinearProgress size={'sm'} />
-
-        <AuthProvider>
+        <QueryProviders>
+          <AppHeader />
+          <LinearProgress size={'sm'} />
+          {/*<AuthProvider>*/}
           <ToastContainer />
           {children}
-        </AuthProvider>
+        </QueryProviders>
+        {/*</AuthProvider>*/}
       </body>
     </html>
   )

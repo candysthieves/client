@@ -30,7 +30,7 @@ export default function OAuthSuccessPage() {
   }, [router]) // Зависимости: router
 
   useEffect(() => {
-    authenticate()
+    void authenticate()
   }, [authenticate])
 
   return null

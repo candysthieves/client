@@ -30,9 +30,7 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   // }
 
   const content = !isLoading ? (
-    <main className={clsx(s.content, { [s.contentAuthenticated]: isAuthenticated })}>
-      {children}
-    </main>
+    <main className={s.content}>{children}</main>
   ) : (
     <div>Loading...</div> // change Loading... later
   )
@@ -40,7 +38,7 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   return (
     <div className={s.layout}>
       {isAuthenticated ? (
-        <div className={s.container}>
+        <div className={clsx(s.container, s.containerAuthenticated)}>
           <aside className={s.sidebar}>
             <Sidebar
               activeId={activeSidebarId}

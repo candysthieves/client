@@ -1,42 +1,34 @@
 @use '@/styles/mixins' as *;
 
 .layout {
+  @include container;
+
   display: flex;
-  flex: 1;
   flex-direction: column;
   width: 100%;
 }
 
 .container {
   display: flex;
-  flex: 1;
-  gap: 1.5rem;
+  justify-content: center;
   width: 100%;
 }
 
-.sidebar {
-  margin-left: 3.75rem;
+.containerAuthenticated {
+  gap: 1.5rem;
+}
 
-  @media (max-width: $tablet-width) {
+.sidebar {
+  position: sticky;
+  top: $header-height;
+  flex-shrink: 0;
+  height: calc(100vh - $header-height);
+
+  @include media-tablet {
     display: none;
   }
 }
 
 .content {
   @include content;
-}
-
-.contentAuthenticated {
-  flex: 1;
-  align-self: stretch;
-  max-width: none;
-  padding: 0;
-
-  @media (min-width: $tablet-width) {
-    margin-right: 3.75rem;
-  }
-
-  @media (max-width: $tablet-width) {
-    @include container;
-  }
 }

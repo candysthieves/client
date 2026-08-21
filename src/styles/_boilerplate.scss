@@ -1,3 +1,5 @@
+@use './mixins' as *;
+
 html {
   box-sizing: border-box;
   font-size: 100%;
@@ -31,7 +33,7 @@ body {
 
   min-height: 100vh;
   margin: 0;
-  padding: 0;
+  padding: $header-height 0 0 0;
 
   font-family: var(--font-family-primary), sans-serif;
   line-height: var(--line-height-m);
@@ -50,4 +52,11 @@ ul {
 
 [role='dialog'] {
   animation: none !important;
+}
+
+// react-remove-scroll (Radix Dialog scroll lock) zeroes body padding-top
+// assuming it is a scrollbar gap compensation, which collapses the space
+// reserved for the fixed header and shifts the layout on modal open.
+html body[data-scroll-locked] {
+  padding-top: $header-height !important;
 }

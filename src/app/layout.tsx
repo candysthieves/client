@@ -6,6 +6,8 @@ import { ReactNode } from 'react'
 import { ToastContainer } from '@/components'
 import { AppHeader } from '@/components/AppHeader'
 import { QueryProviders } from '@/providers'
+import { AuthProvider } from '@/providers/AuthProvider'
+import s from './layout.module.scss'
 
 export const metadata: Metadata = {
   title: 'Client',
@@ -21,13 +23,14 @@ export default function RootLayout({
     <html lang={'en'}>
       <body>
         <QueryProviders>
-          <AppHeader />
-          <LinearProgress size={'sm'} />
-          {/*<AuthProvider>*/}
+          <div className={s.headerWrapper}>
+            <AppHeader />
+            <LinearProgress size={'sm'} className={s.progress} />
+          </div>
+
           <ToastContainer />
           {children}
         </QueryProviders>
-        {/*</AuthProvider>*/}
       </body>
     </html>
   )

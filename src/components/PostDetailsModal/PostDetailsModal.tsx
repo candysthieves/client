@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
+import { isAuthenticated } from '@/shared/config/isAuthenticated'
 import { type Comment, mockComments, mockLikedByUsers, type Post } from './PostDetailsModal.mock'
 import s from './PostDetailsModal.module.scss'
 
@@ -23,7 +24,6 @@ type Props = {
 }
 
 export const PostDetailsModal = ({ post, open, onClose }: Props) => {
-  // the post description, when present, is shown as the author's first entry
   const descriptionComment = post.description
     ? {
         id: 'post-description',
@@ -107,7 +107,7 @@ export const PostDetailsModal = ({ post, open, onClose }: Props) => {
           </div>
 
           {/* Scrollable: author's description + comments */}
-          <div className={s.scrollSection}>
+          <div className={`${s.scrollSection} ${!isAuthenticated ? s.scrollSectionGuest : ''}`}>
             <Scroll orientation={'vertical'}>
               <div className={s.commentsBlock}>
                 {descriptionComment && renderComment(descriptionComment, true)}
@@ -128,43 +128,48 @@ export const PostDetailsModal = ({ post, open, onClose }: Props) => {
           </div>
 
           {/* Actions */}
-          <div className={s.actions}>
-            <div className={s.leftActions}>
+          {isAuthenticated && (
+            <div className={s.actions}>
+              <div className={s.leftActions}>
+                <button type={'button'} aria-label={'Like'} className={s.actionButton}>
+                  <HeartOutline size={24} />
+                </button>
+                <button type={'button'} aria-label={'Share'} className={s.actionButton}>
+                  <PaperPlaneOutline size={24} />
+                </button>
+              </div>
+
               <button type={'button'} aria-label={'Like'} className={s.actionButton}>
-                <HeartOutline size={24} />
-              </button>
-              <button type={'button'} aria-label={'Share'} className={s.actionButton}>
-                <PaperPlaneOutline size={24} />
+                <BookmarkOutline size={24} />
               </button>
             </div>
+          )}
 
-            <button type={'button'} aria-label={'Like'} className={s.actionButton}>
-              <BookmarkOutline size={24} />
-            </button>
-          </div>
+          {/* Footer: likes + date */}
+          <div className={`${s.postFooter} ${!isAuthenticated ? s.postFooterGuest : ''}`}>
+            <div className={s.likes}>
+              <AvatarBlock users={mockLikedByUsers} />
 
-          {/* Likes */}
-          <div className={s.likes}>
-            <AvatarBlock users={mockLikedByUsers} />
+              <Typography variant={'body2'}>2 243 &quot;Like&quot;</Typography>
+            </div>
 
-            <Typography variant={'body2'}>2 243 &quot;Like&quot;</Typography>
-          </div>
-
-          {/* Date */}
-          <div className={s.date}>
-            <Typography variant={'caption1'} color={'var(--color-light-900)'}>
-              July 3, 2021
-            </Typography>
+            <div className={s.date}>
+              <Typography variant={'caption1'} color={'var(--color-light-900)'}>
+                July 3, 2021
+              </Typography>
+            </div>
           </div>
 
           {/* Comment input */}
-          <div className={s.commentForm}>
-            <input className={s.commentInput} placeholder={'Add a Comment...'} />
+          {isAuthenticated && (
+            <div className={s.commentForm}>
+              <input className={s.commentInput} placeholder={'Add a Comment...'} />
 
-            <Button type={'button'} variant={'text'}>
-              Publish
-            </Button>
-          </div>
+              <Button type={'button'} variant={'text'}>
+                Publish
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </Modal>

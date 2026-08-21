@@ -1,0 +1,191 @@
+@use '@/styles/mixins' as *;
+
+.modal {
+  width: $modal-width-xl;
+}
+
+.postContainer {
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 30.625rem 1fr;
+
+  width: 100%;
+  height: $modal-height-xl;
+
+  // guard for short viewports: the fixed design height
+  // would otherwise overflow the kit's max-height: 85vh content
+  max-height: 85vh;
+
+  // the kit Modal content is rounded but does not clip its children,
+  // so the columns' square corners would stick out past the curve
+  border-radius: 0.4rem;
+}
+
+.postImageContainer {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.4rem 0 0 0.4rem;
+
+  @include flex(flex, center, center);
+
+  // the kit Carousel root is sized by its own aspect-ratio,
+  // stretch it over the full design area instead
+  & > :first-child {
+    @include width-height(100%);
+  }
+}
+
+.postInfo {
+  @include flex(flex, none, none);
+
+  flex-direction: column;
+  min-width: 0;
+  color: var(--color-light-100);
+  background: var(--color-dark-300);
+}
+
+.postImageContainer .postImage {
+  @include width-height(100%);
+
+  // +1px overdraw: at fractional zoom / device-pixel ratios
+  // object-fit: cover can leave a hairline unpainted row,
+  // the container's overflow: hidden clips the excess
+  height: calc(100% + 1px);
+  object-fit: cover;
+}
+
+.scrollSection {
+  @include flex(flex, none, none);
+
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: 21rem;
+
+  // allows the section to shrink on short viewports
+  // so the ui-kit Scroll inside can actually scroll
+  min-height: 0;
+}
+
+.commentsBlock {
+  @include flex(flex, flex-start, none);
+
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.emptyComments {
+  @include flex(flex, center, center);
+
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+}
+
+.author {
+  @include flex(flex, flex-start, center);
+
+  flex-shrink: 0;
+  gap: 0.75rem;
+
+  height: 3.688rem;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--color-dark-100);
+}
+
+.comment {
+  @include flex(flex, flex-start, flex-start);
+
+  .actionButton {
+    margin-top: 0.25rem;
+  }
+}
+
+.answerButton {
+  cursor: pointer;
+
+  display: flex;
+
+  padding: 0;
+  border: none;
+
+  line-height: var(--line-height-xs);
+
+  background: transparent;
+}
+
+.commentMeta {
+  @include flex(flex, flex-start, center);
+
+  gap: 0.75rem;
+  margin-top: 0.3rem;
+}
+
+.commentBody {
+  width: 21.563rem;
+  margin-right: 1.5rem;
+  margin-left: 0.75rem;
+}
+
+.commentText {
+  display: inline;
+}
+
+.actions {
+  @include flex(flex, space-between, center);
+
+  padding: 0.75rem 1.4rem 1rem 1rem;
+  border-top: 1px solid var(--color-dark-100);
+}
+
+.leftActions {
+  @include flex(flex, flex-start, center);
+
+  gap: 1.6rem;
+}
+
+.actionButton {
+  cursor: pointer;
+
+  display: flex;
+
+  padding: 0;
+  border: none;
+
+  color: var(--color-light-100);
+
+  background: transparent;
+}
+
+.likes {
+  @include flex(flex, flex-start, center);
+
+  gap: 0.75rem;
+  padding: 0 1rem 0.25rem;
+}
+
+.date {
+  padding: 0 0 0.4rem 1rem;
+}
+
+.commentForm {
+  @include flex(flex, space-between, center);
+
+  flex-shrink: 0;
+  min-height: 3.687rem;
+  padding: 0 1rem;
+  border-top: 1px solid var(--color-dark-100);
+}
+
+.commentInput {
+  flex: 1;
+
+  min-width: 0;
+  border: none;
+
+  color: var(--color-light-100);
+
+  background: transparent;
+  outline: none;
+}

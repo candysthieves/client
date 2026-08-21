@@ -46,11 +46,16 @@ ul {
   margin: 0;
 }
 
+// The fixed header (.headerWrapper in layout.module.scss) has z-index: 100,
+// while the ui-kit Modal overlay and content are position: fixed without any
+// z-index, so the header paints above the modal and its outside close button.
 [class*='_overlay_'] {
+  z-index: 101;
   animation: none !important;
 }
 
 [role='dialog'] {
+  z-index: 102;
   animation: none !important;
 }
 

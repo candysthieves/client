@@ -2,8 +2,13 @@
 
 import { Button } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
+import { useState } from 'react'
+import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
+import { mockPost } from '@/components/PostDetailsModal/PostDetailsModal.mock'
 
 export default function Home() {
+  const [isOpen, setIsOpen] = useState(false)
+
   return (
     <main>
       <h1>Welcome to LumosApp</h1>
@@ -13,6 +18,10 @@ export default function Home() {
       <Link href={'/sign-in'} style={{ marginRight: 16 }}>
         <Button>Sign in</Button>
       </Link>
+
+      <Button onClick={() => setIsOpen(true)}>Show Post</Button>
+
+      <PostDetailsModal post={mockPost} open={isOpen} onClose={() => setIsOpen(false)} />
     </main>
   )
 }

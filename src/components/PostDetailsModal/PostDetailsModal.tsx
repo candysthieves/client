@@ -33,7 +33,7 @@ export const PostDetailsModal = ({ post, open, onClose }: Props) => {
       }
     : null
 
-  const renderComment = (comment: Comment) => (
+  const renderComment = (comment: Comment, isDescription = false) => (
     <div key={comment.id} className={s.comment}>
       <Avatar userName={comment.username} src={comment.avatarUrl} size={'s'} />
 
@@ -57,11 +57,13 @@ export const PostDetailsModal = ({ post, open, onClose }: Props) => {
             </Typography>
           ) : null}
 
-          <button type={'button'} className={s.answerButton}>
-            <Typography variant={'caption2'} color={'var(--color-light-900)'}>
-              Answer
-            </Typography>
-          </button>
+          {isDescription ? null : (
+            <button type={'button'} className={s.answerButton}>
+              <Typography variant={'caption2'} color={'var(--color-light-900)'}>
+                Answer
+              </Typography>
+            </button>
+          )}
         </div>
       </div>
 
@@ -108,7 +110,7 @@ export const PostDetailsModal = ({ post, open, onClose }: Props) => {
           <div className={s.scrollSection}>
             <Scroll orientation={'vertical'}>
               <div className={s.commentsBlock}>
-                {descriptionComment && renderComment(descriptionComment)}
+                {descriptionComment && renderComment(descriptionComment, true)}
 
                 {mockComments.length === 0 ? (
                   <div className={s.emptyComments}>
@@ -119,7 +121,7 @@ export const PostDetailsModal = ({ post, open, onClose }: Props) => {
                     </Typography>
                   </div>
                 ) : (
-                  mockComments.map(renderComment)
+                  mockComments.map(comment => renderComment(comment))
                 )}
               </div>
             </Scroll>

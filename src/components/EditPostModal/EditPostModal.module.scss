@@ -1,0 +1,115 @@
+@use '@/styles/mixins' as *;
+
+.modal {
+  width: $modal-width-xl;
+}
+
+.container {
+  position: relative;
+
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 30.625rem 1fr;
+  grid-template-rows: minmax(0, 1fr);
+
+  width: 100%;
+  height: $modal-height-xl;
+  max-height: 85vh;
+  border-radius: 0.4rem;
+}
+
+.header {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 3.688rem;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--color-dark-100);
+
+  color: var(--color-light-100);
+
+  background: var(--color-dark-300);
+}
+
+.closeButton {
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  border: none;
+
+  color: var(--color-light-100);
+
+  background: transparent;
+}
+
+.imageSection {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-dark-900);
+}
+
+// compound selector to outbid the kit's global
+// ._childContent_vns11_106 img { height: auto; object-fit: contain }
+.imageSection .postImage {
+  @include width-height(100%);
+
+  // +1px overdraw: at fractional zoom / device-pixel ratios
+  // object-fit: cover can leave a hairline unpainted row,
+  // the container's overflow: hidden clips the excess
+  height: calc(100% + 1px);
+  object-fit: cover;
+}
+
+.editSection {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  padding-top: 3.688rem;
+
+  color: var(--color-light-100);
+
+  background: var(--color-dark-300);
+}
+
+.user {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.75rem;
+  align-items: center;
+
+  padding: 1rem;
+}
+
+.descriptionSection {
+  position: relative;
+  padding: 1rem;
+}
+
+.descriptionSection .descriptionInput {
+  height: 7.6rem;
+}
+
+.counter {
+  position: absolute;
+  right: 1rem;
+  bottom: 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding: 1rem;
+}

@@ -18,6 +18,7 @@ export type Post = {
   preview: PostPreview
   userId: string
   userName: string
+  avatarUrl?: string
   willBeDeletedIn: Date | null
 }
 
@@ -55,17 +56,19 @@ export const mockPost: Post = {
     url: 'https://images.unsplash.com/photo-1778017458320-fd7f6688cbf5?q=80&w=196&h=226&auto=format&fit=crop',
   },
 
+  avatarUrl: 'https://i.pravatar.cc/96?img=12',
+
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
 
   userId: 'user-1',
-  userName: 'Alex Johnson',
+  userName: 'alex_johnson',
   willBeDeletedIn: null,
 }
 
 export const mockComments: Comment[] = [
   {
     id: '1',
-    username: 'User Name',
+    username: 'anna.murphy',
     avatarUrl: 'https://i.pravatar.cc/40?img=8',
     text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
     createdAt: '2 hours ago',
@@ -73,7 +76,7 @@ export const mockComments: Comment[] = [
   },
   {
     id: '2',
-    username: 'Another User',
+    username: 'dmitry_k',
     avatarUrl: 'https://i.pravatar.cc/40?img=9',
     text: 'This is a really nice photo!',
     createdAt: '1 hour ago',
@@ -81,14 +84,14 @@ export const mockComments: Comment[] = [
   },
   {
     id: '3',
-    username: 'John Doe',
+    username: 'johndoe_official',
     avatarUrl: 'https://i.pravatar.cc/40?img=10',
     text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.',
     createdAt: '30 minutes ago',
   },
   {
     id: '4',
-    username: 'Jane Doe',
+    username: 'jane_doe',
     avatarUrl: 'https://i.pravatar.cc/40?img=11',
     text: 'Amazing!',
     createdAt: '10 minutes ago',
@@ -97,7 +100,7 @@ export const mockComments: Comment[] = [
 ]
 
 export const mockLikedByUsers: LikedByUser[] = [
-  { userName: 'User One', src: 'https://i.pravatar.cc/40?img=5' },
-  { userName: 'User Two', src: 'https://i.pravatar.cc/40?img=6' },
-  { userName: 'User Three', src: 'https://i.pravatar.cc/40?img=7' },
+  { userName: 'mark_levin', src: 'https://i.pravatar.cc/40?img=5' },
+  { userName: 'sofia.petrova', src: 'https://i.pravatar.cc/40?img=6' },
+  { userName: 'kate_wolf', src: 'https://i.pravatar.cc/40?img=7' },
 ]

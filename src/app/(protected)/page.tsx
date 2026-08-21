@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
 import { mockPost } from '@/components/PostDetailsModal/PostDetailsModal.mock'
+import { PostModal } from '@/components/PostModal/PostModal'
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false)
@@ -21,7 +22,7 @@ export default function Home() {
 
       <Button onClick={() => setIsOpen(true)}>Show Post</Button>
 
-      <PostDetailsModal post={mockPost} open={isOpen} onClose={() => setIsOpen(false)} />
+      <PostModal post={mockPost} open={isOpen} onClose={() => setIsOpen(false)} />
     </main>
   )
 }

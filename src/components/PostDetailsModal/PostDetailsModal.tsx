@@ -21,13 +21,15 @@ type Props = {
   post: Post
   open: boolean
   onClose: () => void
+  onEdit: () => void
 }
 
-export const PostDetailsModal = ({ post, open, onClose }: Props) => {
+export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
   const descriptionComment = post.description
     ? {
         id: 'post-description',
         username: post.userName,
+        avatarUrl: post.avatarUrl,
         text: post.description,
         createdAt: '',
       }
@@ -35,7 +37,7 @@ export const PostDetailsModal = ({ post, open, onClose }: Props) => {
 
   const renderComment = (comment: Comment, isDescription = false) => (
     <div key={comment.id} className={s.comment}>
-      <Avatar userName={comment.username} src={comment.avatarUrl} size={'s'} />
+      <Avatar userName={comment.username} src={comment.avatarUrl} size={'s'} delayMs={0} />
 
       <div className={s.commentBody}>
         <Typography variant={'subtitle2'} className={s.commentText}>
@@ -101,9 +103,16 @@ export const PostDetailsModal = ({ post, open, onClose }: Props) => {
         <div className={s.postInfo}>
           {/* Header */}
           <div className={s.author}>
-            <Avatar userName={post.userName} size={'s'} />
+            <Avatar userName={post.userName} src={post.avatarUrl} size={'s'} delayMs={0} />
 
             <Typography variant={'subtitle2'}>{post.userName}</Typography>
+
+            {/* temporary placeholder for the future dropdown menu */}
+            {isAuthenticated && (
+              <Button type={'button'} variant={'text'} onClick={onEdit}>
+                Edit Post
+              </Button>
+            )}
           </div>
 
           {/* Scrollable: author's description + comments */}

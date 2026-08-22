@@ -1,24 +1,22 @@
+@use 'sass:math';
+
 @use '@/styles/mixins' as *;
 
 .modal {
-  width: $modal-width-xl;
+  width: min($modal-width-xl, calc(100vw - 2rem));
 }
 
 .postContainer {
   overflow: hidden;
   display: grid;
-  grid-template-columns: 30.625rem 1fr;
-
-  // cap the row at the container height: otherwise the info
-  // column's content can stretch the row (and the photo) by ~1px
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
 
+  aspect-ratio: math.div($modal-width-xl, $modal-height-xl);
   width: 100%;
-  height: $modal-height-xl;
 
-  // guard for short viewports: the fixed design height
-  // would otherwise overflow the kit's max-height: 85vh content
-  max-height: 85vh;
+  // width drives the size; the cap only protects short viewports
+  max-height: min($modal-height-xl, 85vh);
 
   // the kit Modal content is rounded but does not clip its children,
   // so the columns' square corners would stick out past the curve
@@ -43,8 +41,12 @@
   @include flex(flex, none, none);
 
   flex-direction: column;
+
   min-width: 0;
+  min-height: 0;
+
   color: var(--color-light-100);
+
   background: var(--color-dark-300);
 }
 
@@ -63,12 +65,11 @@
 
   flex: 1 1 auto;
   flex-direction: column;
-  height: 21rem;
   min-height: 0;
 }
 
 .scrollSectionGuest {
-  height: 26.25rem;
+  flex: 1 1 auto;
 }
 
 .commentsBlock {
@@ -94,7 +95,7 @@
   flex-shrink: 0;
   gap: 0.75rem;
 
-  height: 3.6875rem;
+  height: modal-fluid(3.688rem);
   padding: 0 1rem;
   border-bottom: 1px solid var(--color-dark-100);
 }
@@ -102,7 +103,10 @@
 .comment {
   @include flex(flex, flex-start, flex-start);
 
+  min-width: 0;
+
   .actionButton {
+    flex-shrink: 0;
     margin-top: 0.25rem;
   }
 }
@@ -129,6 +133,7 @@
 
 .commentBody {
   width: 21.563rem;
+  min-width: 0;
   margin-right: 1.5rem;
   margin-left: 0.75rem;
 }
@@ -140,7 +145,8 @@
 .actions {
   @include flex(flex, space-between, center);
 
-  padding: 0.75rem 1.4rem 1rem 1rem;
+  flex-shrink: 0;
+  padding: modal-fluid(0.75rem) 1.4rem modal-fluid(1rem) 1rem;
   border-top: 1px solid var(--color-dark-100);
 }
 
@@ -154,6 +160,7 @@
   cursor: pointer;
 
   display: flex;
+  flex-shrink: 0;
 
   padding: 0;
   border: none;
@@ -167,11 +174,12 @@
   @include flex(flex, none, none);
 
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 .postFooterGuest {
-  height: 5.188rem;
-  padding-top: 0.75rem;
+  height: modal-fluid(5.188rem);
+  padding-top: modal-fluid(0.75rem);
   border-top: 1px solid var(--color-dark-100);
 }
 
@@ -179,18 +187,18 @@
   @include flex(flex, flex-start, center);
 
   gap: 0.75rem;
-  padding: 0 1rem 0.25rem;
+  padding: 0 1rem modal-fluid(0.25rem);
 }
 
 .date {
-  padding: 0 0 0.4rem 1rem;
+  padding: 0 0 modal-fluid(0.4rem) 1rem;
 }
 
 .commentForm {
   @include flex(flex, space-between, center);
 
   flex-shrink: 0;
-  min-height: 3.687rem;
+  min-height: modal-fluid(3.687rem);
   padding: 0 1rem;
   border-top: 1px solid var(--color-dark-100);
 }
@@ -205,4 +213,55 @@
 
   background: transparent;
   outline: none;
+}
+
+@media (width <= 62.5rem) {
+  .postContainer {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  }
+
+  .commentBody {
+    margin-right: 0.75rem;
+  }
+
+  .leftActions {
+    gap: 1rem;
+  }
+}
+
+@include media-tablet {
+  .postContainer {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  }
+
+  .commentsBlock {
+    gap: 1rem;
+    padding: 0.75rem;
+  }
+
+  .commentBody {
+    margin-left: 0.5rem;
+  }
+
+  .author {
+    padding: 0 0.75rem;
+  }
+
+  .actions {
+    padding-right: 1rem;
+    padding-left: 0.75rem;
+  }
+
+  .likes {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+
+  .date {
+    padding-left: 0.75rem;
+  }
+
+  .commentForm {
+    padding: 0 0.75rem;
+  }
 }

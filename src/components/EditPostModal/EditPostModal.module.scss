@@ -1,7 +1,9 @@
+@use 'sass:math';
+
 @use '@/styles/mixins' as *;
 
 .modal {
-  width: $modal-width-xl;
+  width: min($modal-width-xl, calc(100vw - 2rem));
 }
 
 .container {
@@ -9,27 +11,27 @@
 
   overflow: hidden;
   display: grid;
-  grid-template-columns: 30.625rem 1fr;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
 
+  aspect-ratio: math.div($modal-width-xl, $modal-height-xl);
   width: 100%;
-  height: $modal-height-xl;
-  max-height: 85vh;
+
+  // width drives the size; the cap only protects short viewports
+  max-height: min($modal-height-xl, 85vh);
   border-radius: 0.4rem;
 }
 
 .header {
   position: absolute;
   z-index: 2;
-  top: 0;
-  left: 0;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  @include top-left(0);
 
-  width: 100%;
-  height: 3.688rem;
+  @include flex(flex, space-between, center);
+
+  @include width-height(100%, 3.688rem);
+
   padding: 0 1rem;
   border-bottom: 1px solid var(--color-dark-100);
 
@@ -41,9 +43,7 @@
 .closeButton {
   cursor: pointer;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex(flex, center, center);
 
   padding: 0;
   border: none;
@@ -76,6 +76,7 @@
   flex-direction: column;
 
   min-width: 0;
+  min-height: 0;
   padding-top: 3.688rem;
 
   color: var(--color-light-100);
@@ -84,11 +85,11 @@
 }
 
 .user {
-  display: flex;
+  @include flex(flex, none, center);
+
   flex-shrink: 0;
   gap: 0.75rem;
-  align-items: center;
-
+  min-height: 3.688rem;
   padding: 1rem;
 }
 
@@ -98,7 +99,9 @@
 }
 
 .descriptionSection .descriptionInput {
-  height: 7.6rem;
+  @include width-height(100%, 7.6rem);
+
+  resize: none;
 }
 
 .counter {
@@ -108,8 +111,56 @@
 }
 
 .actions {
-  display: flex;
-  justify-content: flex-end;
+  @include flex(flex, flex-end, none);
+
   margin-top: auto;
   padding: 1rem;
+}
+
+@media (width <= 62.5rem) {
+  .container {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  }
+
+  .descriptionSection {
+    padding: 0.75rem;
+  }
+
+  .user {
+    padding: 0 0.75rem;
+  }
+
+  .actions {
+    padding: 0.75rem;
+  }
+}
+
+@include media-tablet {
+  .container {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  }
+
+  .header {
+    padding: 0 0.75rem;
+  }
+
+  .user {
+    padding: 0 0.75rem;
+  }
+
+  .descriptionSection {
+    padding: 0.75rem;
+  }
+
+  .descriptionSection .descriptionInput {
+    height: 7rem;
+  }
+
+  .counter {
+    right: 0.75rem;
+  }
+
+  .actions {
+    padding: 0.75rem;
+  }
 }

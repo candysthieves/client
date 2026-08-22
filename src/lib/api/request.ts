@@ -288,9 +288,9 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
       }
 
       // не «refresh token invalid», а не удалось выполнить refresh вообще - отсавить что-то одно
-      // throw new ApiError(401, undefined) // the user becomes unauthorized (sends to auth logic to log out user) - ЭТОТ ВАРИАНТ ВЕРНУТЬ ЕСЛИ ЧТО
+      throw new ApiError(401, undefined) // the user becomes unauthorized (sends to auth logic to log out user) - ЭТОТ ВАРИАНТ ВЕРНУТЬ ЕСЛИ ЧТО
       // a если с невалидным refresh token то:
-      throw new ApiError(498, undefined) // the user becomes unauthorized
+      // throw new ApiError(498, undefined) // the user becomes unauthorized
     }
   }
   // Refresh token error - revalidate refresh token logic ends

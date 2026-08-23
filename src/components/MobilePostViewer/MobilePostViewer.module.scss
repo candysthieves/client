@@ -1,15 +1,18 @@
 @use '@/styles/mixins' as *;
 
 .viewer {
-  position: absolute;
+  position: fixed;
   z-index: 10;
-  inset: 0;
+  inset: $header-height $container-padding-tablet $header-height;
 
-  min-height: calc(100vh - $header-height * 2);
   border-top: 1px solid var(--color-dark-300);
   border-bottom: 1px solid var(--color-dark-300);
 
   background: var(--color-dark-900);
+
+  @include media-mobile {
+    inset: $header-height $container-padding-mobile $header-height;
+  }
 }
 
 .closeButton {
@@ -35,6 +38,7 @@
 
   scrollbar-width: none;
   overflow-y: auto;
+  overscroll-behavior: contain;
 
   -ms-overflow-style: none;
 

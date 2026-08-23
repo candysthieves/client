@@ -46,13 +46,16 @@ ul {
   margin: 0;
 }
 
-// z-index, so the header paints above the modal and its outside close button.
 [class*='_overlay_'] {
   z-index: 101;
 }
 
 [role='dialog'] {
   z-index: 102;
+}
+
+[data-radix-popper-content-wrapper] {
+  z-index: 105 !important;
 }
 
 // react-remove-scroll (Radix Dialog scroll lock) zeroes body padding-top

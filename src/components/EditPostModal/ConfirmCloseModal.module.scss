@@ -1,9 +1,5 @@
 @use '@/styles/mixins' as *;
 
-.modal {
-  width: $modal-width-m;
-}
-
 :global([class*='_overlay_c66hw_']:has(+ [data-blurred-backdrop])) {
   z-index: 103;
 }

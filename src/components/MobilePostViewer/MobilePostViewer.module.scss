@@ -1,0 +1,111 @@
+@use '@/styles/mixins' as *;
+
+.viewer {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+
+  min-height: calc(100vh - $header-height * 2);
+  border-top: 1px solid var(--color-dark-300);
+  border-bottom: 1px solid var(--color-dark-300);
+
+  background: var(--color-dark-900, #000);
+}
+
+.closeButton {
+  cursor: pointer;
+
+  position: absolute;
+  z-index: 1;
+  top: 0.75rem;
+  right: 0;
+
+  display: flex;
+
+  padding: 0.5rem;
+  border: none;
+
+  color: var(--color-light-100);
+
+  background: transparent;
+}
+
+.slides {
+  @include width-height(100%);
+
+  scrollbar-width: none;
+  overflow-y: auto;
+
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.slide {
+  display: flex;
+  flex-direction: column;
+  max-width: 460px;
+  margin: 0 auto 1.25rem;
+}
+
+.imageArea {
+  position: relative;
+  width: 100%;
+}
+
+.imageFrame {
+  overflow: hidden;
+  aspect-ratio: 30.5 / 31.5;
+  width: 100%;
+}
+
+.postImage {
+  display: block;
+  border-radius: 2px;
+  object-fit: cover;
+
+  @include width-height(100%);
+}
+
+.author {
+  @include flex(flex, flex-start, center);
+
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+}
+
+.actionsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0 1.18rem;
+}
+
+.actionsGroup {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.actionButton {
+  cursor: pointer;
+
+  display: flex;
+
+  padding: 0;
+  border: none;
+
+  color: var(--color-light-100);
+
+  background: transparent;
+}
+
+.createdAt {
+  color: var(--color-dark-100, #949494);
+}
+
+.description {
+  color: var(--color-light-100);
+}

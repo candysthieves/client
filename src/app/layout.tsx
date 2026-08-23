@@ -22,7 +22,7 @@ export default function RootLayout({
       <body>
         <div className={s.headerWrapper}>
           <AppHeader />
-          <LinearProgress size={"sm"} className={s.progress} />
+          {/* <LinearProgress size={"sm"} className={s.progress} /> */}
         </div>
 
         <AuthProvider>

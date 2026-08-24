@@ -3,8 +3,7 @@
 import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
 import { ToastWarning } from '@/components/Toast/Toast'
-import { logout } from '@/lib/api/auth'
-import { ACCESS_TOKEN_LS_KEY } from '@/lib/model/constants/constants'
+import { useLogout } from '@/lib/auth'
 import s from './LogoutModal.module.css'
 
 type LogoutModalProps = {
@@ -15,19 +14,20 @@ type LogoutModalProps = {
 
 export const LogoutModal = ({ open, onClose, onSuccess }: LogoutModalProps) => {
   const router = useRouter()
+  const { mutate: logoutUser, isPending } = useLogout()
 
-  const handleLogout = async () => {
-    try {
-      await logout()
-      ToastWarning({
-        title: 'Signed out successfully',
-        message: 'You have been successfully signed out. See you soon!',
-      })
-    } finally {
-      localStorage.removeItem(ACCESS_TOKEN_LS_KEY)
-      onSuccess?.()
-      router.replace('/sign-in')
-    }
+  const handleLogout = () => {
+    logoutUser(undefined, {
+      onSuccess: () => {
+        onSuccess?.()
+
+        ToastWarning({
+          title: 'Signed out successfully',
+          message: 'You have been successfully signed out. See you soon!',
+        })
+        router.replace('/sign-in')
+      },
+    })
   }
 
   return (
@@ -45,8 +45,8 @@ export const LogoutModal = ({ open, onClose, onSuccess }: LogoutModalProps) => {
             Do you really want to log out of your account?
           </Typography>
           <div className={s.controls}>
-            <Button variant={'primary'} onClick={handleLogout}>
-              Ok
+            <Button variant={'primary'} onClick={handleLogout} disabled={isPending}>
+              {isPending ? 'Logging out...' : 'Ok'}
             </Button>
             <Button variant={'secondary'} onClick={onClose}>
               Cancel

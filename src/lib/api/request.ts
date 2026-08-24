@@ -165,9 +165,8 @@
 // //     ↓
 // // setUser(null) // or something else
 
-import { ToastSuccess } from '@/components'
 import { NEXT_PUBLIC_API_URL } from '@/constants'
-import { ACCESS_TOKEN_LS_KEY, SIGN_IN_SUCCESS_MESSAGE, SIGN_IN_SUCCESS_TITLE } from '@/lib/model'
+import { ACCESS_TOKEN_LS_KEY } from '@/lib/model'
 import { isErrorResponse, refreshAccessToken } from '@/lib/utils'
 import { ApiError } from './apiError'
 

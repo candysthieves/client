@@ -4,16 +4,14 @@ import { clsx, LogOut, Sidebar } from '@candy.thieves/ui-kit-lumos'
 import { usePathname, useRouter } from 'next/navigation'
 import { ReactNode, useEffect, useState } from 'react'
 import { LogoutModal } from '@/components'
+import { useAuth } from '@/lib/hooks/useAuth'
 import { sidebarItems } from '@/shared/navigation/sidebarItems'
 import s from './ProtectedShell.module.scss'
-
-export const isAuthenticated = false
-export const isLoading = false
 
 export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname()
   const router = useRouter()
-  // const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading } = useAuth()
   const activeSidebarId = sidebarItems.find(item => item.href === pathname)?.id ?? ''
   const [logoutOpen, setLogoutOpen] = useState(false)
 
@@ -23,6 +21,7 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
       // router.replace('/sign-in')
       router.replace('/')
     }
+    // }, [isAuthenticated, isLoading, router])
   }, [isAuthenticated, isLoading, router, pathname])
 
   // if (!isAuthenticated) { // avoid blinking on load - check if needed when isLoading will work

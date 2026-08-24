@@ -5,14 +5,14 @@ import {
   AvatarBlock,
   BookmarkOutline,
   Button,
-  Carousel,
   HeartOutline,
   Modal,
   PaperPlaneOutline,
   Scroll,
   Typography,
 } from '@candy.thieves/ui-kit-lumos'
-import Image from 'next/image'
+import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
+import { getPostImageAreaStyle } from '@/lib/utils'
 import { isAuthenticated } from '@/shared/config/isAuthenticated'
 import { type Comment, mockComments, mockLikedByUsers, type Post } from './PostDetailsModal.mock'
 import s from './PostDetailsModal.module.scss'
@@ -29,7 +29,6 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
     ? {
         id: 'post-description',
         username: post.userName,
-        avatarUrl: post.avatarUrl,
         text: post.description,
         createdAt: '',
       }
@@ -84,26 +83,15 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
       fullSize
       className={s.modal}
     >
-      <div className={s.postContainer}>
+      <div className={s.postContainer} style={getPostImageAreaStyle(post.images[0])}>
         <div className={s.postImageContainer}>
-          <Carousel
-            slides={post.images.map(image => (
-              <Image
-                key={image.url}
-                src={image.url}
-                alt={post.description || 'Post'}
-                width={image.width ?? 986}
-                height={image.height ?? 1130}
-                className={s.postImage}
-              />
-            ))}
-          />
+          <PostImagesCarousel images={post.images} alt={post.description || 'Post'} />
         </div>
 
         <div className={s.postInfo}>
           {/* Header */}
           <div className={s.author}>
-            <Avatar userName={post.userName} src={post.avatarUrl} size={'s'} delayMs={0} />
+            <Avatar userName={post.userName} size={'s'} delayMs={0} />
 
             <Typography variant={'subtitle2'}>{post.userName}</Typography>
 

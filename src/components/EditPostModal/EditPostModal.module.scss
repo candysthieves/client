@@ -11,7 +11,11 @@
 
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+
+  // левая колонка подстраивается под ширину первого изображения поста
+  // (--image-area-width задаётся inline в EditPostModal);
+  // cap protects narrow viewports
+  grid-template-columns: minmax(0, min(var(--image-area-width, 30.625rem), 51%)) minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
 
   aspect-ratio: math.div($modal-width-xl, $modal-height-xl);
@@ -56,19 +60,6 @@
 .imageSection {
   position: relative;
   overflow: hidden;
-  background: var(--color-dark-900);
-}
-
-// compound selector to outbid the kit's global
-// ._childContent_vns11_106 img { height: auto; object-fit: contain }
-.imageSection .postImage {
-  @include width-height(100%);
-
-  // +1px overdraw: at fractional zoom / device-pixel ratios
-  // object-fit: cover can leave a hairline unpainted row,
-  // the container's overflow: hidden clips the excess
-  height: calc(100% + 1px);
-  object-fit: cover;
 }
 
 .editSection {
@@ -118,10 +109,6 @@
 }
 
 @media (width <= 62.5rem) {
-  .container {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
-  }
-
   .descriptionSection {
     padding: 0.75rem;
   }
@@ -136,10 +123,6 @@
 }
 
 @include media-tablet {
-  .container {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
-  }
-
   .header {
     padding: 0 0.75rem;
   }

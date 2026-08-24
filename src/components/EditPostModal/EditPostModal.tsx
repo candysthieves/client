@@ -2,9 +2,10 @@
 
 import type { ModalProps } from '@candy.thieves/ui-kit-lumos'
 import { Avatar, Button, Close, Modal, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
-import Image from 'next/image'
 import { useState } from 'react'
 import type { Post } from '@/components/PostDetailsModal/PostDetailsModal.mock'
+import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
+import { getPostImageAreaStyle } from '@/lib/utils'
 import { ConfirmCloseModal } from './ConfirmCloseModal'
 import s from './EditPostModal.module.scss'
 
@@ -66,7 +67,7 @@ export const EditPostModal = ({ post, open, onClose, onCancel, onSave }: Props) 
         onInteractOutside={handleInteractOutside}
         className={s.modal}
       >
-        <div className={s.container}>
+        <div className={s.container} style={getPostImageAreaStyle(post.images[0])}>
           <div className={s.header}>
             <Typography variant={'subtitle2'}>Edit Post</Typography>
 
@@ -81,18 +82,12 @@ export const EditPostModal = ({ post, open, onClose, onCancel, onSave }: Props) 
           </div>
 
           <div className={s.imageSection}>
-            <Image
-              src={post.images[0].url}
-              alt={post.description || 'Post'}
-              width={post.images[0].width ?? 986}
-              height={post.images[0].height ?? 1130}
-              className={s.postImage}
-            />
+            <PostImagesCarousel images={post.images} alt={post.description || 'Post'} />
           </div>
 
           <div className={s.editSection}>
             <div className={s.user}>
-              <Avatar userName={post.userName} src={post.avatarUrl} size={'s'} delayMs={0} />
+              <Avatar userName={post.userName} size={'s'} delayMs={0} />
 
               <Typography variant={'subtitle2'}>{post.userName}</Typography>
             </div>

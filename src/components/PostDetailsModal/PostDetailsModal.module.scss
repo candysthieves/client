@@ -9,17 +9,12 @@
 .postContainer {
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, min(var(--image-area-width, 30.625rem), 51%)) minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
 
   aspect-ratio: math.div($modal-width-xl, $modal-height-xl);
   width: 100%;
-
-  // width drives the size; the cap only protects short viewports
   max-height: min($modal-height-xl, 85vh);
-
-  // the kit Modal content is rounded but does not clip its children,
-  // so the columns' square corners would stick out past the curve
   border-radius: 0.4rem;
 }
 
@@ -27,14 +22,6 @@
   position: relative;
   overflow: hidden;
   border-radius: 0.4rem 0 0 0.4rem;
-
-  @include flex(flex, center, center);
-
-  // the kit Carousel root is sized by its own aspect-ratio,
-  // stretch it over the full design area instead
-  & > :first-child {
-    @include width-height(100%);
-  }
 }
 
 .postInfo {
@@ -48,16 +35,6 @@
   color: var(--color-light-100);
 
   background: var(--color-dark-300);
-}
-
-.postImageContainer .postImage {
-  @include width-height(100%);
-
-  // +1px overdraw: at fractional zoom / device-pixel ratios
-  // object-fit: cover can leave a hairline unpainted row,
-  // the container's overflow: hidden clips the excess
-  height: calc(100% + 1px);
-  object-fit: cover;
 }
 
 .scrollSection {
@@ -216,10 +193,6 @@
 }
 
 @media (width <= 62.5rem) {
-  .postContainer {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
-  }
-
   .commentBody {
     margin-right: 0.75rem;
   }
@@ -230,10 +203,6 @@
 }
 
 @include media-tablet {
-  .postContainer {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
-  }
-
   .commentsBlock {
     gap: 1rem;
     padding: 0.75rem;

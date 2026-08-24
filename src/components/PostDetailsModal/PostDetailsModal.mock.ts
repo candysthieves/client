@@ -1,7 +1,6 @@
 // Temporary types and mock data for PostDetailsModal.
 
 export type PostImage = {
-  // inner fields are not finalized by the backend yet
   url: string
   width?: number
   height?: number
@@ -18,7 +17,6 @@ export type Post = {
   preview: PostPreview
   userId: string
   userName: string
-  avatarUrl?: string
   willBeDeletedIn: Date | null
 }
 
@@ -41,22 +39,25 @@ export const mockPost: Post = {
 
   images: [
     {
-      url: 'https://images.unsplash.com/photo-1778017458320-fd7f6688cbf5?q=80&w=986&h=1130&auto=format&fit=crop',
-      width: 986,
-      height: 1130,
+      url: 'https://images.unsplash.com/photo-1778017458320-fd7f6688cbf5?q=80&w=1080&h=1080&auto=format&fit=crop',
+      width: 1080,
+      height: 1080,
     },
     {
-      url: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=986&h=1130&auto=format&fit=crop',
-      width: 986,
-      height: 1130,
+      url: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1000&h=1250&auto=format&fit=crop',
+      width: 1000,
+      height: 1250,
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=1280&h=720&auto=format&fit=crop',
+      width: 1280,
+      height: 720,
     },
   ],
 
   preview: {
-    url: 'https://images.unsplash.com/photo-1778017458320-fd7f6688cbf5?q=80&w=196&h=226&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1778017458320-fd7f6688cbf5?q=80&w=196&h=196&auto=format&fit=crop',
   },
-
-  avatarUrl: 'https://i.pravatar.cc/96?img=12',
 
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
 

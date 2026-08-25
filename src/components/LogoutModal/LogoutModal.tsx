@@ -25,7 +25,7 @@ export const LogoutModal = ({ open, onClose, onSuccess }: LogoutModalProps) => {
           title: 'Signed out successfully',
           message: 'You have been successfully signed out. See you soon!',
         })
-        router.replace('/sign-in')
+        router.replace('/')
       },
     })
   }

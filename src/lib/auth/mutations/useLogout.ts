@@ -9,13 +9,13 @@ export function useLogout() {
   return useMutation({
     mutationFn: logout,
 
-    // или возможно onSettled
-    onSuccess: () => {
+    // или возможно onSuccess
+    onSettled: () => {
       localStorage.removeItem(ACCESS_TOKEN_LS_KEY)
 
-      queryClient.removeQueries({
-        queryKey: authKeys.me(), // not authKeys.all (т.к. recovery code не является authentication state текущего пользователя)
-      })
+      queryClient.setQueryData(authKeys.me(), null)
+      queryClient.removeQueries({ queryKey: authKeys.me() })
+      queryClient.invalidateQueries({ queryKey: authKeys.me() })
     },
   })
 }

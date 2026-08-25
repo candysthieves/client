@@ -1,9 +1,10 @@
-import { Typography } from '@candy.thieves/ui-kit-lumos'
+import { ProfilePostTabs } from '@/components'
+import s from './page.module.scss'
 
 export default function ProfilePage() {
   return (
-    <Typography align={'center'} color={'white'} variant={'h1'}>
-      Profile
-    </Typography>
+    <main className={s.page}>
+      <ProfilePostTabs />
+    </main>
   )
 }

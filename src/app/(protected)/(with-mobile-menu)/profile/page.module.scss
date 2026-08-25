@@ -1,0 +1,13 @@
+@use '@/styles/mixins' as *;
+
+.page {
+  @include content;
+
+  padding-top: 2.25rem;
+}
+
+@include media-tablet {
+  .page {
+    padding-top: 1.5rem;
+  }
+}

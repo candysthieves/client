@@ -3,7 +3,7 @@
 @use '@/styles/mixins' as *;
 
 .modal {
-  width: min($modal-width-xl, calc(100vw - 2rem));
+  width: min($modal-width-xl, calc(100vw - 4rem));
 }
 
 .postContainer {

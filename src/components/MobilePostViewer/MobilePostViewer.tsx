@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { MobilePostEdit } from './MobilePostEdit'
-import { MobilePostFeed } from './MobilePostFeed'
+import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'
+import { MobilePostFeed } from './MobilePostFeed/MobilePostFeed'
 import s from './MobilePostViewer.module.scss'
 import { Post } from './mockData'
 

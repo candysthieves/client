@@ -3,8 +3,8 @@
 import { Avatar, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { useState } from 'react'
+import { Post } from '../mockData'
 import s from './MobilePostEdit.module.scss'
-import { Post } from './mockData'
 
 type Props = {
   post: Post

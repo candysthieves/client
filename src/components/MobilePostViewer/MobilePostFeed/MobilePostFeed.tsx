@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  ActionMenu,
   Avatar,
   BookmarkOutline,
   Carousel,
@@ -9,12 +10,14 @@ import {
   HeartOutline,
   MessageCircleOutline,
   PaperPlaneOutline,
+  TrashOutline,
   Typography,
 } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { useEffect, useRef } from 'react'
+import { isAuthenticated } from '@/shared/config/isAuthenticated'
+import { Post } from '../mockData'
 import s from './MobilePostFeed.module.scss'
-import { Post } from './mockData'
 
 type Props = {
   posts: Post[]
@@ -54,6 +57,26 @@ export const MobilePostFeed = ({ posts, startIndex, onClose, onEdit }: Props) =>
               <Avatar userName={post.userName} size={'s'} delayMs={0} />
 
               <Typography variant={'subtitle2'}>{post.userName}</Typography>
+
+              {isAuthenticated && (
+                <ActionMenu
+                  ariaLabel={'Open post actions'}
+                  items={[
+                    {
+                      icon: <EditOutline size={24} />,
+                      id: 'edit-post',
+                      label: 'Edit Post',
+                      onSelect: () => onEdit(index),
+                    },
+                    {
+                      icon: <TrashOutline size={24} />,
+                      id: 'delete-post',
+                      label: 'Delete Post',
+                      onSelect: () => {},
+                    },
+                  ]}
+                />
+              )}
             </div>
             <div className={s.imageArea}>
               {post.images.length > 1 ? (
@@ -95,15 +118,6 @@ export const MobilePostFeed = ({ posts, startIndex, onClose, onEdit }: Props) =>
               </div>
 
               <div className={s.actionsGroup}>
-                <button
-                  type={'button'}
-                  aria-label={'Edit post'}
-                  className={s.actionButton}
-                  onClick={() => onEdit(index)}
-                >
-                  <EditOutline size={24} />
-                </button>
-
                 <button type={'button'} aria-label={'Save'} className={s.actionButton}>
                   <BookmarkOutline size={24} />
                 </button>

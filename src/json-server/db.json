@@ -1,0 +1,108 @@
+{
+  "posts": [
+    {
+      "postId": "1",
+      "description": "Красивый закат на побережье",
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&h=600&fit=crop"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&h=600&fit=crop"
+        }
+      ],
+      "preview": {
+        "url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop"
+      },
+      "userId": "123",
+      "userName": "Tom",
+      "willBeDeletedIn": null,
+      "createdAt": "2026-08-20T08:30:00.000Z",
+      "updatedAt": "2026-08-25T16:30:11.070Z"
+    },
+    {
+      "postId": "2",
+      "description": "Фото из отпуска",
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop"
+        }
+      ],
+      "preview": {
+        "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=300&fit=crop"
+      },
+      "userId": "223",
+      "userName": "Ann",
+      "willBeDeletedIn": null,
+      "createdAt": "2026-08-21T10:15:00.000Z",
+      "updatedAt": "2026-08-25T16:28:11.046Z"
+    },
+    {
+      "postId": "3",
+      "description": "Кондитерские изделия",
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=800&h=600&fit=crop"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=800&h=600&fit=crop"
+        },
+        { "url": "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?w=800&h=600&fit=crop" }
+      ],
+      "preview": {
+        "url": "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=400&h=300&fit=crop"
+      },
+      "userId": "231",
+      "userName": "John",
+      "willBeDeletedIn": null,
+      "createdAt": "2026-08-22T09:45:00.000Z",
+      "updatedAt": "2026-08-24T14:20:00.000Z"
+    },
+    {
+      "postId": "4",
+      "description": "Фото с наших соревнований️",
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=800&h=600&fit=crop"
+        }
+      ],
+      "preview": {
+        "url": "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=800&h=600&fit=crop"
+      },
+      "userId": "12",
+      "userName": "Tony",
+      "willBeDeletedIn": null,
+      "createdAt": "2026-08-23T07:00:00.000Z",
+      "updatedAt": "2026-08-23T07:00:00.000Z"
+    },
+    {
+      "postId": "5",
+      "description": "Фото достопримечательностей",
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=800&h=600&fit=crop"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=800&h=600&fit=crop"
+        }
+      ],
+      "preview": {
+        "url": "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=800&h=600&fit=crop"
+      },
+      "userId": "12",
+      "userName": "Tony",
+      "willBeDeletedIn": null,
+      "createdAt": "2026-08-24T16:20:00.000Z",
+      "updatedAt": "2026-08-25T10:00:00.000Z"
+    }
+  ]
+}

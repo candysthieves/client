@@ -7,7 +7,8 @@ import { useState } from 'react'
 import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { ToastError } from '@/components'
 import { FormInput } from '@/components/FormInput'
-import { ApiError, resendConfirmationEmail } from '@/lib/api'
+import { ApiError } from '@/lib/api'
+import { useResendConfirmationEmail } from '@/lib/auth'
 import { ResendConfirmationEmailRequest, resendConfirmationEmailSchema } from '@/lib/model'
 import { isErrorResponse, mapRegistrationValidationError } from '@/lib/utils'
 import { mapConfirmationEmailDomainError } from '@/lib/utils/mapConfirmationEmailDomainError'
@@ -15,6 +16,7 @@ import s from './page.module.scss'
 
 export default function VerificationExpiredPage() {
   const [isOpen, setIsOpen] = useState(false)
+  const { mutate: resendConfirmationEmail } = useResendConfirmationEmail()
 
   const {
     control,
@@ -44,37 +46,36 @@ export default function VerificationExpiredPage() {
     closeModal()
   }
 
-  const onSubmit: SubmitHandler<ResendConfirmationEmailRequest> = async data => {
-    // setIsLoading(true)
-    try {
-      await resendConfirmationEmail(data)
-      openModal()
-    } catch (error) {
-      if (error instanceof ApiError && isErrorResponse(error.data)) {
-        const isValidationError = mapRegistrationValidationError(error, setError)
-        const isDomainError = mapConfirmationEmailDomainError(error, setError)
+  const onSubmit: SubmitHandler<ResendConfirmationEmailRequest> = data => {
+    resendConfirmationEmail(data, {
+      onSuccess: () => {
+        openModal()
+      },
 
-        if (isValidationError) {
-          ToastError({
-            title: 'Validation Error',
-            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
-            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
-          })
-        } else if (isDomainError) {
-          // Show domain errors
-          ToastError({
-            title: 'Domain Error',
-            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
-            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
-          })
+      onError: error => {
+        if (error instanceof ApiError && isErrorResponse(error.data)) {
+          const isValidationError = mapRegistrationValidationError(error, setError)
+          const isDomainError = mapConfirmationEmailDomainError(error, setError)
+
+          if (isValidationError) {
+            ToastError({
+              title: 'Validation Error',
+              messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
+              // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
+            })
+          } else if (isDomainError) {
+            // Show domain errors
+            ToastError({
+              title: 'Domain Error',
+              messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
+              // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
+            })
+          }
+          return
         }
-        return
-      } else {
-        throw error // Проброс в глобальный error handler всех остальных ошибок не связанных с Validation / Domain errors - позже будет доработка логики
-      }
-      // } finally {
-      //   setIsLoading(false)
-    }
+        throw error
+      },
+    })
   }
 
   return (

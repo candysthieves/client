@@ -1,5 +1,15 @@
 'use client'
-import { Avatar, AvatarBlock, Button, Modal, Scroll, Typography } from '@candy.thieves/ui-kit-lumos'
+import {
+  ActionMenu,
+  Avatar,
+  AvatarBlock,
+  Button,
+  EditOutline,
+  Modal,
+  Scroll,
+  TrashOutline,
+  Typography,
+} from '@candy.thieves/ui-kit-lumos'
 import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostComments } from '@/components/Post/PostComments/PostComments'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
@@ -35,16 +45,31 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
 
         <div className={s.postInfo}>
           {/* Header */}
-          <div className={s.author}>
-            <Avatar userName={post.userName} size={'s'} delayMs={0} />
+          <div className={s.postHeader}>
+            <div className={s.author}>
+              <Avatar userName={post.userName} size={'s'} delayMs={0} />
 
-            <Typography variant={'subtitle2'}>{post.userName}</Typography>
+              <Typography variant={'subtitle2'}>{post.userName}</Typography>
+            </div>
 
-            {/* temporary placeholder for the future dropdown menu */}
             {isAuthenticated && (
-              <Button type={'button'} variant={'text'} onClick={onEdit}>
-                Edit Post
-              </Button>
+              <ActionMenu
+                ariaLabel={"Open post actions"}
+                items={[
+                  {
+                    icon: <EditOutline size={24} />,
+                    id: 'edit-post',
+                    label: 'Edit Post',
+                    onSelect: onEdit,
+                  },
+                  {
+                    icon: <TrashOutline size={24} />,
+                    id: 'delete-post',
+                    label: 'Delete Post',
+                    onSelect: () => {},
+                  },
+                ]}
+              />
             )}
           </div>
 

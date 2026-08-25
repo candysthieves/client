@@ -93,6 +93,7 @@
   @include width-height(100%, 7.6rem);
 
   resize: none;
+  margin-bottom: 0.2rem;
 }
 
 .counter {
@@ -106,44 +107,4 @@
 
   margin-top: auto;
   padding: 1rem;
-}
-
-@media (width <= 62.5rem) {
-  .descriptionSection {
-    padding: 0.75rem;
-  }
-
-  .user {
-    padding: 0 0.75rem;
-  }
-
-  .actions {
-    padding: 0.75rem;
-  }
-}
-
-@include media-tablet {
-  .header {
-    padding: 0 0.75rem;
-  }
-
-  .user {
-    padding: 0 0.75rem;
-  }
-
-  .descriptionSection {
-    padding: 0.75rem;
-  }
-
-  .descriptionSection .descriptionInput {
-    height: 7rem;
-  }
-
-  .counter {
-    right: 0.75rem;
-  }
-
-  .actions {
-    padding: 0.75rem;
-  }
 }

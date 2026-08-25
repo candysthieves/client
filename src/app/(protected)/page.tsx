@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@candy.thieves/ui-kit-lumos'
+import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useState } from 'react'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'

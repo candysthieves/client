@@ -15,7 +15,6 @@ import { PostComments } from '@/components/Post/PostComments/PostComments'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
 import { useIsMobileViewport } from '@/lib/hooks'
 import { getPostImageAreaStyle } from '@/lib/utils'
-import { isAuthenticated } from '@/shared/config/isAuthenticated'
 import { mockComments, mockLikedByUsers, type Post } from './PostDetailsModal.mock'
 import s from './PostDetailsModal.module.scss'
 
@@ -25,6 +24,8 @@ type Props = {
   onClose: () => void
   onEdit: () => void
 }
+
+const isAuthenticated = true
 
 export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
   const isMobileViewport = useIsMobileViewport()
@@ -52,25 +53,23 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
               <Typography variant={'subtitle2'}>{post.userName}</Typography>
             </div>
 
-            {isAuthenticated && (
-              <ActionMenu
-                ariaLabel={"Open post actions"}
-                items={[
-                  {
-                    icon: <EditOutline size={24} />,
-                    id: 'edit-post',
-                    label: 'Edit Post',
-                    onSelect: onEdit,
-                  },
-                  {
-                    icon: <TrashOutline size={24} />,
-                    id: 'delete-post',
-                    label: 'Delete Post',
-                    onSelect: () => {},
-                  },
-                ]}
-              />
-            )}
+            <ActionMenu
+              ariaLabel={'Open post actions'}
+              items={[
+                {
+                  icon: <EditOutline size={24} />,
+                  id: 'edit-post',
+                  label: 'Edit Post',
+                  onSelect: onEdit,
+                },
+                {
+                  icon: <TrashOutline size={24} />,
+                  id: 'delete-post',
+                  label: 'Delete Post',
+                  onSelect: () => {},
+                },
+              ]}
+            />
           </div>
 
           {/* Scrollable: author's description + comments */}

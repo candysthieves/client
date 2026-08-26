@@ -10,7 +10,8 @@ import { FormInput } from '@/components/FormInput'
 import { FormRecaptcha } from '@/components/FormRecaptcha'
 import { ToastError } from '@/components/Toast/Toast'
 import { NEXT_PUBLIC_RECAPTCHA_SITE_KEY } from '@/constants'
-import { ApiError, passwordRecovery } from '@/lib/api'
+import { ApiError } from '@/lib/api'
+import { usePasswordRecovery } from '@/lib/auth'
 import { type PasswordRecoveryRequest, passwordRecoverySchema } from '@/lib/model'
 import {
   isErrorResponse,
@@ -24,6 +25,7 @@ export default function ForgotPasswordPage() {
   const [sentEmail, setSentEmail] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const recaptchaRef = useRef<ReCAPTCHA>(null)
+  const { mutate: recoverPassword } = usePasswordRecovery()
 
   const {
     control,
@@ -40,39 +42,40 @@ export default function ForgotPasswordPage() {
     },
   })
 
-  const onSubmit: SubmitHandler<PasswordRecoveryRequest> = async data => {
-    try {
-      await passwordRecovery(data)
+  const onSubmit: SubmitHandler<PasswordRecoveryRequest> = data => {
+    recoverPassword(data, {
+      onSuccess: () => {
+        setSentEmail(data.email)
+        setIsSent(true)
+        setIsModalOpen(true)
+      },
 
-      setSentEmail(data.email)
-      setIsSent(true)
-      setIsModalOpen(true)
-    } catch (error) {
-      if (error instanceof ApiError && isErrorResponse(error.data)) {
-        const isValidationError = mapPasswordRecoveryValidationError(error, setError)
-        const isDomainError = mapPasswordRecoveryDomainError(error, setError)
+      onError: error => {
+        if (error instanceof ApiError && isErrorResponse(error.data)) {
+          const isValidationError = mapPasswordRecoveryValidationError(error, setError)
+          const isDomainError = mapPasswordRecoveryDomainError(error, setError)
 
-        if (isDomainError) {
-          // The recaptcha token backend rejected is now stale; clear it and reset
-          // the widget so it must be solved again before the next submit.
-          setValue('recaptchaToken', '')
-          recaptchaRef.current?.reset()
+          if (isDomainError) {
+            // The recaptcha token backend rejected is now stale; clear it and reset
+            // the widget so it must be solved again before the next submit.
+            setValue('recaptchaToken', '')
+            recaptchaRef.current?.reset()
 
-          ToastError({
-            title: 'Domain Error',
-            messages: error.data.errorsMessages,
-          })
-        } else if (isValidationError) {
-          ToastError({
-            title: 'Validation Error',
-            messages: error.data.errorsMessages,
-          })
+            ToastError({
+              title: 'Domain Error',
+              messages: error.data.errorsMessages,
+            })
+          } else if (isValidationError) {
+            ToastError({
+              title: 'Validation Error',
+              messages: error.data.errorsMessages,
+            })
+          }
+          return
         }
-        return
-      } else {
         throw error
-      }
-    }
+      },
+    })
   }
 
   const closeModal = () => {

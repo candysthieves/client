@@ -43,12 +43,6 @@ export const passwordRecovery = (data: PasswordRecoveryRequest) =>
     body: JSON.stringify(data),
   })
 
-// method: 'GET'
-export const validatePasswordRecoveryCode = ({
-  recoveryCode,
-}: ValidatePasswordRecoveryCodeRequest) =>
-  request<void>(`/auth/password-recovery/validate?recoveryCode=${encodeURIComponent(recoveryCode)}`)
-
 export const newPassword = (data: NewPasswordRequest) =>
   request<void>('/auth/new-password', {
     method: 'POST',
@@ -60,15 +54,16 @@ export const refreshToken = () =>
     method: 'POST',
   })
 
-// method: 'GET'
-// How to use: const user = await authMe()
-export const authMe = () => request<UserResponse>('/auth/me')
-
 export const logout = () =>
   request<void>('/auth/logout', {
     method: 'POST',
   })
 
-// login()
-// logout()
-// newPassword()
+// method: 'GET'
+export const authMe = (): Promise<UserResponse> => request<UserResponse>('/auth/me')
+
+// method: 'GET'
+export const validatePasswordRecoveryCode = ({
+  recoveryCode,
+}: ValidatePasswordRecoveryCodeRequest) =>
+  request<void>(`/auth/password-recovery/validate?recoveryCode=${encodeURIComponent(recoveryCode)}`)

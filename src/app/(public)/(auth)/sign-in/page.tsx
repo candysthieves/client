@@ -9,9 +9,9 @@ import { GitHubButton, GoogleButton } from '@/components'
 import { FormInput } from '@/components/FormInput'
 import { FormPasswordInput } from '@/components/FormPasswordInput'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
-import { ApiError, login } from '@/lib/api'
+import { ApiError } from '@/lib/api'
+import { useLogin } from '@/lib/auth'
 import {
-  ACCESS_TOKEN_LS_KEY,
   type LoginRequest,
   loginSchema,
   SIGN_IN_SUCCESS_MESSAGE,
@@ -22,12 +22,13 @@ import s from './page.module.scss'
 
 export default function SignInForm() {
   const router = useRouter()
+  const { mutate: loginUser, isPending } = useLogin()
 
   const {
     control,
     handleSubmit,
     setError,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isValid },
   } = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
     mode: 'onChange',
@@ -37,43 +38,38 @@ export default function SignInForm() {
     },
   })
 
-  const onSubmit: SubmitHandler<LoginRequest> = async data => {
-    try {
-      // setIsLoading(true)
-      const response = await login(data)
+  const onSubmit: SubmitHandler<LoginRequest> = data => {
+    loginUser(data, {
+      onSuccess: () => {
+        ToastSuccess({
+          title: SIGN_IN_SUCCESS_TITLE,
+          message: SIGN_IN_SUCCESS_MESSAGE,
+        })
 
-      localStorage.setItem(ACCESS_TOKEN_LS_KEY, response.accessToken)
+        router.replace('/profile')
+      },
 
-      ToastSuccess({
-        title: SIGN_IN_SUCCESS_TITLE,
-        message: SIGN_IN_SUCCESS_MESSAGE,
-      })
+      onError: error => {
+        if (error instanceof ApiError && isErrorResponse(error.data)) {
+          const isValidationError = mapLoginValidationError(error, setError)
+          const isDomainError = mapLoginDomainError(error, setError)
 
-      router.replace('/profile')
-    } catch (error) {
-      if (error instanceof ApiError && isErrorResponse(error.data)) {
-        const isValidationError = mapLoginValidationError(error, setError)
-        const isDomainError = mapLoginDomainError(error, setError)
-
-        if (isValidationError) {
-          ToastError({
-            title: 'Validation Error',
-            messages: error.data.errorsMessages,
-          })
-        } else if (isDomainError) {
-          ToastError({
-            title: 'Domain Error',
-            messages: error.data.errorsMessages,
-          })
+          if (isValidationError) {
+            ToastError({
+              title: 'Validation Error',
+              messages: error.data.errorsMessages,
+            })
+          } else if (isDomainError) {
+            ToastError({
+              title: 'Domain Error',
+              messages: error.data.errorsMessages,
+            })
+          }
+          return
         }
-        return
-      } else {
-        throw error // Проброс в глобальный error handler всех остальных ошибок не связанных с Validation / Domain errors - позже будет доработка логики
-      }
-    }
-    // finally {
-    //   setIsLoading(false)
-    // }
+        throw error
+      },
+    })
   }
 
   return (
@@ -120,7 +116,7 @@ export default function SignInForm() {
           </Typography>
         </Link>
 
-        <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
+        <Button type={'submit'} fullWidth disabled={!isValid || isPending}>
           Sign In
         </Button>
 

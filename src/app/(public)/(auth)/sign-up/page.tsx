@@ -11,7 +11,8 @@ import { FormInput } from '@/components/FormInput'
 import { FormPasswordInput } from '@/components/FormPasswordInput'
 import { GitHubButton } from '@/components/GitHubButton'
 import { GoogleButton } from '@/components/GoogleButton'
-import { ApiError, registration } from '@/lib/api'
+import { ApiError } from '@/lib/api'
+import { useRegistration } from '@/lib/auth'
 import { RegistrationRequest, registrationSchema } from '@/lib/model'
 import {
   isErrorResponse,
@@ -22,6 +23,7 @@ import s from './page.module.scss'
 
 export default function SignUpPage() {
   const [isOpen, setIsOpen] = useState(false)
+  const { mutate: signup, isPending } = useRegistration()
 
   const {
     control,
@@ -29,7 +31,7 @@ export default function SignUpPage() {
     reset,
     trigger,
     setError,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isValid },
   } = useForm<RegistrationRequest>({
     resolver: zodResolver(registrationSchema),
     mode: 'onChange',
@@ -68,34 +70,36 @@ export default function SignUpPage() {
     }
   }, [password, passwordConfirmation, trigger])
 
-  const onSubmit: SubmitHandler<RegistrationRequest> = async data => {
-    try {
-      await registration(data)
-      openModal()
-    } catch (error) {
-      if (error instanceof ApiError && isErrorResponse(error.data)) {
-        const isValidationError = mapRegistrationValidationError(error, setError)
-        const isDomainError = mapRegistrationDomainError(error, setError)
+  const onSubmit: SubmitHandler<RegistrationRequest> = data => {
+    signup(data, {
+      onSuccess: () => {
+        openModal()
+      },
 
-        if (isValidationError) {
-          ToastError({
-            title: 'Validation Error',
-            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
-            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
-          })
-        } else if (isDomainError) {
-          // Show domain errors
-          ToastError({
-            title: 'Domain Error',
-            messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
-            // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
-          })
+      onError: error => {
+        if (error instanceof ApiError && isErrorResponse(error.data)) {
+          const isValidationError = mapRegistrationValidationError(error, setError)
+          const isDomainError = mapRegistrationDomainError(error, setError)
+
+          if (isValidationError) {
+            ToastError({
+              title: 'Validation Error',
+              messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
+              // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
+            })
+          } else if (isDomainError) {
+            // Show domain errors
+            ToastError({
+              title: 'Domain Error',
+              messages: error.data.errorsMessages, // решим оставлять ли при добавлении интернационализации
+              // messages: VALIDATION_ERROR_COMMON_MESSAGE, // решим оставлять ли при добавлении интернационализации
+            })
+          }
+          return
         }
-        return
-      } else {
-        throw error // Проброс в глобальный error handler всех остальных ошибок не связанных с Validation / Domain errors - позже будет доработка логики
-      }
-    }
+        throw error
+      },
+    })
   }
 
   return (
@@ -178,7 +182,7 @@ export default function SignUpPage() {
           )}
         </div>
 
-        <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
+        <Button type={'submit'} fullWidth disabled={!isValid || isPending}>
           Sign Up
         </Button>
 

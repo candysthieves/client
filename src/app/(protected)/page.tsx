@@ -1,7 +1,6 @@
 'use client'
 
-import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
-import Link from 'next/link'
+import { Typography } from '@candy.thieves/ui-kit-lumos'
 
 export default function Home() {
   return (

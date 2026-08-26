@@ -1,0 +1,117 @@
+@use 'sass:math';
+
+@use '@/styles/mixins' as *;
+
+.modal {
+  width: min($modal-width-xl, calc(100vw - 4rem));
+}
+
+.postContainer {
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, min(var(--image-area-width, 30.625rem), 51%)) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+
+  aspect-ratio: math.div($modal-width-xl, $modal-height-xl);
+  width: 100%;
+  max-height: min($modal-height-xl, 85vh);
+  border-radius: 0.375rem;
+}
+
+.postImageContainer {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.375rem 0 0 0.375rem;
+}
+
+.postInfo {
+  @include flex(flex, none, none);
+
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 0;
+
+  color: var(--color-light-100);
+
+  background: var(--color-dark-300);
+}
+
+.scrollSection {
+  @include flex(flex, none, none);
+
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.scrollSectionGuest {
+  flex: 1 1 auto;
+}
+
+.postHeader {
+  @include flex(flex, space-between, center);
+
+  flex-shrink: 0;
+  gap: 0.75rem;
+
+  height: modal-fluid(3.688rem);
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-dark-100);
+}
+
+.author {
+  @include flex(flex, none, center);
+
+  gap: 0.75rem;
+}
+
+.postFooter {
+  @include flex(flex, none, none);
+
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.postFooterGuest {
+  height: modal-fluid(5.188rem);
+  padding-top: modal-fluid(0.75rem);
+  border-top: 1px solid var(--color-dark-100);
+}
+
+.likes {
+  @include flex(flex, flex-start, center);
+
+  gap: 0.75rem;
+  padding: 0 1rem modal-fluid(0.25rem);
+}
+
+.date {
+  padding: 0 0 modal-fluid(0.4rem) 1rem;
+}
+
+.commentForm {
+  @include flex(flex, space-between, center);
+
+  flex-shrink: 0;
+  min-height: modal-fluid(3.687rem);
+  padding: 0 1rem;
+  border-top: 1px solid var(--color-dark-100);
+
+  button {
+    min-width: 0;
+    padding: 0;
+  }
+}
+
+.commentInput {
+  flex: 1;
+
+  min-width: 0;
+  border: none;
+
+  color: var(--color-light-100);
+
+  background: transparent;
+  outline: none;
+}

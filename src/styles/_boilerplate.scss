@@ -47,11 +47,15 @@ ul {
 }
 
 [class*='_overlay_'] {
-  animation: none !important;
+  z-index: 101;
 }
 
 [role='dialog'] {
-  animation: none !important;
+  z-index: 102;
+}
+
+[data-radix-popper-content-wrapper] {
+  z-index: 105 !important;
 }
 
 // react-remove-scroll (Radix Dialog scroll lock) zeroes body padding-top

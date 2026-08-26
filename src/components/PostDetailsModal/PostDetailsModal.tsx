@@ -14,6 +14,7 @@ import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostComments } from '@/components/Post/PostComments/PostComments'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
 import { useIsMobileViewport } from '@/lib/hooks'
+import { useAuth } from '@/lib/hooks/useAuth'
 import { getPostImageAreaStyle } from '@/lib/utils'
 import { mockComments, mockLikedByUsers, type Post } from './PostDetailsModal.mock'
 import s from './PostDetailsModal.module.scss'
@@ -25,10 +26,10 @@ type Props = {
   onEdit: () => void
 }
 
-const isAuthenticated = true
-
 export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
+  const { user, isAuthenticated } = useAuth()
   const isMobileViewport = useIsMobileViewport()
+  const isAuthor = !!user && user.id === post.userId
 
   return (
     <Modal
@@ -53,23 +54,25 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
               <Typography variant={'subtitle2'}>{post.userName}</Typography>
             </div>
 
-            <ActionMenu
-              ariaLabel={'Open post actions'}
-              items={[
-                {
-                  icon: <EditOutline size={24} />,
-                  id: 'edit-post',
-                  label: 'Edit Post',
-                  onSelect: onEdit,
-                },
-                {
-                  icon: <TrashOutline size={24} />,
-                  id: 'delete-post',
-                  label: 'Delete Post',
-                  onSelect: () => {},
-                },
-              ]}
-            />
+            {isAuthor && (
+              <ActionMenu
+                ariaLabel={'Open post actions'}
+                items={[
+                  {
+                    icon: <EditOutline size={24} />,
+                    id: 'edit-post',
+                    label: 'Edit Post',
+                    onSelect: onEdit,
+                  },
+                  {
+                    icon: <TrashOutline size={24} />,
+                    id: 'delete-post',
+                    label: 'Delete Post',
+                    onSelect: () => {},
+                  },
+                ]}
+              />
+            )}
           </div>
 
           {/* Scrollable: author's description + comments */}

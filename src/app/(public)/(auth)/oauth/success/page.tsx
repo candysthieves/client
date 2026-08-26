@@ -1,37 +1,83 @@
+// 'use client'
+//
+// import { useRouter } from 'next/navigation'
+// import { useCallback, useEffect } from 'react'
+// import { ApiError } from '@/lib/api'
+// import { useRefreshToken } from '@/lib/auth/mutations/useRefreshToken'
+// import { ACCESS_TOKEN_LS_KEY } from '@/lib/model'
+//
+// export default function OAuthSuccessPage() {
+//   const router = useRouter()
+//   const { mutate: refreshToken } = useRefreshToken()
+//
+//   const handleAuthentication = useCallback(() => {
+//     refreshToken(
+//       undefined, // mutation refreshToken не принимает аргументы
+//       {
+//         // до Tanstack query было: const { accessToken } = await refreshToken()
+//         onSuccess: ({ accessToken }) => {
+//           localStorage.setItem(ACCESS_TOKEN_LS_KEY, accessToken)
+//
+//           router.replace('/') // или '/profile'
+//         },
+//         onError: error => {
+//           if (error instanceof ApiError) {
+//             console.error('OAuth error:', error.message)
+//           } else {
+//             console.error('Unexpected error:', error)
+//           }
+//
+//           router.replace('/sign-in')
+//           // throw error
+//         },
+//       }
+//     )
+//   }, [refreshToken, router])
+//
+//   useEffect(() => {
+//     handleAuthentication()
+//   }, [handleAuthentication])
+//
+//   return null
+// }
+
 'use client'
 
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
-import { ApiError, refreshToken } from '@/lib/api'
-import { ACCESS_TOKEN_LS_KEY } from '@/lib/model'
+import { ApiError } from '@/lib/api'
+import { useRefreshToken } from '@/lib/auth/mutations/useRefreshToken'
 
 export default function OAuthSuccessPage() {
   const router = useRouter()
+  const { mutate: refreshToken } = useRefreshToken()
 
-  const authenticate = useCallback(async () => {
-    try {
-      const { accessToken } = await refreshToken()
+  const handleAuthentication = useCallback(() => {
+    refreshToken(
+      undefined, // mutation refreshToken не принимает аргументы
+      {
+        // до Tanstack query было: const { accessToken } = await refreshToken()
+        onSuccess: () => {
+          router.replace('/') // или '/profile'
+        },
 
-      localStorage.setItem(ACCESS_TOKEN_LS_KEY, accessToken)
+        onError: error => {
+          if (error instanceof ApiError) {
+            console.error('OAuth error:', error.message)
+          } else {
+            console.error('Unexpected error:', error)
+          }
 
-      // Или вариант с cookies ?
-      // document.cookie = `accessToken=${accessToken}; path=/; secure; samesite=lax`
-
-      router.replace('/') // или '/profile'
-    } catch (error) {
-      if (error instanceof ApiError) {
-        console.error('OAuth error:', error.message)
-      } else {
-        console.error('Unexpected error:', error)
+          router.replace('/sign-in')
+          // throw error
+        },
       }
-
-      router.replace('/sign-in')
-    }
-  }, [router]) // Зависимости: router
+    )
+  }, [refreshToken, router])
 
   useEffect(() => {
-    authenticate()
-  }, [authenticate])
+    handleAuthentication()
+  }, [handleAuthentication])
 
   return null
 }

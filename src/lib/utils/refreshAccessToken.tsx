@@ -12,6 +12,7 @@ export const refreshAccessToken = async (): Promise<string> => {
   })
 
   if (!response.ok) {
+    // Также обработает и 498 Invalid refresh token
     throw new ApiError(response.status, undefined)
   }
 

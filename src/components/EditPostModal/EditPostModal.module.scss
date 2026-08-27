@@ -1,0 +1,110 @@
+@use 'sass:math';
+
+@use '@/styles/mixins' as *;
+
+.modal {
+  width: min($modal-width-xl, calc(100vw - 2rem));
+}
+
+.container {
+  position: relative;
+
+  overflow: hidden;
+  display: grid;
+
+  // левая колонка подстраивается под ширину первого изображения поста
+  // (--image-area-width задаётся inline в EditPostModal);
+  // cap protects narrow viewports
+  grid-template-columns: minmax(0, min(var(--image-area-width, 30.625rem), 51%)) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+
+  aspect-ratio: math.div($modal-width-xl, $modal-height-xl);
+  width: 100%;
+
+  // width drives the size; the cap only protects short viewports
+  max-height: min($modal-height-xl, 85vh);
+  border-radius: 0.375rem;
+}
+
+.header {
+  position: absolute;
+  z-index: 2;
+
+  @include top-left(0);
+
+  @include flex(flex, space-between, center);
+
+  @include width-height(100%, 3.688rem);
+
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--color-dark-100);
+
+  color: var(--color-light-100);
+
+  background: var(--color-dark-300);
+}
+
+.closeButton {
+  cursor: pointer;
+
+  @include flex(flex, center, center);
+
+  padding: 0;
+  border: none;
+
+  color: var(--color-light-100);
+
+  background: transparent;
+}
+
+.imageSection {
+  position: relative;
+  overflow: hidden;
+}
+
+.editSection {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 0;
+  padding-top: 3.675rem;
+
+  color: var(--color-light-100);
+
+  background: var(--color-dark-300);
+}
+
+.user {
+  @include flex(flex, none, center);
+
+  flex-shrink: 0;
+  gap: 0.75rem;
+  min-height: 3.675rem;
+  padding: 1rem;
+}
+
+.descriptionSection {
+  position: relative;
+  padding: 1rem;
+}
+
+.descriptionSection .descriptionInput {
+  @include width-height(100%, 7.6rem);
+
+  resize: none;
+  margin-bottom: 0.2rem;
+}
+
+.counter {
+  position: absolute;
+  right: 1rem;
+  bottom: 0;
+}
+
+.actions {
+  @include flex(flex, flex-end, none);
+
+  margin-top: auto;
+  padding: 1rem;
+}

@@ -1,0 +1,25 @@
+@use '@/styles/mixins' as *;
+
+:global([class*='_overlay_c66hw_']:has(+ [data-blurred-backdrop])) {
+  z-index: 103;
+}
+
+:global([data-blurred-backdrop][role='dialog']) {
+  z-index: 104;
+}
+
+.confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+
+  button {
+    min-width: 6rem;
+  }
+}

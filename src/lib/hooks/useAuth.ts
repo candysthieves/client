@@ -11,7 +11,7 @@ type UseAuthReturn = {
 
 export function useAuth(): UseAuthReturn {
   const { data: user = null, isLoading } = useAuthMe()
-
+  console.log('ssssssssssss', !!user)
   return {
     user,
     isLoading,

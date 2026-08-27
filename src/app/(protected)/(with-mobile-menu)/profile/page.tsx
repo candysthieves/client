@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { mockPosts, Post } from '@/components/MobilePostViewer/mockData'
+import { PostModal } from '@/components/PostModal/PostModal'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
 import s from './page.module.scss'
 
@@ -50,7 +51,7 @@ export default function ProfilePage() {
             startIndex={selectedIndex}
           />
         ) : (
-          <p>post modal</p>
+          <PostModal post={selectedPost} open onClose={() => setSelectedPost(null)} />
         ))}
     </>
   )

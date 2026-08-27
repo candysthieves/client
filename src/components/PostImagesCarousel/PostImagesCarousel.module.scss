@@ -26,3 +26,11 @@
 .container .image.imageContained {
   object-fit: contain;
 }
+
+// 'natural' fit: container matches the image ratio (no frame). Full size
+// without the cover overdraw so no hairline bar appears on the non-matching axis.
+.container .image.imageNatural {
+  @include width-height(100%);
+
+  object-fit: contain;
+}

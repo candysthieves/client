@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { Post } from '@/mocks/posts'
 import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'
 import { MobilePostFeed } from './MobilePostFeed/MobilePostFeed'
 import s from './MobilePostViewer.module.scss'
-import { Post } from './mockData'
 
 type Props = {
   posts: Post[]

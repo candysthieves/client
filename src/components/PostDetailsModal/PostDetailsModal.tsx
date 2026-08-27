@@ -1,22 +1,13 @@
 'use client'
-import {
-  ActionMenu,
-  Avatar,
-  AvatarBlock,
-  Button,
-  EditOutline,
-  Modal,
-  Scroll,
-  TrashOutline,
-  Typography,
-} from '@candy.thieves/ui-kit-lumos'
+import { Avatar, AvatarBlock, Button, Modal, Scroll, Typography } from '@candy.thieves/ui-kit-lumos'
+import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
 import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostComments } from '@/components/Post/PostComments/PostComments'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
 import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { getPostImageAreaStyle } from '@/lib/utils'
-import { mockComments, mockLikedByUsers, type Post } from './PostDetailsModal.mock'
+import { mockComments, mockLikedByUsers, type Post } from '@/mocks/posts'
 import s from './PostDetailsModal.module.scss'
 
 type Props = {
@@ -54,25 +45,7 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
               <Typography variant={'subtitle2'}>{post.userName}</Typography>
             </div>
 
-            {isAuthor && (
-              <ActionMenu
-                ariaLabel={'Open post actions'}
-                items={[
-                  {
-                    icon: <EditOutline size={24} />,
-                    id: 'edit-post',
-                    label: 'Edit Post',
-                    onSelect: onEdit,
-                  },
-                  {
-                    icon: <TrashOutline size={24} />,
-                    id: 'delete-post',
-                    label: 'Delete Post',
-                    onSelect: () => {},
-                  },
-                ]}
-              />
-            )}
+            <PostActionMenu isAuthor={isAuthor} onEdit={onEdit} />
           </div>
 
           {/* Scrollable: author's description + comments */}

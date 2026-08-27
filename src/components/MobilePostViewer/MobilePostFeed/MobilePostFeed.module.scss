@@ -41,20 +41,8 @@
 
 .imageArea {
   position: relative;
-  width: 100%;
-}
-
-.imageFrame {
   overflow: hidden;
   width: 100%;
-}
-
-.postImage {
-  display: block;
-  border-radius: 2px;
-  object-fit: contain;
-
-  @include width-height(100%);
 }
 
 .author {
@@ -88,4 +76,11 @@
   color: var(--color-light-100);
 
   background: transparent;
+}
+
+.likes {
+  @include flex(flex, flex-start, center);
+
+  gap: 0.75rem;
+  padding-bottom: 1rem;
 }

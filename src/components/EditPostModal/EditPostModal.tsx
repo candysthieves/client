@@ -1,9 +1,10 @@
 'use client'
 
 import type { ModalProps } from '@candy.thieves/ui-kit-lumos'
-import { Avatar, Button, Close, Modal, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Avatar, Button, Close, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useState } from 'react'
-import type { Post } from '@/components/PostDetailsModal/PostDetailsModal.mock'
+import type { Post } from '@/mocks/posts'
+import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
 import { getPostImageAreaStyle } from '@/lib/utils'
 import { ConfirmCloseModal } from './ConfirmCloseModal'
@@ -92,23 +93,13 @@ export const EditPostModal = ({ post, open, onClose, onCancel, onSave }: Props) 
               <Typography variant={'subtitle2'}>{post.userName}</Typography>
             </div>
 
-            <div className={s.descriptionSection}>
-              <TextArea
-                label={'Add publication descriptions'}
-                value={description}
-                onChange={event => setDescription(event.target.value)}
-                maxLength={500}
-                className={s.descriptionInput}
-              />
-
-              <Typography
-                variant={'caption1'}
-                color={'var(--color-light-900)'}
-                className={s.counter}
-              >
-                {description.length}/500
-              </Typography>
-            </div>
+            <PostDescriptionEditor
+              value={description}
+              onChange={setDescription}
+              className={s.descriptionSection}
+              textAreaClassName={s.descriptionInput}
+              counterClassName={s.counter}
+            />
 
             <div className={s.actions}>
               <Button type={'button'} variant={'text'} onClick={onCancel}>

@@ -1,9 +1,10 @@
 'use client'
 
-import { Avatar, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Avatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { useState } from 'react'
-import { Post } from '../mockData'
+import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
+import { Post } from '@/mocks/posts'
 import s from './MobilePostEdit.module.scss'
 
 type Props = {
@@ -51,19 +52,13 @@ export const MobilePostEdit = ({ post, onCancel, onSave }: Props) => {
           <Typography variant={'subtitle2'}>{post.userName}</Typography>
         </div>
 
-        <div className={s.descriptionSection}>
-          <TextArea
-            label={'Add publication descriptions'}
-            value={description}
-            onChange={event => setDescription(event.target.value)}
-            maxLength={500}
-            className={s.descriptionInput}
-          />
-
-          <Typography variant={'caption1'} color={'var(--color-light-900)'} className={s.counter}>
-            {description.length}/500
-          </Typography>
-        </div>
+        <PostDescriptionEditor
+          value={description}
+          onChange={setDescription}
+          className={s.descriptionSection}
+          textAreaClassName={s.descriptionInput}
+          counterClassName={s.counter}
+        />
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Post } from '@/components/PostDetailsModal/PostDetailsModal.mock'
+import type { Post } from '@/mocks/posts'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
 

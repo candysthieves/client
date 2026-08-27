@@ -1,22 +1,13 @@
 'use client'
 
-import {
-  ActionMenu,
-  Avatar,
-  BookmarkOutline,
-  Carousel,
-  Close,
-  EditOutline,
-  HeartOutline,
-  MessageCircleOutline,
-  PaperPlaneOutline,
-  TrashOutline,
-  Typography,
-} from '@candy.thieves/ui-kit-lumos'
-import Image from 'next/image'
+import { Avatar, AvatarBlock, Close, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useEffect, useRef } from 'react'
+import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
+import { PostActions } from '@/components/Post/PostActions/PostActions'
+import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
+import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
-import { Post } from '../mockData'
+import { mockLikedByUsers, Post } from '@/mocks/posts'
 import s from './MobilePostFeed.module.scss'
 
 type Props = {
@@ -27,6 +18,7 @@ type Props = {
 }
 
 export const MobilePostFeed = ({ posts, startIndex, onClose, onEdit }: Props) => {
+  const isMobile = useIsMobileViewport()
   const { user } = useAuth()
   const postRefs = useRef<(HTMLElement | null)[]>([])
 
@@ -61,73 +53,21 @@ export const MobilePostFeed = ({ posts, startIndex, onClose, onEdit }: Props) =>
 
                 <Typography variant={'subtitle2'}>{post.userName}</Typography>
 
-                {isAuthor && (
-                  <ActionMenu
-                    ariaLabel={'Open post actions'}
-                    items={[
-                      {
-                        icon: <EditOutline size={24} />,
-                        id: 'edit-post',
-                        label: 'Edit Post',
-                        onSelect: () => onEdit(index),
-                      },
-                      {
-                        icon: <TrashOutline size={24} />,
-                        id: 'delete-post',
-                        label: 'Delete Post',
-                        onSelect: () => {},
-                      },
-                    ]}
-                  />
-                )}
+                <PostActionMenu isAuthor={isAuthor} onEdit={() => onEdit(index)} />
               </div>
               <div className={s.imageArea}>
-                {post.images.length > 1 ? (
-                  <Carousel
-                    slides={post.images.map(image => (
-                      <Image
-                        key={image.url}
-                        src={image.url}
-                        alt={post.description || 'Post'}
-                        width={image.width ?? 986}
-                        height={image.height ?? 1130}
-                        className={s.postImage}
-                      />
-                    ))}
-                  />
-                ) : (
-                  <div className={s.imageFrame}>
-                    <Image
-                      src={post.images[0].url}
-                      alt={post.description || 'Post'}
-                      width={post.images[0].width ?? 986}
-                      height={post.images[0].height ?? 1130}
-                      className={s.postImage}
-                    />
-                  </div>
-                )}
+                <PostImagesCarousel images={post.images} alt={post.description} natural />
               </div>
-              <div className={s.actionsRow}>
-                <div className={s.actionsGroup}>
-                  <button type={'button'} aria-label={'Like'} className={s.actionButton}>
-                    <HeartOutline size={24} />
-                  </button>
-                  <button type={'button'} aria-label={'Comment'} className={s.actionButton}>
-                    <MessageCircleOutline size={24} />
-                  </button>
-                  <button type={'button'} aria-label={'Share'} className={s.actionButton}>
-                    <PaperPlaneOutline size={24} />
-                  </button>
-                </div>
 
-                <div className={s.actionsGroup}>
-                  <button type={'button'} aria-label={'Save'} className={s.actionButton}>
-                    <BookmarkOutline size={24} />
-                  </button>
-                </div>
-              </div>
+              <PostActions showComments={isMobile} />
 
               <div className={s.info}>
+                <div className={s.likes}>
+                  <AvatarBlock users={mockLikedByUsers} />
+
+                  <Typography variant={'body2'}>2 243 &quot;Like&quot;</Typography>
+                </div>
+
                 <Typography variant={'caption1'} color={'var(--color-light-900)'}>
                   {post.createdAt}
                 </Typography>

@@ -62,6 +62,14 @@ export const MobilePostFeed = ({ posts, startIndex, onClose, onEdit }: Props) =>
               <PostActions showComments={isMobile} />
 
               <div className={s.info}>
+                {post.description && (
+                  <div className={s.description}>
+                    <Typography variant={'body1'} color={'var(--color-light-100)'}>
+                      {post.description}
+                    </Typography>
+                  </div>
+                )}
+
                 <div className={s.likes}>
                   <AvatarBlock users={mockLikedByUsers} />
 

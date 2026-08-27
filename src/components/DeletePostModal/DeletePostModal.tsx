@@ -18,6 +18,8 @@ export const DeletePostModal = ({ open, onClose, onConfirm }: DeletePostModalPro
       size={'s'}
       showHeader
       showCloseButton
+      className={s.modal}
+      data-blurred-backdrop={'true'}
     >
       <div className={s.content}>
         <Typography variant={'subtitle1'} color={'var(--color-light-100)'}>
@@ -25,10 +27,10 @@ export const DeletePostModal = ({ open, onClose, onConfirm }: DeletePostModalPro
         </Typography>
 
         <div className={s.controls}>
-          <Button variant={'secondary'} onClick={onConfirm}>
+          <Button type={'button'} variant={'outlined'} onClick={onConfirm}>
             Yes
           </Button>
-          <Button variant={'primary'} onClick={onClose}>
+          <Button type={'button'} variant={'primary'} onClick={onClose}>
             No
           </Button>
         </div>

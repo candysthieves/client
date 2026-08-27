@@ -1,7 +1,9 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { Post } from '@/components/PostDetailsModal/PostDetailsModal.mock'
+import { DeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
 
@@ -14,15 +16,23 @@ type Props = {
 type Mode = 'edit' | 'view'
 
 export const PostModal = ({ post, open, onClose }: Props) => {
+  const router = useRouter()
+
   const [mode, setMode] = useState<Mode>('view')
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const handleClose = () => {
     setMode('view')
+    setIsDeleteModalOpen(false)
     onClose()
   }
 
   const handleEdit = () => {
     setMode('edit')
+  }
+
+  const handleDelete = () => {
+    setIsDeleteModalOpen(true)
   }
 
   const handleCancelEdit = () => {
@@ -34,6 +44,13 @@ export const PostModal = ({ post, open, onClose }: Props) => {
     console.log('New description:', description)
 
     setMode('view')
+  }
+
+  const handleConfirmDelete = () => {
+    // TODO: API soft delete
+    setIsDeleteModalOpen(false)
+    handleClose()
+    router.replace('/profile')
   }
 
   if (mode === 'edit') {
@@ -48,5 +65,21 @@ export const PostModal = ({ post, open, onClose }: Props) => {
     )
   }
 
-  return <PostDetailsModal post={post} open={open} onClose={handleClose} onEdit={handleEdit} />
+  return (
+    <>
+      <PostDetailsModal
+        post={post}
+        open={open}
+        onClose={handleClose}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+
+      <DeletePostModal
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
+    </>
+  )
 }

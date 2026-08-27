@@ -1,3 +1,18 @@
+@use '@/styles/mixins' as *;
+
+.modal {
+  width: min($modal-width-s, calc(100vw - 2rem));
+  background: color-mix(in srgb, var(--color-dark-300) 88%, var(--color-dark-900));
+}
+
+:global([class*='_overlay_']:has(+ [data-blurred-backdrop])) {
+  z-index: 103;
+}
+
+:global([data-blurred-backdrop][role='dialog']) {
+  z-index: 104;
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -8,4 +23,8 @@
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+
+  button {
+    min-width: 6rem;
+  }
 }

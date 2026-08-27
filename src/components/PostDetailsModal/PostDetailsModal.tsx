@@ -24,9 +24,10 @@ type Props = {
   open: boolean
   onClose: () => void
   onEdit: () => void
+  onDelete: () => void
 }
 
-export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
+export const PostDetailsModal = ({ post, open, onClose, onEdit, onDelete }: Props) => {
   const { user, isAuthenticated } = useAuth()
   const isMobileViewport = useIsMobileViewport()
   const isAuthor = !!user && user.id === post.userId
@@ -68,7 +69,7 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
                     icon: <TrashOutline size={24} />,
                     id: 'delete-post',
                     label: 'Delete Post',
-                    onSelect: () => {},
+                    onSelect: onDelete,
                   },
                 ]}
               />

@@ -107,6 +107,7 @@
 import { Avatar, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useRef, useState } from 'react'
 import { LocationInput } from '@/components/LocationInput'
+import { Location } from '@/features/createPost'
 import { UserResponse } from '@/lib/model'
 import s from './PublicationStep.module.scss'
 
@@ -118,6 +119,7 @@ type PublicationStepProps = {
   onPreviousFile: () => void
   onNextFile: () => void
   onDescriptionChange: (value: string) => void
+  onLocationChange: (value: Location[]) => void
 }
 
 const MAX_DESCRIPTION_LENGTH = 500
@@ -130,6 +132,7 @@ export const PublicationStep = ({
   onPreviousFile,
   onNextFile,
   onDescriptionChange,
+  onLocationChange,
 }: PublicationStepProps) => {
   const descriptionRef = useRef(description)
   const counterRef = useRef<HTMLDivElement | null>(null)
@@ -217,7 +220,7 @@ export const PublicationStep = ({
         </div>
 
         <div className={s.locationBlock}>
-          <LocationInput maxLocations={maxLocations} />
+          <LocationInput maxLocations={maxLocations} onLocationChange={onLocationChange} />
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ import { CreatePostModalHeader } from '@/features/createPost/CreatePostModal'
 import { ConfirmCloseCreatePostModal } from '@/features/createPost/CreatePostModal'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { CropStep, PublicationStep, UploadStep } from '../../steps'
+import { Location } from '../../types'
 import s from './CreatePostModal.module.scss'
 
 export const initialCreatePostState: CreatePostState = {
@@ -17,6 +18,7 @@ export const initialCreatePostState: CreatePostState = {
   files: [],
   currentFileIndex: 0,
   description: '',
+  locations: [],
 }
 
 type CreatePostModalProps = {
@@ -98,6 +100,13 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
     openConfirm()
   }
 
+  const onLocationChange = (locations: Location[]) => {
+    setState(prev => ({
+      ...prev,
+      locations,
+    }))
+  }
+  console.log('state', state)
   const renderStep = () => {
     switch (state.step) {
       case 'upload':
@@ -116,6 +125,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
             onPreviousFile={handlePreviousFile} // ?
             onNextFile={handleNextFile} // ?
             onDescriptionChange={handleDescriptionChange} // ?
+            onLocationChange={onLocationChange}
           />
         )
     }

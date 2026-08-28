@@ -7,27 +7,28 @@ import {
   Typography,
 } from '@candy.thieves/ui-kit-lumos'
 import { ChangeEvent, KeyboardEvent, useRef, useState, useEffect } from 'react'
+import { Location } from '@/features/createPost'
 import s from './LocationInput.module.scss'
-
-type Location = {
-  id: string
-  name: string
-  address?: string
-}
 
 type LocationInputProps = {
   maxLocations: number
+  onLocationChange: (value: Location[]) => void
 }
 
 const LOCATION_INPUT_DEBOUNCE_DELAY = 1000
 
-export const LocationInput = ({ maxLocations }: LocationInputProps) => {
+export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputProps) => {
   const [locations, setLocations] = useState<Location[]>([])
   const [inputValue, setInputValue] = useState('')
   const [editingId, setEditingId] = useState<null | string>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // Отправка изменений в родительский компонент
+  useEffect(() => {
+    onLocationChange(locations)
+  }, [locations, onLocationChange])
 
   // Confirm editing by clicking outside the input
   useEffect(() => {

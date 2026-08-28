@@ -4,6 +4,12 @@
   @include flex(flex, flex-start, flex-start);
 
   flex-flow: row nowrap;
+
+  @include media-tablet {
+    flex-direction: column;
+
+    @include flex(flex, flex-start, center);
+  }
 }
 
 .slideShow {
@@ -54,6 +60,10 @@
 
   gap: 0.75rem;
   margin-bottom: 1.25rem;
+}
+
+.textCounter {
+  @include flex(flex, flex-end, center);
 }
 
 .locationBlock {

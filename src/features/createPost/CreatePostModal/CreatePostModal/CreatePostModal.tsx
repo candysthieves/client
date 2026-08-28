@@ -29,7 +29,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const [state, setState] = useState<CreatePostState>(initialCreatePostState)
   const [isCreationOpen, setIsCreationOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
-
+  console.log(state)
   const handleClose = () => {
     router.push(`/profile/${userId}`)
   }

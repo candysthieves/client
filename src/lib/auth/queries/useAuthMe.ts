@@ -9,9 +9,20 @@ export function useAuthMe() {
 
   return useQuery({
     queryKey: authKeys.me(),
-    queryFn: authMe,
+    // queryFn: authMe,
+    queryFn: () => {
+      console.log('🔥 ACTUAL authMe HTTP REQUEST')
+
+      return authMe()
+    },
+
     retry: false,
     // enabled: !!token, // check if refresh token will not work properly
+    // staleTime: 5 * 60 * 1000,
+    // staleTime: Infinity,
+    // refetchOnMount: false,
+    // refetchOnWindowFocus: false,
+    // refetchOnReconnect: false,
   })
 }
 

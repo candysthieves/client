@@ -1,6 +1,7 @@
 'use client'
 
 import { clsx, LogOut, Sidebar } from '@candy.thieves/ui-kit-lumos'
+import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { ReactNode, useEffect, useState } from 'react'
 import { LogoutModal } from '@/components'
@@ -50,7 +51,7 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   const content = !isLoading ? (
     <main className={s.content}>{children}</main>
   ) : (
-    <div>Loading...</div> // change Loading... later
+    <div>Loading....</div> // change Loading... later
   )
 
   const userId = user?.id
@@ -61,6 +62,7 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
         <div className={clsx(s.container, s.containerAuthenticated)}>
           <aside className={s.sidebar}>
             <Sidebar
+              linkTag={Link}
               userId={userId}
               activeId={activeSidebarId}
               items={sidebarItems}

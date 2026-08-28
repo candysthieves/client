@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@candy.thieves/ui-kit-lumos':
-        specifier: ^0.0.36
-        version: 0.0.36(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)
+        specifier: ^0.0.41
+        version: 0.0.41(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@9.39.5(jiti@2.6.1))
@@ -209,8 +209,8 @@ packages:
   '@cacheable/utils@2.5.0':
     resolution: {integrity: sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA==}
 
-  '@candy.thieves/ui-kit-lumos@0.0.36':
-    resolution: {integrity: sha512-p2LmL2xPN9GbarQp7SY4v9/yldl9eVFcp9nt0OhUgr0EPlV/XikpF8Y3zi2vvnojKyhwQC4lgMKquOLYLc4+Mw==}
+  '@candy.thieves/ui-kit-lumos@0.0.41':
+    resolution: {integrity: sha512-GEUdV2EDKvAkVqWjwTI7R3DBlnOVTa6sDz4jKbpIePmbJX8gUVCJamYFFs4dFyFG+I7PZqNPyTg483pTYa7BxA==}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
@@ -2017,28 +2017,28 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@storybook/react-dom-shim@10.5.7':
-    resolution: {integrity: sha512-lxOkyh+wu/MiBXvYQHjZfD+DRKOa4bHBzbuGuiHXnHXmdOcTRdcrQTsoeN2FPtfugmmOG66cZUEgDwNX+k5eRA==}
+  '@storybook/react-dom-shim@10.5.10':
+    resolution: {integrity: sha512-rbu62ILo/VE3iXKmu+kWXFpD1H1Lwi0f19q/x7JnDsD2dxKS9w5znLEqPIq2qxpzi/wjjIb2iUP1cRG1d/9W5A==}
     peerDependencies:
       '@types/react': ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       '@types/react-dom': ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      storybook: ^10.5.7
+      storybook: ^10.5.10
     peerDependenciesMeta:
       '@types/react':
         optional: true
       '@types/react-dom':
         optional: true
 
-  '@storybook/react@10.5.7':
-    resolution: {integrity: sha512-uFvty2MMdFXzW5PcQe1JqDAZkz6cQq7q/9G/cbGVnBEvP6zsOVeL+bmrQ0/WBlFQN0Ko9+ZoCTvaQ9s65zBa5g==}
+  '@storybook/react@10.5.10':
+    resolution: {integrity: sha512-4MBV5e1SXIMfPynLHzr+Mp0dwGv/FW1bklWAsS4ynBOAbC98W9p/I9vqBnUctsvE3BJkhzHQQyPwMHL5tTcHVA==}
     peerDependencies:
       '@types/react': ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       '@types/react-dom': ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      storybook: ^10.5.7
+      storybook: ^10.5.10
       typescript: '>= 4.9.x'
     peerDependenciesMeta:
       '@types/react':
@@ -4406,7 +4406,7 @@ snapshots:
       hashery: 1.5.1
       keyv: 5.6.0
 
-  '@candy.thieves/ui-kit-lumos@0.0.36(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)':
+  '@candy.thieves/ui-kit-lumos@0.0.41(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)':
     dependencies:
       '@fontsource-variable/inter': 5.3.0
       '@fontsource-variable/roboto': 5.3.0
@@ -4418,7 +4418,7 @@ snapshots:
       '@radix-ui/react-tooltip': 1.2.16(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@radix-ui/themes': 3.3.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@storybook/addon-actions': 9.0.8
-      '@storybook/react': 10.5.7(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)
+      '@storybook/react': 10.5.10(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)
       clsx: 2.1.1
       eslint-plugin-perfectionist: 5.10.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.9.3)
       radix-ui: 1.6.7(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -5970,7 +5970,7 @@ snapshots:
     dependencies:
       react: 19.2.4
 
-  '@storybook/react-dom-shim@10.5.7(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))':
+  '@storybook/react-dom-shim@10.5.10(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))':
     dependencies:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
@@ -5979,10 +5979,10 @@ snapshots:
       '@types/react': 19.2.17
       '@types/react-dom': 19.2.3(@types/react@19.2.17)
 
-  '@storybook/react@10.5.7(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)':
+  '@storybook/react@10.5.10(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)':
     dependencies:
       '@storybook/global': 5.0.0
-      '@storybook/react-dom-shim': 10.5.7(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))
+      '@storybook/react-dom-shim': 10.5.10(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.5.10(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))
       react: 19.2.4
       react-docgen: 8.0.3
       react-docgen-typescript: 2.4.0(typescript@5.9.3)

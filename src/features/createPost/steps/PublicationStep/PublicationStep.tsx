@@ -1,4 +1,14 @@
-import { Avatar, Button, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
+import {
+  Avatar,
+  Button,
+  Input,
+  PinOutline,
+  Select,
+  TextArea,
+  Typography,
+} from '@candy.thieves/ui-kit-lumos'
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
+import { LocationInput } from '@/components/LocationInput'
 import { UserResponse } from '@/lib/model'
 import s from './PublicationStep.module.scss'
 
@@ -22,8 +32,8 @@ export const PublicationStep = ({
   onDescriptionChange,
 }: PublicationStepProps) => {
   const currentFile = files[currentFileIndex]
-
   const userName = user?.username || 'user'
+  const maxLocations = files.length
 
   return (
     <div className={s.publicationContent}>
@@ -65,10 +75,10 @@ export const PublicationStep = ({
           />
         </div>
 
-        <div className={s.locationBlock}></div>
+        <div className={s.locationBlock}>
+          <LocationInput maxLocations={maxLocations} />
+        </div>
       </div>
     </div>
   )
 }
-
-// Опять же, createObjectURL здесь потом вынесем.

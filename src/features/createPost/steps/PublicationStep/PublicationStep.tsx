@@ -1,6 +1,9 @@
-import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Avatar, Button, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
+import { UserResponse } from '@/lib/model'
+import s from './PublicationStep.module.scss'
 
 type PublicationStepProps = {
+  user: null | UserResponse
   files: File[]
   currentFileIndex: number
   description: string
@@ -10,6 +13,7 @@ type PublicationStepProps = {
 }
 
 export const PublicationStep = ({
+  user,
   files,
   currentFileIndex,
   description,
@@ -19,35 +23,50 @@ export const PublicationStep = ({
 }: PublicationStepProps) => {
   const currentFile = files[currentFileIndex]
 
+  const userName = user?.username || 'user'
+
   return (
-    <div>
-      <header>
-        <button type={"button"}>←</button>
-
-        <Typography variant={"h2"}>Publication</Typography>
-
-        <Button type={"button"} variant={"text"}>
-          Publish
-        </Button>
-      </header>
-
-      <div>
-        <button type={"button"} onClick={onPreviousFile} disabled={currentFileIndex === 0}>
+    <div className={s.publicationContent}>
+      <div className={s.slideShow}>
+        <button
+          type={'button'}
+          onClick={onPreviousFile}
+          disabled={currentFileIndex === 0}
+          className={s.prevSlideButton}
+        >
           ←
         </button>
 
-        <img src={URL.createObjectURL(currentFile)} alt={""} />
+        <img src={URL.createObjectURL(currentFile)} alt={''} className={s.slideShowImage} />
 
-        <button type={"button"} onClick={onNextFile} disabled={currentFileIndex === files.length - 1}>
+        <button
+          type={'button'}
+          onClick={onNextFile}
+          disabled={currentFileIndex === files.length - 1}
+          className={s.nextSlideButton}
+        >
           →
         </button>
       </div>
 
-      <textarea
-        value={description}
-        onChange={event => onDescriptionChange(event.target.value)}
-        placeholder={"Add publication description"}
-      />
+      <div className={s.publicationBlock}>
+        <div className={s.descriptionBlock}>
+          <div className={s.publisherInfo}>
+            <Avatar size={'s'} userName={userName} src={''} />
+            <Typography variant={'subtitle1'} color={'var(--color-light-100)'}>
+              {userName}
+            </Typography>
+          </div>
+
+          <TextArea
+            value={description}
+            onChange={event => onDescriptionChange(event.target.value)}
+            placeholder={'Add publication description'}
+          />
+        </div>
+
+        <div className={s.locationBlock}></div>
+      </div>
     </div>
   )
 }

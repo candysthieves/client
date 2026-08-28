@@ -1,0 +1,38 @@
+@use '@/styles/mixins' as *;
+
+.imageContent {
+  position: relative;
+
+  @include flex(flex, center, center);
+
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.imageItem {
+  @include width-height(100%, auto);
+
+  max-width: $crop-image-width;
+  max-height: $crop-image-height;
+  object-fit: contain;
+}
+
+.addImageButton {
+  cursor: pointer;
+
+  position: absolute;
+
+  padding: 0;
+  border: none;
+
+  background-color: transparent;
+
+  @include flex(flex, center, center);
+  @include width-height(1.25rem);
+  @include transition-basic(transform);
+  @include bottom-right(3rem);
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}

@@ -1,2 +1,2 @@
 export * from './types'
-export { CreatePostModal } from './CreatePostModal/CreatePostModal'
+export { CreatePostModal } from './CreatePostModal/CreatePostModal/CreatePostModal'

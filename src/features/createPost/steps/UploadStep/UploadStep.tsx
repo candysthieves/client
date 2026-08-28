@@ -1,10 +1,14 @@
-import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Cards, ImageOutline } from '@candy.thieves/ui-kit-lumos'
+import { useRef } from 'react'
+import s from './UploadStep.module.scss'
 
 type UploadStepProps = {
   onFileSelected: (file: File) => void
 }
 
 export const UploadStep = ({ onFileSelected }: UploadStepProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
 
@@ -15,18 +19,33 @@ export const UploadStep = ({ onFileSelected }: UploadStepProps) => {
     onFileSelected(file)
   }
 
+  const handleButtonClick = () => {
+    fileInputRef.current?.click()
+  }
+
   return (
     <div>
-      <Typography variant={"h2"}>Add Photo</Typography>
+      <Cards className={s.uploadMiniature}>
+        <ImageOutline size={48} />
+      </Cards>
 
-      <input type={"file"} accept={"image/*"} onChange={handleChange} />
+      <input
+        ref={fileInputRef}
+        type={'file'}
+        accept={'image/*'}
+        onChange={handleChange}
+        className={s.uploadInput}
+      />
 
-      <Button type={"button"}>Open Draft</Button>
+      <div className={s.uploadControls}>
+        <Button type={'button'} variant={'primary'} onClick={handleButtonClick} fullWidth>
+          Select from Computer
+        </Button>
+
+        <Button type={'button'} variant={'outlined'} fullWidth>
+          Open Draft
+        </Button>
+      </div>
     </div>
   )
 }
-
-// здесь UI:
-// preview;
-// Select from Computer;
-// Open Draft.

@@ -1,28 +1,20 @@
-import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, PlusCircleOutline } from '@candy.thieves/ui-kit-lumos'
+import s from './CropStep.module.scss'
 
 type CropStepProps = {
   file: File
-  onNext: () => void
+  addImage: () => void
 }
 
-export const CropStep = ({ file, onNext }: CropStepProps) => {
+export const CropStep = ({ file, addImage }: CropStepProps) => {
   const imageUrl = URL.createObjectURL(file)
 
   return (
-    <div>
-      <header>
-        <Button type={'button'} variant={'text'}>
-          ←
-        </Button>
-
-        <Typography variant={'h2'}>Cropping</Typography>
-
-        <Button type={'button'} variant={'text'} onClick={onNext}>
-          Next
-        </Button>
-      </header>
-
-      <img src={imageUrl} alt={''} />
+    <div className={s.imageContent}>
+      <img src={imageUrl} alt={'Crop preview'} className={s.imageItem} />
+      <Button className={s.addImageButton} onClick={addImage}>
+        <PlusCircleOutline size={24} />
+      </Button>
     </div>
   )
 }

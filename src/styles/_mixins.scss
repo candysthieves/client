@@ -11,6 +11,8 @@ $modal-width-s: 378px;
 $modal-width-m: 492px;
 $modal-width-l: 644px;
 $modal-width-xl: 972px;
+$crop-image-width: 490px;
+$crop-image-height: 500px;
 $container-padding-tablet: 30px;
 $container-padding-mobile: 15px;
 
@@ -46,6 +48,16 @@ $spacing-checkbox-error: 1.25rem;
 @mixin top-right($top: none, $right: $top) {
   top: $top;
   right: $right;
+}
+
+@mixin bottom-left($bottom: none, $left: $bottom) {
+  bottom: $bottom;
+  left: $left;
+}
+
+@mixin bottom-right($bottom: none, $right: $bottom) {
+  right: $right;
+  bottom: $bottom;
 }
 
 /**

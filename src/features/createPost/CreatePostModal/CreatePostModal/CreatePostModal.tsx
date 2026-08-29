@@ -4,17 +4,14 @@
 
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { ToastError } from '@/components'
-import { POST_DRAFT_LS_KEY } from '@/constants'
 import { CreatePostState, CreatePostStep } from '@/features/createPost'
-import { CreatePostModalHeader } from '@/features/createPost/CreatePostModal'
-import { ConfirmCloseCreatePostModal } from '@/features/createPost/CreatePostModal'
-import { useAuth } from '@/lib/hooks/useAuth'
 import {
-  EMAIL_VERIFICATION_CODE_EXPIRED_ERROR_MESSAGE,
-  EMAIL_VERIFICATION_ERROR_TITLE,
-} from '@/lib/model'
+  ConfirmCloseCreatePostModal,
+  CreatePostModalHeader,
+} from '@/features/createPost/CreatePostModal'
+import { useAuth } from '@/lib/hooks/useAuth'
 import { loadPostDraft, savePostDraft } from '@/lib/utils'
 import { CropStep, PublicationStep, UploadStep } from '../../steps'
 import { Location } from '../../types'
@@ -191,6 +188,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
             fileUrls={state.files.map(file => file.url)}
             currentFileIndex={state.currentFileIndex}
             description={state.description}
+            locations={state.locations}
             onPreviousFile={handlePreviousFile} // ?
             onNextFile={handleNextFile} // ?
             onDescriptionChange={handleDescriptionChange} // ?

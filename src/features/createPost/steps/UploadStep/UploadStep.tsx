@@ -1,5 +1,5 @@
 import { Button, Cards, ImageOutline } from '@candy.thieves/ui-kit-lumos'
-import { useRef } from 'react'
+import { useRef, ChangeEvent } from 'react'
 import s from './UploadStep.module.scss'
 
 type UploadStepProps = {
@@ -10,7 +10,7 @@ type UploadStepProps = {
 export const UploadStep = ({ onFileSelected, onLoadDraft }: UploadStepProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
 
     if (!file) {

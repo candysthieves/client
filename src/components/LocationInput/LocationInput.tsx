@@ -12,13 +12,18 @@ import s from './LocationInput.module.scss'
 
 type LocationInputProps = {
   maxLocations: number
+  initialLocations: Location[]
   onLocationChange: (value: Location[]) => void
 }
 
 const LOCATION_INPUT_DEBOUNCE_DELAY = 1000
 
-export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputProps) => {
-  const [locations, setLocations] = useState<Location[]>([])
+export const LocationInput = ({
+  maxLocations,
+  initialLocations,
+  onLocationChange,
+}: LocationInputProps) => {
+  const [locations, setLocations] = useState<Location[]>(initialLocations)
   const [inputValue, setInputValue] = useState('')
   const [editingId, setEditingId] = useState<null | string>(null)
 

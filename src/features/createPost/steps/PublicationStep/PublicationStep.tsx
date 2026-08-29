@@ -161,6 +161,7 @@ type PublicationStepProps = {
   fileUrls: string[]
   currentFileIndex: number
   description: string
+  locations: Location[]
   onPreviousFile: () => void
   onNextFile: () => void
   onDescriptionChange: (value: string) => void
@@ -175,6 +176,7 @@ export const PublicationStep = ({
   fileUrls,
   currentFileIndex,
   description,
+  locations,
   onPreviousFile,
   onNextFile,
   onDescriptionChange,
@@ -248,7 +250,11 @@ export const PublicationStep = ({
         </div>
 
         <div className={s.locationBlock}>
-          <LocationInput maxLocations={maxLocations} onLocationChange={onLocationChange} />
+          <LocationInput
+            maxLocations={maxLocations}
+            initialLocations={locations}
+            onLocationChange={onLocationChange}
+          />
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import { Avatar, Carousel, ReadMore, Typography } from '@candy.thieves/ui-kit-lumos'
-import { useRef, useState } from 'react'
+import { type KeyboardEvent, type MouseEvent, useRef, useState } from 'react'
 import s from './PostCard.module.scss'
 import { useReadMoreClamp } from './useReadMoreClamp'
 
@@ -16,9 +16,13 @@ type PostCardProps = {
   username: string
   timeAgo: string
   caption: string
+  onOpen: () => void
 }
 
-export const PostCard = ({ images, username, timeAgo, caption }: PostCardProps) => {
+const isInteractiveElementTarget = (target: EventTarget | null) =>
+  target instanceof HTMLElement && !!target.closest('a, button')
+
+export const PostCard = ({ images, username, timeAgo, caption, onOpen }: PostCardProps) => {
   const captionWrapperRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const showCarouselControls = !isExpanded
@@ -31,8 +35,33 @@ export const PostCard = ({ images, username, timeAgo, caption }: PostCardProps) 
     initialMaxLength: INITIAL_COLLAPSED_LENGTH,
   })
 
+  const handleClick = (event: MouseEvent<HTMLDivElement>) => {
+    if (!isInteractiveElementTarget(event.target)) {
+      onOpen()
+    }
+  }
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (isInteractiveElementTarget(event.target)) {
+      return
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      onOpen()
+    }
+  }
+
   return (
-    <div className={s.root} data-expanded={isExpanded}>
+    <div
+      aria-label={`Open post by ${username}`}
+      className={s.root}
+      data-expanded={isExpanded}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role={'button'}
+      tabIndex={0}
+    >
       <div className={s.imageWrapper}>
         {showCarouselControls ? (
           <Carousel controlsSize={'s'} slides={images} />

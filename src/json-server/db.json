@@ -124,6 +124,65 @@
       "createdAt": "2026-08-29T22:37:33.664Z",
       "updatedAt": "2026-08-29T22:37:33.664Z",
       "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788043739326",
+      "description": "Old house",
+      "locations": [
+        {
+          "id": "location-1788043712331",
+          "address": "Kioto"
+        }
+      ],
+      "images": [
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/4c8c202f-d8c5-478e-8cda-39435d6fdba2",
+          "width": 490,
+          "height": 562
+        }
+      ],
+      "preview": {
+        "url": "blob:https://dev.lumosapp.net:3000/4c8c202f-d8c5-478e-8cda-39435d6fdba2",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-29T22:48:59.326Z",
+      "updatedAt": "2026-08-29T22:48:59.326Z",
+      "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788043838857",
+      "description": "Mockup images",
+      "locations": [
+        {
+          "id": "location-1788043825490",
+          "address": "City"
+        }
+      ],
+      "images": [
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/4275db82-7e56-4e06-a1aa-a7d8122b6978",
+          "width": 490,
+          "height": 562
+        },
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/3911bd25-92f9-47f5-899d-427e2bfc9144",
+          "width": 490,
+          "height": 562
+        }
+      ],
+      "preview": {
+        "url": "blob:https://dev.lumosapp.net:3000/4275db82-7e56-4e06-a1aa-a7d8122b6978",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-29T22:50:38.857Z",
+      "updatedAt": "2026-08-29T22:50:38.857Z",
+      "willBeDeletedIn": null
     }
   ]
 }

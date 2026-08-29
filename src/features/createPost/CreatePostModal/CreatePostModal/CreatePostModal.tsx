@@ -12,7 +12,7 @@ import {
 } from '@/features/createPost/CreatePostModal'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { useAddPost } from '@/lib/posts'
-import { loadPostDraft, savePostDraft } from '@/lib/utils'
+import { clearPostDraft, loadPostDraft, savePostDraft } from '@/lib/utils'
 import { CropStep, PublicationStep, UploadStep } from '../../steps'
 import { AddPostState, CreatePostStep, Location } from '../../types'
 import s from './CreatePostModal.module.scss'
@@ -48,11 +48,11 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   //   }
   // }, [state.files])
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     router.push(`/profile/${userId}`)
-  }
+  }, [router, userId])
 
-  const closeCreation = () => {
+  const closeCreation = useCallback(() => {
     setIsCreationOpen(false)
     setIsConfirmOpen(false)
 
@@ -61,7 +61,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       URL.revokeObjectURL(url)
     })
     handleClose()
-  }
+  }, [state.files, handleClose])
 
   // Upload file step
   const handleFileSelected = (file: File) => {
@@ -170,7 +170,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   }
 
   const handlePublish = useCallback(() => {
-    // Подготовка данных для отправки
+    // Prepare data to send
     const postData = {
       files: state.files,
       description: state.description,
@@ -179,15 +179,14 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
     addPost(postData, {
       onSuccess: () => {
-        // Успешная публикация
         ToastSuccess({
           title: 'Success!',
           message: 'Your post has been published',
         })
         closeCreation()
+        clearPostDraft()
       },
       onError: error => {
-        // Ошибка при публикации
         ToastError({
           title: 'Post publish Error',
           messages: 'Failed to publish post',

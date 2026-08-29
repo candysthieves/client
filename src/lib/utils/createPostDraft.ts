@@ -79,3 +79,7 @@ export const loadPostDraft = async (): Promise<AddPostState | null> => {
     step: 'crop',
   }
 }
+
+export const clearPostDraft = (): void => {
+  localStorage.removeItem(POST_DRAFT_LS_KEY)
+}

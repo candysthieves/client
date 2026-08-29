@@ -1,0 +1,23 @@
+@use '@/styles/mixins' as *;
+
+.backdrop {
+  position: fixed;
+  z-index: 9;
+  inset: 0;
+  background: var(--color-dark-900);
+}
+
+.viewer {
+  position: fixed;
+  z-index: 10;
+  inset: $header-height $container-padding-tablet $header-height;
+
+  border-top: 1px solid var(--color-dark-300);
+  border-bottom: 1px solid var(--color-dark-300);
+
+  background: var(--color-dark-900);
+
+  @include media-mobile {
+    inset: $header-height $container-padding-mobile $header-height;
+  }
+}

@@ -5,19 +5,19 @@
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
-import { ToastError } from '@/components'
-import { CreatePostState, CreatePostStep } from '@/features/createPost'
+import { ToastError, ToastSuccess } from '@/components'
 import {
   ConfirmCloseCreatePostModal,
   CreatePostModalHeader,
 } from '@/features/createPost/CreatePostModal'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { useAddPost } from '@/lib/posts'
 import { loadPostDraft, savePostDraft } from '@/lib/utils'
 import { CropStep, PublicationStep, UploadStep } from '../../steps'
-import { Location } from '../../types'
+import { AddPostState, CreatePostStep, Location } from '../../types'
 import s from './CreatePostModal.module.scss'
 
-export const initialCreatePostState: CreatePostState = {
+export const initialCreatePostState: AddPostState = {
   step: 'upload',
   files: [],
   currentFileIndex: 0,
@@ -31,9 +31,10 @@ type CreatePostModalProps = {
 
 export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const { user } = useAuth() // CHANGE LATER TO FETCHED USER DATA (with avatar src)
+  const { mutate: addPost, isPending: isPublishing } = useAddPost()
   const router = useRouter()
 
-  const [state, setState] = useState<CreatePostState>(initialCreatePostState)
+  const [state, setState] = useState<AddPostState>(initialCreatePostState)
   const [isCreationOpen, setIsCreationOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   // const [fileUrls, setFileUrls] = useState<string[]>([])
@@ -140,8 +141,6 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
     }))
   }, [])
 
-  console.log(state)
-
   const saveToDraftHandler = async () => {
     try {
       await savePostDraft(state)
@@ -169,6 +168,33 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       setState(initialCreatePostState)
     }
   }
+
+  const handlePublish = useCallback(() => {
+    // Подготовка данных для отправки
+    const postData = {
+      files: state.files,
+      description: state.description,
+      locations: state.locations,
+    }
+
+    addPost(postData, {
+      onSuccess: () => {
+        // Успешная публикация
+        ToastSuccess({
+          title: 'Success!',
+          message: 'Your post has been published',
+        })
+        closeCreation()
+      },
+      onError: error => {
+        // Ошибка при публикации
+        ToastError({
+          title: 'Post publish Error',
+          messages: 'Failed to publish post',
+        })
+      },
+    })
+  }, [state, addPost, closeCreation])
 
   const renderStep = () => {
     switch (state.step) {
@@ -199,7 +225,13 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   }
 
   const headerContent = (
-    <CreatePostModalHeader step={state.step} onPrevClick={handlePrev} onNextClick={handleNext} />
+    <CreatePostModalHeader
+      step={state.step}
+      onPrevClick={handlePrev}
+      onNextClick={handleNext}
+      onPublishClick={handlePublish}
+      isPublishing={isPublishing}
+    />
   )
 
   const isShowCloseButton = state.step === 'upload'

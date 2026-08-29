@@ -7,6 +7,7 @@ type ModalHeaderProps = {
   buttonTitle: string
   onPrevClick: (step: CreatePostStep) => void
   onNextClick: () => void
+  isPublishing?: boolean
 }
 
 export const ModalHeader = ({
@@ -14,6 +15,7 @@ export const ModalHeader = ({
   buttonTitle,
   onPrevClick,
   onNextClick,
+  isPublishing,
 }: ModalHeaderProps) => {
   return (
     <div className={s.postControlsHeader}>
@@ -27,6 +29,7 @@ export const ModalHeader = ({
         as={'a'}
         className={clsx('typography-subtitle2', s.button, s.actionButton)}
         onClick={onNextClick}
+        disabled={isPublishing}
       >
         {buttonTitle}
       </Button>

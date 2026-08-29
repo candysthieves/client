@@ -1,5 +1,5 @@
-import type { CreatePostState } from '@/features/createPost'
 import { POST_DRAFT_LS_KEY } from '@/constants'
+import { AddPostState } from '@/features/createPost/types'
 
 type DraftFile = {
   file: string
@@ -8,7 +8,7 @@ type DraftFile = {
   lastModified: number
 }
 
-type PostDraft = Omit<CreatePostState, 'files'> & {
+type PostDraft = Omit<AddPostState, 'files'> & {
   files: DraftFile[]
 }
 
@@ -32,7 +32,7 @@ const dataUrlToFile = async (dataUrl: string, name: string, type: string, lastMo
   })
 }
 
-export const savePostDraft = async (state: CreatePostState): Promise<void> => {
+export const savePostDraft = async (state: AddPostState): Promise<void> => {
   const files = await Promise.all(
     state.files.map(async ({ file }) => ({
       file: await fileToDataUrl(file),
@@ -53,7 +53,7 @@ export const savePostDraft = async (state: CreatePostState): Promise<void> => {
   localStorage.setItem(POST_DRAFT_LS_KEY, JSON.stringify(draft))
 }
 
-export const loadPostDraft = async (): Promise<CreatePostState | null> => {
+export const loadPostDraft = async (): Promise<AddPostState | null> => {
   const draft = localStorage.getItem(POST_DRAFT_LS_KEY)
 
   if (!draft) {

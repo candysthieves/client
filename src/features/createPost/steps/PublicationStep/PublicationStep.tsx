@@ -105,10 +105,9 @@
 // }
 
 import { Avatar, Carousel, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
-import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { LocationInput } from '@/components/LocationInput'
-import { CreatePostState, Location } from '@/features/createPost'
+import { Location } from '@/features/createPost/types'
 import { UserResponse } from '@/lib/model'
 import s from './PublicationStep.module.scss'
 

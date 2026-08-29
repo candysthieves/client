@@ -1,5 +1,5 @@
 import { Button, Cards, ImageOutline } from '@candy.thieves/ui-kit-lumos'
-import { useRef, ChangeEvent } from 'react'
+import { ChangeEvent, useRef } from 'react'
 import s from './UploadStep.module.scss'
 
 type UploadStepProps = {

@@ -3,15 +3,19 @@ import { CreatePostStep } from '@/features/createPost'
 import { ModalHeader } from '@/features/createPost/CreatePostModal'
 
 type CreatePostModalHeaderProps = {
-  step: 'crop' | 'publication' | 'upload'
+  step: CreatePostStep
   onPrevClick: (step: CreatePostStep) => void
   onNextClick: () => void
+  onPublishClick: () => void
+  isPublishing?: boolean
 }
 
 export const CreatePostModalHeader = ({
   step,
   onPrevClick,
   onNextClick,
+  onPublishClick,
+  isPublishing,
 }: CreatePostModalHeaderProps) => {
   const renderContent = () => {
     switch (step) {
@@ -36,9 +40,10 @@ export const CreatePostModalHeader = ({
         return (
           <ModalHeader
             headerTitle={'Publication'}
-            buttonTitle={'Publish'}
+            buttonTitle={isPublishing ? 'Publishing...' : 'Publish'}
             onPrevClick={() => onPrevClick('crop')}
-            onNextClick={onNextClick}
+            onNextClick={onPublishClick}
+            isPublishing={isPublishing}
           />
         )
     }

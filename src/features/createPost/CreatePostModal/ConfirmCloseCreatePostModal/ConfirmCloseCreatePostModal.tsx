@@ -3,13 +3,17 @@
 import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import s from './ConfirmCloseCreatePostModal.module.scss'
 
-type Props = {
+type ConfirmCloseCreatePostModalProps = {
   open: boolean
   onConfirm: () => void
   onCancel: () => void
 }
 
-export const ConfirmCloseCreatePostModal = ({ open, onConfirm, onCancel }: Props) => {
+export const ConfirmCloseCreatePostModal = ({
+  open,
+  onConfirm,
+  onCancel,
+}: ConfirmCloseCreatePostModalProps) => {
   return (
     <Modal
       open={open}

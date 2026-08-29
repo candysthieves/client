@@ -13,7 +13,6 @@
 }
 
 .slideShow {
-  position: relative;
   width: 100%;
   max-width: $crop-image-width;
 }
@@ -24,20 +23,6 @@
   max-width: $crop-image-width;
   max-height: $crop-image-height;
   object-fit: contain;
-}
-
-.prevSlideButton,
-.nextSlideButton {
-  cursor: pointer;
-  position: absolute;
-}
-
-.prevSlideButton {
-  @include top-left(50%, 1rem);
-}
-
-.nextSlideButton {
-  @include top-right(50%, 1rem);
 }
 
 %publication {

@@ -34,10 +34,12 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (editingId && wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        const newName = inputValue.trim()
-        if (newName) {
+        const newAddress = inputValue.trim()
+        if (newAddress) {
           setLocations(prev =>
-            prev.map(loc => (loc.id === editingId ? { ...loc, name: newName } : loc))
+            prev.map(location =>
+              location.id === editingId ? { ...location, address: newAddress } : location
+            )
           )
         }
         setEditingId(null)
@@ -57,10 +59,12 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
 
     if (e.key === 'Enter') {
       e.preventDefault()
-      const newName = inputValue.trim()
-      if (newName) {
+      const newAddress = inputValue.trim()
+      if (newAddress) {
         setLocations(prev =>
-          prev.map(loc => (loc.id === editingId ? { ...loc, name: newName } : loc))
+          prev.map(location =>
+            location.id === editingId ? { ...location, address: newAddress } : location
+          )
         )
       }
       setEditingId(null)
@@ -96,7 +100,7 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
     // Set a new timer for 1 second
     timerRef.current = setTimeout(() => {
       const isDuplicate = locations.some(
-        location => location.name.toLowerCase() === value.trim().toLowerCase()
+        location => location.address.toLowerCase() === value.trim().toLowerCase()
       )
 
       if (!isDuplicate) {
@@ -104,7 +108,7 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
           ...prev,
           {
             id: `location-${Date.now()}`,
-            name: value.trim(),
+            address: value.trim(),
           },
         ])
         setInputValue('')
@@ -121,7 +125,7 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
       return
     }
     setEditingId(location.id)
-    setInputValue(location.name)
+    setInputValue(location.address)
     if (timerRef.current) {
       clearTimeout(timerRef.current)
       timerRef.current = null
@@ -135,7 +139,7 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
 
   // Deleting locations
   const removeLocation = (id: string) => {
-    setLocations(prev => prev.filter(loc => loc.id !== id))
+    setLocations(prev => prev.filter(location => location.id !== id))
     if (editingId === id) {
       setEditingId(null)
       setInputValue('')
@@ -165,7 +169,7 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
             className={clsx(s.locationItem, editingId === location.id ? s.editing : '')}
           >
             <Typography variant={'subtitle1'} className={s.locationName}>
-              {location.name}
+              {location.address}
               {editingId === location.id && ' ✏️'}
             </Typography>
             <Button

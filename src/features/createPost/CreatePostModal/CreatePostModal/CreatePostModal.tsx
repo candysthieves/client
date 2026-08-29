@@ -4,7 +4,7 @@
 
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CreatePostState, CreatePostStep } from '@/features/createPost'
 import { CreatePostModalHeader } from '@/features/createPost/CreatePostModal'
 import { ConfirmCloseCreatePostModal } from '@/features/createPost/CreatePostModal'
@@ -28,10 +28,21 @@ type CreatePostModalProps = {
 export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const { user } = useAuth() // CHANGE LATER TO FETCHED USER DATA (with avatar src)
   const router = useRouter()
+
   const [state, setState] = useState<CreatePostState>(initialCreatePostState)
   const [isCreationOpen, setIsCreationOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
-  console.log(state)
+  // const [fileUrls, setFileUrls] = useState<string[]>([])
+
+  // Добавить очистку если потребуется
+  // useEffect(() => {
+  //   return () => {
+  //     state.files.forEach(({ url }) => {
+  //       URL.revokeObjectURL(url)
+  //     })
+  //   }
+  // }, [state.files])
+
   const handleClose = () => {
     router.push(`/profile/${userId}`)
   }
@@ -39,13 +50,26 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const closeCreation = () => {
     setIsCreationOpen(false)
     setIsConfirmOpen(false)
+
+    // Release object URLs
+    state.files.forEach(({ url }) => {
+      URL.revokeObjectURL(url)
+    })
   }
 
   // Upload file step
   const handleFileSelected = (file: File) => {
+    const url = URL.createObjectURL(file)
+
     setState(prev => ({
       ...prev,
-      files: [...prev.files, file],
+      files: [
+        ...prev.files,
+        {
+          file,
+          url,
+        },
+      ],
       step: 'crop',
     }))
   }
@@ -113,13 +137,16 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
         return <UploadStep onFileSelected={handleFileSelected} />
 
       case 'crop':
-        return <CropStep file={state.files[state.currentFileIndex]} addImage={addImageHandler} />
+        return (
+          <CropStep file={state.files[state.currentFileIndex]?.file} addImage={addImageHandler} />
+        )
 
       case 'publication':
         return (
           <PublicationStep
             user={user}
-            files={state.files}
+            // files={state.files}
+            fileUrls={state.files.map(file => file.url)}
             currentFileIndex={state.currentFileIndex}
             description={state.description}
             onPreviousFile={handlePreviousFile} // ?

@@ -104,16 +104,61 @@
 //   )
 // }
 
-import { Avatar, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Avatar, Carousel, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
+import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { LocationInput } from '@/components/LocationInput'
 import { Location } from '@/features/createPost'
 import { UserResponse } from '@/lib/model'
 import s from './PublicationStep.module.scss'
 
+// const placeholderSlides = [
+//   <img
+//     key={'1'}
+//     src={
+//       'https://plus.unsplash.com/premium_photo-1711434824963-ca894373272e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bmF0dXJlfGVufDB8fDB8fHww'
+//     }
+//     alt={'Slide 1'}
+//     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+//   />,
+//   <img
+//     key={'2'}
+//     src={
+//       'https://images.unsplash.com/photo-1771838026270-28fd7e3bef1d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bmF0dXJlfGVufDB8fDB8fHww'
+//     }
+//     alt={'Slide 2'}
+//     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+//   />,
+//   <img
+//     key={'3'}
+//     src={
+//       'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bmF0dXJlfGVufDB8fDB8fHww'
+//     }
+//     alt={'Slide 3'}
+//     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+//   />,
+//   <img
+//     key={'4'}
+//     src={
+//       'https://plus.unsplash.com/premium_photo-1781039325448-435a6a0899b9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fG5hdHVyZXxlbnwwfHwwfHx8MA%3D%3D'
+//     }
+//     alt={'Slide 4'}
+//     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+//   />,
+//   <img
+//     key={'5'}
+//     src={
+//       'https://plus.unsplash.com/premium_photo-1719943510748-4b4354fbcf56?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fG5hdHVyZXxlbnwwfHwwfHx8MA%3D%3D'
+//     }
+//     alt={'Slide 5'}
+//     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+//   />,
+// ]
+
 type PublicationStepProps = {
   user: null | UserResponse
-  files: File[]
+  // files: File[]
+  fileUrls: string[]
   currentFileIndex: number
   description: string
   onPreviousFile: () => void
@@ -126,7 +171,8 @@ const MAX_DESCRIPTION_LENGTH = 500
 
 export const PublicationStep = ({
   user,
-  files,
+  // files,
+  fileUrls,
   currentFileIndex,
   description,
   onPreviousFile,
@@ -138,9 +184,9 @@ export const PublicationStep = ({
   const counterRef = useRef<HTMLDivElement | null>(null)
   const [isTextError, setIsTextError] = useState(false)
 
-  const currentFile = files[currentFileIndex]
+  // const currentFile = files[currentFileIndex]
   const userName = user?.username || 'user'
-  const maxLocations = files.length
+  const maxLocations = fileUrls.length
 
   const handleDescriptionChange = (value: string) => {
     if (value.length > MAX_DESCRIPTION_LENGTH) {
@@ -168,25 +214,7 @@ export const PublicationStep = ({
   return (
     <div className={s.publicationContent}>
       <div className={s.slideShow}>
-        <button
-          type={'button'}
-          onClick={onPreviousFile}
-          disabled={currentFileIndex === 0}
-          className={s.prevSlideButton}
-        >
-          ←
-        </button>
-
-        <img src={URL.createObjectURL(currentFile)} alt={''} className={s.slideShowImage} />
-
-        <button
-          type={'button'}
-          onClick={onNextFile}
-          disabled={currentFileIndex === files.length - 1}
-          className={s.nextSlideButton}
-        >
-          →
-        </button>
+        <Carousel slides={fileUrls} />
       </div>
 
       <div className={s.publicationBlock}>

@@ -2,11 +2,16 @@ export type CreatePostStep = 'crop' | 'publication' | 'upload'
 
 export type Location = {
   id: string
-  name: string
+  address: string
+}
+
+export type PostFile = {
+  file: File
+  url: string
 }
 
 export type CreatePostState = {
-  files: File[]
+  files: PostFile[]
   currentFileIndex: number
   step: CreatePostStep
   description: string

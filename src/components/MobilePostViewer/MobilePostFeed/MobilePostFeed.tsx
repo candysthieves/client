@@ -14,10 +14,11 @@ type Props = {
   posts: Post[]
   startIndex: number
   onClose: () => void
+  onDelete: () => void
   onEdit: (index: number) => void
 }
 
-export const MobilePostFeed = ({ posts, startIndex, onClose, onEdit }: Props) => {
+export const MobilePostFeed = ({ posts, startIndex, onClose, onDelete, onEdit }: Props) => {
   const isMobile = useIsMobileViewport()
   const { user } = useAuth()
   const postRefs = useRef<(HTMLElement | null)[]>([])
@@ -53,7 +54,11 @@ export const MobilePostFeed = ({ posts, startIndex, onClose, onEdit }: Props) =>
 
                 <Typography variant={'subtitle2'}>{post.userName}</Typography>
 
-                <PostActionMenu isAuthor={isAuthor} onEdit={() => onEdit(index)} />
+                <PostActionMenu
+                  isAuthor={isAuthor}
+                  onEdit={() => onEdit(index)}
+                  onDelete={onDelete}
+                />
               </div>
               <div className={s.imageArea}>
                 <PostImagesCarousel images={post.images} alt={post.description} natural />

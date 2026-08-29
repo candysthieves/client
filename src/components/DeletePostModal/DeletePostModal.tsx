@@ -22,7 +22,7 @@ export const DeletePostModal = ({ open, onClose, onConfirm }: DeletePostModalPro
       data-blurred-backdrop={'true'}
     >
       <div className={s.content}>
-        <Typography variant={'subtitle1'} color={'var(--color-light-100)'}>
+        <Typography variant={'subtitle1'} color={'var(--color-light-100)'} className={s.message}>
           Are you sure you want to delete this post?
         </Typography>
 

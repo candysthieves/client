@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { DeletePostModal } from '@/components'
 import { Post } from '@/mocks/posts'
 import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'
 import { MobilePostFeed } from './MobilePostFeed/MobilePostFeed'
@@ -15,6 +16,13 @@ type Props = {
 export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editingIndex, setEditingIndex] = useState(startIndex)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+  const handleConfirmDelete = () => {
+    // TODO: API soft delete
+    setIsDeleteModalOpen(false)
+    onClose()
+  }
 
   if (isEditing && posts[editingIndex]) {
     return (
@@ -39,6 +47,7 @@ export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
       <div className={s.viewer}>
         <MobilePostFeed
           onClose={onClose}
+          onDelete={() => setIsDeleteModalOpen(true)}
           onEdit={index => {
             setEditingIndex(index)
             setIsEditing(true)
@@ -47,6 +56,12 @@ export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
           startIndex={startIndex}
         />
       </div>
+
+      <DeletePostModal
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </>
   )
 }

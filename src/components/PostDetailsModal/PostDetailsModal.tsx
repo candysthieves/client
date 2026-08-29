@@ -46,7 +46,7 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit, onDelete }: Prop
               <Typography variant={'subtitle2'}>{post.userName}</Typography>
             </div>
 
-            <PostActionMenu isAuthor={isAuthor} onEdit={onEdit} />
+            <PostActionMenu isAuthor={isAuthor} onEdit={onEdit} onDelete={onDelete} />
           </div>
 
           {/* Scrollable: author's description + comments */}

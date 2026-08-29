@@ -4,11 +4,18 @@
 
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { ToastError } from '@/components'
+import { POST_DRAFT_LS_KEY } from '@/constants'
 import { CreatePostState, CreatePostStep } from '@/features/createPost'
 import { CreatePostModalHeader } from '@/features/createPost/CreatePostModal'
 import { ConfirmCloseCreatePostModal } from '@/features/createPost/CreatePostModal'
 import { useAuth } from '@/lib/hooks/useAuth'
+import {
+  EMAIL_VERIFICATION_CODE_EXPIRED_ERROR_MESSAGE,
+  EMAIL_VERIFICATION_ERROR_TITLE,
+} from '@/lib/model'
+import { loadPostDraft, savePostDraft } from '@/lib/utils'
 import { CropStep, PublicationStep, UploadStep } from '../../steps'
 import { Location } from '../../types'
 import s from './CreatePostModal.module.scss'
@@ -55,6 +62,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
     state.files.forEach(({ url }) => {
       URL.revokeObjectURL(url)
     })
+    handleClose()
   }
 
   // Upload file step
@@ -115,26 +123,60 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
   // ConfirmCloseCreatePostModal handlers
   const handleConfirm = () => {
+    void saveToDraftHandler()
     closeCreation()
   }
-  const closeConfirm = () => setIsConfirmOpen(false)
+  const closeConfirm = () => {
+    closeCreation()
+  }
+
   const openConfirm = () => setIsConfirmOpen(true)
   const handleOutsideClick = (event: Event) => {
     event.preventDefault()
     openConfirm()
   }
 
-  const onLocationChange = (locations: Location[]) => {
+  const onLocationChange = useCallback((locations: Location[]) => {
     setState(prev => ({
       ...prev,
       locations,
     }))
+  }, [])
+
+  console.log(state)
+
+  const saveToDraftHandler = async () => {
+    try {
+      await savePostDraft(state)
+    } catch (error) {
+      console.error('Failed to save draft:', error)
+    }
   }
-  console.log('state', state)
+
+  const loadFromDraftHandler = async () => {
+    try {
+      const restoredState = await loadPostDraft()
+
+      if (!restoredState) {
+        ToastError({
+          title: 'Draft load Error:',
+          messages: 'No data saved as a draft',
+        })
+
+        return
+      }
+
+      setState(restoredState)
+    } catch (error) {
+      console.error('Failed to load draft:', error)
+      setState(initialCreatePostState)
+    }
+  }
+
   const renderStep = () => {
     switch (state.step) {
       case 'upload':
-        return <UploadStep onFileSelected={handleFileSelected} />
+        return <UploadStep onFileSelected={handleFileSelected} onLoadDraft={loadFromDraftHandler} />
 
       case 'crop':
         return (

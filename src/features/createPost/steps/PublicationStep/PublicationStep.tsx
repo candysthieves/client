@@ -108,7 +108,7 @@ import { Avatar, Carousel, TextArea, Typography } from '@candy.thieves/ui-kit-lu
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { LocationInput } from '@/components/LocationInput'
-import { Location } from '@/features/createPost'
+import { CreatePostState, Location } from '@/features/createPost'
 import { UserResponse } from '@/lib/model'
 import s from './PublicationStep.module.scss'
 

@@ -4,9 +4,10 @@ import s from './UploadStep.module.scss'
 
 type UploadStepProps = {
   onFileSelected: (file: File) => void
+  onLoadDraft?: () => void
 }
 
-export const UploadStep = ({ onFileSelected }: UploadStepProps) => {
+export const UploadStep = ({ onFileSelected, onLoadDraft }: UploadStepProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +43,7 @@ export const UploadStep = ({ onFileSelected }: UploadStepProps) => {
           Select from Computer
         </Button>
 
-        <Button type={'button'} variant={'outlined'} fullWidth>
+        <Button type={'button'} variant={'outlined'} onClick={onLoadDraft} fullWidth>
           Open Draft
         </Button>
       </div>

@@ -21,14 +21,20 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
   const [locations, setLocations] = useState<Location[]>([])
   const [inputValue, setInputValue] = useState('')
   const [editingId, setEditingId] = useState<null | string>(null)
+
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
 
-  // Отправка изменений в родительский компонент
-  useEffect(() => {
-    onLocationChange(locations)
-  }, [locations, onLocationChange])
+  // // Отправка изменений в родительский компонент
+  // useEffect(() => {
+  //   onLocationChange(locations)
+  // }, [locations, onLocationChange])
+
+  const updateLocations = (nextLocations: Location[]) => {
+    setLocations(nextLocations)
+    onLocationChange(nextLocations)
+  }
 
   // Confirm editing by clicking outside the input
   useEffect(() => {
@@ -36,11 +42,11 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
       if (editingId && wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
         const newAddress = inputValue.trim()
         if (newAddress) {
-          setLocations(prev =>
-            prev.map(location =>
-              location.id === editingId ? { ...location, address: newAddress } : location
-            )
+          const nextLocations = locations.map(location =>
+            location.id === editingId ? { ...location, address: newAddress } : location
           )
+
+          updateLocations(nextLocations)
         }
         setEditingId(null)
         setInputValue('')
@@ -51,7 +57,7 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [editingId, inputValue])
+  }, [editingId, inputValue, locations])
 
   // Enter key to confirm input after editing
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -59,13 +65,15 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
 
     if (e.key === 'Enter') {
       e.preventDefault()
+
       const newAddress = inputValue.trim()
+
       if (newAddress) {
-        setLocations(prev =>
-          prev.map(location =>
-            location.id === editingId ? { ...location, address: newAddress } : location
-          )
+        const nextLocations = locations.map(location =>
+          location.id === editingId ? { ...location, address: newAddress } : location
         )
+
+        updateLocations(nextLocations)
       }
       setEditingId(null)
       setInputValue('')
@@ -99,18 +107,22 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
 
     // Set a new timer for 1 second
     timerRef.current = setTimeout(() => {
+      const trimmedValue = value.trim()
+
       const isDuplicate = locations.some(
         location => location.address.toLowerCase() === value.trim().toLowerCase()
       )
 
       if (!isDuplicate) {
-        setLocations(prev => [
-          ...prev,
+        const nextLocations = [
+          ...locations,
           {
             id: `location-${Date.now()}`,
-            address: value.trim(),
+            address: trimmedValue,
           },
-        ])
+        ]
+
+        updateLocations(nextLocations)
         setInputValue('')
       }
       timerRef.current = null
@@ -139,12 +151,23 @@ export const LocationInput = ({ maxLocations, onLocationChange }: LocationInputP
 
   // Deleting locations
   const removeLocation = (id: string) => {
-    setLocations(prev => prev.filter(location => location.id !== id))
+    const nextLocations = locations.filter(location => location.id !== id)
+    updateLocations(nextLocations)
+
     if (editingId === id) {
       setEditingId(null)
       setInputValue('')
     }
   }
+
+  // // Clear debounce timer on unmount
+  // useEffect(() => {
+  //   return () => {
+  //     if (timerRef.current) {
+  //       clearTimeout(timerRef.current)
+  //     }
+  //   }
+  // }, [])
 
   return (
     <div className={s.locationWrapper} ref={wrapperRef}>

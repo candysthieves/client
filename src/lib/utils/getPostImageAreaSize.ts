@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 
 export const POST_IMAGE_AREA_MAX_WIDTH = 490
 export const POST_IMAGE_AREA_MAX_HEIGHT = 562
+export const POST_IMAGE_AREA_REFERENCE_WIDTH = 972
 
 type ImageDimensions = {
   width?: number
@@ -31,9 +32,12 @@ export const getPostImageAreaSize = (image: ImageDimensions | undefined) => {
 /**
  * Inline-стиль с шириной области для grid-контейнера модалки:
  * левая колонка модалки подстраивается под первое изображение поста.
+ * Ширина задаётся в процентах от полной ширины модалки, поэтому колонка
+ * сохраняет пропорции (4:5 уже, чем 1:1) при любом масштабе модалки.
  */
 export const getPostImageAreaStyle = (image: ImageDimensions | undefined): CSSProperties => {
   const { width } = getPostImageAreaSize(image)
+  const percent = (width / POST_IMAGE_AREA_REFERENCE_WIDTH) * 100
 
-  return { '--image-area-width': `${width}px` } as CSSProperties
+  return { '--image-area-width': `${percent}%` } as CSSProperties
 }

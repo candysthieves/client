@@ -1,6 +1,7 @@
 'use client'
 
 import { Header } from '@candy.thieves/ui-kit-lumos'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useAuth } from '@/lib/hooks/useAuth'
@@ -26,6 +27,7 @@ export const AppHeader = () => {
       isAuthenticated={isAuthenticated}
       onLogInClick={signInHandler}
       onSignUpClick={signUpHandler}
+      linkTag={Link}
     />
   )
 }

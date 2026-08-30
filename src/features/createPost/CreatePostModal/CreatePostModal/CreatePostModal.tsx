@@ -202,7 +202,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
       case 'crop':
         return (
-          <CropStep file={state.files[state.currentFileIndex]?.file} addImage={addImageHandler} />
+          <CropStep file={state.files[state.currentFileIndex]?.file} addImage={addImageHandler} /> // file={state.files[state.files.length - 1]?.file}
         )
 
       case 'publication':
@@ -211,12 +211,9 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
             user={user}
             // files={state.files}
             fileUrls={state.files.map(file => file.url)}
-            currentFileIndex={state.currentFileIndex}
             description={state.description}
             locations={state.locations}
-            onPreviousFile={handlePreviousFile} // ?
-            onNextFile={handleNextFile} // ?
-            onDescriptionChange={handleDescriptionChange} // ?
+            onDescriptionChange={handleDescriptionChange}
             onLocationChange={onLocationChange}
           />
         )

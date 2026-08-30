@@ -83,3 +83,7 @@ export const loadPostDraft = async (): Promise<AddPostState | null> => {
 export const clearPostDraft = (): void => {
   localStorage.removeItem(POST_DRAFT_LS_KEY)
 }
+
+export const isPostDraftExist = (): boolean => {
+  return localStorage.getItem(POST_DRAFT_LS_KEY) !== null
+}

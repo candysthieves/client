@@ -21,9 +21,14 @@
 .uploadControls {
   @extend %upload-container;
 
-  @include flex(flex, center, center);
+  @include flex(flex, flex-start, center);
 
+  // min-height: 9.75rem; // Add if needed
   flex-direction: column;
   gap: 1.25rem;
   margin: 0 auto;
+}
+
+.openDraftButtonWrapper {
+  width: 100%;
 }

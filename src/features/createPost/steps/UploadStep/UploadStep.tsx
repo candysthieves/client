@@ -1,5 +1,6 @@
-import { Button, Cards, ImageOutline } from '@candy.thieves/ui-kit-lumos'
-import { ChangeEvent, useRef } from 'react'
+import { Button, Cards, ImageOutline, Tooltip } from '@candy.thieves/ui-kit-lumos'
+import { ChangeEvent, useRef, useState } from 'react'
+import { clearPostDraft, isPostDraftExist } from '@/lib/utils'
 import s from './UploadStep.module.scss'
 
 type UploadStepProps = {
@@ -8,7 +9,10 @@ type UploadStepProps = {
 }
 
 export const UploadStep = ({ onFileSelected, onLoadDraft }: UploadStepProps) => {
+  const [hasPostDraft, setHasPostDraft] = useState(isPostDraftExist())
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const TOOLTIP_MESSAGE = hasPostDraft ? '' : "You don't have any saved drafts to create a post"
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -22,6 +26,11 @@ export const UploadStep = ({ onFileSelected, onLoadDraft }: UploadStepProps) => 
 
   const handleButtonClick = () => {
     fileInputRef.current?.click()
+  }
+
+  const handleClearPostDraft = () => {
+    clearPostDraft()
+    setHasPostDraft(false)
   }
 
   return (
@@ -43,9 +52,25 @@ export const UploadStep = ({ onFileSelected, onLoadDraft }: UploadStepProps) => 
           Select from Computer
         </Button>
 
-        <Button type={'button'} variant={'outlined'} onClick={onLoadDraft} fullWidth>
-          Open Draft
-        </Button>
+        <Tooltip content={TOOLTIP_MESSAGE}>
+          <div className={s.openDraftButtonWrapper}>
+            <Button
+              type={'button'}
+              variant={'outlined'}
+              onClick={onLoadDraft}
+              fullWidth
+              disabled={!hasPostDraft}
+            >
+              Open Draft
+            </Button>
+          </div>
+        </Tooltip>
+
+        {hasPostDraft && (
+          <Button type={'button'} variant={'secondary'} onClick={handleClearPostDraft} fullWidth>
+            Delete Draft
+          </Button>
+        )}
       </div>
     </div>
   )

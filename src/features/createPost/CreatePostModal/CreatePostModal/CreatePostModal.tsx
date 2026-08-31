@@ -259,7 +259,6 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       </Modal>
 
       <ConfirmCloseCreatePostModal
-        // open={hasPostDraft && isConfirmOpen}
         hasFileUploads={hasFileUploads}
         open={isConfirmOpen}
         onCloseClick={closeConfirm}

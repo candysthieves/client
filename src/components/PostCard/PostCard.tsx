@@ -20,7 +20,7 @@ type PostCardProps = {
 }
 
 const isInteractiveElementTarget = (target: EventTarget | null) =>
-  target instanceof HTMLElement && !!target.closest('a, button')
+  target instanceof Element && !!target.closest('a, button')
 
 export const PostCard = ({ images, username, timeAgo, caption, onOpen }: PostCardProps) => {
   const captionWrapperRef = useRef<HTMLDivElement>(null)

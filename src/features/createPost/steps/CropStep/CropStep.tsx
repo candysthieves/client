@@ -1,14 +1,14 @@
 import {
   Button,
   clsx,
-  Expand,
   ExpandOutline,
   ImageOutline,
   MaximizeOutline,
-  PlusCircleOutline,
 } from '@candy.thieves/ui-kit-lumos'
 import { useEffect, useRef, useState } from 'react'
+import { ExpandCropPostImageBlock } from '@/components/ExpandCropPostImageBlock'
 import { SelectCropPostImagesBlock } from '@/components/SelectCropPostImagesBlock'
+import { AspectRatio } from '@/features/createPost'
 import s from './CropStep.module.scss'
 
 type CropStepProps = {
@@ -18,11 +18,17 @@ type CropStepProps = {
 
 export const CropStep = ({ file, addImage }: CropStepProps) => {
   const [isSelectImagesOpen, setIsSelectImagesOpen] = useState(false)
+  const [isExpandImageOpen, seIsExpandImageOpen] = useState(false)
+
   const selectImagesRef = useRef<HTMLDivElement>(null)
+  const expandImageRef = useRef<HTMLDivElement>(null)
 
   const imageUrl = URL.createObjectURL(file)
 
-  const openExpandImageMenuHandler = () => console.log('openExpandImageMenuHandler')
+  const openExpandImageMenuHandler = () => {
+    seIsExpandImageOpen(prev => !prev)
+  }
+
   const openMaximizeImageSliderHandler = () => console.log('openMaximizeImageSliderHandler')
 
   const openSelectImageMenuHandler = () => {
@@ -34,15 +40,20 @@ export const CropStep = ({ file, addImage }: CropStepProps) => {
     console.log('onAddImageHandler')
   }
 
-  const onCloseSelectCropPostImagesBlockHandler = () => {
-    setIsSelectImagesOpen(false)
+  const onSelectAspectRatioHandler = (aspectRatio: AspectRatio) => {
+    seIsExpandImageOpen(false) // delete later
+    console.log('onSelectAspectRatioHandler:', aspectRatio)
   }
 
   const handleSelectCropPostImagesBlockClickOutside = (event: MouseEvent) => {
-    console.log(selectImagesRef.current && !selectImagesRef.current.contains(event.target as Node))
     if (selectImagesRef.current && !selectImagesRef.current.contains(event.target as Node)) {
-      console.log('010')
       setIsSelectImagesOpen(false)
+    }
+  }
+
+  const handleExpandImageBlockClickOutside = (event: MouseEvent) => {
+    if (expandImageRef.current && !expandImageRef.current.contains(event.target as Node)) {
+      seIsExpandImageOpen(false)
     }
   }
 
@@ -53,6 +64,14 @@ export const CropStep = ({ file, addImage }: CropStepProps) => {
       document.removeEventListener('mousedown', handleSelectCropPostImagesBlockClickOutside)
     }
   }, [isSelectImagesOpen])
+
+  useEffect(() => {
+    if (!isExpandImageOpen) return
+    document.addEventListener('mousedown', handleExpandImageBlockClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleExpandImageBlockClickOutside)
+    }
+  }, [isExpandImageOpen])
 
   return (
     <div className={s.imageContent}>
@@ -87,6 +106,12 @@ export const CropStep = ({ file, addImage }: CropStepProps) => {
           }}
         />
       </Button>
+
+      <ExpandCropPostImageBlock
+        ref={expandImageRef}
+        isOpen={isExpandImageOpen}
+        onSelectAspectRatio={onSelectAspectRatioHandler}
+      />
 
       <SelectCropPostImagesBlock
         ref={selectImagesRef}

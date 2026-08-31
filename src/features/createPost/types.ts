@@ -33,3 +33,10 @@ export type AddPostRequest = z.infer<typeof AddPostRequestSchema>
 //   description: string
 //   locations: Location[]
 // }
+
+export enum AspectRatio {
+  ORIGINAL = 'original', // original
+  PORTRAIT = 'portrait', // 4:5
+  SQUARE = 'square', // 1:1
+  WIDESCREEN = 'widescreen', // 16:9
+}

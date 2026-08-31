@@ -1,0 +1,78 @@
+@use '@/styles/mixins' as *;
+
+.expandImageContent {
+  position: absolute;
+
+  display: flex;
+  flex-direction: column;
+
+  // gap: 0.625rem;
+  min-width: 8.25rem;
+  max-width: 9.75rem;
+  height: 8.75rem; // max-height
+  // padding: 0.625rem 1rem 0.625rem  0.75rem;
+
+  opacity: 0.8;
+
+  @include bottom-left(3.125rem, 0.75rem);
+
+  @include media-tablet {
+    max-width: 15.25rem;
+    height: 5rem;
+  }
+}
+
+.iconButton {
+  cursor: pointer;
+  padding: 0.3rem 0.75rem;
+
+  // padding: 0;
+  border: none;
+  background-color: transparent;
+
+  @include flex(flex, space-between, center);
+
+  // @include width-height(1.25rem);
+  @include transition-basic(color, background-color);
+
+  &:hover {
+    background-color: var(--color-accent-900);
+
+    // %shape {
+    //  border-color: var(--color-accent-500);
+    // }
+  }
+}
+
+%shape {
+  border: 2px solid var(--color-light-900);
+  border-radius: 2px;
+}
+
+.square {
+  @extend %shape;
+
+  @include width-height(1.125rem);
+}
+
+.portrait {
+  @extend %shape;
+
+  @include width-height(1.125rem, 1.625rem);
+}
+
+.widescreen {
+  @extend %shape;
+
+  @include width-height(1.625rem, 1.25rem);
+}
+
+.originalButton {
+  position: relative;
+}
+
+.originalButtonIcon {
+  position: absolute;
+
+  @include top-right(0.4rem, 0.55rem);
+}

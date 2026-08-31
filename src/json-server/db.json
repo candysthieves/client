@@ -183,6 +183,87 @@
       "createdAt": "2026-08-29T22:50:38.857Z",
       "updatedAt": "2026-08-29T22:50:38.857Z",
       "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788182956597",
+      "description": "wedwed",
+      "locations": [
+        {
+          "id": "location-1788182951193",
+          "address": "wedwed"
+        }
+      ],
+      "images": [
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/84b608e0-a424-49fb-9041-ea7d21c149dc",
+          "width": 490,
+          "height": 562
+        },
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/bdc02eef-0f1a-4d9d-8248-2a3f3eb66501",
+          "width": 490,
+          "height": 562
+        }
+      ],
+      "preview": {
+        "url": "blob:https://dev.lumosapp.net:3000/84b608e0-a424-49fb-9041-ea7d21c149dc",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-31T13:29:16.597Z",
+      "updatedAt": "2026-08-31T13:29:16.597Z",
+      "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788183436755",
+      "description": "шщлдше",
+      "locations": [],
+      "images": [
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/64339de6-1c94-4872-847b-62b979828487",
+          "width": 490,
+          "height": 562
+        }
+      ],
+      "preview": {
+        "url": "blob:https://dev.lumosapp.net:3000/64339de6-1c94-4872-847b-62b979828487",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-31T13:37:16.755Z",
+      "updatedAt": "2026-08-31T13:37:16.755Z",
+      "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788183776457",
+      "description": "кекепкеп",
+      "locations": [
+        {
+          "id": "location-1788183771922",
+          "address": "кепкеп"
+        }
+      ],
+      "images": [
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/d33af003-4cda-42c4-b7d3-176702740678",
+          "width": 490,
+          "height": 562
+        }
+      ],
+      "preview": {
+        "url": "blob:https://dev.lumosapp.net:3000/d33af003-4cda-42c4-b7d3-176702740678",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-31T13:42:56.457Z",
+      "updatedAt": "2026-08-31T13:42:56.457Z",
+      "willBeDeletedIn": null
     }
   ]
 }

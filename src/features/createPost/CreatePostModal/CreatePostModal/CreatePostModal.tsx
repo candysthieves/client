@@ -12,7 +12,7 @@ import {
 } from '@/features/createPost/CreatePostModal'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { useAddPost } from '@/lib/posts'
-import { clearPostDraft, loadPostDraft, savePostDraft } from '@/lib/utils'
+import { clearPostDraft, isPostDraftExist, loadPostDraft, savePostDraft } from '@/lib/utils'
 import { CropStep, PublicationStep, UploadStep } from '../../steps'
 import { AddPostState, CreatePostStep, Location } from '../../types'
 import s from './CreatePostModal.module.scss'
@@ -38,6 +38,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const [isCreationOpen, setIsCreationOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
+  const closeCreationModal = () => setIsCreationOpen(false)
   const openConfirm = () => setIsConfirmOpen(true)
   const closeConfirm = () => setIsConfirmOpen(false)
 
@@ -57,7 +58,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   }, [router, userId])
 
   const closeCreation = useCallback(() => {
-    setIsCreationOpen(false)
+    closeCreationModal()
     closeConfirm()
 
     // Release object URLs
@@ -131,6 +132,12 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
   const handleOutsideClick = (event: Event) => {
     event.preventDefault()
+    // if (!hasPostDraft) {
+    //   closeCreationModal()
+    //   handleClose()
+    //   return
+    // }
+
     openConfirm()
   }
 
@@ -233,6 +240,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const isShowCloseButton = state.step === 'upload'
   const isFullSize = state.step !== 'upload'
   const modalSize = state.step === 'publication' ? 'xl' : 'm'
+  const hasFileUploads = state.files.length > 0
 
   return (
     <>
@@ -251,6 +259,8 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       </Modal>
 
       <ConfirmCloseCreatePostModal
+        // open={hasPostDraft && isConfirmOpen}
+        hasFileUploads={hasFileUploads}
         open={isConfirmOpen}
         onCloseClick={closeConfirm}
         onCancel={closeCreation}

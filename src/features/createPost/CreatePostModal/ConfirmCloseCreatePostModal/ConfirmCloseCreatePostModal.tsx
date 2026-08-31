@@ -8,6 +8,7 @@ type ConfirmCloseCreatePostModalProps = {
   onConfirm: () => void
   onCancel: () => void
   onCloseClick: () => void
+  hasFileUploads: boolean
 }
 
 export const ConfirmCloseCreatePostModal = ({
@@ -15,6 +16,7 @@ export const ConfirmCloseCreatePostModal = ({
   onConfirm,
   onCancel,
   onCloseClick,
+  hasFileUploads,
 }: ConfirmCloseCreatePostModalProps) => {
   return (
     <Modal
@@ -36,7 +38,12 @@ export const ConfirmCloseCreatePostModal = ({
             Discard
           </Button>
 
-          <Button type={'button'} variant={'primary'} onClick={onConfirm}>
+          <Button
+            type={'button'}
+            variant={'primary'}
+            onClick={onConfirm}
+            disabled={!hasFileUploads}
+          >
             Save draft
           </Button>
         </div>

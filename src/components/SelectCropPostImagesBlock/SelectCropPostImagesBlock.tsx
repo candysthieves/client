@@ -1,14 +1,17 @@
 import { Button, Cards, clsx, PlusCircleOutline } from '@candy.thieves/ui-kit-lumos'
+import { Ref } from 'react'
 import s from './SelectCropPostImagesBlock.module.scss'
 
 type SelectCropPostImagesBlockProps = {
   isOpen: boolean
   onAddImage: () => void
+  ref?: Ref<HTMLDivElement>
 }
 
 export const SelectCropPostImagesBlock = ({
   isOpen,
   onAddImage,
+  ref,
 }: SelectCropPostImagesBlockProps) => {
   const addNewPostImageHandler = () => {
     console.log('addNewPostImageHandler')
@@ -16,7 +19,7 @@ export const SelectCropPostImagesBlock = ({
   }
 
   return (
-    <>
+    <div ref={ref}>
       {isOpen && (
         <Cards className={s.selectImagesContent}>
           <Button className={clsx(s.iconButton, s.addImageButton)} onClick={addNewPostImageHandler}>
@@ -35,6 +38,6 @@ export const SelectCropPostImagesBlock = ({
           </div>
         </Cards>
       )}
-    </>
+    </div>
   )
 }

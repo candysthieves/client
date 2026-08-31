@@ -7,7 +7,7 @@ import {
   MaximizeOutline,
   PlusCircleOutline,
 } from '@candy.thieves/ui-kit-lumos'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { SelectCropPostImagesBlock } from '@/components/SelectCropPostImagesBlock'
 import s from './CropStep.module.scss'
 
@@ -18,6 +18,7 @@ type CropStepProps = {
 
 export const CropStep = ({ file, addImage }: CropStepProps) => {
   const [isSelectImagesOpen, setIsSelectImagesOpen] = useState(false)
+  const selectImagesRef = useRef<HTMLDivElement>(null)
 
   const imageUrl = URL.createObjectURL(file)
 
@@ -32,6 +33,26 @@ export const CropStep = ({ file, addImage }: CropStepProps) => {
     setIsSelectImagesOpen(false) // delete later
     console.log('onAddImageHandler')
   }
+
+  const onCloseSelectCropPostImagesBlockHandler = () => {
+    setIsSelectImagesOpen(false)
+  }
+
+  const handleSelectCropPostImagesBlockClickOutside = (event: MouseEvent) => {
+    console.log(selectImagesRef.current && !selectImagesRef.current.contains(event.target as Node))
+    if (selectImagesRef.current && !selectImagesRef.current.contains(event.target as Node)) {
+      console.log('010')
+      setIsSelectImagesOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    if (!isSelectImagesOpen) return
+    document.addEventListener('mousedown', handleSelectCropPostImagesBlockClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleSelectCropPostImagesBlockClickOutside)
+    }
+  }, [isSelectImagesOpen])
 
   return (
     <div className={s.imageContent}>
@@ -67,7 +88,11 @@ export const CropStep = ({ file, addImage }: CropStepProps) => {
         />
       </Button>
 
-      <SelectCropPostImagesBlock isOpen={isSelectImagesOpen} onAddImage={onAddImageHandler} />
+      <SelectCropPostImagesBlock
+        ref={selectImagesRef}
+        isOpen={isSelectImagesOpen}
+        onAddImage={onAddImageHandler}
+      />
     </div>
   )
 }

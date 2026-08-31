@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: false,
   reactCompiler: true,
+  turbopack: {
+    root: __dirname,
+  },
 }
 
 export default nextConfig

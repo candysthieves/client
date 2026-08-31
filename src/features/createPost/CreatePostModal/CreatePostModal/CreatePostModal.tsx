@@ -125,8 +125,8 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const addImageHandler = () => console.log('addImageHandler')
 
   // ConfirmCloseCreatePostModal handlers
-  const handleConfirm = () => {
-    void saveToDraftHandler()
+  const handleConfirm = async () => {
+    await saveToDraftHandler()
     closeCreation()
   }
 

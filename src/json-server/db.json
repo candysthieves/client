@@ -264,6 +264,52 @@
       "createdAt": "2026-08-31T13:42:56.457Z",
       "updatedAt": "2026-08-31T13:42:56.457Z",
       "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788208530885",
+      "description": "some text",
+      "locations": [
+        {
+          "id": "location-1788207574126",
+          "address": "some place"
+        }
+      ],
+      "images": [
+        {
+          "url": "http://localhost:8080/uploads/1788208530885_5ec8a39689d4a4cbd6ffb3d4ce1eac07.jpg",
+          "width": 490,
+          "height": 562,
+          "name": "5ec8a39689d4a4cbd6ffb3d4ce1eac07.jpg",
+          "size": 415009,
+          "type": "image/jpeg"
+        },
+        {
+          "url": "http://localhost:8080/uploads/1788208530885_Mask group.png",
+          "width": 490,
+          "height": 562,
+          "name": "Mask group.png",
+          "size": 470818,
+          "type": "image/png"
+        },
+        {
+          "url": "http://localhost:8080/uploads/1788208530885_image 2.png",
+          "width": 490,
+          "height": 562,
+          "name": "image 2.png",
+          "size": 414741,
+          "type": "image/png"
+        }
+      ],
+      "preview": {
+        "url": "http://localhost:8080/uploads/1788208530885_5ec8a39689d4a4cbd6ffb3d4ce1eac07.jpg",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-31T20:35:30.885Z",
+      "updatedAt": "2026-08-31T20:35:30.885Z",
+      "willBeDeletedIn": null
     }
   ]
 }

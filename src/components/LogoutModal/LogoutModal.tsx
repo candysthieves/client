@@ -29,7 +29,6 @@ export const LogoutModal = ({ open, onClose, onSuccess }: LogoutModalProps) => {
 
         // router.replace('/sign-in')
         router.replace('/')
-        clearPostDraft()
       },
     })
   }

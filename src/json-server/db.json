@@ -310,6 +310,31 @@
       "createdAt": "2026-08-31T20:35:30.885Z",
       "updatedAt": "2026-08-31T20:35:30.885Z",
       "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788212838698",
+      "description": "ooo",
+      "locations": [],
+      "images": [
+        {
+          "url": "http://localhost:8080/uploads/1788212838698_Mask group.png",
+          "width": 490,
+          "height": 562,
+          "name": "Mask group.png",
+          "size": 470818,
+          "type": "image/png"
+        }
+      ],
+      "preview": {
+        "url": "http://localhost:8080/uploads/1788212838698_Mask group.png",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-31T21:47:18.698Z",
+      "updatedAt": "2026-08-31T21:47:18.698Z",
+      "willBeDeletedIn": null
     }
   ]
 }

@@ -1,0 +1,13 @@
+@use '@/styles/mixins' as *;
+
+.modal {
+  display: block; // change later
+}
+
+.modal-m {
+  width: min($modal-width-m, calc(100vw - 2rem));
+}
+
+.modal-xl {
+  width: min($modal-width-xl, calc(100vw - 2rem));
+}

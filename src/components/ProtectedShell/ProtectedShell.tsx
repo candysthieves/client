@@ -1,6 +1,7 @@
 'use client'
 
 import { clsx, LogOut, Sidebar } from '@candy.thieves/ui-kit-lumos'
+import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { ReactNode, useEffect, useState } from 'react'
 import { LogoutModal } from '@/components'
@@ -11,18 +12,37 @@ import s from './ProtectedShell.module.scss'
 export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname()
   const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuth()
+  const { user, isAuthenticated, isLoading } = useAuth()
   const activeSidebarId = sidebarItems.find(item => item.href === pathname)?.id ?? ''
   const [logoutOpen, setLogoutOpen] = useState(false)
 
+  // useEffect(() => {
+  //   // if (!isLoading && !isAuthenticated && pathname !== '/') {
+  //   if (!isLoading && !isAuthenticated) {
+  //     // router.replace('/sign-in')
+  //     router.replace('/')
+  //   }
+  //   // }, [isAuthenticated, isLoading, router])
+  // }, [isAuthenticated, isLoading, router, pathname])
+
   useEffect(() => {
-    // if (!isLoading && !isAuthenticated && pathname !== '/') {
-    if (!isLoading && !isAuthenticated) {
-      // router.replace('/sign-in')
-      router.replace('/')
+    if (!isLoading) {
+      // Редирект с /profile на /profile/{userId}
+      if (pathname === '/profile') {
+        if (isAuthenticated && user?.id) {
+          router.replace(`/profile/${user.id}`)
+        } else {
+          router.replace('/')
+        }
+        return
+      }
+
+      // Остальная логика редиректа для защищенных страниц
+      if (!isAuthenticated) {
+        router.replace('/')
+      }
     }
-    // }, [isAuthenticated, isLoading, router])
-  }, [isAuthenticated, isLoading, router, pathname])
+  }, [isAuthenticated, isLoading, router, pathname, user?.id])
 
   // if (!isAuthenticated) { // avoid blinking on load - check if needed when isLoading will work
   //   return null
@@ -31,8 +51,10 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   const content = !isLoading ? (
     <main className={s.content}>{children}</main>
   ) : (
-    <div>Loading...</div> // change Loading... later
+    <div>Loading....</div> // change Loading... later
   )
+
+  const userId = user?.id
 
   return (
     <div className={s.layout}>
@@ -40,6 +62,8 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
         <div className={clsx(s.container, s.containerAuthenticated)}>
           <aside className={s.sidebar}>
             <Sidebar
+              linkTag={Link}
+              userId={userId}
               activeId={activeSidebarId}
               items={sidebarItems}
               logOutIcon={<LogOut />}

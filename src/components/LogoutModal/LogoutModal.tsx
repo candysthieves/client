@@ -4,6 +4,7 @@ import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
 import { ToastWarning } from '@/components/Toast/Toast'
 import { useLogout } from '@/lib/auth'
+import { clearPostDraft } from '@/lib/utils'
 import s from './LogoutModal.module.css'
 
 type LogoutModalProps = {
@@ -25,7 +26,10 @@ export const LogoutModal = ({ open, onClose, onSuccess }: LogoutModalProps) => {
           title: 'Signed out successfully',
           message: 'You have been successfully signed out. See you soon!',
         })
+
+        // router.replace('/sign-in')
         router.replace('/')
+        clearPostDraft()
       },
     })
   }

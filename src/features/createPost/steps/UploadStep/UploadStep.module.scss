@@ -1,0 +1,34 @@
+@use '@/styles/mixins' as *;
+
+%upload-container {
+  width: 100%;
+  max-width: 222px;
+}
+
+.uploadMiniature {
+  @extend %upload-container;
+
+  height: 228px;
+  margin: 2.6rem auto 3.75rem;
+
+  @include flex(flex, center, center);
+}
+
+.uploadInput {
+  display: none;
+}
+
+.uploadControls {
+  @extend %upload-container;
+
+  @include flex(flex, flex-start, center);
+
+  // min-height: 9.75rem; // Add if needed
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0 auto;
+}
+
+.openDraftButtonWrapper {
+  width: 100%;
+}

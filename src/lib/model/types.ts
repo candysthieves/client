@@ -14,6 +14,7 @@ import {
   validatePasswordRecoveryCodeSchema,
 } from './auth.schemas'
 
+// Auth
 export type AccessTokenResponse = z.infer<typeof accessTokenResponseSchema>
 export type ErrorMessageResponse = z.infer<typeof errorMessageSchema>
 export type ApiErrorResponse = z.infer<typeof apiErrorResponseSchema>

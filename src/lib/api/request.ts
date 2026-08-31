@@ -234,6 +234,7 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
     // 401 с backend error response — это ошибка самого запроса.
     // Например при sign-in: code 51 InvalidCredentials (This error must go directly to the caller)
     if (isErrorResponse(errorData)) {
+      console.log('401 backend error response') // check here
       throw new ApiError(response.status, errorData)
     }
 

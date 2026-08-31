@@ -15,7 +15,7 @@ export const PublicShell = ({ children }: { children: ReactNode }) => {
   }, [isAuthenticated, isLoading, router])
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div>Loading..</div>
   }
 
   // if (isAuthenticated) {

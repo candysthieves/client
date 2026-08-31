@@ -12,3 +12,4 @@ export { mapPasswordRecoveryDomainError } from './mapPasswordRecoveryDomainError
 export { mapPasswordRecoveryValidationError } from './mapPasswordRecoveryValidationError'
 export { mapNewPasswordDomainError } from './mapNewPasswordDomainError'
 export { mapNewPasswordValidationError } from './mapNewPasswordValidationError'
+export * from './createPostDraft'

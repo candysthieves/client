@@ -7,17 +7,19 @@ type ConfirmCloseCreatePostModalProps = {
   open: boolean
   onConfirm: () => void
   onCancel: () => void
+  onCloseClick: () => void
 }
 
 export const ConfirmCloseCreatePostModal = ({
   open,
   onConfirm,
   onCancel,
+  onCloseClick,
 }: ConfirmCloseCreatePostModalProps) => {
   return (
     <Modal
       open={open}
-      onClose={onCancel}
+      onClose={onCloseClick}
       modalTitle={'Close'}
       size={'s'}
       showHeader

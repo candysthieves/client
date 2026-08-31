@@ -19,9 +19,9 @@ export const SelectCropPostImagesBlock = ({
   }
 
   return (
-    <div ref={ref}>
+    <>
       {isOpen && (
-        <Cards className={s.selectImagesContent}>
+        <Cards ref={ref} className={s.selectImagesContent}>
           <Button className={clsx(s.iconButton, s.addImageButton)} onClick={addNewPostImageHandler}>
             <PlusCircleOutline
               size={36}
@@ -38,6 +38,6 @@ export const SelectCropPostImagesBlock = ({
           </div>
         </Cards>
       )}
-    </div>
+    </>
   )
 }

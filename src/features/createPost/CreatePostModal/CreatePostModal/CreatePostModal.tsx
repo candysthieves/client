@@ -37,6 +37,10 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const [state, setState] = useState<AddPostState>(initialCreatePostState)
   const [isCreationOpen, setIsCreationOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+
+  const openConfirm = () => setIsConfirmOpen(true)
+  const closeConfirm = () => setIsConfirmOpen(false)
+
   // const [fileUrls, setFileUrls] = useState<string[]>([])
 
   // Добавить очистку если потребуется
@@ -54,7 +58,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
   const closeCreation = useCallback(() => {
     setIsCreationOpen(false)
-    setIsConfirmOpen(false)
+    closeConfirm()
 
     // Release object URLs
     state.files.forEach(({ url }) => {
@@ -124,11 +128,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
     void saveToDraftHandler()
     closeCreation()
   }
-  const closeConfirm = () => {
-    closeCreation()
-  }
 
-  const openConfirm = () => setIsConfirmOpen(true)
   const handleOutsideClick = (event: Event) => {
     event.preventDefault()
     openConfirm()
@@ -252,7 +252,8 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
       <ConfirmCloseCreatePostModal
         open={isConfirmOpen}
-        onCancel={closeConfirm}
+        onCloseClick={closeConfirm}
+        onCancel={closeCreation}
         onConfirm={handleConfirm}
       />
     </>

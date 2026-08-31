@@ -1,11 +1,11 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { Post } from '@/mocks/posts'
 import { DeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
+import { useDeletePost } from '@/lib/posts'
 
 type Props = {
   post: Post
@@ -16,8 +16,7 @@ type Props = {
 type Mode = 'edit' | 'view'
 
 export const PostModal = ({ post, open, onClose }: Props) => {
-  const router = useRouter()
-
+  const deletePostMutation = useDeletePost()
   const [mode, setMode] = useState<Mode>('view')
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
@@ -47,10 +46,9 @@ export const PostModal = ({ post, open, onClose }: Props) => {
   }
 
   const handleConfirmDelete = () => {
-    // TODO: API soft delete
-    setIsDeleteModalOpen(false)
-    handleClose()
-    router.replace('/profile')
+    deletePostMutation.mutate(post.postId, {
+      onSuccess: handleClose,
+    })
   }
 
   if (mode === 'edit') {
@@ -76,6 +74,7 @@ export const PostModal = ({ post, open, onClose }: Props) => {
       />
 
       <DeletePostModal
+        isDeleting={deletePostMutation.isPending}
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}

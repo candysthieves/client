@@ -4,12 +4,18 @@ import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import s from './DeletePostModal.module.scss'
 
 type DeletePostModalProps = {
+  isDeleting?: boolean
   open: boolean
   onClose: () => void
   onConfirm: () => void
 }
 
-export const DeletePostModal = ({ open, onClose, onConfirm }: DeletePostModalProps) => {
+export const DeletePostModal = ({
+  isDeleting = false,
+  open,
+  onClose,
+  onConfirm,
+}: DeletePostModalProps) => {
   return (
     <Modal
       open={open}
@@ -27,10 +33,10 @@ export const DeletePostModal = ({ open, onClose, onConfirm }: DeletePostModalPro
         </Typography>
 
         <div className={s.controls}>
-          <Button type={'button'} variant={'outlined'} onClick={onConfirm}>
+          <Button type={'button'} variant={'outlined'} onClick={onConfirm} disabled={isDeleting}>
             Yes
           </Button>
-          <Button type={'button'} variant={'primary'} onClick={onClose}>
+          <Button type={'button'} variant={'primary'} onClick={onClose} disabled={isDeleting}>
             No
           </Button>
         </div>

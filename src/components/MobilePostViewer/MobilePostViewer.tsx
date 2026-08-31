@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { DeletePostModal } from '@/components'
+import { useDeletePost } from '@/lib/posts'
 import { Post } from '@/mocks/posts'
 import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'
 import { MobilePostFeed } from './MobilePostFeed/MobilePostFeed'
@@ -17,11 +18,18 @@ export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editingIndex, setEditingIndex] = useState(startIndex)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [postIdToDelete, setPostIdToDelete] = useState<null | string>(null)
+  const deletePostMutation = useDeletePost()
 
   const handleConfirmDelete = () => {
-    // TODO: API soft delete
-    setIsDeleteModalOpen(false)
-    onClose()
+    if (!postIdToDelete) return
+
+    deletePostMutation.mutate(postIdToDelete, {
+      onSuccess: () => {
+        setIsDeleteModalOpen(false)
+        onClose()
+      },
+    })
   }
 
   if (isEditing && posts[editingIndex]) {
@@ -47,7 +55,10 @@ export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
       <div className={s.viewer}>
         <MobilePostFeed
           onClose={onClose}
-          onDelete={() => setIsDeleteModalOpen(true)}
+          onDelete={postId => {
+            setPostIdToDelete(postId)
+            setIsDeleteModalOpen(true)
+          }}
           onEdit={index => {
             setEditingIndex(index)
             setIsEditing(true)
@@ -58,6 +69,7 @@ export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
       </div>
 
       <DeletePostModal
+        isDeleting={deletePostMutation.isPending}
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}

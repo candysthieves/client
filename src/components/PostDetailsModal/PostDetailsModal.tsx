@@ -19,9 +19,8 @@ type Props = {
 }
 
 export const PostDetailsModal = ({ post, open, onClose, onEdit, onDelete }: Props) => {
-  const { user, isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuth()
   const isMobileViewport = useIsMobileViewport()
-  const isAuthor = !!user && user.id === post.userId
 
   return (
     <Modal
@@ -46,7 +45,8 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit, onDelete }: Prop
               <Typography variant={'subtitle2'}>{post.userName}</Typography>
             </div>
 
-            <PostActionMenu isAuthor={isAuthor} onEdit={onEdit} onDelete={onDelete} />
+            {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.userId` and pass isAuthor here. */}
+            <PostActionMenu isAuthor={isAuthenticated} onEdit={onEdit} onDelete={onDelete} />
           </div>
 
           {/* Scrollable: author's description + comments */}

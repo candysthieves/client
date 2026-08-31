@@ -6,15 +6,17 @@ import { useState } from 'react'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
-import { mockPosts, Post } from '@/mocks/posts'
+import { usePosts } from '@/lib/posts'
+import { Post } from '@/mocks/posts'
 import s from './page.module.scss'
 
 export default function ProfilePage() {
   const [selectedPost, setSelectedPost] = useState<null | Post>(null)
   const isMobile = useIsMobileViewport()
+  const { data: posts = [] } = usePosts()
 
   const selectedIndex = selectedPost
-    ? mockPosts.findIndex(post => post.postId === selectedPost.postId)
+    ? posts.findIndex(post => post.postId === selectedPost.postId)
     : 0
 
   return (
@@ -24,7 +26,7 @@ export default function ProfilePage() {
       </Typography>
 
       <div className={s.feed}>
-        {mockPosts.map((post, index) => (
+        {posts.map((post, index) => (
           <button
             key={post.postId}
             type={'button'}
@@ -47,7 +49,7 @@ export default function ProfilePage() {
         (isMobile ? (
           <MobilePostViewer
             onClose={() => setSelectedPost(null)}
-            posts={mockPosts}
+            posts={posts}
             startIndex={selectedIndex}
           />
         ) : (

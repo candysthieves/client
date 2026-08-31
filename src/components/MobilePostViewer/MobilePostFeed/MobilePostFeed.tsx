@@ -14,13 +14,13 @@ type Props = {
   posts: Post[]
   startIndex: number
   onClose: () => void
-  onDelete: () => void
+  onDelete: (postId: string) => void
   onEdit: (index: number) => void
 }
 
 export const MobilePostFeed = ({ posts, startIndex, onClose, onDelete, onEdit }: Props) => {
   const isMobile = useIsMobileViewport()
-  const { user } = useAuth()
+  const { isAuthenticated } = useAuth()
   const postRefs = useRef<(HTMLElement | null)[]>([])
 
   useEffect(() => {
@@ -40,7 +40,6 @@ export const MobilePostFeed = ({ posts, startIndex, onClose, onDelete, onEdit }:
 
       <div className={s.slides}>
         {posts.map((post, index) => {
-          const isAuthor = !!user && user.id === post.userId
           return (
             <article
               key={post.postId}
@@ -54,10 +53,11 @@ export const MobilePostFeed = ({ posts, startIndex, onClose, onDelete, onEdit }:
 
                 <Typography variant={'subtitle2'}>{post.userName}</Typography>
 
+                {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.userId` and pass isAuthor here. */}
                 <PostActionMenu
-                  isAuthor={isAuthor}
+                  isAuthor={isAuthenticated}
                   onEdit={() => onEdit(index)}
-                  onDelete={onDelete}
+                  onDelete={() => onDelete(post.postId)}
                 />
               </div>
               <div className={s.imageArea}>

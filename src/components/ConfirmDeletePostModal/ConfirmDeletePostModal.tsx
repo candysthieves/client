@@ -1,21 +1,21 @@
 'use client'
 
 import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
-import s from './DeletePostModal.module.scss'
+import s from './ConfirmDeletePostModal.module.scss'
 
-type DeletePostModalProps = {
+type ConfirmDeletePostModalProps = {
   isDeleting?: boolean
   open: boolean
   onClose: () => void
   onConfirm: () => void
 }
 
-export const DeletePostModal = ({
+export const ConfirmDeletePostModal = ({
   isDeleting = false,
   open,
   onClose,
   onConfirm,
-}: DeletePostModalProps) => {
+}: ConfirmDeletePostModalProps) => {
   return (
     <Modal
       open={open}

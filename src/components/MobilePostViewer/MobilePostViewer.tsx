@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { DeletePostModal } from '@/components'
+import { ConfirmDeletePostModal } from '@/components'
 import { useDeletePost } from '@/lib/posts'
 import { Post } from '@/mocks/posts'
 import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'
@@ -68,7 +68,7 @@ export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
         />
       </div>
 
-      <DeletePostModal
+      <ConfirmDeletePostModal
         isDeleting={deletePostMutation.isPending}
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}

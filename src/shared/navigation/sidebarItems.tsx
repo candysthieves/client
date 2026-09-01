@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react'
 import {
   Bookmark,
   BookmarkOutline,
@@ -12,19 +11,12 @@ import {
   PlusSquareOutline,
   Search,
   SearchOutline,
+  SidebarItem,
   TrendingUp,
   TrendingUpOutline,
 } from '@candy.thieves/ui-kit-lumos'
 
-type NavigationItem = {
-  id: string
-  label: string
-  href: string
-  icon: ReactNode
-  activeIcon: ReactNode
-}
-
-export const sidebarItems: NavigationItem[] = [
+export const sidebarItems: SidebarItem[] = [
   {
     activeIcon: <Home />,
     href: '/feed',
@@ -34,7 +26,7 @@ export const sidebarItems: NavigationItem[] = [
   },
   {
     activeIcon: <PlusSquare />,
-    href: '/create',
+    href: (userId: string) => `/profile/${userId}?action=create`,
     icon: <PlusSquareOutline />,
     id: 'create',
     label: 'Create',

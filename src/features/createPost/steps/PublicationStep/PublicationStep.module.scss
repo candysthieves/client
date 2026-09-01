@@ -1,0 +1,56 @@
+@use '@/styles/mixins' as *;
+
+.publicationContent {
+  @include flex(flex, flex-start, flex-start);
+
+  flex-flow: row nowrap;
+
+  @include media-tablet {
+    flex-direction: column;
+
+    @include flex(flex, flex-start, center);
+  }
+}
+
+.slideShow {
+  width: 100%;
+  max-width: $crop-image-width;
+}
+
+.slideShowImage {
+  @include width-height(100%, auto);
+
+  max-width: $crop-image-width;
+  max-height: $crop-image-height;
+  object-fit: contain;
+}
+
+%publication {
+  width: 100%;
+  padding: 1.5rem 1.5rem 2rem;
+}
+
+.publicationBlock {
+  width: 100%;
+}
+
+.descriptionBlock {
+  @extend %publication;
+
+  border-bottom: 1px solid var(--color-dark-100);
+}
+
+.publisherInfo {
+  @include flex(flex, flex-start, center);
+
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.textCounter {
+  @include flex(flex, flex-end, center);
+}
+
+.locationBlock {
+  @extend %publication;
+}

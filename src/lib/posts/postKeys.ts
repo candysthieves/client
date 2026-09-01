@@ -1,3 +1,3 @@
-export const postKeys = {
+export const postsKeys = {
   all: ['posts'] as const,
 }

@@ -13,9 +13,8 @@
   display: grid;
 
   // левая колонка подстраивается под ширину первого изображения поста
-  // (--image-area-width задаётся inline в EditPostModal);
-  // cap protects narrow viewports
-  grid-template-columns: minmax(0, min(var(--image-area-width, 30.625rem), 51%)) minmax(0, 1fr);
+  // (--image-area-width задаётся inline в EditPostModal как процент от ширины модалки)
+  grid-template-columns: minmax(0, var(--image-area-width, 30.625rem)) minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
 
   aspect-ratio: math.div($modal-width-xl, $modal-height-xl);

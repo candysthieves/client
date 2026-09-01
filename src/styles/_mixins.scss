@@ -1,4 +1,5 @@
 @use 'sass:list';
+@use 'sass:math';
 
 $desktop-width: 1280px;
 $tablet-width: 768px;
@@ -10,13 +11,32 @@ $modal-width-xs: 366px;
 $modal-width-s: 378px;
 $modal-width-m: 492px;
 $modal-width-l: 644px;
-$modal-width-xl: 972px;
+$modal-width-xl: 60.75rem;
+$modal-height-xl: 35.25rem;
 $container-padding-tablet: 30px;
 $container-padding-mobile: 15px;
 
 // Forms:
 $spacing-error: 1.75rem;
 $spacing-checkbox-error: 1.25rem;
+
+/**
+ * Scales a design length down together with the xl modal width, so the
+ * modal chrome keeps the $modal-width-xl x $modal-height-xl proportions
+ * while the modal shrinks with the viewport. At viewports wider than
+ * $modal-width-xl + 2rem it returns the design length unchanged.
+ *
+ * Must stay in sync with the .modal width formula:
+ * min($modal-width-xl, calc(100vw - 2rem))
+ *
+ * @example
+ * .commentForm { min-height: modal-fluid(3.687rem); }
+ */
+@function modal-fluid($length) {
+  $factor: math.div($length, $modal-width-xl);
+
+  @return min($length, calc((100vw - 2rem) * $factor));
+}
 
 @mixin typography($fontSize, $lineHeight, $fontWeight, $fontFamily: var(--font-family-primary)) {
   margin: 0;

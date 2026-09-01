@@ -1,15 +1,21 @@
 'use client'
 
 import { useState } from 'react'
+import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostCard } from '@/components/PostCard'
-import { PostViewModal } from '@/components/PostViewModal'
+import { PostModal } from '@/components/PostModal/PostModal'
 import { RegisteredUsersCounter } from '@/components/RegisteredUsersCounter'
+import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
+import { mockPosts, type Post } from '@/mocks/posts'
 import s from './MainPage.module.scss'
-import { mockPosts } from './mockPosts'
 
 export const MainPage = () => {
-  const [selectedPostId, setSelectedPostId] = useState<null | string>(null)
-  const selectedPost = mockPosts.find(post => post.id === selectedPostId) ?? null
+  const [selectedPost, setSelectedPost] = useState<null | Post>(null)
+  const isMobile = useIsMobileViewport()
+
+  const selectedIndex = selectedPost
+    ? mockPosts.findIndex(post => post.postId === selectedPost.postId)
+    : 0
 
   return (
     <div className={s.root}>
@@ -18,17 +24,26 @@ export const MainPage = () => {
       <div className={s.postsGrid} data-hidden={!!selectedPost}>
         {mockPosts.map(post => (
           <PostCard
-            caption={post.caption}
-            images={post.images}
-            key={post.id}
-            onOpen={() => setSelectedPostId(post.id)}
-            timeAgo={post.timeAgo}
-            username={post.username}
+            caption={post.description ?? ''}
+            images={post.images.map(image => image.url)}
+            key={post.postId}
+            onOpen={() => setSelectedPost(post)}
+            timeAgo={post.createdAt}
+            username={post.userName}
           />
         ))}
       </div>
 
-      <PostViewModal onClose={() => setSelectedPostId(null)} post={selectedPost} />
+      {selectedPost &&
+        (isMobile ? (
+          <MobilePostViewer
+            onClose={() => setSelectedPost(null)}
+            posts={mockPosts}
+            startIndex={selectedIndex}
+          />
+        ) : (
+          <PostModal onClose={() => setSelectedPost(null)} open post={selectedPost} />
+        ))}
     </div>
   )
 }

@@ -1,4 +1,5 @@
 export { isErrorResponse } from './isErrorResponse'
+export { getPostImageAreaSize, getPostImageAreaStyle } from './getPostImageAreaSize'
 export * from './isValidField'
 export { mapRegistrationConfirmationError } from './mapRegistrationConfirmationError'
 export { mapRegistrationValidationError } from './mapRegistrationValidationError'
@@ -11,3 +12,4 @@ export { mapPasswordRecoveryDomainError } from './mapPasswordRecoveryDomainError
 export { mapPasswordRecoveryValidationError } from './mapPasswordRecoveryValidationError'
 export { mapNewPasswordDomainError } from './mapNewPasswordDomainError'
 export { mapNewPasswordValidationError } from './mapNewPasswordValidationError'
+export * from './createPostDraft'

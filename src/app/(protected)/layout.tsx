@@ -1,4 +1,4 @@
-import { ProtectedShell } from '@/components/ProtectedShell'
+import { ProtectedShell } from '@/components'
 
 export default function ProtectedLayout({
   children,

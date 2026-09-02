@@ -31,4 +31,6 @@
 
 .content {
   @include content;
+
+  position: relative;
 }

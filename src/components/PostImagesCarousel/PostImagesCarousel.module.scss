@@ -1,0 +1,36 @@
+@use '@/styles/mixins' as *;
+
+.container {
+  @include width-height(100%);
+
+  background: #000;
+}
+
+// compound selector to outbid the kit's global
+// ._childContent_vns11_106 img { height: auto; object-fit: contain }
+// the kit Carousel root is sized by its own aspect-ratio,
+// stretch it over the adaptive left grid column instead
+.container > :first-child {
+  @include width-height(100%);
+}
+
+.container .image {
+  // +1px overdraw: at fractional zoom / device-pixel ratios
+  // object-fit: cover can leave a hairline unpainted row,
+  // the carousel root clips the excess
+  @include width-height(100%, calc(100% + 1px));
+
+  object-fit: cover;
+}
+
+.container .image.imageContained {
+  object-fit: contain;
+}
+
+// 'natural' fit: container matches the image ratio (no frame). Full size
+// without the cover overdraw so no hairline bar appears on the non-matching axis.
+.container .image.imageNatural {
+  @include width-height(100%);
+
+  object-fit: contain;
+}

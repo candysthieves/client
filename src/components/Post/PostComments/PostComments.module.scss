@@ -1,0 +1,85 @@
+@use '@/styles/mixins' as *;
+
+.commentsBlock {
+  @include flex(flex, flex-start, none);
+
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.emptyComments {
+  @include flex(flex, center, center);
+
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+}
+
+.comment {
+  @include flex(flex, flex-start, flex-start);
+
+  min-width: 0;
+
+  .actionButton {
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+    margin-left: auto;
+  }
+}
+
+.answerButton {
+  cursor: pointer;
+
+  display: flex;
+
+  padding: 0;
+  border: none;
+
+  line-height: var(--line-height-xs);
+
+  background: transparent;
+}
+
+.commentMeta {
+  @include flex(flex, flex-start, center);
+
+  gap: 0.75rem;
+  margin-top: 0.3rem;
+}
+
+.commentBody {
+  width: 21.563rem;
+  min-width: 0;
+  margin-left: 0.75rem;
+}
+
+.commentText {
+  display: inline;
+}
+
+.actionButton {
+  cursor: pointer;
+
+  display: flex;
+  flex-shrink: 0;
+
+  padding: 0;
+  border: none;
+
+  color: var(--color-light-100);
+
+  background: transparent;
+}
+
+@include media-tablet {
+  .commentsBlock {
+    gap: 1rem;
+    padding: 0.75rem;
+  }
+
+  .commentBody {
+    margin-left: 0.5rem;
+  }
+}

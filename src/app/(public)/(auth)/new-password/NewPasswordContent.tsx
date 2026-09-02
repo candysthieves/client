@@ -7,7 +7,8 @@ import { useEffect } from 'react'
 import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { ToastError, ToastSuccess } from '@/components'
 import { FormPasswordInput } from '@/components/FormPasswordInput'
-import { ApiError, newPassword as createNewPassword } from '@/lib/api'
+import { ApiError } from '@/lib/api'
+import { useNewPassword } from '@/lib/auth'
 import { type NewPasswordRequest, newPasswordSchema } from '@/lib/model'
 import {
   isErrorResponse,
@@ -20,13 +21,14 @@ export const NewPasswordContent = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const recoveryCode = searchParams.get('recoveryCode') ?? ''
+  const { mutate: createNewPassword, isPending } = useNewPassword()
 
   const {
     control,
     handleSubmit,
     setError,
     trigger,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isValid },
   } = useForm<NewPasswordRequest>({
     resolver: zodResolver(newPasswordSchema),
     mode: 'onChange',
@@ -52,37 +54,39 @@ export const NewPasswordContent = () => {
     }
   }, [recoveryCode, router])
 
-  const onSubmit: SubmitHandler<NewPasswordRequest> = async data => {
-    try {
-      await createNewPassword(data)
-      router.replace('/sign-in')
+  const onSubmit: SubmitHandler<NewPasswordRequest> = data => {
+    createNewPassword(data, {
+      onSuccess: () => {
+        router.replace('/sign-in')
 
-      ToastSuccess({
-        title: 'Password updated',
-        message: 'You have successfully changed your password',
-      })
-    } catch (error) {
-      if (error instanceof ApiError && isErrorResponse(error.data)) {
-        const isValidationError = mapNewPasswordValidationError(error, setError)
-        const isDomainError = mapNewPasswordDomainError(error, setError)
+        ToastSuccess({
+          title: 'Password updated',
+          message: 'You have successfully changed your password',
+        })
+      },
 
-        if (isDomainError) {
-          ToastError({
-            title: 'Email verification Error',
-            messages: 'Email verification link invalid. Resend verification link',
-          })
-          router.replace('/password-recovery-link-expired')
-        } else if (isValidationError) {
-          ToastError({
-            title: 'Validation Error',
-            messages: error.data.errorsMessages,
-          })
+      onError: error => {
+        if (error instanceof ApiError && isErrorResponse(error.data)) {
+          const isValidationError = mapNewPasswordValidationError(error, setError)
+          const isDomainError = mapNewPasswordDomainError(error, setError)
+
+          if (isDomainError) {
+            ToastError({
+              title: 'Email verification Error',
+              messages: 'Email verification link invalid. Resend verification link',
+            })
+            router.replace('/password-recovery-link-expired')
+          } else if (isValidationError) {
+            ToastError({
+              title: 'Validation Error',
+              messages: error.data.errorsMessages,
+            })
+          }
+          return
         }
-        return
-      } else {
         throw error
-      }
-    }
+      },
+    })
   }
 
   if (!recoveryCode) {
@@ -130,7 +134,7 @@ export const NewPasswordContent = () => {
         </div>
 
         <div className={s.submit}>
-          <Button type={'submit'} fullWidth disabled={!isValid || isSubmitting}>
+          <Button type={'submit'} fullWidth disabled={!isValid || isPending}>
             Create new password
           </Button>
         </div>

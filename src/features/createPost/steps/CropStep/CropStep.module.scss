@@ -1,0 +1,64 @@
+@use '@/styles/mixins' as *;
+
+.imageContent {
+  position: relative;
+
+  @include flex(flex, center, center);
+
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.imageItem {
+  @include width-height(100%, auto);
+
+  max-width: $crop-image-width;
+  max-height: $crop-image-height;
+  object-fit: contain;
+}
+
+%icon {
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+.icon {
+  @extend %icon;
+
+  padding: 0.375rem;
+}
+
+.iconButton {
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+
+  @include flex(flex, center, center);
+
+  // @include width-height(1.25rem);
+  @include transition-basic(transform, color);
+
+  &:hover {
+    transform: scale(1.07);
+    color: var(--color-accent-500);
+  }
+}
+
+.expandButton {
+  position: absolute;
+
+  @include bottom-left(0.75rem);
+}
+
+.maximizeButton {
+  position: absolute;
+
+  @include bottom-left(0.75rem, 4.375rem);
+}
+
+.imageButton {
+  position: absolute;
+
+  @include bottom-right(0.75rem);
+}

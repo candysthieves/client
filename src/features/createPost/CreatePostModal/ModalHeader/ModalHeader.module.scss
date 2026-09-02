@@ -1,0 +1,24 @@
+@use '@/styles/mixins' as *;
+
+.postControlsHeader {
+  @include flex(flex, space-between, center);
+}
+
+.button {
+  cursor: pointer;
+
+  @include transition-basic(opacity);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.arrowButton {
+  @include flex(flex, center, center);
+}
+
+.actionButton {
+  color: var(--color-accent-500);
+  text-decoration: none;
+}

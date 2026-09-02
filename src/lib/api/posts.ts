@@ -2,7 +2,7 @@ import type { AddPostRequest } from '@/features/createPost'
 import type { Post } from '@/mocks/posts'
 import { NEXT_PUBLIC_POSTS_API_URL } from '@/constants'
 
-async function postsRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
+async function apiClient<T>(path: string, init: RequestInit = {}): Promise<T> {
   const response = await fetch(`${NEXT_PUBLIC_POSTS_API_URL}${path}`, {
     ...init,
     headers: {
@@ -32,15 +32,15 @@ async function postsRequest<T>(path: string, init: RequestInit = {}): Promise<T>
   return response.json() as Promise<T>
 }
 
-export const getPosts = () => postsRequest<Post[]>('/posts')
+export const getPosts = () => apiClient<Post[]>('/posts')
 
 export const addPost = (data: AddPostRequest) =>
-  postsRequest<void>('/posts', {
+  apiClient<void>('/posts', {
     method: 'POST',
     body: JSON.stringify(data),
   })
 
 export const deletePost = (postId: string) =>
-  postsRequest<void>(`/posts/${postId}`, {
+  apiClient<void>(`/posts/${postId}`, {
     method: 'DELETE',
   })

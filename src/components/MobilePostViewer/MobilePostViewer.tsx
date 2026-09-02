@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { ConfirmDeletePostModal } from '@/components'
+import { useDeletePost } from '@/lib/posts'
 import { Post } from '@/mocks/posts'
 import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'
 import { MobilePostFeed } from './MobilePostFeed/MobilePostFeed'
@@ -15,6 +17,20 @@ type Props = {
 export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editingIndex, setEditingIndex] = useState(startIndex)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [postIdToDelete, setPostIdToDelete] = useState<null | string>(null)
+  const { mutate: deletePost, isPending } = useDeletePost()
+
+  const handleConfirmDelete = () => {
+    if (!postIdToDelete) return
+
+    deletePost(postIdToDelete, {
+      onSuccess: () => {
+        setIsDeleteModalOpen(false)
+        onClose()
+      },
+    })
+  }
 
   if (isEditing && posts[editingIndex]) {
     return (
@@ -39,6 +55,10 @@ export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
       <div className={s.viewer}>
         <MobilePostFeed
           onClose={onClose}
+          onDelete={postId => {
+            setPostIdToDelete(postId)
+            setIsDeleteModalOpen(true)
+          }}
           onEdit={index => {
             setEditingIndex(index)
             setIsEditing(true)
@@ -47,6 +67,13 @@ export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
           startIndex={startIndex}
         />
       </div>
+
+      <ConfirmDeletePostModal
+        isDeleting={isPending}
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </>
   )
 }

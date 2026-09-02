@@ -1,58 +1,46 @@
-import { AddPostRequest } from '@/features/createPost'
-import { request } from '@/lib/api/request'
-import { LoginRequest, LoginResponse } from '@/lib/model'
+import type { AddPostRequest } from '@/features/createPost'
+import type { Post } from '@/mocks/posts'
+import { NEXT_PUBLIC_POSTS_API_URL } from '@/constants'
 
-// TEMPORARY
-const API_BASE_URL = 'http://localhost:8080'
-
-async function apiClient<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`
-
-  const response = await fetch(url, {
+async function apiClient<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const response = await fetch(`${NEXT_PUBLIC_POSTS_API_URL}${path}`, {
+    ...init,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      ...options.headers,
+      ...init.headers,
     },
-    ...options,
   })
 
-  // Обработка ошибок
   if (!response.ok) {
-    let errorMessage = `Request failed with status ${response.status}`
+    let errorMessage = `Posts server responded with status ${response.status}`
 
     try {
       const errorData = await response.json()
       errorMessage = errorData.message || errorData.error || errorMessage
     } catch {
-      // Если не удалось распарсить JSON
       errorMessage = (await response.text()) || errorMessage
     }
 
     throw new Error(errorMessage)
   }
 
-  // Для статуса 204 No Content
   if (response.status === 204) {
-    return {} as T
+    return undefined as T
   }
 
-  return response.json()
+  return response.json() as Promise<T>
 }
 
-// export const addPost = async (data: AddPostRequest) =>
-//   request<void>('/posts', {
-//     method: 'POST',
-//     body: JSON.stringify(data),
-//   })
-export const addPost = async (data: AddPostRequest): Promise<void> => {
-  try {
-    await apiClient<void>('/posts', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    })
-  } catch (error) {
-    console.error('Failed to create post:', error)
-    throw error
-  }
-}
+export const getPosts = () => apiClient<Post[]>('/posts')
+
+export const addPost = (data: AddPostRequest) =>
+  apiClient<void>('/posts', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
+
+export const deletePost = (postId: string) =>
+  apiClient<void>(`/posts/${postId}`, {
+    method: 'DELETE',
+  })

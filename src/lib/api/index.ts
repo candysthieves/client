@@ -1,4 +1,5 @@
 export * from './request'
 export * from './apiError'
 export * from './auth'
+export * from './posts'
 export * from './types'

@@ -1,0 +1,68 @@
+@use '@/styles/mixins' as *;
+
+.selectImagesContent {
+  position: absolute;
+
+  display: flex;
+
+  min-width: 8.25rem;
+  max-width: 21rem;
+  height: 6.75rem; // max-height
+  padding: 0.75rem 3.75rem 0.75rem 0.75rem;
+
+  opacity: 0.8;
+
+  @include bottom-right(3.125rem, 0.75rem);
+
+  @include media-tablet {
+    max-width: 15.25rem;
+    height: 5rem;
+  }
+}
+
+.addImageButton {
+  position: absolute;
+
+  @include top-right(0.75rem);
+}
+
+.iconButton {
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+
+  @include flex(flex, center, center);
+
+  // @include width-height(1.25rem);
+  @include transition-basic(transform, color);
+
+  &:hover {
+    transform: scale(1.07);
+    color: var(--color-accent-500);
+  }
+}
+
+.addIcon {
+  padding: 0.175rem;
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+.selectImagesBlock {
+  @include flex(flex, center, center);
+
+  flex-flow: row nowrap;
+  gap: 0.75rem;
+}
+
+.selectImageItem {
+  width: 80px;
+  height: 82px;
+  background-color: red;
+
+  @include media-tablet {
+    width: 3.375rem;
+    height: 3.5rem;
+  }
+}

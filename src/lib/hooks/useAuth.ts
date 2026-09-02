@@ -16,5 +16,6 @@ export function useAuth(): UseAuthReturn {
     user,
     isLoading,
     isAuthenticated: !!user,
+    // isAuthenticated: true,
   }
 }

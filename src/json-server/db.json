@@ -1,144 +1,188 @@
 {
   "posts": [
     {
-      "postId": "1",
-      "description": "Красивый закат на побережье",
+      "postId": "1788042798449",
+      "description": "Some artifacts",
+      "locations": [
+        {
+          "id": "location-1788042765911",
+          "address": "In the middle of nowhere"
+        }
+      ],
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop",
+          "url": "blob:https://dev.lumosapp.net:3000/b8a2d8a4-475a-4649-a786-c10cbb6b0046",
           "width": 490,
           "height": 562
         },
         {
-          "url": "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&h=600&fit=crop",
-          "width": 490,
-          "height": 562
-        },
-        {
-          "url": "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&h=600&fit=crop",
+          "url": "blob:https://dev.lumosapp.net:3000/a4244b08-a8ec-4509-a813-663039e5f7a8",
           "width": 490,
           "height": 562
         }
       ],
       "preview": {
-        "url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop",
+        "url": "blob:https://dev.lumosapp.net:3000/b8a2d8a4-475a-4649-a786-c10cbb6b0046",
         "width": 234,
         "height": 228
       },
-      "userId": "123",
-      "userName": "Tom",
-      "willBeDeletedIn": null,
-      "createdAt": "2026-08-20T08:30:00.000Z",
-      "updatedAt": "2026-08-25T16:30:11.070Z"
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-29T22:33:18.449Z",
+      "updatedAt": "2026-08-29T22:33:18.449Z",
+      "willBeDeletedIn": null
     },
     {
-      "postId": "2",
-      "description": "Фото из отпуска",
+      "postId": "1788042993120",
+      "description": "Things and places that people like",
+      "locations": [
+        {
+          "id": "location-1788042972334",
+          "address": "California"
+        },
+        {
+          "id": "location-1788042990369",
+          "address": "Los Santos"
+        }
+      ],
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop",
+          "url": "blob:https://dev.lumosapp.net:3000/86cc797f-7c8f-4fa2-8e83-7d00528bd0f6",
           "width": 490,
           "height": 562
         },
         {
-          "url": "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop",
+          "url": "blob:https://dev.lumosapp.net:3000/c4afbfd9-10f7-4ad2-9687-61eed486db33",
           "width": 490,
           "height": 562
         },
         {
-          "url": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop",
+          "url": "blob:https://dev.lumosapp.net:3000/2f70b5ad-6b6e-40b4-a656-c97d94ca2223",
+          "width": 490,
+          "height": 562
+        },
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/6edebfbb-303e-4976-b67c-4f123f60c254",
+          "width": 490,
+          "height": 562
+        },
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/c4ec82d0-03ea-4719-a7dd-49b84217209c",
           "width": 490,
           "height": 562
         }
       ],
       "preview": {
-        "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=300&fit=crop",
+        "url": "blob:https://dev.lumosapp.net:3000/86cc797f-7c8f-4fa2-8e83-7d00528bd0f6",
         "width": 234,
         "height": 228
       },
-      "userId": "223",
-      "userName": "Ann",
-      "willBeDeletedIn": null,
-      "createdAt": "2026-08-21T10:15:00.000Z",
-      "updatedAt": "2026-08-25T16:28:11.046Z"
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-29T22:36:33.120Z",
+      "updatedAt": "2026-08-29T22:36:33.120Z",
+      "willBeDeletedIn": null
     },
     {
-      "postId": "3",
-      "description": "Кондитерские изделия",
+      "postId": "1788043053664",
+      "description": "Make your choice",
+      "locations": [
+        {
+          "id": "location-1788043051146",
+          "address": "Spain"
+        }
+      ],
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=800&h=600&fit=crop",
+          "url": "blob:https://dev.lumosapp.net:3000/8e1996d1-aabf-42b4-94f4-49fa2fd90538",
           "width": 490,
           "height": 562
         },
         {
-          "url": "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=800&h=600&fit=crop",
+          "url": "blob:https://dev.lumosapp.net:3000/42f52ed2-fa3e-464b-b50d-c7fc74881f0c",
           "width": 490,
           "height": 562
         },
         {
-          "url": "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?w=800&h=600&fit=crop",
+          "url": "blob:https://dev.lumosapp.net:3000/fc16a002-f069-4fce-89ca-c8b042e147e6",
+          "width": 490,
+          "height": 562
+        },
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/0a9e6a23-2235-444a-92de-22d12824b704",
           "width": 490,
           "height": 562
         }
       ],
       "preview": {
-        "url": "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=400&h=300&fit=crop",
+        "url": "blob:https://dev.lumosapp.net:3000/8e1996d1-aabf-42b4-94f4-49fa2fd90538",
         "width": 234,
         "height": 228
       },
-      "userId": "231",
-      "userName": "John",
-      "willBeDeletedIn": null,
-      "createdAt": "2026-08-22T09:45:00.000Z",
-      "updatedAt": "2026-08-24T14:20:00.000Z"
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-29T22:37:33.664Z",
+      "updatedAt": "2026-08-29T22:37:33.664Z",
+      "willBeDeletedIn": null
     },
     {
-      "postId": "4",
-      "description": "Фото с наших соревнований️",
+      "postId": "1788043739326",
+      "description": "Old house",
+      "locations": [
+        {
+          "id": "location-1788043712331",
+          "address": "Kioto"
+        }
+      ],
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=800&h=600&fit=crop",
+          "url": "blob:https://dev.lumosapp.net:3000/4c8c202f-d8c5-478e-8cda-39435d6fdba2",
           "width": 490,
           "height": 562
         }
       ],
       "preview": {
-        "url": "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=400&h=300&fit=crop",
+        "url": "blob:https://dev.lumosapp.net:3000/4c8c202f-d8c5-478e-8cda-39435d6fdba2",
         "width": 234,
         "height": 228
       },
-      "userId": "12",
-      "userName": "Tony",
-      "willBeDeletedIn": null,
-      "createdAt": "2026-08-23T07:00:00.000Z",
-      "updatedAt": "2026-08-23T07:00:00.000Z"
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-29T22:48:59.326Z",
+      "updatedAt": "2026-08-29T22:48:59.326Z",
+      "willBeDeletedIn": null
     },
     {
-      "postId": "5",
-      "description": "Фото достопримечательностей",
+      "postId": "1788043838857",
+      "description": "Mockup images",
+      "locations": [
+        {
+          "id": "location-1788043825490",
+          "address": "City"
+        }
+      ],
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=800&h=600&fit=crop",
+          "url": "blob:https://dev.lumosapp.net:3000/4275db82-7e56-4e06-a1aa-a7d8122b6978",
           "width": 490,
           "height": 562
         },
         {
-          "url": "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=800&h=600&fit=crop",
+          "url": "blob:https://dev.lumosapp.net:3000/3911bd25-92f9-47f5-899d-427e2bfc9144",
           "width": 490,
           "height": 562
         }
       ],
       "preview": {
-        "url": "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=400&h=300&fit=crop",
+        "url": "blob:https://dev.lumosapp.net:3000/4275db82-7e56-4e06-a1aa-a7d8122b6978",
         "width": 234,
         "height": 228
       },
-      "userId": "12",
-      "userName": "Tony",
-      "willBeDeletedIn": null,
-      "createdAt": "2026-08-24T16:20:00.000Z",
-      "updatedAt": "2026-08-25T10:00:00.000Z"
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-29T22:50:38.857Z",
+      "updatedAt": "2026-08-29T22:50:38.857Z",
+      "willBeDeletedIn": null
     }
   ]
 }

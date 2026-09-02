@@ -75,7 +75,7 @@ export const PostCard = ({ images, username, timeAgo, caption, onOpen }: PostCar
         <Typography variant={'h3'}>{username}</Typography>
       </div>
 
-      <Typography className={s.time} variant={'caption1'}>
+      <Typography className={s.time} color={'var(--color-light-900)'} variant={'caption1'}>
         {timeAgo}
       </Typography>
 

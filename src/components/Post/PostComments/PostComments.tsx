@@ -5,10 +5,9 @@ import s from './PostComments.module.scss'
 type Props = {
   post: Post
   comments: Comment[]
-  isAuthenticated: boolean
 }
 
-export const PostComments = ({ post, comments, isAuthenticated }: Props) => {
+export const PostComments = ({ post, comments }: Props) => {
   const descriptionComment: Comment | null = post.description
     ? {
         id: 'post-description',
@@ -42,7 +41,7 @@ export const PostComments = ({ post, comments, isAuthenticated }: Props) => {
             </Typography>
           ) : null}
 
-          {isDescription || !isAuthenticated ? null : (
+          {isDescription ? null : (
             <button type={'button'} className={s.answerButton}>
               <Typography variant={'caption2'} color={'var(--color-light-900)'}>
                 Answer
@@ -52,11 +51,9 @@ export const PostComments = ({ post, comments, isAuthenticated }: Props) => {
         </div>
       </div>
 
-      {isAuthenticated && (
-        <button type={'button'} aria-label={'Like'} className={s.actionButton}>
-          <HeartOutline size={16} />
-        </button>
-      )}
+      <button type={'button'} aria-label={'Like'} className={s.actionButton}>
+        <HeartOutline size={16} />
+      </button>
     </div>
   )
 

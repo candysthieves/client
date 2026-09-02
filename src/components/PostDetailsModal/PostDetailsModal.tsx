@@ -51,7 +51,7 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit }: Props) => {
           {/* Scrollable: author's description + comments */}
           <div className={`${s.scrollSection} ${!isAuthenticated ? s.scrollSectionGuest : ''}`}>
             <Scroll orientation={'vertical'}>
-              <PostComments comments={mockComments} isAuthenticated={isAuthenticated} post={post} />
+              <PostComments post={post} comments={mockComments} />
             </Scroll>
           </div>
 

@@ -1,4 +1,11 @@
-import { Button, Cards, clsx, PlusCircleOutline } from '@candy.thieves/ui-kit-lumos'
+import {
+  Button,
+  Cards,
+  CloseOutline,
+  clsx,
+  ImageOutline,
+  PlusCircleOutline,
+} from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { Ref, useEffect, useMemo } from 'react'
 import { PostFile } from '@/features/createPost'
@@ -63,6 +70,20 @@ export const SelectCropPostImagesBlock = ({
                 return (
                   <div key={fileKey} className={s.selectImageItem}>
                     <Image width={80} height={82} src={url} alt={`Preview ${index + 1}`} />
+
+                    <Button
+                      onClick={() => console.log('ddd')}
+                      className={clsx(s.iconButton, s.imageDeleteButton)}
+                    >
+                      <CloseOutline
+                        size={16}
+                        backgroundColor={'var(--color-dark-500)'}
+                        color={'var(--color-light-100)'}
+                        svgProps={{
+                          className: s.icon,
+                        }}
+                      />
+                    </Button>
                   </div>
                 )
               })

@@ -12,19 +12,20 @@ import { AspectRatio, PostFile } from '@/features/createPost'
 import s from './CropStep.module.scss'
 
 type CropStepProps = {
-  file: File
+  // file: File
+  currentFileIndex: number
   files: PostFile[]
   addImage: () => void
 }
 
-export const CropStep = ({ file, files, addImage }: CropStepProps) => {
+export const CropStep = ({ currentFileIndex, files, addImage }: CropStepProps) => {
   const [isSelectImagesOpen, setIsSelectImagesOpen] = useState(false)
   const [isExpandImageOpen, seIsExpandImageOpen] = useState(false)
 
   const selectImagesRef = useRef<HTMLDivElement>(null)
   const expandImageRef = useRef<HTMLDivElement>(null)
 
-  const imageUrl = URL.createObjectURL(file)
+  const imageUrl = URL.createObjectURL(files[currentFileIndex].file)
 
   const openExpandImageMenuHandler = () => {
     seIsExpandImageOpen(prev => !prev)

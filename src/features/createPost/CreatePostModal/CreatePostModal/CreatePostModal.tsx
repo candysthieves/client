@@ -87,6 +87,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
           url,
         },
       ],
+      currentFileIndex: prev.files.length,
       step: 'crop',
     }))
   }
@@ -219,7 +220,8 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       case 'crop':
         return (
           <CropStep
-            file={state.files[state.currentFileIndex]?.file}
+            // file={state.files[state.currentFileIndex]?.file}
+            currentFileIndex={state.currentFileIndex}
             files={state.files}
             addImage={addImageHandler}
           /> // file={state.files[state.files.length - 1]?.file}

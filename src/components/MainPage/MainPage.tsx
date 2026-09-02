@@ -6,12 +6,14 @@ import { PostCard } from '@/components/PostCard'
 import { PostModal } from '@/components/PostModal/PostModal'
 import { RegisteredUsersCounter } from '@/components/RegisteredUsersCounter'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
+import { useUsersCount } from '@/lib/users'
 import { mockPosts, type Post } from '@/mocks/posts'
 import s from './MainPage.module.scss'
 
 export const MainPage = () => {
   const [selectedPost, setSelectedPost] = useState<null | Post>(null)
   const isMobile = useIsMobileViewport()
+  const { data: usersCount } = useUsersCount()
 
   const selectedIndex = selectedPost
     ? mockPosts.findIndex(post => post.postId === selectedPost.postId)
@@ -19,7 +21,7 @@ export const MainPage = () => {
 
   return (
     <div className={s.root}>
-      <RegisteredUsersCounter count={9213} />
+      <RegisteredUsersCounter count={usersCount?.count ?? 0} />
 
       <div className={s.postsGrid} data-hidden={!!selectedPost}>
         {mockPosts.map(post => (

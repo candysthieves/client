@@ -1,14 +1,24 @@
 import { Button, Cards, ImageOutline, Tooltip } from '@candy.thieves/ui-kit-lumos'
 import { ChangeEvent, useRef, useState } from 'react'
+import { ToastError, ToastWarning } from '@/components'
 import { clearPostDraft, isPostDraftExist } from '@/lib/utils'
 import s from './UploadStep.module.scss'
 
 type UploadStepProps = {
   onFileSelected: (file: File) => void
   onLoadDraft?: () => void
+  fileUploadsQuantity: number
+  moveNextStep: () => void
 }
 
-export const UploadStep = ({ onFileSelected, onLoadDraft }: UploadStepProps) => {
+const FILES_UPLOAD_LIMIT = 8
+
+export const UploadStep = ({
+  onFileSelected,
+  onLoadDraft,
+  fileUploadsQuantity,
+  moveNextStep,
+}: UploadStepProps) => {
   const [hasPostDraft, setHasPostDraft] = useState(isPostDraftExist())
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -25,6 +35,16 @@ export const UploadStep = ({ onFileSelected, onLoadDraft }: UploadStepProps) => 
   }
 
   const handleButtonClick = () => {
+    if (fileUploadsQuantity >= FILES_UPLOAD_LIMIT) {
+      ToastWarning({
+        title: 'Upload limit reached',
+        message: `You can upload a maximum of ${FILES_UPLOAD_LIMIT} files`,
+      })
+      moveNextStep()
+
+      return
+    }
+
     fileInputRef.current?.click()
   }
 

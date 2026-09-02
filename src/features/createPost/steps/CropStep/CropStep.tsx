@@ -36,6 +36,7 @@ export const CropStep = ({ file, addImage }: CropStepProps) => {
   }
 
   const onAddImageHandler = () => {
+    addImage()
     setIsSelectImagesOpen(false) // delete later
     console.log('onAddImageHandler')
   }

@@ -42,6 +42,12 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const openConfirm = () => setIsConfirmOpen(true)
   const closeConfirm = () => setIsConfirmOpen(false)
 
+  const isShowCloseButton = state.step === 'upload'
+  const isFullSize = state.step !== 'upload'
+  const modalSize = state.step === 'publication' ? 'xl' : 'm'
+  const fileUploadsQuantity = state.files.length
+  const hasFileUploads = fileUploadsQuantity > 0
+
   // const [fileUrls, setFileUrls] = useState<string[]>([])
 
   // Добавить очистку если потребуется
@@ -86,16 +92,10 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   }
 
   // Header controls
-  const handlePrev = (step: CreatePostStep) => {
+  const changeStep = (step: CreatePostStep) => {
     setState(prev => ({
       ...prev,
       step,
-    }))
-  }
-  const handleNext = () => {
-    setState(prev => ({
-      ...prev,
-      step: 'publication',
     }))
   }
 
@@ -122,7 +122,10 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   }
 
   // Crop image - add new image
-  const addImageHandler = () => console.log('addImageHandler')
+  const addImageHandler = () => {
+    changeStep('upload')
+    console.log('addImageHandler 2')
+  }
 
   // ConfirmCloseCreatePostModal handlers
   const handleConfirm = async () => {
@@ -205,7 +208,14 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const renderStep = () => {
     switch (state.step) {
       case 'upload':
-        return <UploadStep onFileSelected={handleFileSelected} onLoadDraft={loadFromDraftHandler} />
+        return (
+          <UploadStep
+            onFileSelected={handleFileSelected}
+            onLoadDraft={loadFromDraftHandler}
+            fileUploadsQuantity={fileUploadsQuantity}
+            moveNextStep={() => changeStep('crop')}
+          />
+        )
 
       case 'crop':
         return (
@@ -230,17 +240,11 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const headerContent = (
     <CreatePostModalHeader
       step={state.step}
-      onPrevClick={handlePrev}
-      onNextClick={handleNext}
+      onChangeStepClick={changeStep}
       onPublishClick={handlePublish}
       isPublishing={isPublishing}
     />
   )
-
-  const isShowCloseButton = state.step === 'upload'
-  const isFullSize = state.step !== 'upload'
-  const modalSize = state.step === 'publication' ? 'xl' : 'm'
-  const hasFileUploads = state.files.length > 0
 
   return (
     <>

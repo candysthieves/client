@@ -30,7 +30,7 @@ export const CropStep = ({
 }: CropStepProps) => {
   const [isSelectImagesOpen, setIsSelectImagesOpen] = useState(false)
   const [isExpandImageOpen, seIsExpandImageOpen] = useState(false)
-
+  console.log(files[currentFileIndex])
   const selectImagesRef = useRef<HTMLDivElement>(null)
   const expandImageRef = useRef<HTMLDivElement>(null)
 
@@ -139,7 +139,7 @@ export const CropStep = ({
 }
 
 // To start cropping the image, access the file you want to crop inside CropStep:
-// const currentFile = files[currentFileIndex]
+// const currentFile = files[currentFileIndex]  =>  { file: {}, id: string, url: string }
 //
 // After cropping set updated cropped file back to the CreatePostModal state:
 // updateCroppedFile(fileId, File)

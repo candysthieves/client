@@ -1,3 +1,4 @@
+import type { Post } from '@/mocks/posts'
 import { AddPostRequest } from '@/features/createPost'
 
 // TEMPORARY
@@ -59,6 +60,8 @@ async function apiClient<T>(endpoint: string, options: RequestInit = {}): Promis
 //     throw error
 //   }
 // }
+export const getPosts = () => apiClient<Post[]>('/posts')
+
 export const addPost = async (data: AddPostRequest): Promise<void> => {
   try {
     const formData = new FormData()
@@ -103,3 +106,8 @@ export const addPost = async (data: AddPostRequest): Promise<void> => {
     throw error
   }
 }
+
+export const deletePost = (postId: string) =>
+  apiClient<void>(`/posts/${postId}`, {
+    method: 'DELETE',
+  })

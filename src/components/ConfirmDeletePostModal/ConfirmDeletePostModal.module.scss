@@ -1,0 +1,45 @@
+@use '@/styles/mixins' as *;
+
+.modal {
+  width: min($modal-width-s, calc(100vw - 2rem));
+}
+
+:global([class*='_overlay_']:has(+ [data-blurred-backdrop])) {
+  z-index: 103;
+}
+
+:global([data-blurred-backdrop][role='dialog']) {
+  z-index: 104;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+
+  .message {
+    text-align: left;
+
+    @include media-mobile {
+      text-align: center;
+    }
+  }
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+
+  button {
+    min-width: 6rem;
+  }
+
+  @include media-mobile {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}

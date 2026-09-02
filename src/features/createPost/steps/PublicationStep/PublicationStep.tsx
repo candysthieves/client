@@ -7,7 +7,6 @@ import s from './PublicationStep.module.scss'
 
 type PublicationStepProps = {
   user: null | UserResponse
-  // files: File[]
   fileUrls: string[]
   description: string
   locations: Location[]
@@ -29,7 +28,6 @@ export const PublicationStep = ({
   const counterRef = useRef<HTMLDivElement | null>(null)
   const [isTextError, setIsTextError] = useState(false)
 
-  // const currentFile = files[currentFileIndex]
   const userName = user?.username || 'user'
   const maxLocations = fileUrls.length
 

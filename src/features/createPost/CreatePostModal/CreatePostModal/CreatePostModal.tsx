@@ -1,7 +1,5 @@
 'use client'
 
-// const currentFile = files[currentFileIndex]
-
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
@@ -12,7 +10,7 @@ import {
 } from '@/features/createPost/CreatePostModal'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { useAddPost } from '@/lib/posts'
-import { clearPostDraft, isPostDraftExist, loadPostDraft, savePostDraft } from '@/lib/utils'
+import { clearPostDraft, loadPostDraft, savePostDraft } from '@/lib/utils'
 import { CropStep, PublicationStep, UploadStep } from '../../steps'
 import { AddPostState, CreatePostStep, Location } from '../../types'
 import s from './CreatePostModal.module.scss'
@@ -49,8 +47,6 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const hasFileUploads = fileUploadsQuantity > 0
 
   // const [fileUrls, setFileUrls] = useState<string[]>([])
-
-  // Добавить очистку если потребуется
   // useEffect(() => {
   //   return () => {
   //     state.files.forEach(({ url }) => {
@@ -85,10 +81,80 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
         {
           file,
           url,
+          id: crypto.randomUUID(),
         },
       ],
       currentFileIndex: prev.files.length,
       step: 'crop',
+    }))
+  }
+
+  // Set updated cropped file to state
+  const handleUpdateFile = (fileId: string, newFile: File) => {
+    setState(prev => {
+      const fileIndex = prev.files.findIndex(file => file.id === fileId)
+      if (fileIndex === -1) return prev
+
+      URL.revokeObjectURL(prev.files[fileIndex].url)
+
+      const updatedFile = {
+        ...prev.files[fileIndex],
+        file: newFile,
+        url: URL.createObjectURL(newFile),
+      }
+
+      return {
+        ...prev,
+        files: prev.files.map((file, index) => (index === fileIndex ? updatedFile : file)),
+      }
+    })
+  }
+
+  // Delete image file from preview gallery in Crop step
+  const handleDeleteFile = (fileId: string) => {
+    setState(prev => {
+      const fileIndex = prev.files.findIndex(file => file.id === fileId)
+      if (fileIndex === -1) return prev
+
+      URL.revokeObjectURL(prev.files[fileIndex].url)
+      const newFiles = prev.files.filter(file => file.id !== fileId)
+
+      let newCurrentFileIndex = prev.currentFileIndex
+      // If we delete the current file
+      if (prev.currentFileIndex === fileIndex) {
+        // If this was the last file, switch to the previous one
+        if (newFiles.length === 0) {
+          newCurrentFileIndex = 0
+        } else if (fileIndex === prev.files.length - 1) {
+          // If we delete the last one, we switch to the previous one
+          newCurrentFileIndex = fileIndex - 1
+        }
+        // Otherwise, we remain at the same index
+      } else if (prev.currentFileIndex > fileIndex) {
+        // If the file being deleted preceded the current one, we shift the index
+        newCurrentFileIndex = prev.currentFileIndex - 1
+      }
+      // If no files remain after deletion, proceed to the download step
+      const newStep = newFiles.length === 0 ? 'upload' : prev.step
+
+      return {
+        ...prev,
+        files: newFiles,
+        currentFileIndex: newCurrentFileIndex,
+        step: newStep,
+      }
+    })
+  }
+
+  /**
+   * Update new CurrentFileIndex
+   * Prevent the index from falling below 0
+   * and prevent it from exceeding the maximum allowable index.
+   */
+  const setCurrentFileIndex = (index: number) => {
+    setState(prev => ({
+      ...prev,
+      currentFileIndex: Math.max(0, Math.min(index, prev.files.length - 1)),
     }))
   }
 
@@ -100,20 +166,6 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
     }))
   }
 
-  // Publication slide-show
-  const handlePreviousFile = () => {
-    setState(prev => ({
-      ...prev,
-      currentFileIndex: Math.max(0, prev.currentFileIndex - 1),
-    }))
-  }
-  const handleNextFile = () => {
-    setState(prev => ({
-      ...prev,
-      currentFileIndex: Math.min(prev.files.length - 1, prev.currentFileIndex + 1),
-    }))
-  }
-
   // Publication add description
   const handleDescriptionChange = (description: string) => {
     setState(prev => ({
@@ -121,6 +173,13 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       description,
     }))
   }
+
+  const onLocationChange = useCallback((locations: Location[]) => {
+    setState(prev => ({
+      ...prev,
+      locations,
+    }))
+  }, [])
 
   // Crop image - add new image
   const addImageHandler = () => {
@@ -135,21 +194,8 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
   const handleOutsideClick = (event: Event) => {
     event.preventDefault()
-    // if (!hasPostDraft) {
-    //   closeCreationModal()
-    //   handleClose()
-    //   return
-    // }
-
     openConfirm()
   }
-
-  const onLocationChange = useCallback((locations: Location[]) => {
-    setState(prev => ({
-      ...prev,
-      locations,
-    }))
-  }, [])
 
   const saveToDraftHandler = async () => {
     try {
@@ -220,18 +266,19 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       case 'crop':
         return (
           <CropStep
-            // file={state.files[state.currentFileIndex]?.file}
             currentFileIndex={state.currentFileIndex}
             files={state.files}
+            updateCroppedFile={handleUpdateFile}
+            deleteFile={handleDeleteFile}
+            setAsCurrentFile={setCurrentFileIndex}
             addImage={addImageHandler}
-          /> // file={state.files[state.files.length - 1]?.file}
+          />
         )
 
       case 'publication':
         return (
           <PublicationStep
             user={user}
-            // files={state.files}
             fileUrls={state.files.map(file => file.url)}
             description={state.description}
             locations={state.locations}

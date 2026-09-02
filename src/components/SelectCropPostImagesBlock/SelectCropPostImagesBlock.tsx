@@ -1,11 +1,4 @@
-import {
-  Button,
-  Cards,
-  CloseOutline,
-  clsx,
-  ImageOutline,
-  PlusCircleOutline,
-} from '@candy.thieves/ui-kit-lumos'
+import { Button, Cards, CloseOutline, clsx, PlusCircleOutline } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { Ref, useEffect, useMemo } from 'react'
 import { PostFile } from '@/features/createPost'
@@ -15,13 +8,19 @@ type SelectCropPostImagesBlockProps = {
   isOpen: boolean
   files: PostFile[]
   onAddImage: () => void
+  deleteFile: (fileId: string) => void
+  setAsCurrentFile: (index: number) => void
+  currentFileIndex?: number
   ref?: Ref<HTMLDivElement>
 }
 
 export const SelectCropPostImagesBlock = ({
   isOpen,
   onAddImage,
+  deleteFile,
+  setAsCurrentFile,
   files,
+  currentFileIndex = 0,
   ref,
 }: SelectCropPostImagesBlockProps) => {
   const imageUrls = useMemo(() => {
@@ -66,13 +65,26 @@ export const SelectCropPostImagesBlock = ({
               imageUrls.map((url, index) => {
                 const file = files[index]?.file
                 const fileKey = file ? `${file.name}-${file.lastModified}` : `image-${index}`
+                const isActive = index === currentFileIndex
 
                 return (
-                  <div key={fileKey} className={s.selectImageItem}>
-                    <Image width={80} height={82} src={url} alt={`Preview ${index + 1}`} />
+                  <div
+                    key={fileKey}
+                    className={s.selectImageItem}
+                    onClick={() => setAsCurrentFile(index)}
+                  >
+                    <Image
+                      width={80}
+                      height={82}
+                      src={url}
+                      alt={`Preview ${index + 1}`}
+                      className={clsx(s.imagePreview, {
+                        [s.active]: isActive,
+                      })}
+                    />
 
                     <Button
-                      onClick={() => console.log('ddd')}
+                      onClick={() => deleteFile(files[index]?.id)}
                       className={clsx(s.iconButton, s.imageDeleteButton)}
                     >
                       <CloseOutline

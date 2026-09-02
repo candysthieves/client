@@ -12,13 +12,22 @@ import { AspectRatio, PostFile } from '@/features/createPost'
 import s from './CropStep.module.scss'
 
 type CropStepProps = {
-  // file: File
   currentFileIndex: number
   files: PostFile[]
+  updateCroppedFile: (fileId: string, newFile: File) => void
+  deleteFile: (fileId: string) => void
+  setAsCurrentFile: (index: number) => void
   addImage: () => void
 }
 
-export const CropStep = ({ currentFileIndex, files, addImage }: CropStepProps) => {
+export const CropStep = ({
+  currentFileIndex,
+  files,
+  updateCroppedFile,
+  deleteFile,
+  addImage,
+  setAsCurrentFile,
+}: CropStepProps) => {
   const [isSelectImagesOpen, setIsSelectImagesOpen] = useState(false)
   const [isExpandImageOpen, seIsExpandImageOpen] = useState(false)
 
@@ -75,7 +84,7 @@ export const CropStep = ({ currentFileIndex, files, addImage }: CropStepProps) =
       document.removeEventListener('mousedown', handleExpandImageBlockClickOutside)
     }
   }, [isExpandImageOpen])
-
+  console.log(files[currentFileIndex])
   return (
     <div className={s.imageContent}>
       <img src={imageUrl} alt={'Crop preview'} className={s.imageItem} />
@@ -118,14 +127,19 @@ export const CropStep = ({ currentFileIndex, files, addImage }: CropStepProps) =
 
       <SelectCropPostImagesBlock
         ref={selectImagesRef}
+        currentFileIndex={currentFileIndex}
         files={files}
         isOpen={isSelectImagesOpen}
         onAddImage={onAddImageHandler}
+        setAsCurrentFile={setAsCurrentFile}
+        deleteFile={deleteFile}
       />
     </div>
   )
 }
 
-// URL.createObjectURL() во время render не оставлять.
-// позже добавлю useEffect/useMemo + URL.revokeObjectURL()
-// либо буду передавать уже подготовленный preview URL.
+// To start cropping the image, access the file you want to crop inside CropStep:
+// const currentFile = files[currentFileIndex]
+//
+// After cropping set updated cropped file back to the CreatePostModal state:
+// updateCroppedFile(fileId, File)

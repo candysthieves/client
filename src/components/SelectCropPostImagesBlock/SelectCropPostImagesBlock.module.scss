@@ -48,7 +48,6 @@
 }
 
 .selectImagesBlock {
-
   // padding: 0.125rem 0.125rem 0.125rem 0;
 
   scrollbar-color: var(--color-dark-300) transparent;
@@ -101,7 +100,7 @@
   @include transition-basic(filter);
 
   &:hover {
-    img {
+    .imagePreview {
       filter: sepia(0.6);
     }
   }
@@ -117,6 +116,11 @@
     width: 3.375rem;
     height: 3.5rem;
   }
+}
+
+.active {
+  border: 2px solid var(--color-success-500);
+  border-radius: 2px;
 }
 
 .iconButton {

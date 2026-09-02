@@ -17,7 +17,7 @@ export type DraftPostFile = z.infer<typeof DraftPostFileSchema>
 
 export type AddPostState = z.infer<typeof AddPostStateSchema>
 // type DraftAddPostState = {
-//   files: DraftPostFile[]
+//   files: PostFile[]
 //   currentFileIndex: number
 //   step: 'crop' | 'publication' | 'upload'
 //   description: string

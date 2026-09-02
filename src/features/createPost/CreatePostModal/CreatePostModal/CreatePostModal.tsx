@@ -124,7 +124,6 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   // Crop image - add new image
   const addImageHandler = () => {
     changeStep('upload')
-    console.log('addImageHandler 2')
   }
 
   // ConfirmCloseCreatePostModal handlers
@@ -219,7 +218,11 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
       case 'crop':
         return (
-          <CropStep file={state.files[state.currentFileIndex]?.file} addImage={addImageHandler} /> // file={state.files[state.files.length - 1]?.file}
+          <CropStep
+            file={state.files[state.currentFileIndex]?.file}
+            files={state.files}
+            addImage={addImageHandler}
+          /> // file={state.files[state.files.length - 1]?.file}
         )
 
       case 'publication':

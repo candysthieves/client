@@ -1,6 +1,6 @@
 import { Button, Cards, ImageOutline, Tooltip } from '@candy.thieves/ui-kit-lumos'
 import { ChangeEvent, useRef, useState } from 'react'
-import { ToastError, ToastWarning } from '@/components'
+import { ToastWarning } from '@/components'
 import { clearPostDraft, isPostDraftExist } from '@/lib/utils'
 import s from './UploadStep.module.scss'
 

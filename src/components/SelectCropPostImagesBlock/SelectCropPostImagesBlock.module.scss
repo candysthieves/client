@@ -7,7 +7,9 @@
 
   min-width: 8.25rem;
   max-width: 21rem;
-  height: 6.75rem; // max-height
+
+  // height: 6.75rem; // max-height
+  height: 7.5rem; // max-height
   padding: 0.75rem 3.75rem 0.75rem 0.75rem;
 
   opacity: 0.8;
@@ -50,16 +52,82 @@
 }
 
 .selectImagesBlock {
+
+  // Скрываем кнопки скролла (стрелки)
+  scrollbar-color: var(--color-dark-300) transparent;
+  scrollbar-width: thin;
+
+  overflow: auto hidden;
+  flex-flow: row nowrap;
+
+  // Запрещаем перенос на новую строку
+  flex-wrap: nowrap;
+  gap: 0.75rem;
+
+  max-width: 100%;
+
+  // Для WebKit браузеров (Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    @include width-height(0.25rem);
+
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0.9rem;
+    background: var(--color-dark-300);
+  }
+
+  // Скрываем кнопки в WebKit браузерах
+  &::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  // Альтернативный способ скрыть кнопки
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
   @include flex(flex, center, center);
 
-  flex-flow: row nowrap;
-  gap: 0.75rem;
+  //// Контейнер для изображений, который не сжимается
+  // > * {
+  //  flex-shrink: 0; // Запрещаем сжатие
+  // }
 }
 
 .selectImageItem {
+  cursor: pointer;
+
+  overflow: hidden;
+  flex-shrink: 0;
+
   width: 80px;
   height: 82px;
+  margin-bottom: 0.5rem;
+
   background-color: red;
+
+  @include transition-basic(opacity);
+
+  &:hover {
+    img {
+      opacity: 0.8;
+    }
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   @include media-tablet {
     width: 3.375rem;

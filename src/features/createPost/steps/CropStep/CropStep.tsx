@@ -8,15 +8,16 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { ExpandCropPostImageBlock } from '@/components/ExpandCropPostImageBlock'
 import { SelectCropPostImagesBlock } from '@/components/SelectCropPostImagesBlock'
-import { AspectRatio } from '@/features/createPost'
+import { AspectRatio, PostFile } from '@/features/createPost'
 import s from './CropStep.module.scss'
 
 type CropStepProps = {
   file: File
+  files: PostFile[]
   addImage: () => void
 }
 
-export const CropStep = ({ file, addImage }: CropStepProps) => {
+export const CropStep = ({ file, files, addImage }: CropStepProps) => {
   const [isSelectImagesOpen, setIsSelectImagesOpen] = useState(false)
   const [isExpandImageOpen, seIsExpandImageOpen] = useState(false)
 
@@ -116,6 +117,7 @@ export const CropStep = ({ file, addImage }: CropStepProps) => {
 
       <SelectCropPostImagesBlock
         ref={selectImagesRef}
+        files={files}
         isOpen={isSelectImagesOpen}
         onAddImage={onAddImageHandler}
       />

@@ -19,12 +19,12 @@ export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
   const [editingIndex, setEditingIndex] = useState(startIndex)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [postIdToDelete, setPostIdToDelete] = useState<null | string>(null)
-  const deletePostMutation = useDeletePost()
+  const { mutate: deletePost, isPending } = useDeletePost()
 
   const handleConfirmDelete = () => {
     if (!postIdToDelete) return
 
-    deletePostMutation.mutate(postIdToDelete, {
+    deletePost(postIdToDelete, {
       onSuccess: () => {
         setIsDeleteModalOpen(false)
         onClose()
@@ -69,7 +69,7 @@ export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
       </div>
 
       <ConfirmDeletePostModal
-        isDeleting={deletePostMutation.isPending}
+        isDeleting={isPending}
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}

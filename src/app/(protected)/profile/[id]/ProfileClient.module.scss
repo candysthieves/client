@@ -1,0 +1,288 @@
+@use '@/styles/mixins' as *;
+
+.profile {
+  width: 100%;
+  max-width: 972px;
+  padding: 2.25rem 0 4rem;
+}
+
+.profileHeader {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2.375rem;
+  align-items: start;
+
+  padding-bottom: 3rem;
+}
+
+.profileAvatar {
+  width: 12.75rem;
+  height: 12.75rem;
+}
+
+.profileInfo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem 2rem;
+  align-items: center;
+
+  min-width: 0;
+}
+
+.profileName {
+  color: var(--color-light-100);
+  overflow-wrap: anywhere;
+}
+
+.settingsButton {
+  white-space: nowrap;
+}
+
+.stats {
+  display: flex;
+  grid-column: 1 / -1;
+  gap: 3.5rem;
+  margin: 0;
+}
+
+.stat {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.statValue {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-light-100);
+}
+
+.statLabel,
+.aboutLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-light-900);
+}
+
+.about {
+  grid-column: 1 / -1;
+  margin: 0;
+  line-height: var(--line-height-m);
+  color: var(--color-light-100);
+}
+
+.aboutLabel {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.postsSection,
+.emptyPosts {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-dark-300);
+}
+
+.postsTitle,
+.emptyPosts h2 {
+  margin: 0 0 1rem;
+  font-size: var(--font-size-l);
+  line-height: var(--line-height-xs);
+  color: var(--color-light-100);
+}
+
+.postsGrid,
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.postPreview {
+  position: relative;
+
+  overflow: hidden;
+  display: block;
+
+  aspect-ratio: 1 / 1;
+  border-radius: 0.125rem;
+
+  background: var(--color-dark-300);
+  outline: none;
+}
+
+.postPreview:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-accent-500);
+}
+
+.postImage {
+  object-fit: cover;
+  transition:
+    opacity var(--transition-duration-basic) var(--transition-function-basic),
+    transform var(--transition-duration-basic) var(--transition-function-basic);
+}
+
+.postPreview:hover .postImage {
+  transform: scale(1.03);
+  opacity: 0.75;
+}
+
+.postPlaceholder {
+  display: grid;
+  place-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-light-100);
+
+  background: linear-gradient(135deg, var(--color-accent-700), var(--color-dark-100));
+}
+
+.emptyPosts {
+  min-height: 14rem;
+  text-align: center;
+}
+
+.emptyPosts p {
+  margin: 0;
+  color: var(--color-light-900);
+}
+
+.skeleton {
+  display: grid;
+  grid-template-columns: 12.75rem minmax(0, 1fr);
+  gap: 2.375rem;
+
+  width: 100%;
+  max-width: 972px;
+  padding: 2.25rem 0 4rem;
+}
+
+.skeletonAvatar,
+.skeletonLine,
+.skeletonLineShort,
+.skeletonText,
+.skeletonPost {
+  background: linear-gradient(
+    90deg,
+    var(--color-dark-300),
+    var(--color-dark-100),
+    var(--color-dark-300)
+  );
+  background-size: 200% 100%;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.skeletonAvatar {
+  width: 12.75rem;
+  height: 12.75rem;
+  border-radius: 50%;
+}
+
+.skeletonContent {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.skeletonLine {
+  width: min(18rem, 60%);
+  height: 2.25rem;
+}
+
+.skeletonLineShort {
+  width: 35%;
+  height: 1.25rem;
+}
+
+.skeletonText {
+  width: 100%;
+  height: 4rem;
+}
+
+.skeletonGrid {
+  grid-column: 1 / -1;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-dark-300);
+}
+
+.skeletonPost {
+  aspect-ratio: 1 / 1;
+}
+
+@keyframes pulse {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@include media-tablet {
+  .profile,
+  .skeleton {
+    padding: 1.5rem 1.875rem 5.5rem;
+  }
+
+  .profileHeader {
+    gap: 1.5rem;
+  }
+
+  .profileAvatar,
+  .skeletonAvatar {
+    width: 9rem;
+    height: 9rem;
+  }
+
+  .skeleton {
+    grid-template-columns: 9rem minmax(0, 1fr);
+  }
+
+  .postsGrid,
+  .skeletonGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (width <= 520px) {
+  .profile,
+  .skeleton {
+    padding: 1.25rem 1rem 5.5rem;
+  }
+
+  .profileHeader,
+  .skeleton {
+    grid-template-columns: 1fr;
+  }
+
+  .profileHeader {
+    gap: 1.25rem;
+    padding-bottom: 2rem;
+  }
+
+  .profileAvatar,
+  .skeletonAvatar {
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+
+  .profileInfo {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .settingsButton {
+    justify-self: start;
+  }
+
+  .stats {
+    gap: 1.5rem;
+  }
+
+  .postsGrid,
+  .skeletonGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+}

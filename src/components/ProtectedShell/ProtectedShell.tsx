@@ -15,6 +15,7 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   const { user, isAuthenticated, isLoading } = useAuth()
   const activeSidebarId = sidebarItems.find(item => item.href === pathname)?.id ?? ''
   const [logoutOpen, setLogoutOpen] = useState(false)
+  const isPublicProfileRoute = pathname.startsWith('/profile/')
 
   // useEffect(() => {
   //   // if (!isLoading && !isAuthenticated && pathname !== '/') {
@@ -38,21 +39,22 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
       }
 
       // Остальная логика редиректа для защищенных страниц
-      if (!isAuthenticated) {
+      if (!isAuthenticated && !isPublicProfileRoute) {
         router.replace('/')
       }
     }
-  }, [isAuthenticated, isLoading, router, pathname, user?.id])
+  }, [isAuthenticated, isLoading, isPublicProfileRoute, router, pathname, user?.id])
 
   // if (!isAuthenticated) { // avoid blinking on load - check if needed when isLoading will work
   //   return null
   // }
 
-  const content = !isLoading ? (
-    <main className={s.content}>{children}</main>
-  ) : (
-    <div>Loading....</div> // change Loading... later
-  )
+  const content =
+    !isLoading || isPublicProfileRoute ? (
+      <main className={s.content}>{children}</main>
+    ) : (
+      <div>Loading....</div> // change Loading... later
+    )
 
   const userId = user?.id
 

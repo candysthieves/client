@@ -40,7 +40,7 @@ type CreatePostModalProps = {
 
 export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const { user } = useAuth() // CHANGE LATER TO FETCHED USER DATA (with avatar src)
-  const { mutate: addPost, isPending: isPublishing } = useAddPost()
+  const { mutate: addPost, isPending } = useAddPost()
   const router = useRouter()
 
   const [state, setState] = useState<AddPostState>(initialCreatePostState)
@@ -305,7 +305,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       step={state.step}
       onChangeStepClick={changeStep}
       onPublishClick={handlePublish}
-      isPublishing={isPublishing}
+      isPublishing={isPending}
     />
   )
 

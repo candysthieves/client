@@ -15,6 +15,17 @@ import { CropStep, PublicationStep, UploadStep } from '../../steps'
 import { AddPostState, CreatePostStep, Location } from '../../types'
 import s from './CreatePostModal.module.scss'
 
+// type AddPostState = {
+//   step: CreatePostStep
+//   files: {
+//     id: string
+//     file: File
+//     url: string
+//   }[]
+//   currentFileIndex: number
+//   description: string
+//   locations: Location[]
+// }
 export const initialCreatePostState: AddPostState = {
   step: 'upload',
   files: [],
@@ -29,7 +40,7 @@ type CreatePostModalProps = {
 
 export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const { user } = useAuth() // CHANGE LATER TO FETCHED USER DATA (with avatar src)
-  const { mutate: addPost, isPending: isPublishing } = useAddPost()
+  const { mutate: addPost, isPending } = useAddPost()
   const router = useRouter()
 
   const [state, setState] = useState<AddPostState>(initialCreatePostState)
@@ -228,7 +239,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const handlePublish = useCallback(() => {
     // Prepare data to send
     const postData = {
-      files: state.files,
+      files: state.files.map(({ file }) => file),
       description: state.description,
       locations: state.locations,
     }
@@ -294,7 +305,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       step={state.step}
       onChangeStepClick={changeStep}
       onPublishClick={handlePublish}
-      isPublishing={isPublishing}
+      isPublishing={isPending}
     />
   )
 

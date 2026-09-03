@@ -15,6 +15,17 @@ import { CropStep, PublicationStep, UploadStep } from '../../steps'
 import { AddPostState, CreatePostStep, Location } from '../../types'
 import s from './CreatePostModal.module.scss'
 
+// type AddPostState = {
+//   step: CreatePostStep
+//   files: {
+//     id: string
+//     file: File
+//     url: string
+//   }[]
+//   currentFileIndex: number
+//   description: string
+//   locations: Location[]
+// }
 export const initialCreatePostState: AddPostState = {
   step: 'upload',
   files: [],
@@ -228,7 +239,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const handlePublish = useCallback(() => {
     // Prepare data to send
     const postData = {
-      files: state.files,
+      files: state.files.map(({ file }) => file),
       description: state.description,
       locations: state.locations,
     }

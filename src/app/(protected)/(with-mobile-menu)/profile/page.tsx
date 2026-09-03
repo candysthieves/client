@@ -10,6 +10,7 @@ import s from './page.module.scss'
 export default function ProfilePage() {
   const { user } = useAuth()
   const { data: posts = [] } = usePosts()
+  const activePosts = posts.filter(post => !post.willBeDeletedIn)
 
   return (
     <>
@@ -19,7 +20,7 @@ export default function ProfilePage() {
 
       <div className={s.feed}>
         {user &&
-          posts.map((post, index) => (
+          activePosts.map((post, index) => (
             <Link
               key={post.postId}
               href={`/profile/${user.id}?postId=${post.postId}`}

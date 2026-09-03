@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { MAX_FILE_SIZE } from '@/constants'
 
 export const LocationSchema = z.object({
   id: z.string(),
@@ -39,3 +40,11 @@ export const AddPostRequestSchema = z.object({
   description: z.string().max(500),
   locations: z.array(LocationSchema),
 })
+
+export const postImageSchema = z
+  .instanceof(File)
+  .refine(
+    file => ['image/png', 'image/jpeg'].includes(file.type),
+    'Only PNG and JPEG images are allowed'
+  )
+  .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 5 MB')

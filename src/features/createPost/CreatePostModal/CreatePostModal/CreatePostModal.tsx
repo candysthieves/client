@@ -3,12 +3,13 @@
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
-import { ToastError, ToastSuccess } from '@/components'
+import { ToastError, ToastSuccess, ToastWarning } from '@/components'
 import {
   ConfirmCloseCreatePostModal,
   CreatePostModalHeader,
 } from '@/features/createPost/CreatePostModal'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { postImageSchema } from '@/lib/model'
 import { useAddPost } from '@/lib/posts'
 import { clearPostDraft, loadPostDraft, savePostDraft } from '@/lib/utils'
 import { CropStep, PublicationStep, UploadStep } from '../../steps'
@@ -83,6 +84,16 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
   // Upload file step
   const handleFileSelected = (file: File) => {
+    const result = postImageSchema.safeParse(file)
+    if (!result.success) {
+      ToastWarning({
+        title: 'Invalid file',
+        message: result.error.issues[0].message,
+      })
+
+      return
+    }
+
     const url = URL.createObjectURL(file)
 
     setState(prev => ({

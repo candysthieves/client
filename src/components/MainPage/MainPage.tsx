@@ -1,13 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import type { Post } from '@/mocks/posts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostCard } from '@/components/PostCard'
 import { PostModal } from '@/components/PostModal/PostModal'
 import { RegisteredUsersCounter } from '@/components/RegisteredUsersCounter'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
-import { mockPosts, type Post } from '@/mocks/posts'
+import { usePosts } from '@/lib/posts'
+import { getTimeAgo } from '@/lib/utils'
 import s from './MainPage.module.scss'
+
+const LATEST_POSTS_LIMIT = 4
 
 type MainPageProps = {
   initialUsersCount: number
@@ -16,9 +20,18 @@ type MainPageProps = {
 export const MainPage = ({ initialUsersCount }: MainPageProps) => {
   const [selectedPost, setSelectedPost] = useState<null | Post>(null)
   const isMobile = useIsMobileViewport()
+  const { data: posts = [] } = usePosts()
+
+  const latestPosts = useMemo(
+    () =>
+      [...posts]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, LATEST_POSTS_LIMIT),
+    [posts]
+  )
 
   const selectedIndex = selectedPost
-    ? mockPosts.findIndex(post => post.postId === selectedPost.postId)
+    ? latestPosts.findIndex(post => post.postId === selectedPost.postId)
     : 0
 
   return (
@@ -26,13 +39,13 @@ export const MainPage = ({ initialUsersCount }: MainPageProps) => {
       <RegisteredUsersCounter count={initialUsersCount} />
 
       <div className={s.postsGrid} data-hidden={!!selectedPost}>
-        {mockPosts.map(post => (
+        {latestPosts.map(post => (
           <PostCard
             caption={post.description ?? ''}
             images={post.images.map(image => image.url)}
             key={post.postId}
             onOpen={() => setSelectedPost(post)}
-            timeAgo={post.createdAt}
+            timeAgo={getTimeAgo(post.createdAt)}
             username={post.userName}
           />
         ))}
@@ -42,7 +55,7 @@ export const MainPage = ({ initialUsersCount }: MainPageProps) => {
         (isMobile ? (
           <MobilePostViewer
             onClose={() => setSelectedPost(null)}
-            posts={mockPosts}
+            posts={latestPosts}
             startIndex={selectedIndex}
           />
         ) : (

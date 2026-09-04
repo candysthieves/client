@@ -1,5 +1,6 @@
 export { isErrorResponse } from './isErrorResponse'
 export { getPostImageAreaSize, getPostImageAreaStyle } from './getPostImageAreaSize'
+export { getTimeAgo } from './getTimeAgo'
 export * from './isValidField'
 export { mapRegistrationConfirmationError } from './mapRegistrationConfirmationError'
 export { mapRegistrationValidationError } from './mapRegistrationValidationError'

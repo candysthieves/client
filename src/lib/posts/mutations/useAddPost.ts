@@ -10,7 +10,7 @@ export function useAddPost() {
     mutationFn: (data: AddPostRequest) => addPost(data),
 
     onSuccess: () => {
-      queryClient.setQueryData(postsKeys.all, null)
+      queryClient.invalidateQueries({ queryKey: postsKeys.all })
     },
   })
 }

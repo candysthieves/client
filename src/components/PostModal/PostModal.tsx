@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import type { Post } from '@/mocks/posts'
+import { ConfirmDeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
+import { useDeletePost } from '@/lib/posts'
 
-type Props = {
+type PostModalProps = {
   post: Post
   open: boolean
   onClose: () => void
@@ -13,16 +15,23 @@ type Props = {
 
 type Mode = 'edit' | 'view'
 
-export const PostModal = ({ post, open, onClose }: Props) => {
+export const PostModal = ({ post, open, onClose }: PostModalProps) => {
+  const { mutate: deletePost, isPending } = useDeletePost()
   const [mode, setMode] = useState<Mode>('view')
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const handleClose = () => {
     setMode('view')
+    setIsDeleteModalOpen(false)
     onClose()
   }
 
   const handleEdit = () => {
     setMode('edit')
+  }
+
+  const handleDelete = () => {
+    setIsDeleteModalOpen(true)
   }
 
   const handleCancelEdit = () => {
@@ -34,6 +43,12 @@ export const PostModal = ({ post, open, onClose }: Props) => {
     console.log('New description:', description)
 
     setMode('view')
+  }
+
+  const handleConfirmDelete = () => {
+    deletePost(post.postId, {
+      onSuccess: handleClose,
+    })
   }
 
   if (mode === 'edit') {
@@ -48,5 +63,22 @@ export const PostModal = ({ post, open, onClose }: Props) => {
     )
   }
 
-  return <PostDetailsModal post={post} open={open} onClose={handleClose} onEdit={handleEdit} />
+  return (
+    <>
+      <PostDetailsModal
+        post={post}
+        open={open}
+        onClose={handleClose}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+
+      <ConfirmDeletePostModal
+        isDeleting={isPending}
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
+    </>
+  )
 }

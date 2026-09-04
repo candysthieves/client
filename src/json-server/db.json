@@ -1,89 +1,6 @@
 {
   "posts": [
     {
-      "postId": "1788042798449",
-      "description": "Some artifacts",
-      "locations": [
-        {
-          "id": "location-1788042765911",
-          "address": "In the middle of nowhere"
-        }
-      ],
-      "images": [
-        {
-          "url": "blob:https://dev.lumosapp.net:3000/b8a2d8a4-475a-4649-a786-c10cbb6b0046",
-          "width": 490,
-          "height": 562
-        },
-        {
-          "url": "blob:https://dev.lumosapp.net:3000/a4244b08-a8ec-4509-a813-663039e5f7a8",
-          "width": 490,
-          "height": 562
-        }
-      ],
-      "preview": {
-        "url": "blob:https://dev.lumosapp.net:3000/b8a2d8a4-475a-4649-a786-c10cbb6b0046",
-        "width": 234,
-        "height": 228
-      },
-      "userId": "anonymous",
-      "userName": "Anonymous",
-      "createdAt": "2026-08-29T22:33:18.449Z",
-      "updatedAt": "2026-08-29T22:33:18.449Z",
-      "willBeDeletedIn": null
-    },
-    {
-      "postId": "1788042993120",
-      "description": "Things and places that people like",
-      "locations": [
-        {
-          "id": "location-1788042972334",
-          "address": "California"
-        },
-        {
-          "id": "location-1788042990369",
-          "address": "Los Santos"
-        }
-      ],
-      "images": [
-        {
-          "url": "blob:https://dev.lumosapp.net:3000/86cc797f-7c8f-4fa2-8e83-7d00528bd0f6",
-          "width": 490,
-          "height": 562
-        },
-        {
-          "url": "blob:https://dev.lumosapp.net:3000/c4afbfd9-10f7-4ad2-9687-61eed486db33",
-          "width": 490,
-          "height": 562
-        },
-        {
-          "url": "blob:https://dev.lumosapp.net:3000/2f70b5ad-6b6e-40b4-a656-c97d94ca2223",
-          "width": 490,
-          "height": 562
-        },
-        {
-          "url": "blob:https://dev.lumosapp.net:3000/6edebfbb-303e-4976-b67c-4f123f60c254",
-          "width": 490,
-          "height": 562
-        },
-        {
-          "url": "blob:https://dev.lumosapp.net:3000/c4ec82d0-03ea-4719-a7dd-49b84217209c",
-          "width": 490,
-          "height": 562
-        }
-      ],
-      "preview": {
-        "url": "blob:https://dev.lumosapp.net:3000/86cc797f-7c8f-4fa2-8e83-7d00528bd0f6",
-        "width": 234,
-        "height": 228
-      },
-      "userId": "anonymous",
-      "userName": "Anonymous",
-      "createdAt": "2026-08-29T22:36:33.120Z",
-      "updatedAt": "2026-08-29T22:36:33.120Z",
-      "willBeDeletedIn": null
-    },
-    {
       "postId": "1788043053664",
       "description": "Make your choice",
       "locations": [
@@ -182,6 +99,158 @@
       "userName": "Anonymous",
       "createdAt": "2026-08-29T22:50:38.857Z",
       "updatedAt": "2026-08-29T22:50:38.857Z",
+      "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788182956597",
+      "description": "wedwed",
+      "locations": [
+        {
+          "id": "location-1788182951193",
+          "address": "wedwed"
+        }
+      ],
+      "images": [
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/84b608e0-a424-49fb-9041-ea7d21c149dc",
+          "width": 490,
+          "height": 562
+        },
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/bdc02eef-0f1a-4d9d-8248-2a3f3eb66501",
+          "width": 490,
+          "height": 562
+        }
+      ],
+      "preview": {
+        "url": "blob:https://dev.lumosapp.net:3000/84b608e0-a424-49fb-9041-ea7d21c149dc",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-31T13:29:16.597Z",
+      "updatedAt": "2026-08-31T13:29:16.597Z",
+      "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788183436755",
+      "description": "шщлдше",
+      "locations": [],
+      "images": [
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/64339de6-1c94-4872-847b-62b979828487",
+          "width": 490,
+          "height": 562
+        }
+      ],
+      "preview": {
+        "url": "blob:https://dev.lumosapp.net:3000/64339de6-1c94-4872-847b-62b979828487",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-31T13:37:16.755Z",
+      "updatedAt": "2026-08-31T13:37:16.755Z",
+      "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788183776457",
+      "description": "кекепкеп",
+      "locations": [
+        {
+          "id": "location-1788183771922",
+          "address": "кепкеп"
+        }
+      ],
+      "images": [
+        {
+          "url": "blob:https://dev.lumosapp.net:3000/d33af003-4cda-42c4-b7d3-176702740678",
+          "width": 490,
+          "height": 562
+        }
+      ],
+      "preview": {
+        "url": "blob:https://dev.lumosapp.net:3000/d33af003-4cda-42c4-b7d3-176702740678",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-31T13:42:56.457Z",
+      "updatedAt": "2026-08-31T13:42:56.457Z",
+      "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788208530885",
+      "description": "some text",
+      "locations": [
+        {
+          "id": "location-1788207574126",
+          "address": "some place"
+        }
+      ],
+      "images": [
+        {
+          "url": "http://localhost:8080/uploads/1788208530885_5ec8a39689d4a4cbd6ffb3d4ce1eac07.jpg",
+          "width": 490,
+          "height": 562,
+          "name": "5ec8a39689d4a4cbd6ffb3d4ce1eac07.jpg",
+          "size": 415009,
+          "type": "image/jpeg"
+        },
+        {
+          "url": "http://localhost:8080/uploads/1788208530885_Mask group.png",
+          "width": 490,
+          "height": 562,
+          "name": "Mask group.png",
+          "size": 470818,
+          "type": "image/png"
+        },
+        {
+          "url": "http://localhost:8080/uploads/1788208530885_image 2.png",
+          "width": 490,
+          "height": 562,
+          "name": "image 2.png",
+          "size": 414741,
+          "type": "image/png"
+        }
+      ],
+      "preview": {
+        "url": "http://localhost:8080/uploads/1788208530885_5ec8a39689d4a4cbd6ffb3d4ce1eac07.jpg",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-31T20:35:30.885Z",
+      "updatedAt": "2026-08-31T20:35:30.885Z",
+      "willBeDeletedIn": null
+    },
+    {
+      "postId": "1788212838698",
+      "description": "ooo",
+      "locations": [],
+      "images": [
+        {
+          "url": "http://localhost:8080/uploads/1788212838698_Mask group.png",
+          "width": 490,
+          "height": 562,
+          "name": "Mask group.png",
+          "size": 470818,
+          "type": "image/png"
+        }
+      ],
+      "preview": {
+        "url": "http://localhost:8080/uploads/1788212838698_Mask group.png",
+        "width": 234,
+        "height": 228
+      },
+      "userId": "anonymous",
+      "userName": "Anonymous",
+      "createdAt": "2026-08-31T21:47:18.698Z",
+      "updatedAt": "2026-08-31T21:47:18.698Z",
       "willBeDeletedIn": null
     }
   ]

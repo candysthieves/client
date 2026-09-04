@@ -1,28 +1,45 @@
 import {
   Button,
   clsx,
-  Expand,
   ExpandOutline,
   ImageOutline,
   MaximizeOutline,
-  PlusCircleOutline,
 } from '@candy.thieves/ui-kit-lumos'
 import { useEffect, useRef, useState } from 'react'
+import { ExpandCropPostImageBlock } from '@/components/ExpandCropPostImageBlock'
 import { SelectCropPostImagesBlock } from '@/components/SelectCropPostImagesBlock'
+import { AspectRatio, PostFile } from '@/features/createPost'
 import s from './CropStep.module.scss'
 
 type CropStepProps = {
-  file: File
+  currentFileIndex: number
+  files: PostFile[]
+  updateCroppedFile: (fileId: string, newFile: File) => void
+  deleteFile: (fileId: string) => void
+  setAsCurrentFile: (index: number) => void
   addImage: () => void
 }
 
-export const CropStep = ({ file, addImage }: CropStepProps) => {
+export const CropStep = ({
+  currentFileIndex,
+  files,
+  updateCroppedFile,
+  deleteFile,
+  addImage,
+  setAsCurrentFile,
+}: CropStepProps) => {
   const [isSelectImagesOpen, setIsSelectImagesOpen] = useState(false)
+  const [isExpandImageOpen, seIsExpandImageOpen] = useState(false)
+  console.log(files[currentFileIndex])
   const selectImagesRef = useRef<HTMLDivElement>(null)
+  const expandImageRef = useRef<HTMLDivElement>(null)
 
-  const imageUrl = URL.createObjectURL(file)
+  const imageUrl = URL.createObjectURL(files[currentFileIndex].file)
 
-  const openExpandImageMenuHandler = () => console.log('openExpandImageMenuHandler')
+  const openExpandImageMenuHandler = () => {
+    seIsExpandImageOpen(prev => !prev)
+  }
+
   const openMaximizeImageSliderHandler = () => console.log('openMaximizeImageSliderHandler')
 
   const openSelectImageMenuHandler = () => {
@@ -30,19 +47,25 @@ export const CropStep = ({ file, addImage }: CropStepProps) => {
   }
 
   const onAddImageHandler = () => {
+    addImage()
     setIsSelectImagesOpen(false) // delete later
     console.log('onAddImageHandler')
   }
 
-  const onCloseSelectCropPostImagesBlockHandler = () => {
-    setIsSelectImagesOpen(false)
+  const onSelectAspectRatioHandler = (aspectRatio: AspectRatio) => {
+    seIsExpandImageOpen(false) // delete later
+    console.log('onSelectAspectRatioHandler:', aspectRatio)
   }
 
   const handleSelectCropPostImagesBlockClickOutside = (event: MouseEvent) => {
-    console.log(selectImagesRef.current && !selectImagesRef.current.contains(event.target as Node))
     if (selectImagesRef.current && !selectImagesRef.current.contains(event.target as Node)) {
-      console.log('010')
       setIsSelectImagesOpen(false)
+    }
+  }
+
+  const handleExpandImageBlockClickOutside = (event: MouseEvent) => {
+    if (expandImageRef.current && !expandImageRef.current.contains(event.target as Node)) {
+      seIsExpandImageOpen(false)
     }
   }
 
@@ -54,6 +77,14 @@ export const CropStep = ({ file, addImage }: CropStepProps) => {
     }
   }, [isSelectImagesOpen])
 
+  useEffect(() => {
+    if (!isExpandImageOpen) return
+    document.addEventListener('mousedown', handleExpandImageBlockClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleExpandImageBlockClickOutside)
+    }
+  }, [isExpandImageOpen])
+  console.log(files[currentFileIndex])
   return (
     <div className={s.imageContent}>
       <img src={imageUrl} alt={'Crop preview'} className={s.imageItem} />
@@ -88,15 +119,27 @@ export const CropStep = ({ file, addImage }: CropStepProps) => {
         />
       </Button>
 
+      <ExpandCropPostImageBlock
+        ref={expandImageRef}
+        isOpen={isExpandImageOpen}
+        onSelectAspectRatio={onSelectAspectRatioHandler}
+      />
+
       <SelectCropPostImagesBlock
         ref={selectImagesRef}
+        currentFileIndex={currentFileIndex}
+        files={files}
         isOpen={isSelectImagesOpen}
         onAddImage={onAddImageHandler}
+        setAsCurrentFile={setAsCurrentFile}
+        deleteFile={deleteFile}
       />
     </div>
   )
 }
 
-// URL.createObjectURL() во время render не оставлять.
-// позже добавлю useEffect/useMemo + URL.revokeObjectURL()
-// либо буду передавать уже подготовленный preview URL.
+// To start cropping the image, access the file you want to crop inside CropStep:
+// const currentFile = files[currentFileIndex]  =>  { file: {}, id: string, url: string }
+//
+// After cropping set updated cropped file back to the CreatePostModal state:
+// updateCroppedFile(fileId, File)

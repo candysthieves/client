@@ -27,6 +27,11 @@ Before changing Next.js APIs, routing, metadata, configuration, or file structur
 - [Architecture](./agent-docs/architecture.md): use before changing module boundaries, routing shape, shared state, or
   data flow.
 
+## Code Review
+
+- Flag raw numeric values that encode a UI collection count, display limit, or pagination limit. Define a clearly named
+  constant near its consumer instead; do not introduce a limit when the backend already owns the result set.
+
 ## External Tools
 
 Do not assume external CLI tools, IDE integrations, MCP servers, or AI-agent features are available unless they are

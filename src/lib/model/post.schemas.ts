@@ -6,6 +6,7 @@ export const LocationSchema = z.object({
 })
 
 export const PostFileSchema = z.object({
+  id: z.string(),
   file: z.instanceof(File),
   url: z.url(),
 })

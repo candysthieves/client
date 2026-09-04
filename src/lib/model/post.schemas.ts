@@ -47,4 +47,4 @@ export const postImageSchema = z
     file => ['image/png', 'image/jpeg'].includes(file.type),
     'Only PNG and JPEG images are allowed'
   )
-  .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 5 MB')
+  .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 500 kB')

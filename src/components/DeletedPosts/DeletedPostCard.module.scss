@@ -1,0 +1,84 @@
+.card {
+  position: relative;
+
+  overflow: hidden;
+
+  aspect-ratio: 1;
+  width: 100%;
+  min-width: 0;
+  border-radius: 0.375rem;
+
+  background: var(--color-dark-500);
+}
+
+.image {
+  object-fit: cover;
+}
+
+.postLink {
+  position: absolute;
+  inset: 0;
+
+  &:focus-visible {
+    border: 2px solid var(--color-accent-500);
+    outline: none;
+  }
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 62%);
+}
+
+.badge {
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 1;
+  top: 0.75rem;
+  left: 0.75rem;
+
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.25rem;
+
+  color: var(--color-light-100);
+
+  background: rgb(255 255 255 / 32%);
+}
+
+.actions {
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  align-items: center;
+  justify-content: center;
+
+  padding: 3.25rem 1.5rem 1.25rem;
+
+  color: var(--color-light-100);
+  text-align: center;
+}
+
+.clock {
+  color: var(--color-light-100);
+}
+
+.remainingTime {
+  white-space: nowrap;
+}
+
+.restoreButton {
+  pointer-events: auto;
+  margin-top: 0.75rem;
+}
+
+.deleteButton {
+  pointer-events: auto;
+}

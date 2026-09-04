@@ -2,14 +2,21 @@
 
 import type { ReactNode } from 'react'
 import { Tabs } from '@candy.thieves/ui-kit-lumos'
+import type { Post } from '@/mocks/posts'
 import { DeletedPosts } from '@/components/DeletedPosts'
 import s from './ProfilePostTabs.module.scss'
 
 type ProfilePostTabsProps = {
   publicationsContent?: ReactNode
+  deletedPosts: Post[]
+  userId: string
 }
 
-export const ProfilePostTabs = ({ publicationsContent }: ProfilePostTabsProps) => {
+export const ProfilePostTabs = ({
+  publicationsContent,
+  deletedPosts,
+  userId,
+}: ProfilePostTabsProps) => {
   const tabs = [
     {
       value: 'publications',
@@ -21,7 +28,7 @@ export const ProfilePostTabs = ({ publicationsContent }: ProfilePostTabsProps) =
       label: 'Recently deleted',
       content: (
         <div className={s.content}>
-          <DeletedPosts />
+          <DeletedPosts posts={deletedPosts} userId={userId} />
         </div>
       ),
     },

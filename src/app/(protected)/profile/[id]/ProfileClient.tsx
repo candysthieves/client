@@ -23,10 +23,12 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const isMobile = useIsMobileViewport()
   const { data: posts = [] } = usePosts()
   const activePosts = posts.filter(post => !post.willBeDeletedIn)
+  const deletedPosts = posts.filter(post => post.willBeDeletedIn)
 
-  const selectedPost = activePosts.find(post => post.postId === postId)
+  const selectedPost = [...activePosts, ...deletedPosts].find(post => post.postId === postId)
+  const selectedPosts = selectedPost?.willBeDeletedIn ? deletedPosts : activePosts
   const selectedIndex = selectedPost
-    ? activePosts.findIndex(post => post.postId === selectedPost.postId)
+    ? selectedPosts.findIndex(post => post.postId === selectedPost.postId)
     : 0
   const showCreateModal = !postId && action === 'create'
   const handleClosePost = () => router.replace(`/profile/${userId}`)
@@ -38,6 +40,8 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
       </Typography>
 
       <ProfilePostTabs
+        deletedPosts={deletedPosts}
+        userId={userId}
         publicationsContent={
           <div className={s.feed}>
             {activePosts.map((post, index) => (
@@ -64,7 +68,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
         (isMobile ? (
           <MobilePostViewer
             onClose={handleClosePost}
-            posts={activePosts}
+            posts={selectedPosts}
             startIndex={selectedIndex}
           />
         ) : (

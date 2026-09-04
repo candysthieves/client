@@ -30,9 +30,7 @@ export function PostPreview({ index, post, userId }: PostPreviewProps) {
           src={post.preview.url}
           alt={post.description ?? `Post ${index + 1}`}
           fill
-          sizes={
-            '(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 234px'
-          }
+          sizes={'(max-width: 640px) 50vw, (max-width: 768px) 33vw, 234px'}
           className={s.postImage}
           onError={() => setHasImageError(true)}
         />

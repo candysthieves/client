@@ -17,15 +17,6 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   const [logoutOpen, setLogoutOpen] = useState(false)
   const isPublicProfileRoute = pathname.startsWith('/profile/')
 
-  // useEffect(() => {
-  //   // if (!isLoading && !isAuthenticated && pathname !== '/') {
-  //   if (!isLoading && !isAuthenticated) {
-  //     // router.replace('/sign-in')
-  //     router.replace('/')
-  //   }
-  //   // }, [isAuthenticated, isLoading, router])
-  // }, [isAuthenticated, isLoading, router, pathname])
-
   useEffect(() => {
     if (!isLoading) {
       // Редирект с /profile на /profile/{userId}
@@ -38,16 +29,11 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
         return
       }
 
-      // Остальная логика редиректа для защищенных страниц
       if (!isAuthenticated && !isPublicProfileRoute) {
         router.replace('/')
       }
     }
   }, [isAuthenticated, isLoading, isPublicProfileRoute, router, pathname, user?.id])
-
-  // if (!isAuthenticated) { // avoid blinking on load - check if needed when isLoading will work
-  //   return null
-  // }
 
   const content =
     !isLoading || isPublicProfileRoute ? (

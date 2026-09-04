@@ -21,11 +21,11 @@ Before writing or reviewing component styles, inspect `src/styles/_mixins.scss` 
 - `content` for the standard centered content area;
 - `width-height` for paired dimensions;
 - `transition-basic` for transitions using the standard timing tokens;
-- `media-desktop` (`1280px`), `media-tablet` (`768px`), and `media-mobile` (`360px`) for responsive rules.
+- `media-desktop` (`1280px`), `media-tablet` (`768px`), `media-tablet-small` (`640px`), and `media-mobile` (`360px`) for responsive rules.
 
-Do not add a local numeric `@media` query or an ad hoc breakpoint. If the existing three breakpoints cannot express a
+Do not add a local numeric `@media` query or an ad hoc breakpoint. If the shared breakpoints cannot express a
 required layout, add a named shared token and mixin in `src/styles/_mixins.scss` only when the task explicitly requires
 that new responsive tier; otherwise ask for direction.
 
 `next/image` `sizes` cannot read Sass values at runtime, so use only the same established breakpoint values in its
-string (`1280px`, `768px`, `360px`). During review, check that `sizes` matches the SCSS grid at every responsive tier.
+string (`1280px`, `768px`, `640px`, `360px`). During review, check that `sizes` matches the SCSS grid at every responsive tier.

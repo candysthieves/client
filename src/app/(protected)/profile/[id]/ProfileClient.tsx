@@ -22,8 +22,12 @@ type ProfileClientProps = {
 export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const router = useRouter()
   const isMobile = useIsMobileViewport()
-  const { data: profile, isLoading: isProfileLoading } = useProfile(userId)
-  const { data: profilePostsResponse, isLoading: arePostsLoading } = useProfilePosts(userId)
+  const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
+  const {
+    data: profilePostsResponse,
+    isError: arePostsError,
+    isLoading: arePostsLoading,
+  } = useProfilePosts(userId)
   const profilePosts: Post[] = (profilePostsResponse?.items ?? []).map(post => ({
     postId: post.id,
     description: post.description,
@@ -45,6 +49,19 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
 
   if (isProfileLoading || arePostsLoading) {
     return <ProfileSkeleton />
+  }
+
+  if (isProfileError || arePostsError) {
+    return (
+      <section className={s.profileError} role={'alert'}>
+        <Typography color={'var(--color-light-100)'} variant={'h1'}>
+          Unable to load profile
+        </Typography>
+        <Typography color={'var(--color-light-900)'} variant={'body1'}>
+          Please try again later.
+        </Typography>
+      </section>
+    )
   }
 
   return (
@@ -103,6 +120,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             onClose={handleClosePost}
             posts={profilePosts}
             startIndex={selectedIndex}
+            userId={userId}
           />
         ) : (
           <PostModal post={selectedPost} open onClose={handleClosePost} />

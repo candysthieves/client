@@ -11,15 +11,16 @@ import s from './MobilePostViewer.module.scss'
 type Props = {
   posts: Post[]
   startIndex: number
+  userId: string
   onClose: () => void
 }
 
-export const MobilePostViewer = ({ posts, startIndex, onClose }: Props) => {
+export const MobilePostViewer = ({ posts, startIndex, userId, onClose }: Props) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editingIndex, setEditingIndex] = useState(startIndex)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [postIdToDelete, setPostIdToDelete] = useState<null | string>(null)
-  const { mutate: deletePost, isPending } = useDeletePost()
+  const { mutate: deletePost, isPending } = useDeletePost(userId)
 
   const handleConfirmDelete = () => {
     if (!postIdToDelete) return

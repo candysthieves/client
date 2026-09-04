@@ -139,6 +139,14 @@
   text-align: center;
 }
 
+.profileError {
+  @include content;
+
+  display: grid;
+  gap: 1rem;
+  padding: 2.25rem 0 4rem;
+}
+
 .skeleton {
   @include content;
 
@@ -230,9 +238,10 @@
   }
 }
 
-@media (width <= 520px) {
+@include media-tablet-small {
   .profile,
-  .skeleton {
+  .skeleton,
+  .profileError {
     padding: 1.25rem 1rem 5.5rem;
   }
 

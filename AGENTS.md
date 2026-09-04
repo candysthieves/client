@@ -34,7 +34,7 @@ Before changing Next.js APIs, routing, metadata, configuration, or file structur
 - Before adding local SCSS dimensions or basic transitions, check the shared mixins and variables. Reuse `content` and
   `transition-basic` when they fit; use `width-height` for paired dimensions. Flag duplicate dimensions and transition
   timing declarations in review.
-- For responsive UI, use only the shared `media-desktop`, `media-tablet`, and `media-mobile` mixins. Flag local numeric
+- For responsive UI, use only the shared `media-desktop`, `media-tablet`, `media-tablet-small`, and `media-mobile` mixins. Flag local numeric
   media queries and `next/image` `sizes` strings that use breakpoints outside that shared set.
 
 ## External Tools

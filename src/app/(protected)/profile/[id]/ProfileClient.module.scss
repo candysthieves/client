@@ -1,8 +1,8 @@
 @use '@/styles/mixins' as *;
 
 .profile {
-  width: 100%;
-  max-width: 972px;
+  @include content;
+
   padding: 2.25rem 0 4rem;
 }
 
@@ -112,10 +112,9 @@
 }
 
 .postImage {
+  @include transition-basic(opacity, transform);
+
   object-fit: cover;
-  transition:
-    opacity var(--transition-duration-basic) var(--transition-function-basic),
-    transform var(--transition-duration-basic) var(--transition-function-basic);
 }
 
 .postPreview:hover .postImage {
@@ -148,12 +147,11 @@
 }
 
 .skeleton {
+  @include content;
+
   display: grid;
   grid-template-columns: 12.75rem minmax(0, 1fr);
   gap: 2.375rem;
-
-  width: 100%;
-  max-width: 972px;
   padding: 2.25rem 0 4rem;
 }
 

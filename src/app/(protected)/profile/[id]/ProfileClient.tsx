@@ -87,14 +87,14 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
               </div>
             </dl>
 
-            <p className={s.about}>
+            <Typography className={s.about} variant={'body1'}>
               <span className={s.aboutLabel}>About me</span>
               {profile?.description ?? ''}
-            </p>
+            </Typography>
           </div>
         </section>
 
-        <PostsFeed posts={profilePosts} profileId={userId} />
+        <PostsFeed posts={profilePostsResponse?.items ?? []} userId={userId} />
       </div>
 
       {selectedPost &&

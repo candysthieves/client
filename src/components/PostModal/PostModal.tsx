@@ -16,7 +16,7 @@ type PostModalProps = {
 type Mode = 'edit' | 'view'
 
 export const PostModal = ({ post, open, onClose }: PostModalProps) => {
-  const { mutate: deletePost, isPending } = useDeletePost()
+  const { mutate: deletePost, isPending } = useDeletePost(post.userId)
   const [mode, setMode] = useState<Mode>('view')
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 

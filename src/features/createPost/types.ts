@@ -11,15 +11,16 @@ import {
 export type Location = z.infer<typeof LocationSchema>
 export type PostFile = z.infer<typeof PostFileSchema>
 export type DraftPostFile = z.infer<typeof DraftPostFileSchema>
-// type DraftPostFile = {
-//   file: File
-// }
 
 export type AddPostState = z.infer<typeof AddPostStateSchema>
-// type DraftAddPostState = {
-//   files: PostFile[]
+// type AddPostState = {
+//   step: CreatePostStep
+//   files: {
+//     id: string
+//     file: File
+//     url: string
+//   }[]
 //   currentFileIndex: number
-//   step: 'crop' | 'publication' | 'upload'
 //   description: string
 //   locations: Location[]
 // }
@@ -29,7 +30,7 @@ export type CreatePostStep = z.infer<typeof AddPostStateSchema>['step']
 
 export type AddPostRequest = z.infer<typeof AddPostRequestSchema>
 // type AddPostRequest = {
-//   files: PostFile[]
+//   files: File[]
 //   description: string
 //   locations: Location[]
 // }

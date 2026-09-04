@@ -44,12 +44,6 @@ async function apiClient<T>(endpoint: string, options: RequestInit = {}): Promis
   return response.json()
 }
 
-// export const addPost = async (data: AddPostRequest) =>
-//   request<void>('/posts', {
-//     method: 'POST',
-//     body: JSON.stringify(data), // new FormData()
-//   })
-
 export const addPost = async (data: AddPostRequest) => {
   const formData = new FormData()
 
@@ -66,51 +60,6 @@ export const addPost = async (data: AddPostRequest) => {
 }
 
 export const getPosts = () => apiClient<Post[]>('/posts')
-
-// export const addPost = async (data: AddPostRequest): Promise<void> => {
-//   try {
-//     const formData = new FormData()
-//
-//     formData.append('description', data.description)
-//     formData.append('locations', JSON.stringify(data.locations))
-//
-//     // Разделяем новые файлы (с File) и существующие (с url)
-//     const newFiles = data.files.filter(f => f.file instanceof File)
-//     const existingFiles = data.files.filter(f => f.url && !(f.file instanceof File))
-//
-//     console.log('Total files:', data.files.length)
-//     console.log('New files:', newFiles.length)
-//     console.log('Existing files:', existingFiles.length)
-//     console.log(
-//       'New files data:',
-//       newFiles.map(f => ({
-//         name: f.file.name,
-//         size: f.file.size,
-//         type: f.file.type,
-//       }))
-//     )
-//
-//     // новые файлы в FormData
-//     newFiles.forEach(postFile => {
-//       if (postFile.file instanceof File) {
-//         formData.append('files', postFile.file)
-//       }
-//     })
-//
-//     // URLs существующих файлов как JSON
-//     if (existingFiles.length > 0) {
-//       formData.append('existingFiles', JSON.stringify(existingFiles.map(f => f.url)))
-//     }
-//
-//     await apiClient<void>('/posts', {
-//       method: 'POST',
-//       body: formData,
-//     })
-//   } catch (error) {
-//     console.error('Failed to create post:', error)
-//     throw error
-//   }
-// }
 
 export const deletePost = (postId: string) =>
   apiClient<void>(`/posts/${postId}`, {

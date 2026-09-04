@@ -28,13 +28,6 @@ export const AddPostStateSchema = z.object({
   locations: z.array(LocationSchema),
 })
 
-// export const AddPostRequestSchema = z.object({
-//   files: z.array(PostFileSchema),
-//   description: z.string().max(500),
-//   locations: z.array(LocationSchema),
-//   // userId: z.string(),
-//   // userName: z.string(),
-// })
 export const AddPostRequestSchema = z.object({
   files: z.array(z.instanceof(File)),
   description: z.string().max(500),

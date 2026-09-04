@@ -14,10 +14,3 @@ export function useAddPost() {
     },
   })
 }
-
-// type AddPostRequest = {
-//   files: File[]
-//   description: string
-//   locations: Location[]
-// }
-//{code: 57, errorsMessages: [{field: "files", message: "Files service is unavailable"}]}

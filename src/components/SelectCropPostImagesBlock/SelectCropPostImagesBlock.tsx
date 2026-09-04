@@ -1,6 +1,6 @@
 import { Button, Cards, CloseOutline, clsx, PlusCircleOutline } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
-import { Ref, useEffect, useMemo } from 'react'
+import { Ref, useEffect, useMemo, MouseEvent } from 'react'
 import { PostFile } from '@/features/createPost'
 import s from './SelectCropPostImagesBlock.module.scss'
 
@@ -47,6 +47,15 @@ export const SelectCropPostImagesBlock = ({
     }
   }, [imageUrls])
 
+  const onClickDeleteImageHandler = (e: MouseEvent, index: number) => {
+    e.stopPropagation()
+    const file = files[index]
+
+    if (file?.id) {
+      deleteFile(file.id)
+    }
+  }
+
   return (
     <>
       {isOpen && (
@@ -63,15 +72,15 @@ export const SelectCropPostImagesBlock = ({
           <div className={s.selectImagesBlock}>
             {imageUrls.length > 0 ? (
               imageUrls.map((url, index) => {
-                // const file = files[index]?.file
-                // const fileKey = file ? `${file.name}-${file.lastModified}` : `image-${index}`
                 const isActive = index === currentFileIndex
 
                 return (
                   <div
                     key={files[index]?.id || index}
                     className={s.selectImageItem}
-                    onClick={() => setAsCurrentFile(index)}
+                    onClick={() => {
+                      setAsCurrentFile(index)
+                    }}
                   >
                     <Image
                       width={80}
@@ -84,7 +93,7 @@ export const SelectCropPostImagesBlock = ({
                     />
 
                     <Button
-                      onClick={() => deleteFile(files[index]?.id)}
+                      onClick={e => onClickDeleteImageHandler(e, index)}
                       className={clsx(s.iconButton, s.imageDeleteButton)}
                     >
                       <CloseOutline

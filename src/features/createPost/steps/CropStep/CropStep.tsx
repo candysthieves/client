@@ -1,15 +1,12 @@
-import {
-  Button,
-  clsx,
-  ExpandOutline,
-  ImageOutline,
-  MaximizeOutline,
-} from '@candy.thieves/ui-kit-lumos'
-import { useEffect, useRef, useState } from 'react'
+import { Button, clsx, ExpandOutline, ImageOutline } from '@candy.thieves/ui-kit-lumos'
+import { useEffect, useRef, useState, type RefObject } from 'react'
 import { ExpandCropPostImageBlock } from '@/components/ExpandCropPostImageBlock'
 import { SelectCropPostImagesBlock } from '@/components/SelectCropPostImagesBlock'
 import { AspectRatio, PostFile } from '@/features/createPost'
+import { CropImage, type CropStepApi } from './CropImage/CropImage'
 import s from './CropStep.module.scss'
+
+export type { CropStepApi } from './CropImage/CropImage'
 
 type CropStepProps = {
   currentFileIndex: number
@@ -18,6 +15,7 @@ type CropStepProps = {
   deleteFile: (fileId: string) => void
   setAsCurrentFile: (index: number) => void
   addImage: () => void
+  apiRef?: RefObject<CropStepApi | null>
 }
 
 export const CropStep = ({
@@ -27,20 +25,21 @@ export const CropStep = ({
   deleteFile,
   addImage,
   setAsCurrentFile,
+  apiRef,
 }: CropStepProps) => {
   const [isSelectImagesOpen, setIsSelectImagesOpen] = useState(false)
-  const [isExpandImageOpen, seIsExpandImageOpen] = useState(false)
-  console.log(files[currentFileIndex])
+  const [isExpandImageOpen, setIsExpandImageOpen] = useState(false)
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState<AspectRatio>(AspectRatio.SQUARE)
+
   const selectImagesRef = useRef<HTMLDivElement>(null)
   const expandImageRef = useRef<HTMLDivElement>(null)
 
-  const imageUrl = URL.createObjectURL(files[currentFileIndex].file)
+  const currentFile = files[currentFileIndex]
+  const imageUrl = currentFile.url
 
   const openExpandImageMenuHandler = () => {
-    seIsExpandImageOpen(prev => !prev)
+    setIsExpandImageOpen(prev => !prev)
   }
-
-  const openMaximizeImageSliderHandler = () => console.log('openMaximizeImageSliderHandler')
 
   const openSelectImageMenuHandler = () => {
     setIsSelectImagesOpen(prev => !prev)
@@ -48,14 +47,21 @@ export const CropStep = ({
 
   const onAddImageHandler = () => {
     addImage()
-    setIsSelectImagesOpen(false) // delete later
-    console.log('onAddImageHandler')
   }
 
   const onSelectAspectRatioHandler = (aspectRatio: AspectRatio) => {
-    seIsExpandImageOpen(false) // delete later
-    console.log('onSelectAspectRatioHandler:', aspectRatio)
+    setSelectedAspectRatio(aspectRatio)
+    setIsExpandImageOpen(false)
   }
+
+  const aspectMap: Record<AspectRatio, number> = {
+    [AspectRatio.ORIGINAL]: 1, // здесь позже надо определить реальное соотношение картинки
+    [AspectRatio.SQUARE]: 1,
+    [AspectRatio.PORTRAIT]: 4 / 5,
+    [AspectRatio.WIDESCREEN]: 16 / 9,
+  }
+
+  const aspect = aspectMap[selectedAspectRatio]
 
   const handleSelectCropPostImagesBlockClickOutside = (event: MouseEvent) => {
     if (selectImagesRef.current && !selectImagesRef.current.contains(event.target as Node)) {
@@ -65,13 +71,14 @@ export const CropStep = ({
 
   const handleExpandImageBlockClickOutside = (event: MouseEvent) => {
     if (expandImageRef.current && !expandImageRef.current.contains(event.target as Node)) {
-      seIsExpandImageOpen(false)
+      setIsExpandImageOpen(false)
     }
   }
 
   useEffect(() => {
     if (!isSelectImagesOpen) return
     document.addEventListener('mousedown', handleSelectCropPostImagesBlockClickOutside)
+
     return () => {
       document.removeEventListener('mousedown', handleSelectCropPostImagesBlockClickOutside)
     }
@@ -80,66 +87,58 @@ export const CropStep = ({
   useEffect(() => {
     if (!isExpandImageOpen) return
     document.addEventListener('mousedown', handleExpandImageBlockClickOutside)
+
     return () => {
       document.removeEventListener('mousedown', handleExpandImageBlockClickOutside)
     }
   }, [isExpandImageOpen])
-  console.log(files[currentFileIndex])
+
   return (
     <div className={s.imageContent}>
-      <img src={imageUrl} alt={'Crop preview'} className={s.imageItem} />
-      <Button className={clsx(s.iconButton, s.expandButton)} onClick={openExpandImageMenuHandler}>
-        <ExpandOutline
-          size={36}
-          backgroundColor={'var(--color-dark-500)'}
-          svgProps={{
-            className: s.icon,
-          }}
-        />
-      </Button>
-      <Button
-        className={clsx(s.iconButton, s.maximizeButton)}
-        onClick={openMaximizeImageSliderHandler}
+      <CropImage
+        key={currentFile.id}
+        imageUrl={imageUrl}
+        fileId={currentFile.id}
+        aspect={aspect}
+        updateCroppedFile={updateCroppedFile}
+        apiRef={apiRef}
       >
-        <MaximizeOutline
-          size={36}
-          backgroundColor={'var(--color-dark-500)'}
-          svgProps={{
-            className: s.icon,
-          }}
-        />
-      </Button>
-      <Button className={clsx(s.iconButton, s.imageButton)} onClick={openSelectImageMenuHandler}>
-        <ImageOutline
-          size={36}
-          backgroundColor={'var(--color-dark-500)'}
-          svgProps={{
-            className: s.icon,
-          }}
-        />
-      </Button>
+        <Button className={clsx(s.iconButton, s.expandButton)} onClick={openExpandImageMenuHandler}>
+          <ExpandOutline
+            size={36}
+            backgroundColor={'var(--color-dark-500)'}
+            svgProps={{
+              className: s.icon,
+            }}
+          />
+        </Button>
+        <Button className={clsx(s.iconButton, s.imageButton)} onClick={openSelectImageMenuHandler}>
+          <ImageOutline
+            size={36}
+            backgroundColor={'var(--color-dark-500)'}
+            svgProps={{
+              className: s.icon,
+            }}
+          />
+        </Button>
 
-      <ExpandCropPostImageBlock
-        ref={expandImageRef}
-        isOpen={isExpandImageOpen}
-        onSelectAspectRatio={onSelectAspectRatioHandler}
-      />
+        <ExpandCropPostImageBlock
+          ref={expandImageRef}
+          isOpen={isExpandImageOpen}
+          selectedAspectRatio={selectedAspectRatio}
+          onSelectAspectRatio={onSelectAspectRatioHandler}
+        />
 
-      <SelectCropPostImagesBlock
-        ref={selectImagesRef}
-        currentFileIndex={currentFileIndex}
-        files={files}
-        isOpen={isSelectImagesOpen}
-        onAddImage={onAddImageHandler}
-        setAsCurrentFile={setAsCurrentFile}
-        deleteFile={deleteFile}
-      />
+        <SelectCropPostImagesBlock
+          ref={selectImagesRef}
+          currentFileIndex={currentFileIndex}
+          files={files}
+          isOpen={isSelectImagesOpen}
+          onAddImage={onAddImageHandler}
+          setAsCurrentFile={setAsCurrentFile}
+          deleteFile={deleteFile}
+        />
+      </CropImage>
     </div>
   )
 }
-
-// To start cropping the image, access the file you want to crop inside CropStep:
-// const currentFile = files[currentFileIndex]  =>  { file: {}, id: string, url: string }
-//
-// After cropping set updated cropped file back to the CreatePostModal state:
-// updateCroppedFile(fileId, File)

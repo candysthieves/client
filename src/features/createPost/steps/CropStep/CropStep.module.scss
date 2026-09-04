@@ -54,12 +54,6 @@
   @include bottom-left(0.75rem);
 }
 
-.maximizeButton {
-  position: absolute;
-
-  @include bottom-left(0.75rem, 4.375rem);
-}
-
 .imageButton {
   position: absolute;
 

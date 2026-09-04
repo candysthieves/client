@@ -6,6 +6,7 @@ type CreatePostModalHeaderProps = {
   step: CreatePostStep
   onChangeStepClick: (step: CreatePostStep) => void
   onPublishClick: () => void
+  onCropNextClick: () => void
   isPublishing?: boolean
 }
 
@@ -13,6 +14,7 @@ export const CreatePostModalHeader = ({
   step,
   onChangeStepClick,
   onPublishClick,
+  onCropNextClick,
   isPublishing,
 }: CreatePostModalHeaderProps) => {
   const renderContent = () => {
@@ -30,7 +32,7 @@ export const CreatePostModalHeader = ({
             headerTitle={'Cropping'}
             buttonTitle={'Next'}
             onPrevClick={() => onChangeStepClick('upload')}
-            onNextClick={() => onChangeStepClick('publication')}
+            onNextClick={onCropNextClick}
           />
         )
 

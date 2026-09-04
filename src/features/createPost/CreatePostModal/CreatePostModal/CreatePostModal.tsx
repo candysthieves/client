@@ -2,7 +2,7 @@
 
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { ToastError, ToastSuccess } from '@/components'
 import {
   ConfirmCloseCreatePostModal,
@@ -11,7 +11,7 @@ import {
 import { useAuth } from '@/lib/hooks/useAuth'
 import { useAddPost } from '@/lib/posts'
 import { clearPostDraft, loadPostDraft, savePostDraft } from '@/lib/utils'
-import { CropStep, PublicationStep, UploadStep } from '../../steps'
+import { CropStep, CropStepApi, PublicationStep, UploadStep } from '../../steps'
 import { AddPostState, CreatePostStep, Location } from '../../types'
 import s from './CreatePostModal.module.scss'
 
@@ -35,6 +35,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const [state, setState] = useState<AddPostState>(initialCreatePostState)
   const [isCreationOpen, setIsCreationOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const cropStepApiRef = useRef<CropStepApi | null>(null)
 
   const closeCreationModal = () => setIsCreationOpen(false)
   const openConfirm = () => setIsConfirmOpen(true)
@@ -166,6 +167,11 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
     }))
   }
 
+  const handleCropStepNext = async () => {
+    await cropStepApiRef.current?.applyCrop()
+    changeStep('publication')
+  }
+
   // Publication add description
   const handleDescriptionChange = (description: string) => {
     setState(prev => ({
@@ -272,6 +278,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
             deleteFile={handleDeleteFile}
             setAsCurrentFile={setCurrentFileIndex}
             addImage={addImageHandler}
+            apiRef={cropStepApiRef}
           />
         )
 
@@ -294,6 +301,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       step={state.step}
       onChangeStepClick={changeStep}
       onPublishClick={handlePublish}
+      onCropNextClick={handleCropStepNext}
       isPublishing={isPublishing}
     />
   )

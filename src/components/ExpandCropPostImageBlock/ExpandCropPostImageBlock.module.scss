@@ -17,8 +17,7 @@
   @include bottom-left(3.125rem, 0.75rem);
 
   @include media-tablet {
-    max-width: 15.25rem;
-    height: 5rem;
+    height: auto;
   }
 }
 
@@ -65,6 +64,10 @@
   @extend %shape;
 
   @include width-height(1.625rem, 1.25rem);
+}
+
+.activeShape {
+  border-color: var(--color-light-100);
 }
 
 .originalButton {

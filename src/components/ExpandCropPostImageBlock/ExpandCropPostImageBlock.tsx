@@ -6,18 +6,23 @@ import s from './ExpandCropPostImageBlock.module.scss'
 type ExpandCropPostImageBlockProps = {
   isOpen: boolean
   ref?: Ref<HTMLDivElement>
+  selectedAspectRatio: AspectRatio
   onSelectAspectRatio: (aspectRatio: AspectRatio) => void
 }
 
 export const ExpandCropPostImageBlock = ({
   isOpen,
   ref,
+  selectedAspectRatio,
   onSelectAspectRatio,
 }: ExpandCropPostImageBlockProps) => {
   const onSelectAspectRatioHandler = (aspectRatio: AspectRatio) => {
     // add logic if needed
     onSelectAspectRatio(aspectRatio)
   }
+
+  const getLabelColor = (aspectRatio: AspectRatio) =>
+    selectedAspectRatio === aspectRatio ? 'var(--color-light-100)' : 'var(--color-light-900)'
 
   return (
     <>
@@ -27,12 +32,16 @@ export const ExpandCropPostImageBlock = ({
             className={clsx(s.iconButton, s.originalButton)}
             onClick={() => onSelectAspectRatioHandler(AspectRatio.ORIGINAL)}
           >
-            <Typography variant={'h3'} color={'var(--color-light-900)'} className={s.buttonTitle}>
+            <Typography
+              variant={'h3'}
+              color={getLabelColor(AspectRatio.ORIGINAL)}
+              className={s.buttonTitle}
+            >
               Original
             </Typography>
             <ImageOutline
               size={24}
-              color={'var(--color-light-900)'}
+              color={getLabelColor(AspectRatio.ORIGINAL)}
               svgProps={{
                 className: s.originalButtonIcon,
               }}
@@ -43,30 +52,45 @@ export const ExpandCropPostImageBlock = ({
             className={s.iconButton}
             onClick={() => onSelectAspectRatioHandler(AspectRatio.SQUARE)}
           >
-            <Typography variant={'h3'} color={'var(--color-light-900)'}>
+            <Typography variant={'h3'} color={getLabelColor(AspectRatio.SQUARE)}>
               1:1
             </Typography>
-            <div className={s.square}></div>
+            <div
+              className={clsx(
+                s.square,
+                selectedAspectRatio === AspectRatio.SQUARE && s.activeShape
+              )}
+            ></div>
           </Button>
 
           <Button
             className={s.iconButton}
             onClick={() => onSelectAspectRatioHandler(AspectRatio.PORTRAIT)}
           >
-            <Typography variant={'h3'} color={'var(--color-light-900)'}>
+            <Typography variant={'h3'} color={getLabelColor(AspectRatio.PORTRAIT)}>
               4:5
             </Typography>
-            <div className={s.portrait}></div>
+            <div
+              className={clsx(
+                s.portrait,
+                selectedAspectRatio === AspectRatio.PORTRAIT && s.activeShape
+              )}
+            ></div>
           </Button>
 
           <Button
             className={s.iconButton}
             onClick={() => onSelectAspectRatioHandler(AspectRatio.WIDESCREEN)}
           >
-            <Typography variant={'h3'} color={'var(--color-light-900)'}>
+            <Typography variant={'h3'} color={getLabelColor(AspectRatio.WIDESCREEN)}>
               16:9
             </Typography>
-            <div className={s.widescreen}></div>
+            <div
+              className={clsx(
+                s.widescreen,
+                selectedAspectRatio === AspectRatio.WIDESCREEN && s.activeShape
+              )}
+            ></div>
           </Button>
         </Cards>
       )}

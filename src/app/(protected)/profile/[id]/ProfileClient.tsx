@@ -3,12 +3,12 @@
 import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import type { Post } from '@/mocks/posts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
 import { CreatePostModal } from '@/features/createPost'
-import { useAuth } from '@/lib/hooks/useAuth'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
-import { usePosts } from '@/lib/posts'
+import { useProfile, useProfilePosts } from '@/lib/profile'
 import { PostsFeed } from './PostsFeed'
 import s from './ProfileClient.module.scss'
 import { ProfileSkeleton } from './ProfileSkeleton'
@@ -22,16 +22,19 @@ type ProfileClientProps = {
 export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const router = useRouter()
   const isMobile = useIsMobileViewport()
-  const { user } = useAuth()
-  const { data: posts = [], isLoading } = usePosts()
-  const profilePosts = posts
-    .filter(post => post.userId === userId)
-    .sort(
-      (firstPost, secondPost) => Date.parse(secondPost.createdAt) - Date.parse(firstPost.createdAt)
-    )
-    .slice(0, 8)
-  const profileName = profilePosts[0]?.userName ?? userId
-  const isOwner = user?.id === userId
+  const { data: profile, isLoading: isProfileLoading } = useProfile(userId)
+  const { data: profilePostsResponse, isLoading: arePostsLoading } = useProfilePosts(userId)
+  const profilePosts: Post[] = (profilePostsResponse?.items ?? []).map(post => ({
+    postId: post.id,
+    description: post.description,
+    images: post.images,
+    preview: post.preview,
+    userId,
+    userName: profile?.username ?? userId,
+    createdAt: post.createdAt,
+    willBeDeletedIn: post.willBeDeleted ? new Date(post.willBeDeleted) : null,
+  }))
+  const isOwner = profile?.isOwner ?? false
 
   const selectedPost = profilePosts.find(post => post.postId === postId)
   const selectedIndex = selectedPost
@@ -40,7 +43,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const showCreateModal = !postId && action === 'create'
   const handleClosePost = () => router.replace(`/profile/${userId}`)
 
-  if (isLoading) {
+  if (isProfileLoading || arePostsLoading) {
     return <ProfileSkeleton />
   }
 
@@ -48,7 +51,13 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     <>
       <div className={s.profile}>
         <section className={s.profileHeader} aria-labelledby={'profile-name'}>
-          <MainAvatar className={s.profileAvatar} userName={profileName} size={'xxl'} delayMs={0} />
+          <MainAvatar
+            className={s.profileAvatar}
+            userName={profile?.username ?? userId}
+            src={profile?.avatarPreviewUrl.url}
+            size={'xxl'}
+            delayMs={0}
+          />
 
           <div className={s.profileInfo}>
             <Typography
@@ -57,7 +66,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
               color={'white'}
               variant={'h1'}
             >
-              {profileName}
+              {profile?.username ?? userId}
             </Typography>
 
             {isOwner && (
@@ -74,13 +83,13 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             <dl className={s.stats}>
               <div className={s.stat}>
                 <dt className={s.statLabel}>Publications</dt>
-                <dd className={s.statValue}>{profilePosts.length}</dd>
+                <dd className={s.statValue}>{profile?.publicationsCount ?? 0}</dd>
               </div>
             </dl>
 
             <p className={s.about}>
               <span className={s.aboutLabel}>About me</span>
-              This profile shares photos and stories with the community.
+              {profile?.description ?? ''}
             </p>
           </div>
         </section>

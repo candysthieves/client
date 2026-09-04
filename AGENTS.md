@@ -32,7 +32,10 @@ Before changing Next.js APIs, routing, metadata, configuration, or file structur
 - Flag raw numeric values that encode a UI collection count, display limit, or pagination limit. Define a clearly named
   constant near its consumer instead; do not introduce a limit when the backend already owns the result set.
 - Before adding local SCSS dimensions or basic transitions, check the shared mixins and variables. Reuse `content` and
-  `transition-basic` when they fit; flag duplicate `width`/`max-width` pairs and transition timing declarations in review.
+  `transition-basic` when they fit; use `width-height` for paired dimensions. Flag duplicate dimensions and transition
+  timing declarations in review.
+- For responsive UI, use only the shared `media-desktop`, `media-tablet`, and `media-mobile` mixins. Flag local numeric
+  media queries and `next/image` `sizes` strings that use breakpoints outside that shared set.
 
 ## External Tools
 

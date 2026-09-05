@@ -9,6 +9,7 @@ export const PostFileSchema = z.object({
   id: z.string(),
   file: z.instanceof(File),
   url: z.url(),
+  originalUrl: z.url(),
 })
 
 export const DraftPostFileSchema = z.object({

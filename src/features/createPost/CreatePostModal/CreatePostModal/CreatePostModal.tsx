@@ -2,7 +2,7 @@
 
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { ToastError, ToastSuccess } from '@/components'
 import {
   ConfirmCloseCreatePostModal,
@@ -11,7 +11,7 @@ import {
 import { useAuth } from '@/lib/hooks/useAuth'
 import { useAddPost } from '@/lib/posts'
 import { clearPostDraft, loadPostDraft, savePostDraft } from '@/lib/utils'
-import { CropStep, PublicationStep, UploadStep } from '../../steps'
+import { CropStep, CropStepApi, PublicationStep, UploadStep } from '../../steps'
 import { AddPostState, CreatePostStep, Location } from '../../types'
 import s from './CreatePostModal.module.scss'
 
@@ -35,6 +35,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const [state, setState] = useState<AddPostState>(initialCreatePostState)
   const [isCreationOpen, setIsCreationOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const cropStepApiRef = useRef<CropStepApi | null>(null)
 
   const closeCreationModal = () => setIsCreationOpen(false)
   const openConfirm = () => setIsConfirmOpen(true)
@@ -81,6 +82,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
         {
           file,
           url,
+          originalUrl: url,
           id: crypto.randomUUID(),
         },
       ],
@@ -95,17 +97,24 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       const fileIndex = prev.files.findIndex(file => file.id === fileId)
       if (fileIndex === -1) return prev
 
-      URL.revokeObjectURL(prev.files[fileIndex].url)
+      const currentFile = prev.files[fileIndex]
+      const newUrl = URL.createObjectURL(newFile)
 
-      const updatedFile = {
-        ...prev.files[fileIndex],
-        file: newFile,
-        url: URL.createObjectURL(newFile),
+      if (currentFile.url !== currentFile.originalUrl) {
+        URL.revokeObjectURL(currentFile.url)
       }
 
       return {
         ...prev,
-        files: prev.files.map((file, index) => (index === fileIndex ? updatedFile : file)),
+        files: prev.files.map((file, index) =>
+          index === fileIndex
+            ? {
+                ...file,
+                file: newFile,
+                url: newUrl,
+              }
+            : file
+        ),
       }
     })
   }
@@ -116,7 +125,13 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       const fileIndex = prev.files.findIndex(file => file.id === fileId)
       if (fileIndex === -1) return prev
 
-      URL.revokeObjectURL(prev.files[fileIndex].url)
+      const fileToDelete = prev.files[fileIndex]
+
+      URL.revokeObjectURL(fileToDelete.url)
+      if (fileToDelete.originalUrl !== fileToDelete.url) {
+        URL.revokeObjectURL(fileToDelete.originalUrl)
+      }
+
       const newFiles = prev.files.filter(file => file.id !== fileId)
 
       let newCurrentFileIndex = prev.currentFileIndex
@@ -164,6 +179,11 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       ...prev,
       step,
     }))
+  }
+
+  const handleCropStepNext = async () => {
+    await cropStepApiRef.current?.applyCrop()
+    changeStep('publication')
   }
 
   // Publication add description
@@ -272,6 +292,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
             deleteFile={handleDeleteFile}
             setAsCurrentFile={setCurrentFileIndex}
             addImage={addImageHandler}
+            apiRef={cropStepApiRef}
           />
         )
 
@@ -294,6 +315,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       step={state.step}
       onChangeStepClick={changeStep}
       onPublishClick={handlePublish}
+      onCropNextClick={handleCropStepNext}
       isPublishing={isPublishing}
     />
   )

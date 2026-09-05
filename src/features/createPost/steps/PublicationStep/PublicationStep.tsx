@@ -7,6 +7,7 @@ import {
 } from '@candy.thieves/ui-kit-lumos'
 import { useRef, useState } from 'react'
 import { LocationInput } from '@/components/LocationInput'
+import { MAX_POST_DESCRIPTION_LENGTH } from '@/constants'
 import { Location, PostFile } from '@/features/createPost/types'
 import { usePostEvents } from '@/lib/hooks'
 import { UserResponse } from '@/lib/model'
@@ -23,8 +24,6 @@ type PublicationStepProps = {
   onPostCreated: (postId: string) => void
   isPublishing?: boolean
 }
-
-const MAX_DESCRIPTION_LENGTH = 500
 
 export const PublicationStep = ({
   user,
@@ -50,7 +49,7 @@ export const PublicationStep = ({
   })
 
   const handleDescriptionChange = (value: string) => {
-    if (value.length > MAX_DESCRIPTION_LENGTH) {
+    if (value.length > MAX_POST_DESCRIPTION_LENGTH) {
       setIsTextError(true)
       return
     }
@@ -62,7 +61,7 @@ export const PublicationStep = ({
     descriptionRef.current = value
 
     if (counterRef.current) {
-      counterRef.current.textContent = `${value.length}/${MAX_DESCRIPTION_LENGTH}`
+      counterRef.current.textContent = `${value.length}/${MAX_POST_DESCRIPTION_LENGTH}`
     }
   }
 
@@ -94,7 +93,7 @@ export const PublicationStep = ({
             onChange={event => handleDescriptionChange(event.target.value)}
             onBlur={handleDescriptionBlur}
             placeholder={'Add publication description'}
-            maxLength={MAX_DESCRIPTION_LENGTH + 1}
+            maxLength={MAX_POST_DESCRIPTION_LENGTH + 1}
             disabled={isPublishing}
           />
 
@@ -105,7 +104,7 @@ export const PublicationStep = ({
             className={s.textCounter}
             mt={'0.5rem'}
           >
-            {description.length}/{MAX_DESCRIPTION_LENGTH}
+            {description.length}/{MAX_POST_DESCRIPTION_LENGTH}
           </Typography>
         </div>
 

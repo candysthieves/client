@@ -50,7 +50,6 @@ export const CropStep = ({
   const onAddImageHandler = () => {
     addImage()
     setIsSelectImagesOpen(false) // delete later
-    console.log('onAddImageHandler')
   }
 
   const onSelectAspectRatioHandler = (aspectRatio: AspectRatio) => {

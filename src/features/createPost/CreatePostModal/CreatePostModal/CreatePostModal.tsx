@@ -209,6 +209,10 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
   const handleOutsideClick = (event: Event) => {
     event.preventDefault()
+    if (isPublishing) {
+      return
+    }
+
     openConfirm()
   }
 
@@ -317,6 +321,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
             onDescriptionChange={handleDescriptionChange}
             onLocationChange={onLocationChange}
             onPostCreated={handlePostCreated}
+            isPublishing={isPublishing}
           />
         )
     }

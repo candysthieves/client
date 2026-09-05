@@ -17,16 +17,22 @@ export const ModalHeader = ({
   onNextClick,
   isPublishing,
 }: ModalHeaderProps) => {
+  console.log('isPublishing', isPublishing)
   return (
     <div className={s.postControlsHeader}>
-      <Button as={'a'} className={clsx(s.arrowButton, s.button)} onClick={onPrevClick}>
+      <Button
+        as={'button'}
+        className={clsx(s.arrowButton, s.button)}
+        onClick={onPrevClick}
+        disabled={isPublishing}
+      >
         <ArrowIosBack />
       </Button>
       <Typography variant={'h1'} color={'var(--color-light-100)'}>
         {headerTitle}
       </Typography>
       <Button
-        as={'a'}
+        as={'button'}
         className={clsx('typography-subtitle2', s.button, s.actionButton)}
         onClick={onNextClick}
         disabled={isPublishing}

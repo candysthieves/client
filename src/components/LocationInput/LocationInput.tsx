@@ -14,6 +14,7 @@ type LocationInputProps = {
   maxLocations: number
   initialLocations: Location[]
   onLocationChange: (value: Location[]) => void
+  isPublishing?: boolean
 }
 
 const LOCATION_INPUT_DEBOUNCE_DELAY = 1000
@@ -22,6 +23,7 @@ export const LocationInput = ({
   maxLocations,
   initialLocations,
   onLocationChange,
+  isPublishing,
 }: LocationInputProps) => {
   const [locations, setLocations] = useState<Location[]>(initialLocations)
   const [inputValue, setInputValue] = useState('')
@@ -185,7 +187,7 @@ export const LocationInput = ({
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        disabled={locations.length >= maxLocations && !editingId}
+        disabled={isPublishing || (locations.length >= maxLocations && !editingId)}
         endAdornment={<PinOutline size={24} />}
       />
 

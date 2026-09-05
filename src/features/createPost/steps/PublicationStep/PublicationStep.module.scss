@@ -3,6 +3,7 @@
 .publicationContent {
   @include flex(flex, flex-start, flex-start);
 
+  position: relative;
   flex-flow: row nowrap;
 
   @include media-tablet {
@@ -53,4 +54,10 @@
 
 .locationBlock {
   @extend %publication;
+}
+
+.loadSpinner {
+  position: absolute;
+
+  @include top-left(50%);
 }

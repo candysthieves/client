@@ -1,4 +1,10 @@
-import { Avatar, Carousel, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
+import {
+  Avatar,
+  Carousel,
+  CircularProgress,
+  TextArea,
+  Typography,
+} from '@candy.thieves/ui-kit-lumos'
 import { useRef, useState } from 'react'
 import { LocationInput } from '@/components/LocationInput'
 import { Location } from '@/features/createPost/types'
@@ -14,6 +20,7 @@ type PublicationStepProps = {
   onDescriptionChange: (value: string) => void
   onLocationChange: (value: Location[]) => void
   onPostCreated: (postId: string) => void
+  isPublishing?: boolean
 }
 
 const MAX_DESCRIPTION_LENGTH = 500
@@ -26,6 +33,7 @@ export const PublicationStep = ({
   onDescriptionChange,
   onLocationChange,
   onPostCreated,
+  isPublishing,
 }: PublicationStepProps) => {
   const descriptionRef = useRef(description)
   const counterRef = useRef<HTMLDivElement | null>(null)
@@ -85,6 +93,7 @@ export const PublicationStep = ({
             onBlur={handleDescriptionBlur}
             placeholder={'Add publication description'}
             maxLength={MAX_DESCRIPTION_LENGTH + 1}
+            disabled={isPublishing}
           />
 
           <Typography
@@ -103,9 +112,11 @@ export const PublicationStep = ({
             maxLocations={maxLocations}
             initialLocations={locations}
             onLocationChange={onLocationChange}
+            isPublishing={isPublishing}
           />
         </div>
       </div>
+      {isPublishing && <CircularProgress size={'lg'} color={'success'} className={s.loadSpinner} />}
     </div>
   )
 }

@@ -34,6 +34,10 @@ export const AddPostRequestSchema = z.object({
   locations: z.array(LocationSchema),
 })
 
+export const AddPostResponseSchema = z.object({
+  postId: z.string(),
+})
+
 export const postImageSchema = z
   .instanceof(File)
   .refine(
@@ -41,3 +45,10 @@ export const postImageSchema = z
     'Only PNG and JPEG images are allowed'
   )
   .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 500 kB')
+
+export const PostCreatedEventSchema = z.object({
+  type: z.literal('post-created'),
+  data: z.object({
+    postId: z.string(),
+  }),
+})

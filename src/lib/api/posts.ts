@@ -1,5 +1,5 @@
 import type { Post } from '@/mocks/posts'
-import { AddPostRequest } from '@/features/createPost'
+import { AddPostRequest, AddPostResponse } from '@/features/createPost'
 import { request } from '@/lib/api/request'
 
 // TEMPORARY
@@ -44,7 +44,7 @@ async function apiClient<T>(endpoint: string, options: RequestInit = {}): Promis
   return response.json()
 }
 
-export const addPost = async (data: AddPostRequest) => {
+export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> => {
   const formData = new FormData()
 
   formData.append('description', data.description)
@@ -53,7 +53,7 @@ export const addPost = async (data: AddPostRequest) => {
   })
   formData.append('locations', JSON.stringify(data.locations))
 
-  return request<void>('/posts', {
+  return request<AddPostResponse>('/posts', {
     method: 'POST',
     body: formData,
   })

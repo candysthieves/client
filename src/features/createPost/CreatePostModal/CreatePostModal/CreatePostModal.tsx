@@ -2,12 +2,13 @@
 
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { ToastError, ToastSuccess, ToastWarning } from '@/components'
 import {
   ConfirmCloseCreatePostModal,
   CreatePostModalHeader,
 } from '@/features/createPost/CreatePostModal'
+import { usePostEvents } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { postImageSchema } from '@/lib/model'
 import { useAddPost } from '@/lib/posts'
@@ -36,6 +37,9 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const [state, setState] = useState<AddPostState>(initialCreatePostState)
   const [isCreationOpen, setIsCreationOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const isPublishing = isPending || isProcessing
+  const publishingPostIdRef = useRef<null | string>(null)
 
   const closeCreationModal = () => setIsCreationOpen(false)
   const openConfirm = () => setIsConfirmOpen(true)
@@ -236,6 +240,32 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
     }
   }
 
+  const handlePostCreated = useCallback(
+    (postId: string) => {
+      console.log('handlePostCreated returned postId', postId)
+      if (postId !== publishingPostIdRef.current) {
+        return
+      }
+
+      publishingPostIdRef.current = null
+      setIsProcessing(false)
+
+      ToastSuccess({
+        title: 'Success!',
+        message: 'Your post has been published',
+      })
+
+      clearPostDraft()
+      closeCreation()
+    },
+    [closeCreation]
+  )
+
+  // SSE Listener hook:
+  usePostEvents({
+    onPostCreated: handlePostCreated,
+  })
+
   const handlePublish = useCallback(() => {
     // Prepare data to send
     const postData = {
@@ -245,13 +275,15 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
     }
 
     addPost(postData, {
-      onSuccess: () => {
-        ToastSuccess({
-          title: 'Success!',
-          message: 'Your post has been published',
-        })
-        closeCreation()
-        clearPostDraft()
+      onSuccess: ({ postId }) => {
+        // ToastSuccess({
+        //   title: 'Success!',
+        //   message: 'Your post has been published',
+        // })
+        // closeCreation()
+        // clearPostDraft()
+        publishingPostIdRef.current = postId
+        setIsProcessing(true)
       },
       onError: error => {
         ToastError({
@@ -260,7 +292,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
         })
       },
     })
-  }, [state, addPost, closeCreation])
+  }, [state, addPost])
 
   const renderStep = () => {
     switch (state.step) {
@@ -305,7 +337,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       step={state.step}
       onChangeStepClick={changeStep}
       onPublishClick={handlePublish}
-      isPublishing={isPending}
+      isPublishing={isPublishing}
     />
   )
 

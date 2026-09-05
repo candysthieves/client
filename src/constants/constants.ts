@@ -6,4 +6,4 @@ export const NEXT_PUBLIC_RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_
 
 export const POST_DRAFT_LS_KEY = 'postDraft'
 export const FILES_UPLOAD_LIMIT = 3
-export const MAX_FILE_SIZE = 0.5 * 1024 * 1024
+export const MAX_FILE_SIZE = 0.3 * 1024 * 1024

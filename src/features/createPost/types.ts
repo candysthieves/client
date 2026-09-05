@@ -1,9 +1,11 @@
 import z from 'zod'
 import {
   AddPostRequestSchema,
+  AddPostResponseSchema,
   AddPostStateSchema,
   DraftPostFileSchema,
   LocationSchema,
+  PostCreatedEventSchema,
   PostFileSchema,
 } from '@/lib/model'
 
@@ -34,6 +36,10 @@ export type AddPostRequest = z.infer<typeof AddPostRequestSchema>
 //   description: string
 //   locations: Location[]
 // }
+export type AddPostResponse = z.infer<typeof AddPostResponseSchema>
+// {
+//   "postId": string
+// }
 
 export enum AspectRatio {
   ORIGINAL = 'original', // original
@@ -41,3 +47,5 @@ export enum AspectRatio {
   SQUARE = 'square', // 1:1
   WIDESCREEN = 'widescreen', // 16:9
 }
+
+export type PostCreatedEvent = z.infer<typeof PostCreatedEventSchema>

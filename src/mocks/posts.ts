@@ -100,6 +100,29 @@ export const mockPosts: Post[] = [
     createdAt: 'yesterday',
     willBeDeletedIn: null,
   },
+  {
+    postId: '4',
+    description: 'Coffee and a good book on a rainy afternoon.',
+    images: [
+      {
+        url: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=1080&h=1080&auto=format&fit=crop',
+        width: 1080,
+        height: 1080,
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1000&h=1250&auto=format&fit=crop',
+        width: 1000,
+        height: 1250,
+      },
+    ],
+    preview: {
+      url: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=296&h=296&auto=format&fit=crop',
+    },
+    userId: 'user-4',
+    userName: 'sarah_connor',
+    createdAt: '8 hours ago',
+    willBeDeletedIn: null,
+  },
 ]
 
 export const mockComments: Comment[] = [

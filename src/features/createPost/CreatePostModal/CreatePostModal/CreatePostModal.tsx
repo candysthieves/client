@@ -261,11 +261,6 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
     [closeCreation]
   )
 
-  // SSE Listener hook:
-  usePostEvents({
-    onPostCreated: handlePostCreated,
-  })
-
   const handlePublish = useCallback(() => {
     // Prepare data to send
     const postData = {
@@ -276,12 +271,6 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
     addPost(postData, {
       onSuccess: ({ postId }) => {
-        // ToastSuccess({
-        //   title: 'Success!',
-        //   message: 'Your post has been published',
-        // })
-        // closeCreation()
-        // clearPostDraft()
         publishingPostIdRef.current = postId
         setIsProcessing(true)
       },
@@ -327,6 +316,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
             locations={state.locations}
             onDescriptionChange={handleDescriptionChange}
             onLocationChange={onLocationChange}
+            onPostCreated={handlePostCreated}
           />
         )
     }

@@ -2,6 +2,7 @@ import { Avatar, Carousel, TextArea, Typography } from '@candy.thieves/ui-kit-lu
 import { useRef, useState } from 'react'
 import { LocationInput } from '@/components/LocationInput'
 import { Location } from '@/features/createPost/types'
+import { usePostEvents } from '@/lib/hooks'
 import { UserResponse } from '@/lib/model'
 import s from './PublicationStep.module.scss'
 
@@ -12,6 +13,7 @@ type PublicationStepProps = {
   locations: Location[]
   onDescriptionChange: (value: string) => void
   onLocationChange: (value: Location[]) => void
+  onPostCreated: (postId: string) => void
 }
 
 const MAX_DESCRIPTION_LENGTH = 500
@@ -23,6 +25,7 @@ export const PublicationStep = ({
   locations,
   onDescriptionChange,
   onLocationChange,
+  onPostCreated,
 }: PublicationStepProps) => {
   const descriptionRef = useRef(description)
   const counterRef = useRef<HTMLDivElement | null>(null)
@@ -30,6 +33,11 @@ export const PublicationStep = ({
 
   const userName = user?.username || 'user'
   const maxLocations = fileUrls.length
+
+  // SSE Listener hook (for Publishing created post):
+  usePostEvents({
+    onPostCreated,
+  })
 
   const handleDescriptionChange = (value: string) => {
     if (value.length > MAX_DESCRIPTION_LENGTH) {

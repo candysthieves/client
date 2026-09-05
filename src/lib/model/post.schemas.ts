@@ -47,8 +47,5 @@ export const postImageSchema = z
   .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 500 kB')
 
 export const PostCreatedEventSchema = z.object({
-  type: z.literal('post-created'),
-  data: z.object({
-    postId: z.string(),
-  }),
+  postId: z.string(),
 })

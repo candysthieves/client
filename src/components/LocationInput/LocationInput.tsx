@@ -6,11 +6,12 @@ import {
   PinOutline,
   Typography,
 } from '@candy.thieves/ui-kit-lumos'
-import { ChangeEvent, KeyboardEvent, useRef, useState, useEffect } from 'react'
-import { Location } from '@/features/createPost'
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { Location, PostFile } from '@/features/createPost'
 import s from './LocationInput.module.scss'
 
 type LocationInputProps = {
+  files: PostFile[]
   maxLocations: number
   initialLocations: Location[]
   onLocationChange: (value: Location[]) => void
@@ -20,6 +21,7 @@ type LocationInputProps = {
 const LOCATION_INPUT_DEBOUNCE_DELAY = 1000
 
 export const LocationInput = ({
+  files,
   maxLocations,
   initialLocations,
   onLocationChange,
@@ -33,11 +35,6 @@ export const LocationInput = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
 
-  // // Отправка изменений в родительский компонент
-  // useEffect(() => {
-  //   onLocationChange(locations)
-  // }, [locations, onLocationChange])
-
   const updateLocations = (nextLocations: Location[]) => {
     setLocations(nextLocations)
     onLocationChange(nextLocations)
@@ -50,7 +47,7 @@ export const LocationInput = ({
         const newAddress = inputValue.trim()
         if (newAddress) {
           const nextLocations = locations.map(location =>
-            location.id === editingId ? { ...location, address: newAddress } : location
+            location.fileId === editingId ? { ...location, address: newAddress } : location
           )
 
           updateLocations(nextLocations)
@@ -77,7 +74,7 @@ export const LocationInput = ({
 
       if (newAddress) {
         const nextLocations = locations.map(location =>
-          location.id === editingId ? { ...location, address: newAddress } : location
+          location.fileId === editingId ? { ...location, address: newAddress } : location
         )
 
         updateLocations(nextLocations)
@@ -108,7 +105,7 @@ export const LocationInput = ({
     }
 
     // If the limit is reached, do not add new location
-    if (locations.length >= maxLocations) {
+    if (locations.length >= Math.min(maxLocations, files.length)) {
       return
     }
 
@@ -121,10 +118,17 @@ export const LocationInput = ({
       )
 
       if (!isDuplicate) {
+        const usedFileIds = new Set(locations.map(location => location.fileId))
+        const file = files.find(file => !usedFileIds.has(file.id))
+
+        if (!file) {
+          return
+        }
+
         const nextLocations = [
           ...locations,
           {
-            id: `location-${Date.now()}`,
+            fileId: file.id,
             address: trimmedValue,
           },
         ]
@@ -138,12 +142,12 @@ export const LocationInput = ({
 
   // Click a location to edit it
   const handleLocationClick = (location: Location) => {
-    if (editingId === location.id) {
+    if (editingId === location.fileId) {
       setEditingId(null)
       setInputValue('')
       return
     }
-    setEditingId(location.id)
+    setEditingId(location.fileId)
     setInputValue(location.address)
     if (timerRef.current) {
       clearTimeout(timerRef.current)
@@ -157,24 +161,15 @@ export const LocationInput = ({
   }
 
   // Deleting locations
-  const removeLocation = (id: string) => {
-    const nextLocations = locations.filter(location => location.id !== id)
+  const removeLocation = (fileId: string) => {
+    const nextLocations = locations.filter(location => location.fileId !== fileId)
     updateLocations(nextLocations)
 
-    if (editingId === id) {
+    if (editingId === fileId) {
       setEditingId(null)
       setInputValue('')
     }
   }
-
-  // // Clear debounce timer on unmount
-  // useEffect(() => {
-  //   return () => {
-  //     if (timerRef.current) {
-  //       clearTimeout(timerRef.current)
-  //     }
-  //   }
-  // }, [])
 
   return (
     <div className={s.locationWrapper} ref={wrapperRef}>
@@ -194,19 +189,19 @@ export const LocationInput = ({
       <ul className={s.locations}>
         {locations.map(location => (
           <li
-            key={location.id}
+            key={location.fileId}
             onClick={() => handleLocationClick(location)}
-            className={clsx(s.locationItem, editingId === location.id ? s.editing : '')}
+            className={clsx(s.locationItem, editingId === location.fileId ? s.editing : '')}
           >
             <Typography variant={'subtitle1'} className={s.locationName}>
               {location.address}
-              {editingId === location.id && ' ✏️'}
+              {editingId === location.fileId && ' ✏️'}
             </Typography>
             <Button
               type={'button'}
               onClick={e => {
                 e.stopPropagation()
-                removeLocation(location.id)
+                removeLocation(location.fileId)
               }}
               className={s.removeLocationButton}
               aria-label={'Remove location'}

@@ -8,7 +8,6 @@ import {
   ConfirmCloseCreatePostModal,
   CreatePostModalHeader,
 } from '@/features/createPost/CreatePostModal'
-import { usePostEvents } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { postImageSchema } from '@/lib/model'
 import { useAddPost } from '@/lib/posts'
@@ -50,15 +49,6 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const modalSize = state.step === 'publication' ? 'xl' : 'm'
   const fileUploadsQuantity = state.files.length
   const hasFileUploads = fileUploadsQuantity > 0
-
-  // const [fileUrls, setFileUrls] = useState<string[]>([])
-  // useEffect(() => {
-  //   return () => {
-  //     state.files.forEach(({ url }) => {
-  //       URL.revokeObjectURL(url)
-  //     })
-  //   }
-  // }, [state.files])
 
   const handleClose = useCallback(() => {
     router.push(`/profile/${userId}`)
@@ -133,6 +123,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
       URL.revokeObjectURL(prev.files[fileIndex].url)
       const newFiles = prev.files.filter(file => file.id !== fileId)
+      const newLocations = prev.locations.filter(location => location.fileId !== fileId)
 
       let newCurrentFileIndex = prev.currentFileIndex
       // If we delete the current file
@@ -157,6 +148,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
         files: newFiles,
         currentFileIndex: newCurrentFileIndex,
         step: newStep,
+        locations: newLocations,
       }
     })
   }
@@ -316,6 +308,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
           <PublicationStep
             user={user}
             fileUrls={state.files.map(file => file.url)}
+            files={state.files}
             description={state.description}
             locations={state.locations}
             onDescriptionChange={handleDescriptionChange}

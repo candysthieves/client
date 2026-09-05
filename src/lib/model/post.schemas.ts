@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { MAX_FILE_SIZE } from '@/constants'
 
 export const LocationSchema = z.object({
-  id: z.string(),
+  fileId: z.string(),
   address: z.string(),
 })
 

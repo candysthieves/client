@@ -7,13 +7,14 @@ import {
 } from '@candy.thieves/ui-kit-lumos'
 import { useRef, useState } from 'react'
 import { LocationInput } from '@/components/LocationInput'
-import { Location } from '@/features/createPost/types'
+import { Location, PostFile } from '@/features/createPost/types'
 import { usePostEvents } from '@/lib/hooks'
 import { UserResponse } from '@/lib/model'
 import s from './PublicationStep.module.scss'
 
 type PublicationStepProps = {
   user: null | UserResponse
+  files: PostFile[]
   fileUrls: string[]
   description: string
   locations: Location[]
@@ -28,6 +29,7 @@ const MAX_DESCRIPTION_LENGTH = 500
 export const PublicationStep = ({
   user,
   fileUrls,
+  files,
   description,
   locations,
   onDescriptionChange,
@@ -109,6 +111,7 @@ export const PublicationStep = ({
 
         <div className={s.locationBlock}>
           <LocationInput
+            files={files}
             maxLocations={maxLocations}
             initialLocations={locations}
             onLocationChange={onLocationChange}

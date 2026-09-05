@@ -30,9 +30,31 @@ export const CropImage = ({
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
   const [isZoomOpen, setIsZoomOpen] = useState(false)
 
+  const zoomRangeRef = useRef<HTMLDivElement>(null)
+  const maximizeButtonRef = useRef<HTMLButtonElement>(null)
+
   const openMaximizeImageSliderHandler = () => {
     setIsZoomOpen(prev => !prev)
   }
+
+  const handleZoomRangeClickOutside = (event: MouseEvent) => {
+    const isInside =
+      zoomRangeRef.current?.contains(event.target as Node) ||
+      maximizeButtonRef.current?.contains(event.target as Node)
+
+    if (!isInside) {
+      setIsZoomOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    if (!isZoomOpen) return
+    document.addEventListener('mousedown', handleZoomRangeClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleZoomRangeClickOutside)
+    }
+  }, [isZoomOpen])
 
   const onCropComplete = (_croppedArea: Area, croppedArea: Area) => {
     setCroppedAreaPixels(croppedArea)
@@ -76,7 +98,7 @@ export const CropImage = ({
         />
         {children}
         {isZoomOpen && (
-          <div className={s.zoomRangeContainer}>
+          <div className={s.zoomRangeContainer} ref={zoomRangeRef}>
             <Slider
               value={[zoom]}
               min={1}
@@ -87,6 +109,7 @@ export const CropImage = ({
           </div>
         )}
         <Button
+          ref={maximizeButtonRef}
           className={clsx(s.iconButton, s.maximizeButton)}
           onClick={openMaximizeImageSliderHandler}
         >

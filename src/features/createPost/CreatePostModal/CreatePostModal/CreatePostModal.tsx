@@ -82,6 +82,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
         {
           file,
           url,
+          originalUrl: url,
           id: crypto.randomUUID(),
         },
       ],
@@ -96,17 +97,24 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       const fileIndex = prev.files.findIndex(file => file.id === fileId)
       if (fileIndex === -1) return prev
 
-      URL.revokeObjectURL(prev.files[fileIndex].url)
+      const currentFile = prev.files[fileIndex]
+      const newUrl = URL.createObjectURL(newFile)
 
-      const updatedFile = {
-        ...prev.files[fileIndex],
-        file: newFile,
-        url: URL.createObjectURL(newFile),
+      if (currentFile.url !== currentFile.originalUrl) {
+        URL.revokeObjectURL(currentFile.url)
       }
 
       return {
         ...prev,
-        files: prev.files.map((file, index) => (index === fileIndex ? updatedFile : file)),
+        files: prev.files.map((file, index) =>
+          index === fileIndex
+            ? {
+                ...file,
+                file: newFile,
+                url: newUrl,
+              }
+            : file
+        ),
       }
     })
   }
@@ -117,7 +125,13 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       const fileIndex = prev.files.findIndex(file => file.id === fileId)
       if (fileIndex === -1) return prev
 
-      URL.revokeObjectURL(prev.files[fileIndex].url)
+      const fileToDelete = prev.files[fileIndex]
+
+      URL.revokeObjectURL(fileToDelete.url)
+      if (fileToDelete.originalUrl !== fileToDelete.url) {
+        URL.revokeObjectURL(fileToDelete.originalUrl)
+      }
+
       const newFiles = prev.files.filter(file => file.id !== fileId)
 
       let newCurrentFileIndex = prev.currentFileIndex

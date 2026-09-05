@@ -35,7 +35,7 @@ export const CropStep = ({
   const expandImageRef = useRef<HTMLDivElement>(null)
 
   const currentFile = files[currentFileIndex]
-  const imageUrl = currentFile.url
+  const imageUrl = currentFile.originalUrl
 
   const openExpandImageMenuHandler = () => {
     setIsExpandImageOpen(prev => !prev)

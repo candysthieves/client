@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ExpandCropPostImageBlock } from '@/components/ExpandCropPostImageBlock'
 import { SelectCropPostImagesBlock } from '@/components/SelectCropPostImagesBlock'
 import { AspectRatio, PostFile } from '@/features/createPost'
+import { CropImagePreview } from '@/features/createPost/steps/CropStep/CropImagePreview'
 import s from './CropStep.module.scss'
 
 type CropStepProps = {
@@ -30,11 +31,11 @@ export const CropStep = ({
 }: CropStepProps) => {
   const [isSelectImagesOpen, setIsSelectImagesOpen] = useState(false)
   const [isExpandImageOpen, seIsExpandImageOpen] = useState(false)
-  console.log(files[currentFileIndex])
+
   const selectImagesRef = useRef<HTMLDivElement>(null)
   const expandImageRef = useRef<HTMLDivElement>(null)
 
-  const imageUrl = URL.createObjectURL(files[currentFileIndex].file)
+  const currentFile = files[currentFileIndex]
 
   const openExpandImageMenuHandler = () => {
     seIsExpandImageOpen(prev => !prev)
@@ -84,10 +85,16 @@ export const CropStep = ({
       document.removeEventListener('mousedown', handleExpandImageBlockClickOutside)
     }
   }, [isExpandImageOpen])
-  console.log(files[currentFileIndex])
+
   return (
     <div className={s.imageContent}>
-      <img src={imageUrl} alt={'Crop preview'} className={s.imageItem} />
+      <CropImagePreview
+        key={currentFile.id}
+        src={currentFile?.url || ''}
+        alt={'Crop image preview'}
+        className={s.imageItem}
+      />
+
       <Button className={clsx(s.iconButton, s.expandButton)} onClick={openExpandImageMenuHandler}>
         <ExpandOutline
           size={36}

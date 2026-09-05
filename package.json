@@ -39,6 +39,7 @@
     "react-google-recaptcha": "^2.1.0",
     "react-hook-form": "^7.85.0",
     "react-hot-toast": "^2.6.0",
+    "react-loading-skeleton": "^3.5.0",
     "typescript-eslint": "^8.65.0",
     "zod": "^4.4.3"
   },

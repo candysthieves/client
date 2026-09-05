@@ -18,17 +18,11 @@
 }
 
 .zoomRangeContainer {
-  display: flex;
-  align-items: center;
+  position: absolute;
 
-  width: 100%;
-  max-width: $crop-image-width;
-  height: 1.25rem;
-}
+  @include bottom-left(3.5rem, 4.375rem);
 
-.zoomRange {
-  width: 100%;
-  accent-color: var(--color-accent-500);
+  width: 7.75rem;
 }
 
 %icon {

@@ -1,4 +1,4 @@
-import { Button, clsx, MaximizeOutline } from '@candy.thieves/ui-kit-lumos'
+import { Button, clsx, MaximizeOutline, Slider } from '@candy.thieves/ui-kit-lumos'
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
 import { createCroppedImage } from '@/lib/utils'
@@ -75,6 +75,17 @@ export const CropImage = ({
           onCropComplete={onCropComplete}
         />
         {children}
+        {isZoomOpen && (
+          <div className={s.zoomRangeContainer}>
+            <Slider
+              value={[zoom]}
+              min={1}
+              max={3}
+              step={0.1}
+              onValueChange={values => setZoom(values[0])}
+            />
+          </div>
+        )}
         <Button
           className={clsx(s.iconButton, s.maximizeButton)}
           onClick={openMaximizeImageSliderHandler}
@@ -87,19 +98,6 @@ export const CropImage = ({
             }}
           />
         </Button>
-      </div>
-      <div className={s.zoomRangeContainer}>
-        {isZoomOpen && (
-          <input
-            className={s.zoomRange}
-            type={'range'}
-            min={1}
-            max={3}
-            step={0.1}
-            value={zoom}
-            onChange={e => setZoom(Number(e.target.value))}
-          />
-        )}
       </div>
     </>
   )

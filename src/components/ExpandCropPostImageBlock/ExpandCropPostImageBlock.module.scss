@@ -9,7 +9,8 @@
   // gap: 0.625rem;
   min-width: 8.25rem;
   max-width: 9.75rem;
-  height: 8.75rem; // max-height
+  height: 6.5rem;
+
   // padding: 0.625rem 1rem 0.625rem  0.75rem;
 
   opacity: 0.8;
@@ -68,14 +69,4 @@
 
 .activeShape {
   border-color: var(--color-light-100);
-}
-
-.originalButton {
-  position: relative;
-}
-
-.originalButtonIcon {
-  position: absolute;
-
-  @include top-right(0.4rem, 0.55rem);
 }

@@ -55,7 +55,6 @@ export const CropStep = ({
   }
 
   const aspectMap: Record<AspectRatio, number> = {
-    [AspectRatio.ORIGINAL]: 1, // здесь позже надо определить реальное соотношение картинки
     [AspectRatio.SQUARE]: 1,
     [AspectRatio.PORTRAIT]: 4 / 5,
     [AspectRatio.WIDESCREEN]: 16 / 9,

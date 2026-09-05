@@ -1,4 +1,4 @@
-import { Button, Cards, clsx, ImageOutline, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Cards, clsx, Typography } from '@candy.thieves/ui-kit-lumos'
 import { Ref } from 'react'
 import { AspectRatio } from '@/features/createPost'
 import s from './ExpandCropPostImageBlock.module.scss'
@@ -28,26 +28,6 @@ export const ExpandCropPostImageBlock = ({
     <>
       {isOpen && (
         <Cards ref={ref} className={s.expandImageContent}>
-          <Button
-            className={clsx(s.iconButton, s.originalButton)}
-            onClick={() => onSelectAspectRatioHandler(AspectRatio.ORIGINAL)}
-          >
-            <Typography
-              variant={'h3'}
-              color={getLabelColor(AspectRatio.ORIGINAL)}
-              className={s.buttonTitle}
-            >
-              Original
-            </Typography>
-            <ImageOutline
-              size={24}
-              color={getLabelColor(AspectRatio.ORIGINAL)}
-              svgProps={{
-                className: s.originalButtonIcon,
-              }}
-            />
-          </Button>
-
           <Button
             className={s.iconButton}
             onClick={() => onSelectAspectRatioHandler(AspectRatio.SQUARE)}

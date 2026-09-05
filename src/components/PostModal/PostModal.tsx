@@ -5,7 +5,7 @@ import type { Post } from '@/mocks/posts'
 import { ConfirmDeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
-import { useDeletePost } from '@/lib/posts'
+import { useDeletePost, useUpdatePost } from '@/lib/posts'
 
 type PostModalProps = {
   post: Post
@@ -17,6 +17,7 @@ type Mode = 'edit' | 'view'
 
 export const PostModal = ({ post, open, onClose }: PostModalProps) => {
   const { mutate: deletePost, isPending } = useDeletePost()
+  const { mutate: updatePost, isPending: isUpdating } = useUpdatePost()
   const [mode, setMode] = useState<Mode>('view')
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
@@ -39,10 +40,12 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
   }
 
   const handleSave = (description: string) => {
-    // TODO: update post via API
-    console.log('New description:', description)
-
-    setMode('view')
+    updatePost(
+      { postId: post.postId, description },
+      {
+        onSuccess: () => setMode('view'),
+      }
+    )
   }
 
   const handleConfirmDelete = () => {
@@ -59,6 +62,7 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
         onClose={handleClose}
         onCancel={handleCancelEdit}
         onSave={handleSave}
+        isSaving={isUpdating}
       />
     )
   }

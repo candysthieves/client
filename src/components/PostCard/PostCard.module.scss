@@ -27,6 +27,14 @@
   > * {
     @include width-height(100%);
   }
+
+  img {
+    @include transition-basic(opacity);
+  }
+}
+
+.root:hover .imageWrapper img {
+  opacity: 0.85;
 }
 
 .image {

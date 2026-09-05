@@ -1,6 +1,7 @@
 /* eslint-disable import/no-nodejs-modules */
 import http from 'http'
 import jsonServer from 'json-server'
+import multer from 'multer'
 import path from 'path'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
@@ -12,9 +13,17 @@ const __dirname = dirname(__filename)
 const server = jsonServer.create()
 const router = jsonServer.router(path.resolve(__dirname, 'db.json'))
 
+// Настройка multer для обработки файлов
+const storage = multer.memoryStorage()
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
+})
+
 // Middleware
 server.use(jsonServer.defaults({}))
-server.use(jsonServer.bodyParser)
 
 // Задержка для имитации реального API
 server.use(async (_req, _res, next) => {
@@ -55,13 +64,39 @@ server.get('/posts/:id', (req, res) => {
   }
 })
 
-// POST создать новый пост
-server.post('/posts', (req, res) => {
+// POST создать новый пост - добавляем upload.array('files')
+server.post('/posts', upload.array('files'), (req, res) => {
   try {
     const db = router.db
-    const { files, description, locations } = req.body
 
-    if (!files || !Array.isArray(files) || files.length === 0) {
+    // Теперь req.body содержит текстовые поля, req.files содержит файлы
+    const { description, locations, existingFiles } = req.body
+    const files = req.files
+
+    console.log('Description:', description)
+    console.log('Locations:', locations)
+    console.log('Files:', files)
+    console.log('Existing files:', existingFiles)
+
+    let parsedLocations = []
+    try {
+      parsedLocations = locations ? JSON.parse(locations) : []
+    } catch (e) {
+      parsedLocations = []
+    }
+
+    // Проверяем наличие файлов
+    const hasNewFiles = files && files.length > 0
+    let existingFilesArray = []
+    try {
+      existingFilesArray = existingFiles ? JSON.parse(existingFiles) : []
+    } catch (e) {
+      existingFilesArray = []
+    }
+
+    const totalFiles = (hasNewFiles ? files.length : 0) + existingFilesArray.length
+
+    if (totalFiles === 0) {
       return res.status(400).json({
         message: 'At least one file is required',
       })
@@ -79,23 +114,32 @@ server.post('/posts', (req, res) => {
       })
     }
 
-    if (locations && !Array.isArray(locations)) {
-      return res.status(400).json({
-        message: 'Locations must be an array',
-      })
-    }
+    // Создаем URL для новых файлов
+    const newFileUrls = (files || []).map(file => ({
+      url: `http://localhost:8080/uploads/${Date.now()}_${file.originalname}`,
+      width: 490,
+      height: 562,
+      name: file.originalname,
+      size: file.size,
+      type: file.mimetype,
+    }))
+
+    // Существующие файлы
+    const existingFileUrls = existingFilesArray.map(url => ({
+      url: url,
+      width: 490,
+      height: 562,
+    }))
+
+    const allImages = [...newFileUrls, ...existingFileUrls]
 
     const newPost = {
       postId: Date.now().toString(),
       description: description,
-      locations: locations || [],
-      images: files.map(file => ({
-        url: file.url || '',
-        width: 490,
-        height: 562,
-      })),
+      locations: parsedLocations,
+      images: allImages,
       preview: {
-        url: files[0].url || '',
+        url: allImages[0]?.url || '',
         width: 234,
         height: 228,
       },
@@ -110,6 +154,7 @@ server.post('/posts', (req, res) => {
 
     return res.status(201).json(newPost)
   } catch (error) {
+    console.error('Error creating post:', error)
     return res.status(500).json({ message: error.message })
   }
 })

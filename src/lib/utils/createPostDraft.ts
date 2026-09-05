@@ -2,6 +2,7 @@ import { POST_DRAFT_LS_KEY } from '@/constants'
 import { AddPostState } from '@/features/createPost/types'
 
 type DraftFile = {
+  id: string
   file: string
   name: string
   type: string
@@ -34,7 +35,8 @@ const dataUrlToFile = async (dataUrl: string, name: string, type: string, lastMo
 
 export const savePostDraft = async (state: AddPostState): Promise<void> => {
   const files = await Promise.all(
-    state.files.map(async ({ file }) => ({
+    state.files.map(async ({ file, id }) => ({
+      id,
       file: await fileToDataUrl(file),
       name: file.name,
       type: file.type,
@@ -63,10 +65,11 @@ export const loadPostDraft = async (): Promise<AddPostState | null> => {
   const parsedDraft = JSON.parse(draft) as PostDraft
 
   const files = await Promise.all(
-    parsedDraft.files.map(async ({ file, name, type, lastModified }) => {
+    parsedDraft.files.map(async ({ id, file, name, type, lastModified }) => {
       const restoredFile = await dataUrlToFile(file, name, type, lastModified)
 
       return {
+        id,
         file: restoredFile,
         url: URL.createObjectURL(restoredFile),
       }

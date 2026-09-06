@@ -26,12 +26,9 @@ export const MobilePostViewer = ({ posts, startIndex, userId, onClose }: Props) 
   const handleConfirmDelete = () => {
     if (!postIdToDelete) return
 
-    deletePost(postIdToDelete, {
-      onSuccess: () => {
-        setIsDeleteModalOpen(false)
-        onClose()
-      },
-    })
+    setIsDeleteModalOpen(false)
+    onClose()
+    deletePost(postIdToDelete)
   }
 
   if (isEditing && posts[editingIndex]) {

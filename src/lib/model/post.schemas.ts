@@ -7,6 +7,36 @@ export const postImageSchema = z.object({
   height: z.number(),
 })
 
+export const profilePostSchema = z.object({
+  id: z.string(),
+  description: z.string(),
+  images: z.array(postImageSchema),
+  preview: postImageSchema.nullable(),
+  createdAt: z.string(),
+  willBeDeleted: z.string().nullable(),
+})
+
+export const profilePostsResponseSchema = z.object({
+  items: z.array(profilePostSchema),
+  nextCursor: z.string().nullable(),
+  hasNextPage: z.boolean(),
+  isOwner: z.boolean(),
+})
+
+export const deletedPostSchema = profilePostSchema.extend({
+  willBeDeleted: z.string(),
+  author: z.object({
+    id: z.string(),
+    username: z.string(),
+  }),
+})
+
+export const deletedPostsResponseSchema = z.object({
+  items: z.array(deletedPostSchema),
+  nextCursor: z.string().nullable(),
+  hasNextPage: z.boolean(),
+})
+
 export const LocationSchema = z.object({
   id: z.string(),
   address: z.string(),

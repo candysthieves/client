@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import type { Post } from '@/mocks/posts'
+import { ConfirmDeletePostModal } from '@/components/ConfirmDeletePostModal/ConfirmDeletePostModal'
 import { useHardDeletePost, useRestorePost } from '@/lib/posts'
 import s from './DeletedPostCard.module.scss'
 
@@ -22,10 +23,16 @@ const getRemainingTime = (deletionDate: Date) => {
 }
 
 export const DeletedPostCard = ({ post, deletionDate, href }: DeletedPostCardProps) => {
-  const { mutate: restorePost, isPending: isRestoring } = useRestorePost()
+  const { mutate: restorePost, isPending: isRestoring } = useRestorePost(post.userId)
   const { mutate: hardDeletePost, isPending: isDeleting } = useHardDeletePost(post.userId)
   const isPending = isRestoring || isDeleting
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [remainingTime, setRemainingTime] = useState(() => getRemainingTime(deletionDate))
+
+  const handleConfirmDelete = () => {
+    setIsDeleteModalOpen(false)
+    hardDeletePost(post.postId)
+  }
 
   useEffect(() => {
     if (isPending) {
@@ -41,56 +48,68 @@ export const DeletedPostCard = ({ post, deletionDate, href }: DeletedPostCardPro
   }, [deletionDate, isPending])
 
   return (
-    <article className={s.card}>
-      <Link className={s.postLink} href={href} aria-label={'Open deleted post'}>
-        <Image
-          src={post.preview.url}
-          alt={post.description ?? 'Deleted post'}
-          fill
-          sizes={'(max-width: 360px) calc(100vw - 30px), 226px'}
-          className={s.image}
-        />
+    <>
+      <article className={s.card}>
+        <Link className={s.postLink} href={href} aria-label={'Open deleted post'}>
+          <Image
+            src={post.preview.url}
+            alt={post.description ?? 'Deleted post'}
+            fill
+            sizes={
+              '(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 234px'
+            }
+            className={s.image}
+          />
 
-        <div className={s.overlay} aria-hidden={'true'} />
-      </Link>
+          <div className={s.overlay} aria-hidden={'true'} />
+        </Link>
 
-      <Typography className={s.badge} variant={'caption1'}>
-        Deleted
-      </Typography>
-
-      <div className={s.actions}>
-        <Clock
-          size={32}
-          color={'var(--color-light-100)'}
-          svgProps={{ 'aria-hidden': true, className: s.clockIcon }}
-        />
-
-        <Typography className={s.remainingTime} variant={'h3'}>
-          {remainingTime}
+        <Typography className={s.badge} variant={'caption1'}>
+          Deleted
         </Typography>
 
-        <div className={s.restoreButton}>
-          <Button
-            type={'button'}
-            variant={'primary'}
-            disabled={isPending}
-            onClick={() => restorePost(post.postId)}
-          >
-            {isRestoring ? 'Restoring...' : 'Restore'}
-          </Button>
-        </div>
+        <div className={s.actions}>
+          <Clock
+            size={32}
+            color={'var(--color-light-100)'}
+            svgProps={{ 'aria-hidden': true, className: s.clockIcon }}
+          />
 
-        <div className={s.deleteButton}>
-          <Button
-            type={'button'}
-            variant={'text'}
-            disabled={isPending}
-            onClick={() => hardDeletePost(post.postId)}
-          >
-            {isDeleting ? 'Deleting...' : 'Delete'}
-          </Button>
+          <Typography className={s.remainingTime} variant={'h3'}>
+            {remainingTime}
+          </Typography>
+
+          <div className={s.restoreButton}>
+            <Button
+              type={'button'}
+              variant={'primary'}
+              disabled={isPending}
+              onClick={() => restorePost(post.postId)}
+            >
+              {isRestoring ? 'Restoring...' : 'Restore'}
+            </Button>
+          </div>
+
+          <div className={s.deleteButton}>
+            <Button
+              type={'button'}
+              variant={'text'}
+              disabled={isPending}
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
+
+      <ConfirmDeletePostModal
+        isDeleting={isDeleting}
+        isPermanent
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
+    </>
   )
 }

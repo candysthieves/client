@@ -12,16 +12,7 @@ export function PostsFeed({ posts, userId }: PostsFeedProps) {
   const isEmpty = posts.length === 0
 
   return (
-    <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-labelledby={'posts-heading'}>
-      <Typography
-        id={'posts-heading'}
-        className={s.postsTitle}
-        color={'var(--color-light-100)'}
-        variant={'h2'}
-      >
-        Posts
-      </Typography>
-
+    <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-label={'Posts'}>
       {isEmpty ? (
         <Typography color={'var(--color-light-900)'} variant={'body1'}>
           This user has not published any posts yet.

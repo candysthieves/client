@@ -19,7 +19,7 @@ type PostModalProps = {
 type PostModalState = 'edit' | 'view'
 
 export const PostModal = ({ post, mode = 'published', open, onClose }: PostModalProps) => {
-  const { mutate: softDeletePost, isPending: isSoftDeleting } = useDeletePost()
+  const { mutate: softDeletePost, isPending: isSoftDeleting } = useDeletePost(post.userId)
   const { mutate: hardDeletePost, isPending: isHardDeleting } = useHardDeletePost(post.userId)
   const { mutate: updatePost, isPending: isUpdating } = useUpdatePost()
   const [modalState, setModalState] = useState<PostModalState>('view')
@@ -57,9 +57,8 @@ export const PostModal = ({ post, mode = 'published', open, onClose }: PostModal
   const handleConfirmDelete = () => {
     const deletePost = isDeleted ? hardDeletePost : softDeletePost
 
-    deletePost(post.postId, {
-      onSuccess: handleClose,
-    })
+    handleClose()
+    deletePost(post.postId)
   }
 
   if (modalState === 'edit' && !isDeleted) {

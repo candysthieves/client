@@ -5,6 +5,6 @@ import { postsKeys } from '../postKeys'
 export const useDeletedPosts = (userId?: string) =>
   useQuery({
     queryKey: postsKeys.deletedByUser(userId ?? ''),
-    queryFn: () => getDeletedPosts(userId!),
+    queryFn: getDeletedPosts,
     enabled: Boolean(userId),
   })

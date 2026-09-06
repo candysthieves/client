@@ -30,8 +30,9 @@ export const PostDetailsModal = ({
   canEdit = true,
   deleteLabel,
 }: Props) => {
-  const { isAuthenticated } = useAuth()
+  const { user, isAuthenticated } = useAuth()
   const isMobileViewport = useIsMobileViewport()
+  const isAuthor = !!user && user.id === post.userId
 
   return (
     <Modal
@@ -56,9 +57,8 @@ export const PostDetailsModal = ({
               <Typography variant={'subtitle2'}>{post.userName}</Typography>
             </div>
 
-            {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.userId` and pass isAuthor here. */}
             <PostActionMenu
-              isAuthor={isAuthenticated}
+              isAuthor={isAuthor}
               canEdit={canEdit}
               deleteLabel={deleteLabel}
               onEdit={onEdit}

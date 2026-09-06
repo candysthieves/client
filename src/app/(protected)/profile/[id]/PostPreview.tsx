@@ -14,6 +14,7 @@ type PostPreviewProps = {
 
 export function PostPreview({ index, post, userId }: PostPreviewProps) {
   const [hasImageError, setHasImageError] = useState(false)
+  const imageUrl = post.preview?.url ?? post.images[0]?.url
 
   return (
     <Link
@@ -21,16 +22,18 @@ export function PostPreview({ index, post, userId }: PostPreviewProps) {
       aria-label={`Open post ${index + 1}`}
       className={s.postPreview}
     >
-      {hasImageError ? (
+      {hasImageError || !imageUrl ? (
         <span className={s.postPlaceholder} aria-hidden={'true'}>
           {post.description?.slice(0, 1).toUpperCase() ?? 'P'}
         </span>
       ) : (
         <Image
-          src={post.preview.url}
+          src={imageUrl}
           alt={post.description ?? `Post ${index + 1}`}
           fill
-          sizes={'(max-width: 640px) 50vw, (max-width: 768px) 33vw, 234px'}
+          sizes={
+            '(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 234px'
+          }
           className={s.postImage}
           onError={() => setHasImageError(true)}
         />

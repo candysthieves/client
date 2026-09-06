@@ -13,6 +13,7 @@ export const useHardDeletePost = (userId: string) => {
       queryClient.setQueryData<Post[]>(postsKeys.deletedByUser(userId), posts =>
         posts?.filter(post => post.postId !== postId)
       )
+      queryClient.removeQueries({ queryKey: postsKeys.deletedPost(postId) })
       ToastSuccess({ message: 'Post permanently deleted' })
     },
     onError: () => {

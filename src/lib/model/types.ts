@@ -13,7 +13,8 @@ import {
   userResponseSchema,
   validatePasswordRecoveryCodeSchema,
 } from './auth.schemas'
-import { profilePostSchema, profilePostsResponseSchema, userProfileSchema } from './profile.schemas'
+import { profilePostSchema, profilePostsResponseSchema } from './post.schemas'
+import { userProfileSchema } from './profile.schemas'
 
 // Auth
 export type AccessTokenResponse = z.infer<typeof accessTokenResponseSchema>

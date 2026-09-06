@@ -3,11 +3,8 @@ import { useEffect, useRef, useState, type RefObject } from 'react'
 import { ExpandCropPostImageBlock } from '@/components/ExpandCropPostImageBlock'
 import { SelectCropPostImagesBlock } from '@/components/SelectCropPostImagesBlock'
 import { AspectRatio, PostFile } from '@/features/createPost'
-import { CropImagePreview } from '@/features/createPost/steps/CropStep/CropImagePreview'
-import { CropImage, type CropStepApi } from './CropImage/CropImage'
+import { CropImage, CropStepApi } from './CropImage/CropImage'
 import s from './CropStep.module.scss'
-
-export type { CropStepApi } from './CropImage/CropImage'
 
 type CropStepProps = {
   currentFileIndex: number
@@ -41,8 +38,6 @@ export const CropStep = ({
   const openExpandImageMenuHandler = () => {
     setIsExpandImageOpen(prev => !prev)
   }
-
-  const openMaximizeImageSliderHandler = () => console.log('openMaximizeImageSliderHandler')
 
   const openSelectImageMenuHandler = () => {
     setIsSelectImagesOpen(prev => !prev)

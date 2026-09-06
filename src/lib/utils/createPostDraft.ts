@@ -72,7 +72,7 @@ export const loadPostDraft = async (): Promise<AddPostState | null> => {
       return {
         id,
         file: restoredFile,
-        url: URL.createObjectURL(restoredFile),
+        url,
         originalUrl: url,
       }
     })

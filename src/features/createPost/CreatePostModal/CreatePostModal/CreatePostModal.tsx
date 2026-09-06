@@ -366,11 +366,12 @@ import {
   ConfirmCloseCreatePostModal,
   CreatePostModalHeader,
 } from '@/features/createPost/CreatePostModal'
+import { CropStepApi } from '@/features/createPost/steps/CropStep/CropImage/CropImage'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { postImageSchema } from '@/lib/model'
 import { useAddPost } from '@/lib/posts'
 import { clearPostDraft, loadPostDraft, savePostDraft } from '@/lib/utils'
-import { CropStep, CropStepApi, PublicationStep, UploadStep } from '../../steps'
+import { CropStep, PublicationStep, UploadStep } from '../../steps'
 import { AddPostState, CreatePostStep, Location } from '../../types'
 import s from './CreatePostModal.module.scss'
 
@@ -394,9 +395,9 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const [state, setState] = useState<AddPostState>(initialCreatePostState)
   const [isCreationOpen, setIsCreationOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
-  const cropStepApiRef = useRef<CropStepApi | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const isPublishing = isPending || isProcessing
+  const cropStepApiRef = useRef<CropStepApi | null>(null)
   const publishingPostIdRef = useRef<null | string>(null)
 
   const closeCreationModal = () => setIsCreationOpen(false)

@@ -128,6 +128,7 @@ export const CropStep = ({
         <ExpandCropPostImageBlock
           ref={expandImageRef}
           isOpen={isExpandImageOpen}
+          selectedAspectRatio={selectedAspectRatio}
           onSelectAspectRatio={onSelectAspectRatioHandler}
         />
 

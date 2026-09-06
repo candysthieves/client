@@ -1,8 +1,6 @@
 @use '@/styles/mixins' as *;
 
 .profile {
-  @include content;
-
   padding: 2.25rem 0 4rem;
 }
 
@@ -140,16 +138,12 @@
 }
 
 .profileError {
-  @include content;
-
   display: grid;
   gap: 1rem;
   padding: 2.25rem 0 4rem;
 }
 
 .skeleton {
-  @include content;
-
   display: grid;
   grid-template-columns: 12.75rem minmax(0, 1fr);
   gap: 2.375rem;

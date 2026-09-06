@@ -25,8 +25,8 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
   const {
     data: profilePostsResponse,
-    isError: arePostsError,
-    isLoading: arePostsLoading,
+    isError: isPostsError,
+    isLoading: isPostsLoading,
   } = useProfilePosts(userId)
   const profilePosts: Post[] = (profilePostsResponse?.items ?? []).map(post => ({
     postId: post.id,
@@ -47,11 +47,11 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const showCreateModal = !postId && action === 'create'
   const handleClosePost = () => router.replace(`/profile/${userId}`)
 
-  if (isProfileLoading || arePostsLoading) {
+  if (isProfileLoading || isPostsLoading) {
     return <ProfileSkeleton />
   }
 
-  if (isProfileError || arePostsError) {
+  if (isProfileError || isPostsError) {
     return (
       <section className={s.profileError} role={'alert'}>
         <Typography color={'var(--color-light-100)'} variant={'h1'}>

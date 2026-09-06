@@ -67,11 +67,13 @@ export const loadPostDraft = async (): Promise<AddPostState | null> => {
   const files = await Promise.all(
     parsedDraft.files.map(async ({ id, file, name, type, lastModified }) => {
       const restoredFile = await dataUrlToFile(file, name, type, lastModified)
+      const url = URL.createObjectURL(restoredFile)
 
       return {
         id,
         file: restoredFile,
-        url: URL.createObjectURL(restoredFile),
+        url,
+        originalUrl: url,
       }
     })
   )

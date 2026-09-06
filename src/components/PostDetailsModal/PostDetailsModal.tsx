@@ -7,6 +7,7 @@ import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCa
 import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { getPostImageAreaStyle } from '@/lib/utils'
+import { formatPostDate } from '@/lib/utils/formatPostDate'
 import { mockComments, mockLikedByUsers, type Post } from '@/mocks/posts'
 import s from './PostDetailsModal.module.scss'
 
@@ -69,7 +70,7 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit, onDelete }: Prop
 
             <div className={s.date}>
               <Typography variant={'caption1'} color={'var(--color-light-900)'}>
-                July 3, 2021
+                {formatPostDate(post.createdAt)}
               </Typography>
             </div>
           </div>

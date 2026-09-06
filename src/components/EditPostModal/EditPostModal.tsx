@@ -18,9 +18,10 @@ type Props = {
   onClose: () => void
   onCancel: () => void
   onSave: (description: string) => void
+  isSaving?: boolean
 }
 
-export const EditPostModal = ({ post, open, onClose, onCancel, onSave }: Props) => {
+export const EditPostModal = ({ post, open, onClose, onCancel, onSave, isSaving }: Props) => {
   const initialDescription = post.description ?? ''
   const [description, setDescription] = useState(initialDescription)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
@@ -106,7 +107,7 @@ export const EditPostModal = ({ post, open, onClose, onCancel, onSave }: Props) 
                 Cancel
               </Button>
 
-              <Button type={'button'} variant={'primary'} onClick={handleSave}>
+              <Button type={'button'} variant={'primary'} onClick={handleSave} disabled={isSaving}>
                 Save Changes
               </Button>
             </div>

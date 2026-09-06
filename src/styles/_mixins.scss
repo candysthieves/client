@@ -3,6 +3,7 @@
 
 $desktop-width: 1280px;
 $tablet-width: 768px;
+$tablet-small-width: 640px;
 $mobile-width: 360px;
 $header-height: 3.75rem;
 $container-width: 1156px;
@@ -128,6 +129,12 @@ $spacing-checkbox-error: 1.25rem;
 
 @mixin media-tablet {
   @media (max-width: $tablet-width) {
+    @content;
+  }
+}
+
+@mixin media-tablet-small {
+  @media (max-width: $tablet-small-width) {
     @content;
   }
 }

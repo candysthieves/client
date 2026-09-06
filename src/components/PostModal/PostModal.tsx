@@ -41,7 +41,7 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
 
   const handleSave = (description: string) => {
     updatePost(
-      { postId: post.postId, description },
+      { postId: post.postId, userId: post.userId, description },
       {
         onSuccess: () => setMode('view'),
       }

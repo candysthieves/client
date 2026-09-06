@@ -46,7 +46,11 @@ export const MobilePostViewer = ({ posts, startIndex, userId, onClose }: Props) 
             isSaving={isUpdating}
             onSave={description => {
               updatePost(
-                { postId: posts[editingIndex].postId, description },
+                {
+                  postId: posts[editingIndex].postId,
+                  userId: posts[editingIndex].userId,
+                  description,
+                },
                 { onSuccess: () => setIsEditing(false) }
               )
             }}

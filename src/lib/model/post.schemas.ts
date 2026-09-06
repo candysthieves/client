@@ -44,7 +44,7 @@ export const postImageSchema = z
     file => ['image/png', 'image/jpeg'].includes(file.type),
     'Only PNG and JPEG images are allowed'
   )
-  .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 500 kB')
+  .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 300 kB')
 
 export const PostCreatedEventSchema = z.object({
   postId: z.string(),

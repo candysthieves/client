@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@12.3.4",
+  "packageManager": "pnpm@11.22.0",
   "scripts": {
     "dev": "next dev",
     "dev:host": "next dev --hostname dev.lumosapp.net --port 3000 --experimental-https",

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type RefObject } from 'react'
 import { ExpandCropPostImageBlock } from '@/components/ExpandCropPostImageBlock'
 import { SelectCropPostImagesBlock } from '@/components/SelectCropPostImagesBlock'
 import { AspectRatio, PostFile } from '@/features/createPost'
-import { CropImage, CropStepApi } from './CropImage/CropImage'
+import { CropImage, type CropStepApi } from './CropImage/CropImage'
 import s from './CropStep.module.scss'
 
 type CropStepProps = {

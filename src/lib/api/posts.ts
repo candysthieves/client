@@ -65,3 +65,9 @@ export const deletePost = (postId: string) =>
   apiClient<void>(`/posts/${postId}`, {
     method: 'DELETE',
   })
+
+export const updatePost = (postId: string, description: string) =>
+  request<void>(`/posts/${postId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ description }),
+  })

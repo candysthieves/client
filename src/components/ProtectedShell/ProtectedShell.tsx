@@ -1,11 +1,13 @@
 'use client'
 
-import { clsx, LogOut, Sidebar } from '@candy.thieves/ui-kit-lumos'
+import { clsx, LogOut, Menu, Sidebar } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { ReactNode, useEffect, useState } from 'react'
 import { LogoutModal } from '@/components'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { mobileMenuItems } from '@/shared/navigation/mobileMenuItems'
+import { isMobileMenuHiddenByPath } from '@/shared/navigation/mobileMenuVisibility'
 import { sidebarItems } from '@/shared/navigation/sidebarItems'
 import s from './ProtectedShell.module.scss'
 
@@ -14,6 +16,8 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   const router = useRouter()
   const { user, isAuthenticated, isLoading } = useAuth()
   const activeSidebarId = sidebarItems.find(item => item.href === pathname)?.id ?? ''
+  const activeMobileMenuId = mobileMenuItems.find(item => item.href === pathname)?.id ?? ''
+  const isMobileMenuHidden = isMobileMenuHiddenByPath(pathname)
   const [logoutOpen, setLogoutOpen] = useState(false)
   const isPublicProfileRoute = pathname.startsWith('/profile/')
 
@@ -62,6 +66,12 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
           <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
 
           {content}
+
+          {!isMobileMenuHidden && (
+            <div className={s.bottomNavigation}>
+              <Menu activeId={activeMobileMenuId} items={mobileMenuItems} />
+            </div>
+          )}
         </div>
       ) : (
         content

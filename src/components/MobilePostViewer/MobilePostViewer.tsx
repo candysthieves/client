@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ConfirmDeletePostModal } from '@/components'
-import { useDeletePost } from '@/lib/posts'
+import { useDeletePost, useUpdatePost } from '@/lib/posts'
 import { Post } from '@/mocks/posts'
 import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'
 import { MobilePostFeed } from './MobilePostFeed/MobilePostFeed'
@@ -21,6 +21,7 @@ export const MobilePostViewer = ({ posts, startIndex, userId, onClose }: Props) 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [postIdToDelete, setPostIdToDelete] = useState<null | string>(null)
   const { mutate: deletePost, isPending } = useDeletePost(userId)
+  const { mutate: updatePost, isPending: isUpdating } = useUpdatePost()
 
   const handleConfirmDelete = () => {
     if (!postIdToDelete) return
@@ -42,7 +43,17 @@ export const MobilePostViewer = ({ posts, startIndex, userId, onClose }: Props) 
           <MobilePostEdit
             post={posts[editingIndex]}
             onCancel={() => setIsEditing(false)}
-            onSave={() => setIsEditing(false)}
+            isSaving={isUpdating}
+            onSave={description => {
+              updatePost(
+                {
+                  postId: posts[editingIndex].postId,
+                  userId: posts[editingIndex].userId,
+                  description,
+                },
+                { onSuccess: () => setIsEditing(false) }
+              )
+            }}
           />
         </div>
       </>

@@ -25,6 +25,9 @@ const upload = multer({
 // Middleware
 server.use(jsonServer.defaults({}))
 
+// Парсинг JSON body для кастомных маршрутов (PUT/PATCH и др.)
+server.use(jsonServer.bodyParser)
+
 // Задержка для имитации реального API
 server.use(async (_req, _res, next) => {
   await new Promise(resolve => {

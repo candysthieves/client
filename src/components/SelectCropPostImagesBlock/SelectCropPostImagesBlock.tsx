@@ -1,6 +1,6 @@
 import { Button, Cards, CloseOutline, clsx, PlusCircleOutline } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
-import { Ref, useEffect, useMemo, MouseEvent } from 'react'
+import { Ref, useMemo, MouseEvent } from 'react'
 import { PostFile } from '@/features/createPost'
 import s from './SelectCropPostImagesBlock.module.scss'
 
@@ -28,24 +28,12 @@ export const SelectCropPostImagesBlock = ({
       return []
     }
 
-    return files
-      .filter(file => file.file instanceof File)
-      .map(file => {
-        console.log(file)
-        return URL.createObjectURL(file.file)
-      })
+    return files.filter(file => file.url).map(file => file.url)
   }, [files])
 
   const addNewPostImageHandler = () => {
-    console.log('addNewPostImageHandler')
     onAddImage()
   }
-
-  useEffect(() => {
-    return () => {
-      imageUrls.forEach(url => URL.revokeObjectURL(url))
-    }
-  }, [imageUrls])
 
   const onClickDeleteImageHandler = (e: MouseEvent, index: number) => {
     e.stopPropagation()

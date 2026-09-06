@@ -1,7 +1,7 @@
 #Устанавливаем зависимости
 FROM node:24-alpine3.24 as dependencies
 WORKDIR /app
-RUN npm install -g pnpm@11.22.0
+RUN npm install -g pnpm@10.34.5
 COPY package*.json ./
 RUN pnpm install --ignore-scripts && pnpm approve-builds --yes
 
@@ -10,7 +10,7 @@ RUN pnpm install --ignore-scripts && pnpm approve-builds --yes
 #но package.json остался неизменным, то стейдж с установкой зависимостей повторно не выполняется, что экономит время.
 FROM node:24-alpine3.24 as builder
 WORKDIR /app
-RUN npm install -g pnpm@11.22.0
+RUN npm install -g pnpm@10.34.5
 ENV NEXT_PUBLIC_API_URL=https://lumosapp.net/api/v1
 ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LclLHUtAAAAAEO0UcvZn9iuW92ENQUDa6ByDR96
 COPY . .
@@ -19,7 +19,7 @@ RUN pnpm run build:production
 
 #Стейдж запуска
 FROM node:24-alpine3.24 as runner
-RUN npm install -g pnpm@11.22.0
+RUN npm install -g pnpm@10.34.5
 ENV NODE_ENV=production
 ENV NEXT_PUBLIC_API_URL=https://lumosapp.net/api/v1
 ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LclLHUtAAAAAEO0UcvZn9iuW92ENQUDa6ByDR96

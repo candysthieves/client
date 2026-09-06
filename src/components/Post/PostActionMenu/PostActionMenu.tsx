@@ -2,11 +2,19 @@ import { ActionMenu, EditOutline, TrashOutline } from '@candy.thieves/ui-kit-lum
 
 type Props = {
   isAuthor?: boolean
+  canEdit?: boolean
+  deleteLabel?: string
   onEdit?: () => void
   onDelete?: () => void
 }
 
-export const PostActionMenu = ({ isAuthor, onEdit, onDelete = () => {} }: Props) => {
+export const PostActionMenu = ({
+  isAuthor,
+  canEdit = true,
+  deleteLabel = 'Delete Post',
+  onEdit,
+  onDelete = () => {},
+}: Props) => {
   if (!isAuthor) {
     return null
   }
@@ -15,16 +23,20 @@ export const PostActionMenu = ({ isAuthor, onEdit, onDelete = () => {} }: Props)
     <ActionMenu
       ariaLabel={'Open post actions'}
       items={[
-        {
-          icon: <EditOutline size={24} />,
-          id: 'edit-post',
-          label: 'Edit Post',
-          onSelect: onEdit,
-        },
+        ...(canEdit
+          ? [
+              {
+                icon: <EditOutline size={24} />,
+                id: 'edit-post',
+                label: 'Edit Post',
+                onSelect: onEdit,
+              },
+            ]
+          : []),
         {
           icon: <TrashOutline size={24} />,
           id: 'delete-post',
-          label: 'Delete Post',
+          label: deleteLabel,
           onSelect: onDelete,
         },
       ]}

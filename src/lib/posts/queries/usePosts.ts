@@ -2,8 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import { getPosts } from '@/lib/api'
 import { postsKeys } from '../postKeys'
 
-export const usePosts = () =>
+export const usePosts = (userId?: string) =>
   useQuery({
-    queryKey: postsKeys.all,
-    queryFn: getPosts,
+    queryKey: postsKeys.byUser(userId ?? ''),
+    queryFn: () => getPosts(userId!),
+    enabled: Boolean(userId),
   })

@@ -1,5 +1,12 @@
 import { z } from 'zod'
 
+export const postImageSchema = z.object({
+  fileId: z.string(),
+  url: z.url(),
+  width: z.number(),
+  height: z.number(),
+})
+
 export const LocationSchema = z.object({
   id: z.string(),
   address: z.string(),

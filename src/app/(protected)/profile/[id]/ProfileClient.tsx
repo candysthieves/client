@@ -9,7 +9,7 @@ import { PostModal } from '@/components/PostModal/PostModal'
 import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
-import { usePosts } from '@/lib/posts'
+import { useDeletedPosts, usePosts } from '@/lib/posts'
 import s from '../../(with-mobile-menu)/profile/page.module.scss'
 
 type ProfileClientProps = {
@@ -21,11 +21,12 @@ type ProfileClientProps = {
 export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const router = useRouter()
   const isMobile = useIsMobileViewport()
-  const { data: posts = [] } = usePosts()
+  const { data: posts = [] } = usePosts(userId)
+  const { data: deletedPosts = [] } = useDeletedPosts(userId)
   const activePosts = posts.filter(post => !post.willBeDeletedIn)
-  const deletedPosts = posts.filter(post => post.willBeDeletedIn)
 
   const selectedPost = [...activePosts, ...deletedPosts].find(post => post.postId === postId)
+  const isDeletedPost = deletedPosts.some(post => post.postId === selectedPost?.postId)
   const selectedPosts = selectedPost?.willBeDeletedIn ? deletedPosts : activePosts
   const selectedIndex = selectedPost
     ? selectedPosts.findIndex(post => post.postId === selectedPost.postId)
@@ -72,7 +73,12 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             startIndex={selectedIndex}
           />
         ) : (
-          <PostModal post={selectedPost} open onClose={handleClosePost} />
+          <PostModal
+            post={selectedPost}
+            mode={isDeletedPost ? 'deleted' : 'published'}
+            open
+            onClose={handleClosePost}
+          />
         ))}
 
       {showCreateModal && <CreatePostModal userId={userId} />}

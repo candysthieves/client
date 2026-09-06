@@ -5,29 +5,35 @@ import type { Post } from '@/mocks/posts'
 import { ConfirmDeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
-import { useDeletePost } from '@/lib/posts'
+import { useDeletePost, useHardDeletePost } from '@/lib/posts'
+
+export type PostViewMode = 'deleted' | 'published'
 
 type PostModalProps = {
   post: Post
+  mode?: PostViewMode
   open: boolean
   onClose: () => void
 }
 
-type Mode = 'edit' | 'view'
+type PostModalState = 'edit' | 'view'
 
-export const PostModal = ({ post, open, onClose }: PostModalProps) => {
-  const { mutate: deletePost, isPending } = useDeletePost()
-  const [mode, setMode] = useState<Mode>('view')
+export const PostModal = ({ post, mode = 'published', open, onClose }: PostModalProps) => {
+  const { mutate: softDeletePost, isPending: isSoftDeleting } = useDeletePost()
+  const { mutate: hardDeletePost, isPending: isHardDeleting } = useHardDeletePost(post.userId)
+  const [modalState, setModalState] = useState<PostModalState>('view')
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const isDeleted = mode === 'deleted'
+  const isDeleting = isSoftDeleting || isHardDeleting
 
   const handleClose = () => {
-    setMode('view')
+    setModalState('view')
     setIsDeleteModalOpen(false)
     onClose()
   }
 
   const handleEdit = () => {
-    setMode('edit')
+    setModalState('edit')
   }
 
   const handleDelete = () => {
@@ -35,23 +41,25 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
   }
 
   const handleCancelEdit = () => {
-    setMode('view')
+    setModalState('view')
   }
 
   const handleSave = (description: string) => {
     // TODO: update post via API
     console.log('New description:', description)
 
-    setMode('view')
+    setModalState('view')
   }
 
   const handleConfirmDelete = () => {
+    const deletePost = isDeleted ? hardDeletePost : softDeletePost
+
     deletePost(post.postId, {
       onSuccess: handleClose,
     })
   }
 
-  if (mode === 'edit') {
+  if (modalState === 'edit' && !isDeleted) {
     return (
       <EditPostModal
         post={post}
@@ -71,10 +79,13 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
         onClose={handleClose}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        canEdit={!isDeleted}
+        deleteLabel={isDeleted ? 'Delete permanently' : 'Delete Post'}
       />
 
       <ConfirmDeletePostModal
-        isDeleting={isPending}
+        isDeleting={isDeleting}
+        isPermanent={isDeleted}
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}

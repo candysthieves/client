@@ -9,7 +9,7 @@ import s from './page.module.scss'
 
 export default function ProfilePage() {
   const { user } = useAuth()
-  const { data: posts = [] } = usePosts()
+  const { data: posts = [] } = usePosts(user?.id)
   const activePosts = posts.filter(post => !post.willBeDeletedIn)
 
   return (

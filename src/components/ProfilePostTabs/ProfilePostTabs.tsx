@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { Tabs } from '@candy.thieves/ui-kit-lumos'
+import { List, RecycleBin, Tabs } from '@candy.thieves/ui-kit-lumos'
 import type { Post } from '@/mocks/posts'
 import { DeletedPosts } from '@/components/DeletedPosts'
 import s from './ProfilePostTabs.module.scss'
@@ -21,11 +21,13 @@ export const ProfilePostTabs = ({
     {
       value: 'publications',
       label: 'Publications',
+      icon: <List size={20} svgProps={{ 'aria-hidden': true }} />,
       content: <div className={s.content}>{publicationsContent}</div>,
     },
     {
       value: 'recently-deleted',
-      label: 'Recently deleted',
+      label: `Recently deleted (${deletedPosts.length})`,
+      icon: <RecycleBin size={20} svgProps={{ 'aria-hidden': true }} />,
       content: (
         <div className={s.content}>
           <DeletedPosts posts={deletedPosts} userId={userId} />

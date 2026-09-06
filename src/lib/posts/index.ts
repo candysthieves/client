@@ -1,4 +1,7 @@
 export { useDeletePost } from './mutations/useDeletePost'
+export { useHardDeletePost } from './mutations/useHardDeletePost'
+export { useRestorePost } from './mutations/useRestorePost'
 export { postsKeys } from './postKeys'
+export { useDeletedPosts } from './queries/useDeletedPosts'
 export { usePosts } from './queries/usePosts'
 export { useAddPost } from './mutations/useAddPost'

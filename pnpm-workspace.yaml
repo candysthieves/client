@@ -9,4 +9,4 @@ ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
 minimumReleaseAgeExclude:
-  - '@candy.thieves/ui-kit-lumos@0.0.30'
+  - '@candy.thieves/ui-kit-lumos@0.0.30 || 0.0.47'

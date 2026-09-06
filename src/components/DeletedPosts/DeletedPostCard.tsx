@@ -1,7 +1,9 @@
-import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Clock, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import type { Post } from '@/mocks/posts'
+import { useHardDeletePost, useRestorePost } from '@/lib/posts'
 import s from './DeletedPostCard.module.scss'
 
 type DeletedPostCardProps = {
@@ -19,44 +21,76 @@ const getRemainingTime = (deletionDate: Date) => {
   return `${hours} h ${minutes} min left`
 }
 
-export const DeletedPostCard = ({ post, deletionDate, href }: DeletedPostCardProps) => (
-  <article className={s.card}>
-    <Link className={s.postLink} href={href} aria-label={'Open deleted post'}>
-      <Image
-        src={post.preview.url}
-        alt={post.description ?? 'Deleted post'}
-        fill
-        sizes={'(max-width: 360px) calc(100vw - 30px), 226px'}
-        className={s.image}
-      />
+export const DeletedPostCard = ({ post, deletionDate, href }: DeletedPostCardProps) => {
+  const { mutate: restorePost, isPending: isRestoring } = useRestorePost()
+  const { mutate: hardDeletePost, isPending: isDeleting } = useHardDeletePost(post.userId)
+  const isPending = isRestoring || isDeleting
+  const [remainingTime, setRemainingTime] = useState(() => getRemainingTime(deletionDate))
 
-      <div className={s.overlay} aria-hidden={'true'} />
-    </Link>
+  useEffect(() => {
+    if (isPending) {
+      return
+    }
 
-    <Typography className={s.badge} variant={'subtitle1'}>
-      Deleted
-    </Typography>
+    const updateRemainingTime = () => setRemainingTime(getRemainingTime(deletionDate))
+    const intervalId = window.setInterval(updateRemainingTime, 60_000)
 
-    <div className={s.actions}>
-      <Typography className={s.clock} variant={'body1'}>
-        Clock
+    updateRemainingTime()
+
+    return () => window.clearInterval(intervalId)
+  }, [deletionDate, isPending])
+
+  return (
+    <article className={s.card}>
+      <Link className={s.postLink} href={href} aria-label={'Open deleted post'}>
+        <Image
+          src={post.preview.url}
+          alt={post.description ?? 'Deleted post'}
+          fill
+          sizes={'(max-width: 360px) calc(100vw - 30px), 226px'}
+          className={s.image}
+        />
+
+        <div className={s.overlay} aria-hidden={'true'} />
+      </Link>
+
+      <Typography className={s.badge} variant={'caption1'}>
+        Deleted
       </Typography>
 
-      <Typography className={s.remainingTime} variant={'h3'}>
-        {getRemainingTime(deletionDate)}
-      </Typography>
+      <div className={s.actions}>
+        <Clock
+          size={32}
+          color={'var(--color-light-100)'}
+          svgProps={{ 'aria-hidden': true, className: s.clockIcon }}
+        />
 
-      <div className={s.restoreButton}>
-        <Button type={'button'} variant={'primary'}>
-          Restore
-        </Button>
-      </div>
+        <Typography className={s.remainingTime} variant={'h3'}>
+          {remainingTime}
+        </Typography>
 
-      <div className={s.deleteButton}>
-        <Button type={'button'} variant={'text'}>
-          Delete
-        </Button>
+        <div className={s.restoreButton}>
+          <Button
+            type={'button'}
+            variant={'primary'}
+            disabled={isPending}
+            onClick={() => restorePost(post.postId)}
+          >
+            {isRestoring ? 'Restoring...' : 'Restore'}
+          </Button>
+        </div>
+
+        <div className={s.deleteButton}>
+          <Button
+            type={'button'}
+            variant={'text'}
+            disabled={isPending}
+            onClick={() => hardDeletePost(post.postId)}
+          >
+            {isDeleting ? 'Deleting...' : 'Delete'}
+          </Button>
+        </div>
       </div>
-    </div>
-  </article>
-)
+    </article>
+  )
+}

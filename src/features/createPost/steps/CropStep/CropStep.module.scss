@@ -59,3 +59,17 @@
 
   @include bottom-right(0.75rem);
 }
+
+// CropImagePreview
+.imageWrapper {
+  position: relative;
+}
+
+.imageSkeleton {
+  position: absolute;
+  inset: 0;
+}
+
+.hidden {
+  visibility: hidden;
+}

@@ -6,8 +6,6 @@ import { AspectRatio, PostFile } from '@/features/createPost'
 import { CropImage, type CropStepApi } from './CropImage/CropImage'
 import s from './CropStep.module.scss'
 
-export type { CropStepApi } from './CropImage/CropImage'
-
 type CropStepProps = {
   currentFileIndex: number
   files: PostFile[]
@@ -47,6 +45,7 @@ export const CropStep = ({
 
   const onAddImageHandler = () => {
     addImage()
+    setIsSelectImagesOpen(false) // delete later
   }
 
   const onSelectAspectRatioHandler = (aspectRatio: AspectRatio) => {

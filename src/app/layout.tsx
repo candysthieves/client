@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import '@candy.thieves/ui-kit-lumos/dist/index.css'
+import 'react-loading-skeleton/dist/skeleton.css'
 import '../styles/index.scss'
 import { ReactNode } from 'react'
 import { ClientLayout } from '@/components'

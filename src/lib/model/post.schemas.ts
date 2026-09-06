@@ -1,7 +1,8 @@
 import { z } from 'zod'
+import { MAX_FILE_SIZE } from '@/constants'
 
 export const LocationSchema = z.object({
-  id: z.string(),
+  fileId: z.string(),
   address: z.string(),
 })
 
@@ -29,9 +30,23 @@ export const AddPostStateSchema = z.object({
 })
 
 export const AddPostRequestSchema = z.object({
-  files: z.array(PostFileSchema),
+  files: z.array(z.instanceof(File)),
   description: z.string().max(500),
   locations: z.array(LocationSchema),
-  // userId: z.string(),
-  // userName: z.string(),
+})
+
+export const AddPostResponseSchema = z.object({
+  postId: z.string(),
+})
+
+export const postImageSchema = z
+  .instanceof(File)
+  .refine(
+    file => ['image/png', 'image/jpeg'].includes(file.type),
+    'Only PNG and JPEG images are allowed'
+  )
+  .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 300 kB')
+
+export const PostCreatedEventSchema = z.object({
+  postId: z.string(),
 })

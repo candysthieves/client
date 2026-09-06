@@ -3,15 +3,17 @@
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
 import { useCallback, useRef, useState } from 'react'
-import { ToastError, ToastSuccess } from '@/components'
+import { ToastError, ToastSuccess, ToastWarning } from '@/components'
 import {
   ConfirmCloseCreatePostModal,
   CreatePostModalHeader,
 } from '@/features/createPost/CreatePostModal'
+import { CropStepApi } from '@/features/createPost/steps/CropStep/CropImage/CropImage'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { postImageSchema } from '@/lib/model'
 import { useAddPost } from '@/lib/posts'
 import { clearPostDraft, loadPostDraft, savePostDraft } from '@/lib/utils'
-import { CropStep, CropStepApi, PublicationStep, UploadStep } from '../../steps'
+import { CropStep, PublicationStep, UploadStep } from '../../steps'
 import { AddPostState, CreatePostStep, Location } from '../../types'
 import s from './CreatePostModal.module.scss'
 
@@ -29,13 +31,16 @@ type CreatePostModalProps = {
 
 export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const { user } = useAuth() // CHANGE LATER TO FETCHED USER DATA (with avatar src)
-  const { mutate: addPost, isPending: isPublishing } = useAddPost(userId)
+  const { mutate: addPost, isPending } = useAddPost()
   const router = useRouter()
 
   const [state, setState] = useState<AddPostState>(initialCreatePostState)
   const [isCreationOpen, setIsCreationOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const isPublishing = isPending || isProcessing
   const cropStepApiRef = useRef<CropStepApi | null>(null)
+  const publishingPostIdRef = useRef<null | string>(null)
 
   const closeCreationModal = () => setIsCreationOpen(false)
   const openConfirm = () => setIsConfirmOpen(true)
@@ -46,15 +51,6 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   const modalSize = state.step === 'publication' ? 'xl' : 'm'
   const fileUploadsQuantity = state.files.length
   const hasFileUploads = fileUploadsQuantity > 0
-
-  // const [fileUrls, setFileUrls] = useState<string[]>([])
-  // useEffect(() => {
-  //   return () => {
-  //     state.files.forEach(({ url }) => {
-  //       URL.revokeObjectURL(url)
-  //     })
-  //   }
-  // }, [state.files])
 
   const handleClose = useCallback(() => {
     router.push(`/profile/${userId}`)
@@ -73,6 +69,16 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
   // Upload file step
   const handleFileSelected = (file: File) => {
+    const result = postImageSchema.safeParse(file)
+    if (!result.success) {
+      ToastWarning({
+        title: 'Invalid file',
+        message: result.error.issues[0].message,
+      })
+
+      return
+    }
+
     const url = URL.createObjectURL(file)
 
     setState(prev => ({
@@ -133,6 +139,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       }
 
       const newFiles = prev.files.filter(file => file.id !== fileId)
+      const newLocations = prev.locations.filter(location => location.fileId !== fileId)
 
       let newCurrentFileIndex = prev.currentFileIndex
       // If we delete the current file
@@ -157,6 +164,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
         files: newFiles,
         currentFileIndex: newCurrentFileIndex,
         step: newStep,
+        locations: newLocations,
       }
     })
   }
@@ -214,6 +222,10 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
 
   const handleOutsideClick = (event: Event) => {
     event.preventDefault()
+    if (isPublishing) {
+      return
+    }
+
     openConfirm()
   }
 
@@ -245,22 +257,39 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
     }
   }
 
+  const handlePostCreated = useCallback(
+    (postId: string) => {
+      console.log('handlePostCreated returned postId', postId)
+      if (postId !== publishingPostIdRef.current) {
+        return
+      }
+
+      publishingPostIdRef.current = null
+      setIsProcessing(false)
+
+      ToastSuccess({
+        title: 'Success!',
+        message: 'Your post has been published',
+      })
+
+      clearPostDraft()
+      closeCreation()
+    },
+    [closeCreation]
+  )
+
   const handlePublish = useCallback(() => {
     // Prepare data to send
     const postData = {
-      files: state.files,
+      files: state.files.map(({ file }) => file),
       description: state.description,
       locations: state.locations,
     }
 
     addPost(postData, {
-      onSuccess: () => {
-        ToastSuccess({
-          title: 'Success!',
-          message: 'Your post has been published',
-        })
-        closeCreation()
-        clearPostDraft()
+      onSuccess: ({ postId }) => {
+        publishingPostIdRef.current = postId
+        setIsProcessing(true)
       },
       onError: error => {
         ToastError({
@@ -269,7 +298,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
         })
       },
     })
-  }, [state, addPost, closeCreation])
+  }, [state, addPost])
 
   const renderStep = () => {
     switch (state.step) {
@@ -301,10 +330,13 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
           <PublicationStep
             user={user}
             fileUrls={state.files.map(file => file.url)}
+            files={state.files}
             description={state.description}
             locations={state.locations}
             onDescriptionChange={handleDescriptionChange}
             onLocationChange={onLocationChange}
+            onPostCreated={handlePostCreated}
+            isPublishing={isPublishing}
           />
         )
     }

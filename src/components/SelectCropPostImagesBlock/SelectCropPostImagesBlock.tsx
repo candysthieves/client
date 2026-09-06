@@ -60,11 +60,12 @@ export const SelectCropPostImagesBlock = ({
           <div className={s.selectImagesBlock}>
             {imageUrls.length > 0 ? (
               imageUrls.map((url, index) => {
+                const file = files[index]
                 const isActive = index === currentFileIndex
 
                 return (
                   <div
-                    key={files[index]?.id || index}
+                    key={file?.id || index}
                     className={s.selectImageItem}
                     onClick={() => {
                       setAsCurrentFile(index)

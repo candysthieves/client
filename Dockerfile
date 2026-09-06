@@ -3,7 +3,7 @@ FROM node:24-alpine3.24 as dependencies
 WORKDIR /app
 RUN npm install -g pnpm@10.34.5
 COPY package*.json ./
-RUN pnpm install --ignore-scripts && pnpm approve-builds --yes
+RUN pnpm install --ignore-scripts && pnpm approve-builds
 
 #Билдим приложение
 #Кэширование зависимостей — если файлы в проекте изменились,

@@ -1,7 +1,11 @@
 import { z } from 'zod'
-import { postImageSchema } from './post.schemas'
 
-export const profileMediaSchema = postImageSchema
+export const profileMediaSchema = z.object({
+  fileId: z.string(),
+  url: z.url(),
+  width: z.number(),
+  height: z.number(),
+})
 
 export const profilePostSchema = z.object({
   id: z.string(),

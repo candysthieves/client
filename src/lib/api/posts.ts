@@ -59,3 +59,9 @@ export const hardDeletePost = (postId: string) =>
   request<void>(`/posts/${postId}/hard-delete`, {
     method: 'DELETE',
   })
+
+export const updatePost = (postId: string, description: string) =>
+  request<void>(`/posts/${postId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ description }),
+  })

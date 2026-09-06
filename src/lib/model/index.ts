@@ -1,5 +1,6 @@
 export * from './auth.schemas'
 export * from './post.schemas'
+export * from './profile.schemas'
 export * from './constants'
 export * from './types'
 export * from './profile.schemas'

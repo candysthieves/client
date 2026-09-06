@@ -7,6 +7,7 @@ import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
 import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { formatPostDate } from '@/lib/utils/formatPostDate'
 import { mockLikedByUsers, Post } from '@/mocks/posts'
 import s from './MobilePostFeed.module.scss'
 
@@ -82,7 +83,7 @@ export const MobilePostFeed = ({ posts, startIndex, onClose, onDelete, onEdit }:
                 </div>
 
                 <Typography variant={'caption1'} color={'var(--color-light-900)'}>
-                  {post.createdAt}
+                  {formatPostDate(post.createdAt)}
                 </Typography>
               </div>
             </article>

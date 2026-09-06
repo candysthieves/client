@@ -1,11 +1,13 @@
 'use client'
 
-import { clsx, LogOut, Sidebar } from '@candy.thieves/ui-kit-lumos'
+import { clsx, LogOut, Menu, Sidebar } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { ReactNode, useEffect, useState } from 'react'
 import { LogoutModal } from '@/components'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { mobileMenuItems } from '@/shared/navigation/mobileMenuItems'
+import { isMobileMenuHiddenByPath } from '@/shared/navigation/mobileMenuVisibility'
 import { sidebarItems } from '@/shared/navigation/sidebarItems'
 import s from './ProtectedShell.module.scss'
 
@@ -14,16 +16,10 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
   const router = useRouter()
   const { user, isAuthenticated, isLoading } = useAuth()
   const activeSidebarId = sidebarItems.find(item => item.href === pathname)?.id ?? ''
+  const activeMobileMenuId = mobileMenuItems.find(item => item.href === pathname)?.id ?? ''
+  const isMobileMenuHidden = isMobileMenuHiddenByPath(pathname)
   const [logoutOpen, setLogoutOpen] = useState(false)
-
-  // useEffect(() => {
-  //   // if (!isLoading && !isAuthenticated && pathname !== '/') {
-  //   if (!isLoading && !isAuthenticated) {
-  //     // router.replace('/sign-in')
-  //     router.replace('/')
-  //   }
-  //   // }, [isAuthenticated, isLoading, router])
-  // }, [isAuthenticated, isLoading, router, pathname])
+  const isPublicProfileRoute = pathname.startsWith('/profile/')
 
   useEffect(() => {
     if (!isLoading) {
@@ -37,22 +33,18 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
         return
       }
 
-      // Остальная логика редиректа для защищенных страниц
-      if (!isAuthenticated) {
+      if (!isAuthenticated && !isPublicProfileRoute) {
         router.replace('/')
       }
     }
-  }, [isAuthenticated, isLoading, router, pathname, user?.id])
+  }, [isAuthenticated, isLoading, isPublicProfileRoute, router, pathname, user?.id])
 
-  // if (!isAuthenticated) { // avoid blinking on load - check if needed when isLoading will work
-  //   return null
-  // }
-
-  const content = !isLoading ? (
-    <main className={s.content}>{children}</main>
-  ) : (
-    <div>Loading....</div> // change Loading... later
-  )
+  const content =
+    !isLoading || isPublicProfileRoute ? (
+      <main className={s.content}>{children}</main>
+    ) : (
+      <div>Loading....</div> // change Loading... later
+    )
 
   const userId = user?.id
 
@@ -74,6 +66,12 @@ export const ProtectedShell = ({ children }: { children: ReactNode }) => {
           <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
 
           {content}
+
+          {!isMobileMenuHidden && (
+            <div className={s.bottomNavigation}>
+              <Menu activeId={activeMobileMenuId} items={mobileMenuItems} />
+            </div>
+          )}
         </div>
       ) : (
         content

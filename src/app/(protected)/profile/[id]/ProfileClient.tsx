@@ -1,16 +1,17 @@
 'use client'
 
-import { Typography } from '@candy.thieves/ui-kit-lumos'
-import Image from 'next/image'
+import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import type { Post } from '@/mocks/posts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
-import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
-import { useDeletedPosts, usePosts } from '@/lib/posts'
-import s from '../../(with-mobile-menu)/profile/page.module.scss'
+import { useProfile, useProfilePosts } from '@/lib/profile'
+import { PostsFeed } from './PostsFeed'
+import s from './ProfileClient.module.scss'
+import { ProfileSkeleton } from './ProfileSkeleton'
 
 type ProfileClientProps = {
   userId: string
@@ -21,67 +22,111 @@ type ProfileClientProps = {
 export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const router = useRouter()
   const isMobile = useIsMobileViewport()
-  const { data: posts = [] } = usePosts(userId)
-  const { data: deletedPosts = [] } = useDeletedPosts(userId)
-  const activePosts = posts.filter(post => !post.willBeDeletedIn)
+  const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
+  const {
+    data: profilePostsResponse,
+    isError: isPostsError,
+    isLoading: isPostsLoading,
+  } = useProfilePosts(userId)
+  const profilePosts: Post[] = (profilePostsResponse?.items ?? []).map(post => ({
+    postId: post.id,
+    description: post.description,
+    images: post.images,
+    preview: post.preview,
+    userId,
+    userName: profile?.username ?? userId,
+    createdAt: post.createdAt,
+    willBeDeletedIn: post.willBeDeleted ? new Date(post.willBeDeleted) : null,
+  }))
+  const isOwner = profile?.isOwner ?? false
 
-  const selectedPost = [...activePosts, ...deletedPosts].find(post => post.postId === postId)
-  const isDeletedPost = deletedPosts.some(post => post.postId === selectedPost?.postId)
-  const selectedPosts = selectedPost?.willBeDeletedIn ? deletedPosts : activePosts
+  const selectedPost = profilePosts.find(post => post.postId === postId)
   const selectedIndex = selectedPost
-    ? selectedPosts.findIndex(post => post.postId === selectedPost.postId)
+    ? profilePosts.findIndex(post => post.postId === selectedPost.postId)
     : 0
   const showCreateModal = !postId && action === 'create'
   const handleClosePost = () => router.replace(`/profile/${userId}`)
 
+  if (isProfileLoading || isPostsLoading) {
+    return <ProfileSkeleton />
+  }
+
+  if (isProfileError || isPostsError) {
+    return (
+      <section className={s.profileError} role={'alert'}>
+        <Typography color={'var(--color-light-100)'} variant={'h1'}>
+          Unable to load profile
+        </Typography>
+        <Typography color={'var(--color-light-900)'} variant={'body1'}>
+          Please try again later.
+        </Typography>
+      </section>
+    )
+  }
+
   return (
     <>
-      <Typography align={'center'} color={'white'} variant={'h1'}>
-        Profile
-      </Typography>
+      <div className={s.profile}>
+        <section className={s.profileHeader} aria-labelledby={'profile-name'}>
+          <MainAvatar
+            className={s.profileAvatar}
+            userName={profile?.username ?? userId}
+            src={profile?.avatarPreviewUrl.url}
+            size={'xxl'}
+            delayMs={0}
+          />
 
-      <ProfilePostTabs
-        deletedPosts={deletedPosts}
-        userId={userId}
-        publicationsContent={
-          <div className={s.feed}>
-            {activePosts.map((post, index) => (
-              <Link
-                key={post.postId}
-                href={`/profile/${userId}?postId=${post.postId}`}
-                aria-label={`Open post ${index + 1}`}
-                className={s.card}
+          <div className={s.profileInfo}>
+            <Typography
+              id={'profile-name'}
+              className={s.profileName}
+              color={'white'}
+              variant={'h1'}
+            >
+              {profile?.username ?? userId}
+            </Typography>
+
+            {isOwner && (
+              <Button
+                as={Link}
+                className={s.settingsButton}
+                href={'/profile/general-information'}
+                variant={'secondary'}
               >
-                <Image
-                  src={post.preview.url}
-                  alt={post.description ?? `Post ${index + 1}`}
-                  width={226}
-                  height={226}
-                  className={s.image}
-                />
-              </Link>
-            ))}
+                Profile Settings
+              </Button>
+            )}
+
+            <dl className={s.stats}>
+              <div className={s.stat}>
+                <dt className={s.statLabel}>Publications</dt>
+                <dd className={s.statValue}>{profile?.publicationsCount ?? 0}</dd>
+              </div>
+            </dl>
+
+            <Typography className={s.about} variant={'body1'}>
+              <span className={s.aboutLabel}>About me</span>
+              {profile?.description ?? ''}
+            </Typography>
           </div>
-        }
-      />
+        </section>
+
+        <PostsFeed posts={profilePostsResponse?.items ?? []} userId={userId} />
+      </div>
 
       {selectedPost &&
         (isMobile ? (
           <MobilePostViewer
             onClose={handleClosePost}
-            posts={selectedPosts}
+            posts={profilePosts}
             startIndex={selectedIndex}
+            userId={userId}
           />
         ) : (
-          <PostModal
-            post={selectedPost}
-            mode={isDeletedPost ? 'deleted' : 'published'}
-            open
-            onClose={handleClosePost}
-          />
+          <PostModal post={selectedPost} open onClose={handleClosePost} />
         ))}
 
-      {showCreateModal && <CreatePostModal userId={userId} />}
+      {showCreateModal && isOwner && <CreatePostModal userId={userId} />}
     </>
   )
 }

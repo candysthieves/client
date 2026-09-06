@@ -5,7 +5,7 @@ import type { Post } from '@/mocks/posts'
 import { ConfirmDeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
-import { useDeletePost, useHardDeletePost } from '@/lib/posts'
+import { useDeletePost, useHardDeletePost, useUpdatePost } from '@/lib/posts'
 
 export type PostViewMode = 'deleted' | 'published'
 
@@ -21,6 +21,7 @@ type PostModalState = 'edit' | 'view'
 export const PostModal = ({ post, mode = 'published', open, onClose }: PostModalProps) => {
   const { mutate: softDeletePost, isPending: isSoftDeleting } = useDeletePost()
   const { mutate: hardDeletePost, isPending: isHardDeleting } = useHardDeletePost(post.userId)
+  const { mutate: updatePost, isPending: isUpdating } = useUpdatePost()
   const [modalState, setModalState] = useState<PostModalState>('view')
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const isDeleted = mode === 'deleted'
@@ -45,10 +46,12 @@ export const PostModal = ({ post, mode = 'published', open, onClose }: PostModal
   }
 
   const handleSave = (description: string) => {
-    // TODO: update post via API
-    console.log('New description:', description)
-
-    setModalState('view')
+    updatePost(
+      { postId: post.postId, userId: post.userId, description },
+      {
+        onSuccess: () => setModalState('view'),
+      }
+    )
   }
 
   const handleConfirmDelete = () => {
@@ -67,6 +70,7 @@ export const PostModal = ({ post, mode = 'published', open, onClose }: PostModal
         onClose={handleClose}
         onCancel={handleCancelEdit}
         onSave={handleSave}
+        isSaving={isUpdating}
       />
     )
   }

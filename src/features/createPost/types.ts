@@ -42,7 +42,7 @@ export type AddPostResponse = z.infer<typeof AddPostResponseSchema>
 // }
 
 export enum AspectRatio {
-  ORIGINAL = 'original', // original
+  // ORIGINAL = 'original', // original
   PORTRAIT = 'portrait', // 4:5
   SQUARE = 'square', // 1:1
   WIDESCREEN = 'widescreen', // 16:9

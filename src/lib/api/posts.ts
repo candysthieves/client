@@ -1,5 +1,6 @@
 import type { Post } from '@/mocks/posts'
 import { AddPostRequest } from '@/features/createPost'
+import { request } from '@/lib/api/request'
 
 // TEMPORARY
 const API_BASE_URL = 'http://localhost:8080'
@@ -110,4 +111,10 @@ export const addPost = async (data: AddPostRequest): Promise<void> => {
 export const deletePost = (postId: string) =>
   apiClient<void>(`/posts/${postId}`, {
     method: 'DELETE',
+  })
+
+export const updatePost = (postId: string, description: string) =>
+  request<void>(`/posts/${postId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ description }),
   })

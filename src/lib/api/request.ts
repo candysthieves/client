@@ -249,7 +249,7 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
    *    so we try to refresh the access token.
    *
    */
-  if (response.status === 401) {
+  if (response.status === 401 || response.status === 498) {
     // 1. 401 при domain error при sign-in (с InvalidCredentials error message)
     // клонируем body response т.к. стрим можем прочитать только один раз
     const clonedResponse = response.clone()

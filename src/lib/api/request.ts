@@ -250,7 +250,7 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
    *
    */
   if (response.status === 401 || response.status === 498) {
-    // 1. 401 при domain error при sign-in (с InvalidCredentials error message)
+    // 1. 401 / 498 при domain error при sign-in (с InvalidCredentials error message)
     // клонируем body response т.к. стрим можем прочитать только один раз
     const clonedResponse = response.clone()
 
@@ -264,8 +264,8 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
     }
 
     /**
-     * 401 + code 73 / 74 means that the access token is invalid/expired - is used to refresh access token.
-     * Start refresh-token flow. Only these 401 errors trigger access-token refresh
+     * 401 + code 74 / 498 + code 74 means that the access token is invalid/expired - is used to refresh access token.
+     * Start refresh-token flow. Only these 401 / 498 errors trigger access-token refresh
      */
     if (isAccessTokenError(errorData)) {
       try {
@@ -321,7 +321,7 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
         }
 
         // не «refresh token invalid», а не удалось выполнить refresh вообще - отсавить что-то одно
-        throw new ApiError(401, undefined) // the user becomes unauthorized (sends to auth logic to log out user) - ЭТОТ ВАРИАНТ ВЕРНУТЬ ЕСЛИ ЧТО
+        throw new ApiError(response.status, undefined) // the user becomes unauthorized (sends to auth logic to log out user) - ЭТОТ ВАРИАНТ ВЕРНУТЬ ЕСЛИ ЧТО
         // a если с невалидным refresh token то:
         // throw new ApiError(498, undefined) // the user becomes unauthorized
       }
@@ -334,7 +334,7 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
       // code 80 → Session not found
       // это ошибка самого запроса, refresh НЕ нужен
 
-      console.log('401 backend error response') // check here
+      console.log(`${response.status} backend error response`) // check here
       throw new ApiError(response.status, errorData)
     }
   }

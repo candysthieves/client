@@ -1,4 +1,5 @@
 export { isErrorResponse } from './isErrorResponse'
+export { isAccessTokenError } from './isAccessTokenError'
 export { getPostImageAreaSize, getPostImageAreaStyle } from './getPostImageAreaSize'
 export * from './isValidField'
 export { mapRegistrationConfirmationError } from './mapRegistrationConfirmationError'

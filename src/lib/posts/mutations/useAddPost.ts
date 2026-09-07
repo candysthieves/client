@@ -11,11 +11,20 @@ export function useAddPost(userId?: string) {
     mutationFn: (data: AddPostRequest) => addPost(data),
 
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: postsKeys.all })
+      // await queryClient.invalidateQueries({ queryKey: postsKeys.all })
 
       if (userId) {
-        await queryClient.invalidateQueries({ queryKey: profileKeys.detail(userId) })
+        await queryClient.invalidateQueries({ queryKey: profileKeys.posts(userId) })
       }
     },
   })
 }
+
+// await Promise.all([
+//   queryClient.invalidateQueries({
+//     queryKey: profileKeys.detail(userId),
+//   }),
+//   queryClient.invalidateQueries({
+//     queryKey: profileKeys.posts(userId),
+//   }),
+// ])

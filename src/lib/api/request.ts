@@ -167,7 +167,7 @@
 
 import { NEXT_PUBLIC_API_URL } from '@/constants'
 import { ACCESS_TOKEN_LS_KEY } from '@/lib/model'
-import { isErrorResponse, refreshAccessToken } from '@/lib/utils'
+import { isAccessTokenError, isErrorResponse, refreshAccessToken } from '@/lib/utils'
 import { ApiError } from './apiError'
 
 let refreshPromise: null | Promise<string> = null
@@ -262,73 +262,80 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
     } catch {
       errorData = undefined
     }
-    // 401 с backend error response — это ошибка самого запроса.
-    // Например при sign-in: code 51 InvalidCredentials (This error must go directly to the caller)
-    if (isErrorResponse(errorData)) {
-      console.log('401 backend error response') // check here
-      throw new ApiError(response.status, errorData)
-    }
 
     /**
-     * Plain 401 means that the access token is invalid/expired - is used to refresh access token.
-     * Start refresh-token flow.
+     * 401 + code 73 / 74 means that the access token is invalid/expired - is used to refresh access token.
+     * Start refresh-token flow. Only these 401 errors trigger access-token refresh
      */
-    try {
-      /**
-       * If several requests receive 401 simultaneously,
-       * only one refresh request is sent.
-       *
-       * Other requests wait for the same Promise.
-       */
-      if (!refreshPromise) {
-        refreshPromise = refreshAccessToken().finally(() => {
-          refreshPromise = null
-        })
+    if (isAccessTokenError(errorData)) {
+      try {
+        /**
+         * If several requests receive 401 simultaneously,
+         * only one refresh request is sent.
+         *
+         * Other requests wait for the same Promise.
+         */
+        if (!refreshPromise) {
+          refreshPromise = refreshAccessToken().finally(() => {
+            refreshPromise = null
+          })
+        }
+        // waiting of the Promise ends
+
+        const newAccessToken = await refreshPromise
+
+        /**
+         * Retry the original request with the new access token.
+         *
+         * createRequestInit() will redetermine whether the body is FormData.
+         *
+         * Therefore:
+         * FormData -> multipart/form-data
+         * JSON -> application/json
+         */
+        // response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, {
+        //   ...init,
+        //   credentials: 'include',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //     Authorization: `Bearer ${newAccessToken}`,
+        //     ...init?.headers,
+        //   },
+        // })
+        response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, createRequestInit(newAccessToken))
+      } catch (error) {
+        /**
+         * Refresh failed.
+         *
+         * Backend now returns:
+         * 498 Invalid refresh token
+         *
+         * Therefore, the refresh token is no longer valid and
+         * the access token must be removed from localStorage.
+         */
+
+        localStorage.removeItem(ACCESS_TOKEN_LS_KEY)
+
+        if (error instanceof ApiError) {
+          throw error
+        }
+
+        // не «refresh token invalid», а не удалось выполнить refresh вообще - отсавить что-то одно
+        throw new ApiError(401, undefined) // the user becomes unauthorized (sends to auth logic to log out user) - ЭТОТ ВАРИАНТ ВЕРНУТЬ ЕСЛИ ЧТО
+        // a если с невалидным refresh token то:
+        // throw new ApiError(498, undefined) // the user becomes unauthorized
       }
-      // waiting of the Promise ends
+    } else if (isErrorResponse(errorData)) {
+      // 401 с backend error response — это ошибка самого запроса.
+      // Например при sign-in: code 51 InvalidCredentials (This error must go directly to the caller)
+      // code 70 → Refresh token invalid
+      // code 71 → Refresh token missing
+      // code 72 → Refresh token expired
+      // code 80 → Session not found
+      // это ошибка самого запроса, refresh НЕ нужен
 
-      const newAccessToken = await refreshPromise
-
-      /**
-       * Retry the original request with the new access token.
-       *
-       * createRequestInit() will redetermine whether the body is FormData.
-       *
-       * Therefore:
-       * FormData -> multipart/form-data
-       * JSON -> application/json
-       */
-      // response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, {
-      //   ...init,
-      //   credentials: 'include',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     Authorization: `Bearer ${newAccessToken}`,
-      //     ...init?.headers,
-      //   },
-      // })
-      response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, createRequestInit(newAccessToken))
-    } catch (error) {
-      /**
-       * Refresh failed.
-       *
-       * Backend now returns:
-       * 498 Invalid refresh token
-       *
-       * Therefore, the refresh token is no longer valid and
-       * the access token must be removed from localStorage.
-       */
-
-      localStorage.removeItem(ACCESS_TOKEN_LS_KEY)
-
-      if (error instanceof ApiError) {
-        throw error
-      }
-
-      // не «refresh token invalid», а не удалось выполнить refresh вообще - отсавить что-то одно
-      throw new ApiError(401, undefined) // the user becomes unauthorized (sends to auth logic to log out user) - ЭТОТ ВАРИАНТ ВЕРНУТЬ ЕСЛИ ЧТО
-      // a если с невалидным refresh token то:
-      // throw new ApiError(498, undefined) // the user becomes unauthorized
+      console.log('401 backend error response') // check here
+      throw new ApiError(response.status, errorData)
     }
   }
   // Refresh token error - revalidate refresh token logic ends
@@ -385,55 +392,25 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
  * }
  */
 
-// GET /auth/me
-//       │
-// ├── 200 → вернуть результат
-// │
-// └── 401
-//      │
-//      ├── есть domain error
-//      │      └── например code 51
-//      │           → НЕ refresh
-//      │           → ApiError(401, errorData)
-//      │
-//      └── нет domain error
-//                   │
-//                   ↓
-//             POST /auth/refresh-token
-//                   │
-//                   ├── 200 → сохранить новый accessToken
-//                   │       → повторить исходный запрос
-//                   │
-//                   └── 498 → refresh token недействителен
-//                           → удалить accessToken
-//                           → пользователь не авторизован
-
-// CORS
-// https://lumosapp.net/api/v1
-// https://dev.lumosapp.net:3000/api/v1
-// http://localhost:3000/api/v1
-
-// const handleLogout = async () => {
-//   try {
-//     await logout()
-//       ToastWarning({
-//         title: 'Signed out successfully',
-//         message: 'You have been successfully signed out. See you soon!',
-//       })
-//   } finally {
-//     localStorage.removeItem(ACCESS_TOKEN_LS_KEY)
-//     // setUser(null) // or something else
-//     router.replace('/login')
-//   }
-// }
-// Logout button
-//     ↓
-// POST /auth/logout
-//     ↓
-// backend очищает refreshToken cookie в HttpOnly
-//     ↓
-// finally
-//     ↓
-// remove accessToken из localStorage
-//     ↓
-// setUser(null) // or something else
+//                      GET /auth/me
+//                           │
+//                           ↓
+//                         401
+//                           │
+//              ┌────────────┴────────────┐
+//              │                         │
+//       code 73 / 74                другой code 51... НЕ refresh
+//              │                         │
+//              ↓                         ↓
+//          REFRESH                  ApiError
+//      refreshAccessToken()
+//              │
+//        ┌─────┴─────┐
+//        │           │
+//       200        498/401
+//        │           │
+//        ↓           ↓
+//  новый token    logout
+//        │
+//        ↓
+//  повторить request GET /auth/me

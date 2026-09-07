@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { ProfileClient } from '@/app/(protected)/profile/[id]/ProfileClient'
 
 type Params = { id: string }
-type SearchParams = { postId?: string; action?: string }
+type SearchParams = { postId?: string; action?: string; type?: string }
 
 type ProfilePageProps = {
   params: Params | Promise<Params>
@@ -23,16 +23,17 @@ type ProfilePageProps = {
 
 export default async function ProfilePage({ params, searchParams }: ProfilePageProps) {
   const { id: userId } = await params
-  const { postId, action } = await searchParams
+  const { postId, action, type } = await searchParams
 
   // Если есть postId и action=create, перенаправляем без action (удаляем action) - обработка редиректа на сервере
   if (postId && action === 'create') {
     const newSearchParams = new URLSearchParams()
     newSearchParams.set('postId', postId)
+    if (type === 'deleted') newSearchParams.set('type', type)
 
     // Перенаправляем на тот же URL, но без action
     redirect(`/profile/${userId}?${newSearchParams.toString()}`)
   }
 
-  return <ProfileClient userId={userId} postId={postId} action={action} />
+  return <ProfileClient userId={userId} postId={postId} action={action} postType={type} />
 }

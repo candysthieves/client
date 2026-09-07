@@ -23,7 +23,7 @@ export default function ProfilePage() {
           activePosts.map((post, index) => (
             <Link
               key={post.postId}
-              href={`/profile/${user.id}?postId=${post.postId}`}
+              href={`/profile/${user.id}?postId=${post.postId}&type=published`}
               aria-label={`Open post ${index + 1}`}
               className={s.card}
             >

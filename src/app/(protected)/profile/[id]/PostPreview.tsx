@@ -18,7 +18,7 @@ export function PostPreview({ index, post, userId }: PostPreviewProps) {
 
   return (
     <Link
-      href={`/profile/${userId}?postId=${post.id}`}
+      href={`/profile/${userId}?postId=${post.id}&type=published`}
       aria-label={`Open post ${index + 1}`}
       className={s.postPreview}
     >

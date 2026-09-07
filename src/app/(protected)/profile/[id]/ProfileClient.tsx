@@ -11,7 +11,7 @@ import { PostModal } from '@/components/PostModal/PostModal'
 import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
-import { useDeletedPost, useDeletedPosts } from '@/lib/posts'
+import { useDeletedPost, useDeletedPosts, usePost } from '@/lib/posts'
 import { useProfile, useProfilePosts } from '@/lib/profile'
 import { PostsFeed } from './PostsFeed'
 import s from './ProfileClient.module.scss'
@@ -21,9 +21,10 @@ type ProfileClientProps = {
   userId: string
   postId?: string
   action?: string
+  postType?: string
 }
 
-export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
+export function ProfileClient({ userId, postId, action, postType }: ProfileClientProps) {
   const router = useRouter()
   const isMobile = useIsMobileViewport()
   const [dismissedPostId, setDismissedPostId] = useState<string>()
@@ -39,9 +40,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     isError: isDeletedPostsError,
     isLoading: isDeletedPostsLoading,
   } = useDeletedPosts(isOwner ? userId : undefined)
-  const activeProfilePosts = (profilePostsResponse?.items ?? []).filter(
-    post => post.willBeDeleted === null
-  )
+  const activeProfilePosts = profilePostsResponse?.items ?? []
   const profilePosts: Post[] = activeProfilePosts.map(post => {
     const fallbackImage = { url: '/post-placeholder.svg' }
 
@@ -57,17 +56,15 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     }
   })
 
-  const selectedPublishedPost = profilePosts.find(post => post.postId === postId)
-  const { data: requestedDeletedPost } = useDeletedPost(
-    postId,
-    isOwner && Boolean(postId) && !selectedPublishedPost
-  )
-  const selectedDeletedPost =
-    requestedDeletedPost ?? deletedPosts.find(post => post.postId === postId)
-  const selectedPost = selectedPublishedPost ?? selectedDeletedPost
+  const isDeletedPost = postType === 'deleted'
+  const { data: requestedPost } = usePost(postId, userId, !isDeletedPost)
+  const { data: requestedDeletedPost } = useDeletedPost(postId, isOwner && isDeletedPost)
+  const selectedPost = isDeletedPost ? requestedDeletedPost : requestedPost
   const visibleSelectedPost = dismissedPostId === postId ? undefined : selectedPost
-  const selectedIndex = selectedPublishedPost
-    ? profilePosts.findIndex(post => post.postId === selectedPublishedPost.postId)
+  const selectedIndex = selectedPost
+    ? (isDeletedPost ? deletedPosts : profilePosts).findIndex(
+        post => post.postId === selectedPost.postId
+      )
     : 0
   const showCreateModal = !postId && action === 'create'
   const handleClosePost = () => {
@@ -168,7 +165,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
       </div>
 
       {visibleSelectedPost &&
-        (isMobile && selectedPublishedPost ? (
+        (isMobile && !isDeletedPost ? (
           <MobilePostViewer
             onClose={handleClosePost}
             posts={profilePosts}
@@ -178,7 +175,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
         ) : (
           <PostModal
             post={visibleSelectedPost}
-            mode={selectedDeletedPost ? 'deleted' : 'published'}
+            mode={isDeletedPost ? 'deleted' : 'published'}
             open
             onClose={handleClosePost}
           />

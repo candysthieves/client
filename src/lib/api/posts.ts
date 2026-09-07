@@ -2,7 +2,7 @@ import type { ProfilePost } from '@/lib/model'
 import type { Post } from '@/mocks/posts'
 import { AddPostRequest } from '@/features/createPost'
 import { request } from '@/lib/api/request'
-import { deletedPostSchema, deletedPostsResponseSchema } from '@/lib/model'
+import { deletedPostSchema, deletedPostsResponseSchema, postDetailsSchema } from '@/lib/model'
 
 export const addPost = async (data: AddPostRequest) => {
   const formData = new FormData()
@@ -41,6 +41,22 @@ export const getDeletedPosts = async (): Promise<Post[]> => {
     ...mapProfilePost(post, post.author.id),
     userName: post.author.username,
   }))
+}
+
+export const getPost = async (postId: string, userId: string): Promise<Post> => {
+  const response = await request<unknown>(`/posts/${encodeURIComponent(postId)}`)
+  const post = postDetailsSchema.parse(response)
+
+  return {
+    postId: post.id,
+    description: post.description,
+    images: post.images,
+    preview: post.preview,
+    userId: post.author.id || userId,
+    userName: post.author.username,
+    createdAt: post.createdAt,
+    willBeDeletedIn: null,
+  }
 }
 
 export const getDeletedPost = async (postId: string): Promise<Post> => {

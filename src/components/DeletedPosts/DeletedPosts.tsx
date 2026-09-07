@@ -71,7 +71,7 @@ export const DeletedPosts = ({ posts, userId, isError, isLoading }: DeletedPosts
             key={post.postId}
             post={post}
             deletionDate={deletionDate}
-            href={`/profile/${userId}?postId=${post.postId}`}
+            href={`/profile/${userId}?postId=${post.postId}&type=deleted`}
           />
         )
       })}

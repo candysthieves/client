@@ -23,6 +23,19 @@ export const profilePostsResponseSchema = z.object({
   isOwner: z.boolean(),
 })
 
+export const postDetailsSchema = z.object({
+  id: z.string(),
+  description: z.string(),
+  images: z.array(postImageSchema),
+  preview: postImageSchema,
+  createdAt: z.string(),
+  author: z.object({
+    id: z.string(),
+    username: z.string(),
+  }),
+  isOwner: z.boolean(),
+})
+
 export const deletedPostSchema = profilePostSchema.extend({
   willBeDeleted: z.string(),
   author: z.object({

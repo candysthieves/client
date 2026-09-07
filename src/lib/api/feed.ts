@@ -1,59 +1,31 @@
+import type { FeedPost, FeedPostsResponse } from '@/lib/model'
 import type { Post } from '@/mocks/posts'
 import { request } from '@/lib/api/request'
 
-type FeedPostImage = {
-  fileId: string
-  url: string
-  width?: number
-  height?: number
-}
-
-type FeedPostAuthor = {
-  id: string
-  username: string
-}
-
-type FeedPost = {
-  id: string
-  description?: string
-  images: FeedPostImage[]
-  preview: FeedPostImage
-  createdAt: string
-  willBeDeleted: null | string
-  author: FeedPostAuthor
-}
-
-type FeedPostsResponse = {
-  items: FeedPost[]
-  nextCursor: null | string
-  hasNextPage: boolean
-}
-
 type GetAllPostsParams = {
-  cursor?: string
   limit?: number
 }
 
-const toPost = (feedPost: FeedPost): Post => ({
-  postId: feedPost.id,
-  description: feedPost.description,
-  images: feedPost.images,
-  preview: feedPost.preview,
-  userId: feedPost.author.id,
-  userName: feedPost.author.username,
-  createdAt: feedPost.createdAt,
-  willBeDeletedIn: feedPost.willBeDeleted ? new Date(feedPost.willBeDeleted) : null,
-})
+const toPost = (feedPost: FeedPost): Post => {
+  const willBeDeletedIn = feedPost.willBeDeleted ? new Date(feedPost.willBeDeleted) : null
+
+  return {
+    postId: feedPost.id,
+    description: feedPost.description,
+    images: feedPost.images,
+    preview: feedPost.preview,
+    userId: feedPost.author.id,
+    userName: feedPost.author.username,
+    createdAt: feedPost.createdAt,
+    willBeDeletedIn,
+  }
+}
 
 export const getAllPosts = async (
-  { cursor, limit }: GetAllPostsParams = {},
+  { limit }: GetAllPostsParams = {},
   init?: RequestInit
 ): Promise<Post[]> => {
   const searchParams = new URLSearchParams()
-
-  if (cursor) {
-    searchParams.set('cursor', cursor)
-  }
 
   if (limit) {
     searchParams.set('limit', String(limit))
@@ -64,6 +36,9 @@ export const getAllPosts = async (
     `/posts/all-posts${query ? `?${query}` : ''}`,
     init
   )
+  const posts = response.items.map(toPost)
 
-  return response.items.map(toPost)
+  // The backend ignores `limit` and always returns more than asked — slice
+  // defensively so callers actually get what they requested.
+  return limit ? posts.slice(0, limit) : posts
 }

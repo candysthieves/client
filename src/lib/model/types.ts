@@ -13,7 +13,9 @@ import {
   userResponseSchema,
   validatePasswordRecoveryCodeSchema,
 } from './auth.schemas'
+import { feedPostSchema, feedPostsResponseSchema } from './feed.schemas'
 import { profilePostSchema, profilePostsResponseSchema, userProfileSchema } from './profile.schemas'
+import { usersCountResponseSchema } from './users.schemas'
 
 // Auth
 export type AccessTokenResponse = z.infer<typeof accessTokenResponseSchema>
@@ -37,4 +39,6 @@ export type LoginField = keyof LoginRequest
 export type PasswordRecoveryField = keyof PasswordRecoveryRequest
 // export type AuthType = 'github' | 'google'
 export type NewPasswordField = keyof NewPasswordRequest
-export type UsersCountResponse = { count: number }
+export type UsersCountResponse = z.infer<typeof usersCountResponseSchema>
+export type FeedPost = z.infer<typeof feedPostSchema>
+export type FeedPostsResponse = z.infer<typeof feedPostsResponseSchema>

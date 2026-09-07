@@ -34,7 +34,7 @@ const mapProfilePost = (post: ProfilePost, userId: string): Post => {
 }
 
 export const getDeletedPosts = async (): Promise<Post[]> => {
-  const response = await request<unknown>('/posts/deleted-posts?limit=20')
+  const response = await request<unknown>('/posts/deleted-posts')
   const { items } = deletedPostsResponseSchema.parse(response)
 
   return items.map(post => ({

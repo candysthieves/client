@@ -176,17 +176,48 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
   const accessToken =
     typeof window !== 'undefined' ? localStorage.getItem(ACCESS_TOKEN_LS_KEY) : undefined
 
-  let response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, {
+  const body = init?.body
+  const isFormData = body instanceof FormData
+
+  const createHeaders = (token?: null | string) => {
+    const headers = new Headers(init?.headers)
+
+    // FormData:
+    // DO NOT set the Content-Type manually.
+    // The browser will set it automatically:
+    // multipart/form-data; boundary=...
+    if (isFormData) {
+      headers.delete('Content-Type')
+    } else if (body !== undefined && !headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json')
+    }
+
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`)
+    }
+
+    return headers
+  }
+
+  const createRequestInit = (token?: null | string): RequestInit => ({
     ...init,
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(accessToken && {
-        Authorization: `Bearer ${accessToken}`,
-      }),
-      ...init?.headers,
-    },
+    headers: createHeaders(token),
   })
+
+  let response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, createRequestInit(accessToken))
+
+  // let response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, {
+  //   ...init,
+  //   credentials: 'include',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     ...(accessToken && {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     }),
+  //     ...init?.headers,
+  //   },
+  // })
 
   /**
    * Refresh token error 401 - revalidate refresh token - logic starts
@@ -260,16 +291,23 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
 
       /**
        * Retry the original request with the new access token.
+       *
+       * createRequestInit() will redetermine whether the body is FormData.
+       *
+       * Therefore:
+       * FormData -> multipart/form-data
+       * JSON -> application/json
        */
-      response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, {
-        ...init,
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${newAccessToken}`,
-          ...init?.headers,
-        },
-      })
+      // response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, {
+      //   ...init,
+      //   credentials: 'include',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Authorization: `Bearer ${newAccessToken}`,
+      //     ...init?.headers,
+      //   },
+      // })
+      response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, createRequestInit(newAccessToken))
     } catch (error) {
       /**
        * Refresh failed.

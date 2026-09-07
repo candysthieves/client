@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.34.5",
   "scripts": {
     "dev": "next dev",
     "dev:host": "next dev --hostname dev.lumosapp.net --port 3000 --experimental-https",
@@ -36,9 +37,11 @@
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-easy-crop": "^6.2.3",
     "react-google-recaptcha": "^2.1.0",
     "react-hook-form": "^7.85.0",
     "react-hot-toast": "^2.6.0",
+    "react-loading-skeleton": "^3.5.0",
     "typescript-eslint": "^8.65.0",
     "zod": "^4.4.3"
   },

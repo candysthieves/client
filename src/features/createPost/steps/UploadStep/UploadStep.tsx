@@ -1,6 +1,7 @@
 import { Button, Cards, ImageOutline, Tooltip } from '@candy.thieves/ui-kit-lumos'
 import { ChangeEvent, useRef, useState } from 'react'
 import { ToastWarning } from '@/components'
+import { FILES_UPLOAD_LIMIT } from '@/constants'
 import { clearPostDraft, isPostDraftExist } from '@/lib/utils'
 import s from './UploadStep.module.scss'
 
@@ -10,8 +11,6 @@ type UploadStepProps = {
   fileUploadsQuantity: number
   moveNextStep: () => void
 }
-
-const FILES_UPLOAD_LIMIT = 8
 
 export const UploadStep = ({
   onFileSelected,

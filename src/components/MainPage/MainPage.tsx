@@ -6,6 +6,7 @@ import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer
 import { PostCard } from '@/components/PostCard'
 import { PostModal } from '@/components/PostModal/PostModal'
 import { RegisteredUsersCounter } from '@/components/RegisteredUsersCounter'
+import { useAuth } from '@/lib/hooks/useAuth'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
 import { getTimeAgo } from '@/lib/utils'
 import s from './MainPage.module.scss'
@@ -19,6 +20,7 @@ export const MainPage = ({ initialUsersCount, posts }: MainPageProps) => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isMobile = useIsMobileViewport()
+  const { user } = useAuth()
 
   const postList = posts ?? []
 
@@ -58,7 +60,12 @@ export const MainPage = ({ initialUsersCount, posts }: MainPageProps) => {
 
       {selectedPost &&
         (isMobile ? (
-          <MobilePostViewer onClose={handleClose} posts={postList} startIndex={selectedIndex} />
+          <MobilePostViewer
+            onClose={handleClose}
+            posts={postList}
+            startIndex={selectedIndex}
+            userId={user?.id ?? ''}
+          />
         ) : (
           <PostModal onClose={handleClose} open post={selectedPost} />
         ))}

@@ -1,28 +1,40 @@
-import { Avatar, Carousel, TextArea, Typography } from '@candy.thieves/ui-kit-lumos'
+import {
+  Avatar,
+  Carousel,
+  CircularProgress,
+  TextArea,
+  Typography,
+} from '@candy.thieves/ui-kit-lumos'
 import { useRef, useState } from 'react'
 import { LocationInput } from '@/components/LocationInput'
-import { Location } from '@/features/createPost/types'
+import { MAX_POST_DESCRIPTION_LENGTH } from '@/constants'
+import { Location, PostFile } from '@/features/createPost/types'
+import { usePostEvents } from '@/lib/hooks'
 import { UserResponse } from '@/lib/model'
 import s from './PublicationStep.module.scss'
 
 type PublicationStepProps = {
   user: null | UserResponse
+  files: PostFile[]
   fileUrls: string[]
   description: string
   locations: Location[]
   onDescriptionChange: (value: string) => void
   onLocationChange: (value: Location[]) => void
+  onPostCreated: (postId: string) => void
+  isPublishing?: boolean
 }
-
-const MAX_DESCRIPTION_LENGTH = 500
 
 export const PublicationStep = ({
   user,
   fileUrls,
+  files,
   description,
   locations,
   onDescriptionChange,
   onLocationChange,
+  onPostCreated,
+  isPublishing,
 }: PublicationStepProps) => {
   const descriptionRef = useRef(description)
   const counterRef = useRef<HTMLDivElement | null>(null)
@@ -31,8 +43,13 @@ export const PublicationStep = ({
   const userName = user?.username || 'user'
   const maxLocations = fileUrls.length
 
+  // SSE Listener hook (for Publishing created post):
+  usePostEvents({
+    onPostCreated,
+  })
+
   const handleDescriptionChange = (value: string) => {
-    if (value.length > MAX_DESCRIPTION_LENGTH) {
+    if (value.length > MAX_POST_DESCRIPTION_LENGTH) {
       setIsTextError(true)
       return
     }
@@ -44,7 +61,7 @@ export const PublicationStep = ({
     descriptionRef.current = value
 
     if (counterRef.current) {
-      counterRef.current.textContent = `${value.length}/${MAX_DESCRIPTION_LENGTH}`
+      counterRef.current.textContent = `${value.length}/${MAX_POST_DESCRIPTION_LENGTH}`
     }
   }
 
@@ -76,7 +93,8 @@ export const PublicationStep = ({
             onChange={event => handleDescriptionChange(event.target.value)}
             onBlur={handleDescriptionBlur}
             placeholder={'Add publication description'}
-            maxLength={MAX_DESCRIPTION_LENGTH + 1}
+            maxLength={MAX_POST_DESCRIPTION_LENGTH + 1}
+            disabled={isPublishing}
           />
 
           <Typography
@@ -86,18 +104,21 @@ export const PublicationStep = ({
             className={s.textCounter}
             mt={'0.5rem'}
           >
-            {description.length}/{MAX_DESCRIPTION_LENGTH}
+            {description.length}/{MAX_POST_DESCRIPTION_LENGTH}
           </Typography>
         </div>
 
         <div className={s.locationBlock}>
           <LocationInput
+            files={files}
             maxLocations={maxLocations}
             initialLocations={locations}
             onLocationChange={onLocationChange}
+            isPublishing={isPublishing}
           />
         </div>
       </div>
+      {isPublishing && <CircularProgress size={'lg'} color={'success'} className={s.loadSpinner} />}
     </div>
   )
 }

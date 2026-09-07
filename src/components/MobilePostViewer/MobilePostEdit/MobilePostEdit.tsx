@@ -11,9 +11,10 @@ type Props = {
   post: Post
   onCancel: () => void
   onSave: (description: string) => void
+  isSaving?: boolean
 }
 
-export const MobilePostEdit = ({ post, onCancel, onSave }: Props) => {
+export const MobilePostEdit = ({ post, onCancel, onSave, isSaving }: Props) => {
   const [description, setDescription] = useState(post.description ?? '')
 
   return (
@@ -29,6 +30,7 @@ export const MobilePostEdit = ({ post, onCancel, onSave }: Props) => {
           type={'button'}
           className={`typography-h3 ${s.headerButton} ${s.saveButton}`}
           onClick={() => onSave(description)}
+          disabled={isSaving}
         >
           Save
         </button>

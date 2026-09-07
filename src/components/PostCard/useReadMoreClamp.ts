@@ -11,6 +11,8 @@ type ReadMoreClampOptions = {
 type ReadMoreClamp = {
   maxLength: number
   text: string
+  /** Actual rendered height (px) of `text` once expanded. */
+  expandedHeight: number
 }
 
 const HEIGHT_TOLERANCE_PX = 1
@@ -34,7 +36,11 @@ export const useReadMoreClamp = (
     initialMaxLength = text.length,
   }: ReadMoreClampOptions
 ): ReadMoreClamp => {
-  const [clamp, setClamp] = useState<ReadMoreClamp>({ maxLength: initialMaxLength, text })
+  const [clamp, setClamp] = useState<ReadMoreClamp>({
+    expandedHeight: 0,
+    maxLength: initialMaxLength,
+    text,
+  })
 
   useEffect(() => {
     const measurer = document.createElement('div')
@@ -93,7 +99,12 @@ export const useReadMoreClamp = (
       const isCollapsed =
         container.closest<HTMLElement>('[data-expanded]')?.dataset.expanded !== 'true'
 
+      // Re-measure at the winning length — the measurer may hold a stale value.
+      textFitsWithin(expandedMaxHeight, expandedReserve, expandedLength)
+      const expandedHeight = measurer.scrollHeight
+
       setClamp(previous => ({
+        expandedHeight,
         maxLength: isCollapsed
           ? longestFittingLength(container.clientHeight + HEIGHT_TOLERANCE_PX, collapsedReserve)
           : previous.maxLength,

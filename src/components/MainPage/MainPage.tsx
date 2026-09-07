@@ -11,8 +11,8 @@ import { getTimeAgo } from '@/lib/utils'
 import s from './MainPage.module.scss'
 
 type MainPageProps = {
-  initialUsersCount: number
-  posts: Post[]
+  initialUsersCount: null | number
+  posts: null | Post[]
 }
 
 export const MainPage = ({ initialUsersCount, posts }: MainPageProps) => {
@@ -20,35 +20,45 @@ export const MainPage = ({ initialUsersCount, posts }: MainPageProps) => {
   const searchParams = useSearchParams()
   const isMobile = useIsMobileViewport()
 
+  const postList = posts ?? []
+
   const postId = searchParams.get('postId')
-  const selectedPost = postId ? (posts.find(post => post.postId === postId) ?? null) : null
+  const selectedPost = postId ? (postList.find(post => post.postId === postId) ?? null) : null
 
   const selectedIndex = selectedPost
-    ? posts.findIndex(post => post.postId === selectedPost.postId)
+    ? postList.findIndex(post => post.postId === selectedPost.postId)
     : 0
 
   const handleClose = () => router.push('/')
 
   return (
     <div className={s.root}>
-      <RegisteredUsersCounter count={initialUsersCount} />
+      {initialUsersCount === null ? (
+        <p className={s.errorMessage}>Failed to load registered users count</p>
+      ) : (
+        <RegisteredUsersCounter count={initialUsersCount} />
+      )}
 
-      <div className={s.postsGrid} data-hidden={!!selectedPost}>
-        {posts.map(post => (
-          <PostCard
-            caption={post.description ?? ''}
-            images={post.images.map(image => image.url)}
-            key={post.postId}
-            onOpen={() => router.push(`/?postId=${post.postId}`)}
-            timeAgo={getTimeAgo(post.createdAt)}
-            username={post.userName}
-          />
-        ))}
-      </div>
+      {posts === null ? (
+        <p className={s.errorMessage}>Failed to load posts. Try refreshing the page.</p>
+      ) : (
+        <div className={s.postsGrid} data-hidden={!!selectedPost}>
+          {postList.map(post => (
+            <PostCard
+              caption={post.description ?? ''}
+              images={post.images.map(image => image.url)}
+              key={post.postId}
+              postId={post.postId}
+              timeAgo={getTimeAgo(post.createdAt)}
+              username={post.userName}
+            />
+          ))}
+        </div>
+      )}
 
       {selectedPost &&
         (isMobile ? (
-          <MobilePostViewer onClose={handleClose} posts={posts} startIndex={selectedIndex} />
+          <MobilePostViewer onClose={handleClose} posts={postList} startIndex={selectedIndex} />
         ) : (
           <PostModal onClose={handleClose} open post={selectedPost} />
         ))}

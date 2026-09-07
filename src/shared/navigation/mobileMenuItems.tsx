@@ -15,7 +15,7 @@ import {
 type NavigationItem = {
   id: string
   label: string
-  href: string
+  href?: ((userId: string) => string) | string
   icon: ReactNode
   activeIcon: ReactNode
 }
@@ -30,7 +30,7 @@ export const mobileMenuItems: NavigationItem[] = [
   },
   {
     activeIcon: <PlusSquare />,
-    href: '/create',
+    href: (userId: string) => `/profile/${userId}?action=create`,
     icon: <PlusSquareOutline />,
     id: 'create',
     label: 'Create',

@@ -3,8 +3,8 @@
 import { Avatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { useState } from 'react'
+import type { Post } from '@/lib/model'
 import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
-import { Post } from '@/mocks/posts'
 import s from './MobilePostEdit.module.scss'
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
 }
 
 export const MobilePostEdit = ({ post, onCancel, onSave, isSaving }: Props) => {
-  const [description, setDescription] = useState(post.description ?? '')
+  const [description, setDescription] = useState(post.description)
 
   return (
     <div className={s.edit}>
@@ -40,7 +40,7 @@ export const MobilePostEdit = ({ post, onCancel, onSave, isSaving }: Props) => {
         <div className={s.imageFrame}>
           <Image
             src={post.images[0].url}
-            alt={post.description || 'Post'}
+            alt={post.description}
             width={post.images[0].width ?? 986}
             height={post.images[0].height ?? 1130}
             className={s.postImage}
@@ -49,9 +49,9 @@ export const MobilePostEdit = ({ post, onCancel, onSave, isSaving }: Props) => {
       </div>
       <div className={s.editContent}>
         <div className={s.editAuthor}>
-          <Avatar userName={post.userName} size={'s'} delayMs={0} />
+          <Avatar userName={post.author.username} size={'s'} delayMs={0} />
 
-          <Typography variant={'subtitle2'}>{post.userName}</Typography>
+          <Typography variant={'subtitle2'}>{post.author.username}</Typography>
         </div>
 
         <PostDescriptionEditor

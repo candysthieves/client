@@ -2,13 +2,14 @@
 
 import { Avatar, AvatarBlock, Close, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useEffect, useRef } from 'react'
+import type { Post } from '@/lib/model'
 import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
 import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
 import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { formatPostDate } from '@/lib/utils/formatPostDate'
-import { mockLikedByUsers, Post } from '@/mocks/posts'
+import { mockLikedByUsers } from '@/mocks/posts'
 import s from './MobilePostFeed.module.scss'
 
 type Props = {
@@ -43,22 +44,22 @@ export const MobilePostFeed = ({ posts, startIndex, onClose, onDelete, onEdit }:
         {posts.map((post, index) => {
           return (
             <article
-              key={post.postId}
+              key={post.id}
               className={s.slide}
               ref={element => {
                 postRefs.current[index] = element
               }}
             >
               <div className={s.author}>
-                <Avatar userName={post.userName} size={'s'} delayMs={0} />
+                <Avatar userName={post.author.username} size={'s'} delayMs={0} />
 
-                <Typography variant={'subtitle2'}>{post.userName}</Typography>
+                <Typography variant={'subtitle2'}>{post.author.username}</Typography>
 
-                {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.userId` and pass isAuthor here. */}
+                {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
                 <PostActionMenu
                   isAuthor={isAuthenticated}
                   onEdit={() => onEdit(index)}
-                  onDelete={() => onDelete(post.postId)}
+                  onDelete={() => onDelete(post.id)}
                 />
               </div>
               <div className={s.imageArea}>

@@ -1,26 +1,5 @@
-// Temporary types and shared mock data for posts, used across
-// components before the real API replaces them.
-
-export type PostImage = {
-  url: string
-  width?: number
-  height?: number
-}
-
-export type PostPreview = {
-  url: string
-}
-
-export type Post = {
-  postId: string
-  description?: string
-  images: PostImage[]
-  preview: PostPreview
-  userId: string
-  userName: string
-  createdAt: string
-  willBeDeletedIn: Date | null
-}
+// Mock data for the posts UI, used across components before the real
+// backend backs the corresponding screens.
 
 export type Comment = {
   id: string

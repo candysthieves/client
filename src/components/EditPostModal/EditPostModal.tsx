@@ -3,7 +3,7 @@
 import type { ModalProps } from '@candy.thieves/ui-kit-lumos'
 import { Avatar, Button, Close, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useState } from 'react'
-import type { Post } from '@/mocks/posts'
+import type { Post } from '@/lib/model'
 import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
 import { getPostImageAreaStyle } from '@/lib/utils'
@@ -22,7 +22,7 @@ type Props = {
 }
 
 export const EditPostModal = ({ post, open, onClose, onCancel, onSave, isSaving }: Props) => {
-  const initialDescription = post.description ?? ''
+  const initialDescription = post.description
   const [description, setDescription] = useState(initialDescription)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const hasChanges = description !== initialDescription
@@ -84,14 +84,14 @@ export const EditPostModal = ({ post, open, onClose, onCancel, onSave, isSaving 
           </div>
 
           <div className={s.imageSection}>
-            <PostImagesCarousel images={post.images} alt={post.description || 'Post'} />
+            <PostImagesCarousel images={post.images} alt={post.description} />
           </div>
 
           <div className={s.editSection}>
             <div className={s.user}>
-              <Avatar userName={post.userName} size={'s'} delayMs={0} />
+              <Avatar userName={post.author.username} size={'s'} delayMs={0} />
 
-              <Typography variant={'subtitle2'}>{post.userName}</Typography>
+              <Typography variant={'subtitle2'}>{post.author.username}</Typography>
             </div>
 
             <PostDescriptionEditor

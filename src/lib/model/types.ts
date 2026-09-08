@@ -13,7 +13,7 @@ import {
   userResponseSchema,
   validatePasswordRecoveryCodeSchema,
 } from './auth.schemas'
-import { postDetailsSchema } from './post.schemas'
+import { postAuthorSchema, postDetailsSchema, postMediaSchema, postSchema } from './post.schemas'
 import { profilePostSchema, profilePostsResponseSchema, userProfileSchema } from './profile.schemas'
 
 // Auth
@@ -24,7 +24,10 @@ export type LoginRequest = z.infer<typeof loginSchema>
 export type LoginResponse = z.infer<typeof loginResponseSchema>
 export type NewPasswordRequest = z.infer<typeof newPasswordSchema>
 export type PasswordRecoveryRequest = z.infer<typeof passwordRecoverySchema>
+export type Post = z.infer<typeof postSchema>
+export type PostAuthor = z.infer<typeof postAuthorSchema>
 export type PostDetails = z.infer<typeof postDetailsSchema>
+export type PostImage = z.infer<typeof postMediaSchema>
 export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirmationSchema>
 export type RegistrationRequest = z.infer<typeof registrationSchema>
 export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEmailSchema>

@@ -39,28 +39,29 @@ export const AddPostResponseSchema = z.object({
   postId: z.string(),
 })
 
-export const postDetailsSchema = z.object({
+export const postMediaSchema = z.object({
+  fileId: z.string(),
+  url: z.url(),
+  width: z.number(),
+  height: z.number(),
+})
+
+export const postAuthorSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+})
+
+export const postSchema = z.object({
   id: z.string(),
   description: z.string(),
-  images: z.array(
-    z.object({
-      fileId: z.string(),
-      url: z.url(),
-      width: z.number(),
-      height: z.number(),
-    })
-  ),
-  preview: z.object({
-    fileId: z.string(),
-    url: z.url(),
-    width: z.number(),
-    height: z.number(),
-  }),
+  images: z.array(postMediaSchema),
+  preview: postMediaSchema,
   createdAt: z.string(),
-  author: z.object({
-    id: z.string(),
-    username: z.string(),
-  }),
+  willBeDeleted: z.string().nullable().optional(),
+  author: postAuthorSchema,
+})
+
+export const postDetailsSchema = postSchema.extend({
   isOwner: z.boolean(),
 })
 

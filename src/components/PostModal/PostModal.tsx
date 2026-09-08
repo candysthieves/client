@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Post } from '@/mocks/posts'
+import type { Post } from '@/lib/model'
 import { ConfirmDeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
@@ -16,7 +16,7 @@ type PostModalProps = {
 type Mode = 'edit' | 'view'
 
 export const PostModal = ({ post, open, onClose }: PostModalProps) => {
-  const { mutate: deletePost, isPending } = useDeletePost(post.userId)
+  const { mutate: deletePost, isPending } = useDeletePost(post.author.id)
   const { mutate: updatePost, isPending: isUpdating } = useUpdatePost()
   const [mode, setMode] = useState<Mode>('view')
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -41,7 +41,7 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
 
   const handleSave = (description: string) => {
     updatePost(
-      { postId: post.postId, userId: post.userId, description },
+      { postId: post.id, userId: post.author.id, description },
       {
         onSuccess: () => setMode('view'),
       }
@@ -49,7 +49,7 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
   }
 
   const handleConfirmDelete = () => {
-    deletePost(post.postId, {
+    deletePost(post.id, {
       onSuccess: handleClose,
     })
   }

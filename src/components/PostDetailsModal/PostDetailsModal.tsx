@@ -1,5 +1,6 @@
 'use client'
 import { Avatar, AvatarBlock, Button, Modal, Scroll, Typography } from '@candy.thieves/ui-kit-lumos'
+import type { Post } from '@/lib/model'
 import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
 import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostComments } from '@/components/Post/PostComments/PostComments'
@@ -8,7 +9,7 @@ import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { getPostImageAreaStyle } from '@/lib/utils'
 import { formatPostDate } from '@/lib/utils/formatPostDate'
-import { mockComments, mockLikedByUsers, type Post } from '@/mocks/posts'
+import { mockComments, mockLikedByUsers } from '@/mocks/posts'
 import s from './PostDetailsModal.module.scss'
 
 type Props = {
@@ -34,19 +35,19 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit, onDelete }: Prop
     >
       <div className={s.postContainer} style={getPostImageAreaStyle(post.images[0])}>
         <div className={s.postImageContainer}>
-          <PostImagesCarousel images={post.images} alt={post.description || 'Post'} />
+          <PostImagesCarousel images={post.images} alt={post.description} />
         </div>
 
         <div className={s.postInfo}>
           {/* Header */}
           <div className={s.postHeader}>
             <div className={s.author}>
-              <Avatar userName={post.userName} size={'s'} delayMs={0} />
+              <Avatar userName={post.author.username} size={'s'} delayMs={0} />
 
-              <Typography variant={'subtitle2'}>{post.userName}</Typography>
+              <Typography variant={'subtitle2'}>{post.author.username}</Typography>
             </div>
 
-            {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.userId` and pass isAuthor here. */}
+            {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
             <PostActionMenu isAuthor={isAuthenticated} onEdit={onEdit} onDelete={onDelete} />
           </div>
 

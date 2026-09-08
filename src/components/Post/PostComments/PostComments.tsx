@@ -1,5 +1,6 @@
 import { Avatar, HeartOutline, Typography } from '@candy.thieves/ui-kit-lumos'
-import type { Comment, Post } from '@/mocks/posts'
+import type { Post } from '@/lib/model'
+import type { Comment } from '@/mocks/posts'
 import s from './PostComments.module.scss'
 
 type Props = {
@@ -11,7 +12,7 @@ export const PostComments = ({ post, comments }: Props) => {
   const descriptionComment: Comment | null = post.description
     ? {
         id: 'post-description',
-        username: post.userName,
+        username: post.author.username,
         text: post.description,
         createdAt: '',
       }

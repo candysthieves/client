@@ -4,7 +4,6 @@ import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import type { Post } from '@/mocks/posts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
 import { CreatePostModal } from '@/features/createPost'
@@ -31,17 +30,8 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
   const { data: postDetails } = usePost(postId)
-  const profilePosts: Post[] = (profilePostsResponse?.items ?? []).map(post => ({
-    postId: post.id,
-    description: post.description,
-    images: post.images,
-    preview: post.preview,
-    userId,
-    userName: profile?.username ?? userId,
-    createdAt: post.createdAt,
-    willBeDeletedIn: post.willBeDeleted ? new Date(post.willBeDeleted) : null,
-  }))
   const isOwner = profile?.isOwner ?? false
+  const profilePosts = profilePostsResponse?.items ?? []
 
   useEffect(() => {
     if (postDetails && postDetails.author.id !== userId) {
@@ -49,23 +39,9 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     }
   }, [postDetails, router, userId])
 
-  const selectedPost = profilePosts.find(post => post.postId === postId)
-  const modalPost: Post | undefined =
-    postDetails?.author.id === userId
-      ? {
-          postId: postDetails.id,
-          description: postDetails.description,
-          images: postDetails.images,
-          preview: postDetails.preview,
-          userId: postDetails.author.id,
-          userName: postDetails.author.username,
-          createdAt: postDetails.createdAt,
-          willBeDeletedIn: null,
-        }
-      : undefined
-  const selectedIndex = selectedPost
-    ? profilePosts.findIndex(post => post.postId === selectedPost.postId)
-    : 0
+  const selectedIndex = profilePosts.findIndex(post => post.id === postId)
+  const modalPost = postDetails?.author.id === userId ? postDetails : undefined
+  const mobilePosts = selectedIndex === -1 && modalPost ? [modalPost] : profilePosts
   const showCreateModal = !postId && action === 'create'
   const handleClosePost = () => router.replace(`/profile/${userId}`)
 
@@ -138,11 +114,11 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
 
       {postId &&
         (isMobile
-          ? selectedPost && (
+          ? mobilePosts.length > 0 && (
               <MobilePostViewer
                 onClose={handleClosePost}
-                posts={profilePosts}
-                startIndex={selectedIndex}
+                posts={mobilePosts}
+                startIndex={selectedIndex === -1 ? 0 : selectedIndex}
                 userId={userId}
               />
             )

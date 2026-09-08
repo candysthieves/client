@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import type { Post } from '@/mocks/posts'
+import type { Post } from '@/lib/model'
 import s from './ProfileClient.module.scss'
 
 type PostPreviewProps = {
@@ -19,18 +19,18 @@ export function PostPreview({ index, post, userId }: PostPreviewProps) {
 
   return (
     <Link
-      href={`/profile/${userId}?postId=${post.postId}`}
+      href={`/profile/${userId}?postId=${post.id}`}
       aria-label={`Open post ${index + 1}`}
       className={s.postPreview}
     >
       {showPlaceholder ? (
         <span className={s.postPlaceholder} aria-hidden={'true'}>
-          {post.description?.slice(0, 1).toUpperCase() ?? 'P'}
+          {post.description.slice(0, 1).toUpperCase() ?? 'P'}
         </span>
       ) : (
         <Image
           src={previewUrl}
-          alt={post.description ?? `Post ${index + 1}`}
+          alt={post.description}
           fill
           sizes={'(max-width: 640px) 50vw, (max-width: 768px) 33vw, 234px'}
           className={s.postImage}

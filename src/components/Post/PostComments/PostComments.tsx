@@ -1,6 +1,6 @@
 import { Avatar, HeartOutline, Typography } from '@candy.thieves/ui-kit-lumos'
-import type { Post } from '@/lib/model'
-import type { Comment } from '@/mocks/posts'
+import { Comment, Post } from '@/features/createPost'
+import { useProfile } from '@/lib/profile'
 import s from './PostComments.module.scss'
 
 type Props = {
@@ -9,12 +9,16 @@ type Props = {
 }
 
 export const PostComments = ({ post, comments }: Props) => {
+  // TODO add userName and users avatar url (REFACTOR LATER)
+  const { data: userProfileData } = useProfile(post.userId)
+
   const descriptionComment: Comment | null = post.description
     ? {
         id: 'post-description',
         username: post.author.username,
         text: post.description,
         createdAt: '',
+        avatarUrl: userProfileData?.avatarPreviewUrl?.url ?? '', // set avatarUrl (REFACTOR LATER)
       }
     : null
 

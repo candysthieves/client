@@ -10,11 +10,11 @@ import { LocationInput } from '@/components/LocationInput'
 import { MAX_POST_DESCRIPTION_LENGTH } from '@/constants'
 import { Location, PostFile } from '@/features/createPost/types'
 import { usePostEvents } from '@/lib/hooks'
-import { UserResponse } from '@/lib/model'
+import { UserProfile } from '@/lib/model'
 import s from './PublicationStep.module.scss'
 
 type PublicationStepProps = {
-  user: null | UserResponse
+  userProfile: UserProfile
   files: PostFile[]
   fileUrls: string[]
   description: string
@@ -26,7 +26,7 @@ type PublicationStepProps = {
 }
 
 export const PublicationStep = ({
-  user,
+  userProfile,
   fileUrls,
   files,
   description,
@@ -36,11 +36,12 @@ export const PublicationStep = ({
   onPostCreated,
   isPublishing,
 }: PublicationStepProps) => {
+  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
+
   const descriptionRef = useRef(description)
   const counterRef = useRef<HTMLDivElement | null>(null)
   const [isTextError, setIsTextError] = useState(false)
 
-  const userName = user?.username || 'user'
   const maxLocations = fileUrls.length
 
   // SSE Listener hook (for Publishing created post):
@@ -80,10 +81,10 @@ export const PublicationStep = ({
       <div className={s.publicationBlock}>
         <div className={s.descriptionBlock}>
           <div className={s.publisherInfo}>
-            <Avatar size={'s'} userName={userName} src={''} />
+            <Avatar size={'s'} userName={profileUserName} src={avatarPreviewUrl?.url || ''} />
 
             <Typography variant={'subtitle1'} color={'var(--color-light-100)'}>
-              {userName}
+              {profileUserName}
             </Typography>
           </div>
 

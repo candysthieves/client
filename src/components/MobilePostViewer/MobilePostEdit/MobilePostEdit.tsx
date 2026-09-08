@@ -1,39 +1,44 @@
 'use client'
 
-import { Avatar, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Avatar, Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { useState } from 'react'
 import type { Post } from '@/lib/model'
 import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
+import { Post } from '@/features/createPost'
+import { UserProfile } from '@/lib/model'
 import s from './MobilePostEdit.module.scss'
 
 type Props = {
   post: Post
+  userProfile: UserProfile
   onCancel: () => void
   onSave: (description: string) => void
   isSaving?: boolean
 }
 
-export const MobilePostEdit = ({ post, onCancel, onSave, isSaving }: Props) => {
-  const [description, setDescription] = useState(post.description)
+export const MobilePostEdit = ({ post, userProfile, onCancel, onSave, isSaving }: Props) => {
+  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
+
+  const [description, setDescription] = useState(post.description ?? '')
 
   return (
     <div className={s.edit}>
       <header className={s.editHeader}>
-        <button type={'button'} className={`typography-h3 ${s.headerButton}`} onClick={onCancel}>
+        <Button type={'button'} className={`typography-h3 ${s.headerButton}`} onClick={onCancel}>
           Cancel
-        </button>
+        </Button>
 
         <Typography variant={'h2'}>Edit Post</Typography>
 
-        <button
+        <Button
           type={'button'}
           className={`typography-h3 ${s.headerButton} ${s.saveButton}`}
           onClick={() => onSave(description)}
           disabled={isSaving}
         >
           Save
-        </button>
+        </Button>
       </header>
 
       <div className={s.editImage}>
@@ -49,9 +54,14 @@ export const MobilePostEdit = ({ post, onCancel, onSave, isSaving }: Props) => {
       </div>
       <div className={s.editContent}>
         <div className={s.editAuthor}>
-          <Avatar userName={post.author.username} size={'s'} delayMs={0} />
+          <Avatar
+            userName={profileUserName}
+            size={'s'}
+            delayMs={0}
+            src={avatarPreviewUrl?.url || ''}
+          />
 
-          <Typography variant={'subtitle2'}>{post.author.username}</Typography>
+          <Typography variant={'subtitle2'}>{profileUserName}</Typography>
         </div>
 
         <PostDescriptionEditor

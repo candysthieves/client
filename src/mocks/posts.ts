@@ -1,14 +1,4 @@
-// Mock data for the posts UI, used across components before the real
-// backend backs the corresponding screens.
-
-export type Comment = {
-  id: string
-  username: string
-  avatarUrl?: string
-  text: string
-  createdAt: string
-  likesCount?: number
-}
+import { Comment } from '@/features/createPost'
 
 export type LikedByUser = {
   userName: string

@@ -5,9 +5,12 @@ import type { Post } from '@/lib/model'
 import { ConfirmDeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
+import { Post } from '@/features/createPost'
+import { UserProfile } from '@/lib/model'
 import { useDeletePost, useUpdatePost } from '@/lib/posts'
 
 type PostModalProps = {
+  userProfile: UserProfile
   post: Post
   open: boolean
   onClose: () => void
@@ -15,8 +18,8 @@ type PostModalProps = {
 
 type Mode = 'edit' | 'view'
 
-export const PostModal = ({ post, open, onClose }: PostModalProps) => {
-  const { mutate: deletePost, isPending } = useDeletePost(post.author.id)
+export const PostModal = ({ userProfile, post, open, onClose }: PostModalProps) => {
+  const { mutate: deletePost, isPending } = useDeletePost(post.userId)
   const { mutate: updatePost, isPending: isUpdating } = useUpdatePost()
   const [mode, setMode] = useState<Mode>('view')
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -59,6 +62,7 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
       <EditPostModal
         post={post}
         open={open}
+        userProfile={userProfile}
         onClose={handleClose}
         onCancel={handleCancelEdit}
         onSave={handleSave}
@@ -72,6 +76,7 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
       <PostDetailsModal
         post={post}
         open={open}
+        userProfile={userProfile}
         onClose={handleClose}
         onEdit={handleEdit}
         onDelete={handleDelete}

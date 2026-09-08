@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { Post, ProfilePostsResponse } from '@/lib/model'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
+import { Post } from '@/features/createPost'
 import { updatePost } from '@/lib/api'
 import { profileKeys } from '@/lib/profile/profileKeys'
 import { postsKeys } from '../postKeys'

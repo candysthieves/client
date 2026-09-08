@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
-import { CreatePostModal } from '@/features/createPost'
+import { CreatePostModal, Post } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
 import { usePost } from '@/lib/posts'
 import { useProfile, useProfilePosts } from '@/lib/profile'
@@ -23,16 +23,20 @@ type ProfileClientProps = {
 export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const router = useRouter()
   const isMobile = useIsMobileViewport()
+
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
+
   const {
     data: profilePostsResponse,
     isError: isPostsError,
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
+
   const { data: postDetails } = usePost(postId)
   const isOwner = profile?.isOwner ?? false
   const profilePosts = profilePostsResponse?.items ?? []
 
+  // Check if this useEffect is needed
   useEffect(() => {
     if (postDetails && postDetails.author.id !== userId) {
       router.replace(`/profile/${userId}`)
@@ -69,7 +73,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           <MainAvatar
             className={s.profileAvatar}
             userName={profile?.username ?? userId}
-            src={profile?.avatarPreviewUrl.url}
+            src={profile?.avatarPreviewUrl?.url ?? ''}
             size={'xxl'}
             delayMs={0}
           />
@@ -113,18 +117,22 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
       </div>
 
       {postId &&
+        profile &&
         (isMobile
           ? mobilePosts.length > 0 && (
               <MobilePostViewer
+                userProfile={profile}
                 onClose={handleClosePost}
                 posts={mobilePosts}
                 startIndex={selectedIndex === -1 ? 0 : selectedIndex}
                 userId={userId}
               />
             )
-          : modalPost && <PostModal post={modalPost} open onClose={handleClosePost} />)}
+          : modalPost && (
+              <PostModal userProfile={profile} post={modalPost} open onClose={handleClosePost} />
+            ))}
 
-      {showCreateModal && isOwner && <CreatePostModal userId={userId} />}
+      {showCreateModal && isOwner && profile && <CreatePostModal userProfile={profile} />}
     </>
   )
 }

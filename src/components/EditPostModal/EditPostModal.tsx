@@ -6,6 +6,8 @@ import { useState } from 'react'
 import type { Post } from '@/lib/model'
 import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
+import { Post } from '@/features/createPost'
+import { UserProfile } from '@/lib/model'
 import { getPostImageAreaStyle } from '@/lib/utils'
 import { ConfirmCloseModal } from './ConfirmCloseModal'
 import s from './EditPostModal.module.scss'
@@ -15,14 +17,25 @@ type InteractOutsideEvent = Parameters<NonNullable<ModalProps['onInteractOutside
 type Props = {
   post: Post
   open: boolean
+  userProfile: UserProfile
   onClose: () => void
   onCancel: () => void
   onSave: (description: string) => void
   isSaving?: boolean
 }
 
-export const EditPostModal = ({ post, open, onClose, onCancel, onSave, isSaving }: Props) => {
-  const initialDescription = post.description
+export const EditPostModal = ({
+  post,
+  open,
+  userProfile,
+  onClose,
+  onCancel,
+  onSave,
+  isSaving,
+}: Props) => {
+  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
+
+  const initialDescription = post.description ?? ''
   const [description, setDescription] = useState(initialDescription)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const hasChanges = description !== initialDescription
@@ -73,14 +86,14 @@ export const EditPostModal = ({ post, open, onClose, onCancel, onSave, isSaving 
           <div className={s.header}>
             <Typography variant={'subtitle2'}>Edit Post</Typography>
 
-            <button
+            <Button
               type={'button'}
               aria-label={'Close'}
               onClick={handleCloseRequest}
               className={s.closeButton}
             >
               <Close size={24} />
-            </button>
+            </Button>
           </div>
 
           <div className={s.imageSection}>
@@ -89,9 +102,14 @@ export const EditPostModal = ({ post, open, onClose, onCancel, onSave, isSaving 
 
           <div className={s.editSection}>
             <div className={s.user}>
-              <Avatar userName={post.author.username} size={'s'} delayMs={0} />
+              <Avatar
+                userName={profileUserName}
+                size={'s'}
+                delayMs={0}
+                src={avatarPreviewUrl?.url || ''}
+              />
 
-              <Typography variant={'subtitle2'}>{post.author.username}</Typography>
+              <Typography variant={'subtitle2'}>{profileUserName}</Typography>
             </div>
 
             <PostDescriptionEditor

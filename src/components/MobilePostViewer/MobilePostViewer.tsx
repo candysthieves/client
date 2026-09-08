@@ -3,19 +3,22 @@
 import { useState } from 'react'
 import type { Post } from '@/lib/model'
 import { ConfirmDeletePostModal } from '@/components'
+import { Post } from '@/features/createPost'
+import { UserProfile } from '@/lib/model'
 import { useDeletePost, useUpdatePost } from '@/lib/posts'
 import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'
 import { MobilePostFeed } from './MobilePostFeed/MobilePostFeed'
 import s from './MobilePostViewer.module.scss'
 
 type Props = {
+  userProfile: UserProfile
   posts: Post[]
   startIndex: number
   userId: string
   onClose: () => void
 }
 
-export const MobilePostViewer = ({ posts, startIndex, userId, onClose }: Props) => {
+export const MobilePostViewer = ({ userProfile, posts, startIndex, userId, onClose }: Props) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editingIndex, setEditingIndex] = useState(startIndex)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -41,6 +44,7 @@ export const MobilePostViewer = ({ posts, startIndex, userId, onClose }: Props) 
 
         <div className={s.viewer}>
           <MobilePostEdit
+            userProfile={userProfile}
             post={posts[editingIndex]}
             onCancel={() => setIsEditing(false)}
             isSaving={isUpdating}
@@ -66,6 +70,7 @@ export const MobilePostViewer = ({ posts, startIndex, userId, onClose }: Props) 
 
       <div className={s.viewer}>
         <MobilePostFeed
+          userProfile={userProfile}
           onClose={onClose}
           onDelete={postId => {
             setPostIdToDelete(postId)

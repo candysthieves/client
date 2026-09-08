@@ -59,7 +59,7 @@ export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> =>
   })
 }
 
-export const getPosts = () => apiClient<Post[]>('/posts')
+// export const getPosts = () => apiClient<Post[]>('/posts')
 
 export const getPostById = (postId: string): Promise<PostDetails> =>
   request<PostDetails>(`/posts/${encodeURIComponent(postId)}`)

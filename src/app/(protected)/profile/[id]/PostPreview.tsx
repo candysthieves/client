@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import type { Post } from '@/lib/model'
+import { Post } from '@/features/createPost'
 import s from './ProfileClient.module.scss'
 
 type PostPreviewProps = {
@@ -14,7 +14,7 @@ type PostPreviewProps = {
 
 export function PostPreview({ index, post, userId }: PostPreviewProps) {
   const [hasImageError, setHasImageError] = useState(false)
-  const previewUrl = post.preview?.url
+  const previewUrl = post.preview?.url ?? ''
   const showPlaceholder = hasImageError || !previewUrl
 
   return (

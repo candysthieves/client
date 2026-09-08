@@ -50,3 +50,34 @@ export const postImageSchema = z
 export const PostCreatedEventSchema = z.object({
   postId: z.string(),
 })
+
+export const ApiDeletedPostImageSchema = z.object({
+  fileId: z.string(),
+  url: z.string().url(),
+  width: z.number(),
+  height: z.number(),
+})
+
+// Схема для автора поста
+export const ApiDeletedPostAuthorSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+})
+
+// Схема для одного удаленного поста
+export const DeletedPostItemSchema = z.object({
+  id: z.string(),
+  description: z.string().nullable(), // описание может быть null
+  images: z.array(ApiDeletedPostImageSchema),
+  preview: ApiDeletedPostImageSchema.nullable(), // превью может быть null
+  createdAt: z.string(),
+  willBeDeleted: z.string().nullable(), // дата окончательного удаления
+  author: ApiDeletedPostAuthorSchema,
+})
+
+// Схема полного ответа сервера с курсорной пагинацией
+export const GetDeletedPostsResponseSchema = z.object({
+  items: z.array(DeletedPostItemSchema),
+  nextCursor: z.string().nullable(),
+  hasNextPage: z.boolean(),
+})

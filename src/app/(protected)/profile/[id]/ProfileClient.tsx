@@ -10,7 +10,7 @@ import { PostModal } from '@/components/PostModal/PostModal'
 import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
-import { useProfile, useProfilePosts } from '@/lib/profile'
+import { useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
 import { PostsFeed } from './PostsFeed'
 import s from './ProfileClient.module.scss'
 import { ProfileSkeleton } from './ProfileSkeleton'
@@ -42,6 +42,30 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   }))
   const isOwner = profile?.isOwner ?? false
 
+  const {
+    data: deletedPostsResponse,
+    isError: isDeletedPostsError,
+    isLoading: isDeletedPostsLoading,
+  } = useDeletedPosts(userId, isOwner)
+
+  const deletedPosts: Post[] = (deletedPostsResponse?.items ?? []).map(post => {
+    // 1. Создаем дефолтную картинку на крайний случай (если на бэке вообще пустые массивы)
+    const fallbackImage = {
+      fileId: 'placeholder',
+      url: '/post-placeholder.svg',
+    }
+
+    return {
+      postId: post.id,
+      description: post.description ?? '', // Защита от null
+      images: post.images.length > 0 ? post.images : [fallbackImage],
+      preview: post.preview ?? post.images[0] ?? fallbackImage,
+      userId,
+      userName: post.author.username ?? profile?.username ?? userId,
+      createdAt: post.createdAt,
+      willBeDeletedIn: post.willBeDeleted ? new Date(post.willBeDeleted) : null,
+    }
+  })
   const selectedPost = profilePosts.find(post => post.postId === postId)
   const selectedIndex = selectedPost
     ? profilePosts.findIndex(post => post.postId === selectedPost.postId)
@@ -118,14 +142,13 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             postsFeed={<PostsFeed posts={profilePostsResponse?.items ?? []} userId={userId} />}
             deletedPosts={
               <DeletedPosts
-                posts={profilePosts}
+                posts={deletedPosts}
                 userId={userId}
-                // isError={isDeletedPostsError}
-                // isLoading={isDeletedPostsLoading}
+                isError={isDeletedPostsError}
+                isLoading={isDeletedPostsLoading}
               />
             }
-            deletedPostsCount={profilePosts.length}
-            // deletedPostsCount={1}
+            deletedPostsCount={deletedPosts.length}
           />
         ) : (
           <PostsFeed posts={profilePostsResponse?.items ?? []} userId={userId} />

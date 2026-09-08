@@ -62,7 +62,17 @@ export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> =>
 export const getPosts = () => apiClient<Post[]>('/posts')
 
 export const deletePost = (postId: string) =>
-  apiClient<void>(`/posts/${postId}`, {
+  request<void>(`/posts/${postId}/soft-delete`, {
+    method: 'DELETE',
+  })
+
+export const restorePost = (postId: string) =>
+  request<void>(`/posts/${postId}/restore`, {
+    method: 'POST',
+  })
+
+export const hardDeletePost = (postId: string) =>
+  request<void>(`/posts/${postId}/hard-delete`, {
     method: 'DELETE',
   })
 

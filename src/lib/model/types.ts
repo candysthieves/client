@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { DeletedPostItemSchema, GetDeletedPostsResponseSchema } from '@/lib/model/post.schemas'
 import {
   accessTokenResponseSchema,
   apiErrorResponseSchema,
@@ -37,3 +38,5 @@ export type LoginField = keyof LoginRequest
 export type PasswordRecoveryField = keyof PasswordRecoveryRequest
 // export type AuthType = 'github' | 'google'
 export type NewPasswordField = keyof NewPasswordRequest
+export type DeletedPostItem = z.infer<typeof DeletedPostItemSchema>
+export type GetDeletedPostsResponse = z.infer<typeof GetDeletedPostsResponseSchema>

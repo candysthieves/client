@@ -126,7 +126,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           <PostModal post={selectedPost} open onClose={handleClosePost} />
         ))}
 
-      {showCreateModal && isOwner && <CreatePostModal userId={userId} />}
+      {showCreateModal && isOwner && profile && <CreatePostModal userProfile={profile} />}
     </>
   )
 }

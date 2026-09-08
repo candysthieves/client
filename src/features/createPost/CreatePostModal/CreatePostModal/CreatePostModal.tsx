@@ -1,6 +1,7 @@
 'use client'
 
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useCallback, useRef, useState } from 'react'
 import { ToastError, ToastSuccess, ToastWarning } from '@/components'
@@ -9,9 +10,9 @@ import {
   CreatePostModalHeader,
 } from '@/features/createPost/CreatePostModal'
 import { CropStepApi } from '@/features/createPost/steps/CropStep/CropImage/CropImage'
-import { useAuth } from '@/lib/hooks/useAuth'
-import { postImageSchema } from '@/lib/model'
+import { postImageSchema, UserProfile } from '@/lib/model'
 import { useAddPost } from '@/lib/posts'
+import { profileKeys } from '@/lib/profile'
 import { clearPostDraft, loadPostDraft, savePostDraft } from '@/lib/utils'
 import { CropStep, PublicationStep, UploadStep } from '../../steps'
 import { AddPostState, CreatePostStep, Location } from '../../types'
@@ -26,13 +27,15 @@ export const initialCreatePostState: AddPostState = {
 }
 
 type CreatePostModalProps = {
-  userId: string
+  userProfile: UserProfile
 }
 
-export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
-  const { user } = useAuth() // CHANGE LATER TO FETCHED USER DATA (with avatar src)
-  const { mutate: addPost, isPending } = useAddPost(userId)
+export const CreatePostModal = ({ userProfile }: CreatePostModalProps) => {
+  const { id: userId } = userProfile
+
+  const { mutate: addPost, isPending } = useAddPost()
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const [state, setState] = useState<AddPostState>(initialCreatePostState)
   const [isCreationOpen, setIsCreationOpen] = useState(true)
@@ -258,14 +261,19 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
   }
 
   const handlePostCreated = useCallback(
-    (postId: string) => {
-      console.log('handlePostCreated returned postId', postId)
+    async (postId: string) => {
       if (postId !== publishingPostIdRef.current) {
         return
       }
 
       publishingPostIdRef.current = null
       setIsProcessing(false)
+
+      if (userId) {
+        await queryClient.invalidateQueries({
+          queryKey: profileKeys.detail(userId),
+        })
+      }
 
       ToastSuccess({
         title: 'Success!',
@@ -275,7 +283,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       clearPostDraft()
       closeCreation()
     },
-    [closeCreation]
+    [closeCreation, queryClient, userId]
   )
 
   const handlePublish = useCallback(() => {
@@ -328,7 +336,7 @@ export const CreatePostModal = ({ userId }: CreatePostModalProps) => {
       case 'publication':
         return (
           <PublicationStep
-            user={user}
+            userProfile={userProfile}
             fileUrls={state.files.map(file => file.url)}
             files={state.files}
             description={state.description}

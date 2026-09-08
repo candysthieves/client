@@ -39,8 +39,8 @@
 
   position: absolute;
   z-index: 1;
-  top: min(0.75rem, 5.13cqi);
-  left: min(0.75rem, 5.13cqi);
+
+  @include top-left(min(0.75rem, 5.13cqi));
 
   padding: min(0.25rem, 1.71cqi) min(0.5rem, 3.42cqi);
   border-radius: 0.25rem;

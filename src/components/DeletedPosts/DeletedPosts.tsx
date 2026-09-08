@@ -64,13 +64,11 @@ export const DeletedPosts = ({ posts, userId, isError, isLoading }: DeletedPosts
   return (
     <section className={s.container} aria-label={'Recently deleted posts'}>
       {posts.map(post => {
-        const deletionDate = new Date(post.willBeDeletedIn!)
-
         return (
           <DeletedPostCard
             key={post.postId}
             post={post}
-            deletionDate={deletionDate}
+            deletionDate={new Date(post.willBeDeletedIn!)}
             href={`/profile/${userId}?postId=${post.postId}&type=deleted`}
           />
         )

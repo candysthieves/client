@@ -85,7 +85,7 @@ export const DeletedPostCard = ({ post, deletionDate, href }: DeletedPostCardPro
           <div className={s.restoreButton}>
             <Button
               type={'button'}
-              variant={'primary'}
+              variant={'outlined'}
               // disabled={isPending}
               // onClick={() => restorePost(post.postId)}
             >

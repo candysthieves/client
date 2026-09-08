@@ -124,8 +124,8 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
                 // isLoading={isDeletedPostsLoading}
               />
             }
-            // deletedPostsCount={deletedPosts.length}
-            deletedPostsCount={1}
+            deletedPostsCount={profilePosts.length}
+            // deletedPostsCount={1}
           />
         ) : (
           <PostsFeed posts={profilePostsResponse?.items ?? []} userId={userId} />

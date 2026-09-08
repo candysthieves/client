@@ -2,20 +2,8 @@
 
 .tabs {
   width: 100%;
-}
 
-.content {
-  padding-top: 2.25rem;
-}
-
-@include media-tablet {
-  .content {
-    padding-top: 1.5rem;
-  }
-}
-
-@include media-tablet-small {
-  .tabs {
+  @include media-tablet-small {
     :global([role='tab']) {
       gap: 0;
 
@@ -29,5 +17,13 @@
     :global([role='tab'] svg) {
       display: block;
     }
+  }
+}
+
+.content {
+  padding-top: 2.25rem;
+
+  @include media-tablet {
+    padding-top: 1.5rem;
   }
 }

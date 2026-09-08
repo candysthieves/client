@@ -3,6 +3,7 @@
 import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import type { Post } from '@/mocks/posts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
@@ -42,19 +43,26 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   }))
   const isOwner = profile?.isOwner ?? false
 
+  useEffect(() => {
+    if (postDetails && postDetails.author.id !== userId) {
+      router.replace(`/profile/${userId}`)
+    }
+  }, [postDetails, router, userId])
+
   const selectedPost = profilePosts.find(post => post.postId === postId)
-  const modalPost: Post | undefined = postDetails
-    ? {
-        postId: postDetails.id,
-        description: postDetails.description,
-        images: postDetails.images,
-        preview: postDetails.preview,
-        userId: postDetails.author.id,
-        userName: postDetails.author.username,
-        createdAt: postDetails.createdAt,
-        willBeDeletedIn: null,
-      }
-    : undefined
+  const modalPost: Post | undefined =
+    postDetails?.author.id === userId
+      ? {
+          postId: postDetails.id,
+          description: postDetails.description,
+          images: postDetails.images,
+          preview: postDetails.preview,
+          userId: postDetails.author.id,
+          userName: postDetails.author.username,
+          createdAt: postDetails.createdAt,
+          willBeDeletedIn: null,
+        }
+      : undefined
   const selectedIndex = selectedPost
     ? profilePosts.findIndex(post => post.postId === selectedPost.postId)
     : 0

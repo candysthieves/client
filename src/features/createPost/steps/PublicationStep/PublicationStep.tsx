@@ -36,7 +36,7 @@ export const PublicationStep = ({
   onPostCreated,
   isPublishing,
 }: PublicationStepProps) => {
-  const { id: userId, username: userName = userId, avatarPreviewUrl } = userProfile
+  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
 
   const descriptionRef = useRef(description)
   const counterRef = useRef<HTMLDivElement | null>(null)
@@ -81,10 +81,10 @@ export const PublicationStep = ({
       <div className={s.publicationBlock}>
         <div className={s.descriptionBlock}>
           <div className={s.publisherInfo}>
-            <Avatar size={'s'} userName={userName} src={avatarPreviewUrl?.url || ''} />
+            <Avatar size={'s'} userName={profileUserName} src={avatarPreviewUrl?.url || ''} />
 
             <Typography variant={'subtitle1'} color={'var(--color-light-100)'}>
-              {userName}
+              {profileUserName}
             </Typography>
           </div>
 

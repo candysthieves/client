@@ -71,7 +71,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           <MainAvatar
             className={s.profileAvatar}
             userName={profile?.username ?? userId}
-            src={profile?.avatarPreviewUrl.url}
+            src={profile?.avatarPreviewUrl?.url ?? ''}
             size={'xxl'}
             delayMs={0}
           />
@@ -115,15 +115,17 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
       </div>
 
       {selectedPost &&
+        profile &&
         (isMobile ? (
           <MobilePostViewer
+            userProfile={profile}
             onClose={handleClosePost}
             posts={profilePosts}
             startIndex={selectedIndex}
             userId={userId}
           />
         ) : (
-          <PostModal post={selectedPost} open onClose={handleClosePost} />
+          <PostModal userProfile={profile} post={selectedPost} open onClose={handleClosePost} />
         ))}
 
       {showCreateModal && isOwner && profile && <CreatePostModal userProfile={profile} />}

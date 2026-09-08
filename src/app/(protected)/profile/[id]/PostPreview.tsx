@@ -3,12 +3,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import type { ProfilePost } from '@/lib/model'
+import type { Post } from '@/mocks/posts'
 import s from './ProfileClient.module.scss'
 
 type PostPreviewProps = {
   index: number
-  post: ProfilePost
+  post: Post
   userId: string
 }
 
@@ -19,7 +19,7 @@ export function PostPreview({ index, post, userId }: PostPreviewProps) {
 
   return (
     <Link
-      href={`/profile/${userId}?postId=${post.id}`}
+      href={`/profile/${userId}?postId=${post.postId}`}
       aria-label={`Open post ${index + 1}`}
       className={s.postPreview}
     >

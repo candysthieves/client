@@ -8,6 +8,7 @@ import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer
 import { PostModal } from '@/components/PostModal/PostModal'
 import { CreatePostModal } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
+import { usePost } from '@/lib/posts'
 import { useProfile, useProfilePosts } from '@/lib/profile'
 import { PostsFeed } from './PostsFeed'
 import s from './ProfileClient.module.scss'
@@ -28,6 +29,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     isError: isPostsError,
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
+  const { data: postDetails } = usePost(postId)
   const profilePosts: Post[] = (profilePostsResponse?.items ?? []).map(post => ({
     postId: post.id,
     description: post.description,
@@ -41,13 +43,25 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const isOwner = profile?.isOwner ?? false
 
   const selectedPost = profilePosts.find(post => post.postId === postId)
+  const modalPost: Post | undefined = postDetails
+    ? {
+        postId: postDetails.id,
+        description: postDetails.description,
+        images: postDetails.images,
+        preview: postDetails.preview,
+        userId: postDetails.author.id,
+        userName: postDetails.author.username,
+        createdAt: postDetails.createdAt,
+        willBeDeletedIn: null,
+      }
+    : undefined
   const selectedIndex = selectedPost
     ? profilePosts.findIndex(post => post.postId === selectedPost.postId)
     : 0
   const showCreateModal = !postId && action === 'create'
   const handleClosePost = () => router.replace(`/profile/${userId}`)
 
-  if (isProfileLoading || isPostsLoading) {
+  if (isProfileLoading) {
     return <ProfileSkeleton />
   }
 
@@ -111,20 +125,20 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           </div>
         </section>
 
-        <PostsFeed posts={profilePostsResponse?.items ?? []} userId={userId} />
+        <PostsFeed isLoading={isPostsLoading} posts={profilePosts} userId={userId} />
       </div>
 
-      {selectedPost &&
-        (isMobile ? (
-          <MobilePostViewer
-            onClose={handleClosePost}
-            posts={profilePosts}
-            startIndex={selectedIndex}
-            userId={userId}
-          />
-        ) : (
-          <PostModal post={selectedPost} open onClose={handleClosePost} />
-        ))}
+      {postId &&
+        (isMobile
+          ? selectedPost && (
+              <MobilePostViewer
+                onClose={handleClosePost}
+                posts={profilePosts}
+                startIndex={selectedIndex}
+                userId={userId}
+              />
+            )
+          : modalPost && <PostModal post={modalPost} open onClose={handleClosePost} />)}
 
       {showCreateModal && isOwner && <CreatePostModal userId={userId} />}
     </>

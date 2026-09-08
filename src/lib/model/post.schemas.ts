@@ -39,6 +39,31 @@ export const AddPostResponseSchema = z.object({
   postId: z.string(),
 })
 
+export const postDetailsSchema = z.object({
+  id: z.string(),
+  description: z.string(),
+  images: z.array(
+    z.object({
+      fileId: z.string(),
+      url: z.url(),
+      width: z.number(),
+      height: z.number(),
+    })
+  ),
+  preview: z.object({
+    fileId: z.string(),
+    url: z.url(),
+    width: z.number(),
+    height: z.number(),
+  }),
+  createdAt: z.string(),
+  author: z.object({
+    id: z.string(),
+    username: z.string(),
+  }),
+  isOwner: z.boolean(),
+})
+
 export const postImageSchema = z
   .instanceof(File)
   .refine(

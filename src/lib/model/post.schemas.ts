@@ -66,7 +66,7 @@ export const postImageSchema = z
   .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 300 kB')
 
 export const postCreatedEventSchema = z.object({
-  postId: z.uuid(),
+  postId: z.uuid('Invalid postID format in add post SSE response'),
 })
 
 // Temporary used

@@ -17,7 +17,7 @@ export function useLogout() {
 
       queryClient.setQueryData(authKeys.me(), null)
       queryClient.removeQueries({ queryKey: authKeys.me() })
-      queryClient.invalidateQueries({ queryKey: authKeys.me() })
+      queryClient.invalidateQueries({ queryKey: authKeys.me() }) // check if needed
     },
   })
 }

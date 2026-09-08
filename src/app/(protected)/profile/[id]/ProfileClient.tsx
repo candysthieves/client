@@ -47,6 +47,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
 
   const isOwner = profile?.isOwner ?? false
 
+  // Check if this useEffect is needed
   useEffect(() => {
     if (postDetails && postDetails.author.id !== userId) {
       router.replace(`/profile/${userId}`)
@@ -59,7 +60,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     : 0
 
   const modalPost: Post | undefined =
-    postDetails?.author.id === userId
+    postDetails?.author.id === userId // check if this condition is needed
       ? {
           postId: postDetails.id,
           description: postDetails.description,
@@ -99,7 +100,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           <MainAvatar
             className={s.profileAvatar}
             userName={profile?.username ?? userId}
-            src={profile?.avatarPreviewUrl.url}
+            src={profile?.avatarPreviewUrl?.url ?? ''}
             size={'xxl'}
             delayMs={0}
           />
@@ -143,18 +144,22 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
       </div>
 
       {postId &&
+        profile &&
         (isMobile
           ? selectedPost && (
               <MobilePostViewer
+                userProfile={profile}
                 onClose={handleClosePost}
                 posts={profilePosts}
                 startIndex={selectedIndex}
                 userId={userId}
               />
             )
-          : modalPost && <PostModal post={modalPost} open onClose={handleClosePost} />)}
+          : modalPost && (
+              <PostModal userProfile={profile} post={modalPost} open onClose={handleClosePost} />
+            ))}
 
-      {showCreateModal && isOwner && <CreatePostModal userId={userId} />}
+      {showCreateModal && isOwner && profile && <CreatePostModal userProfile={profile} />}
     </>
   )
 }

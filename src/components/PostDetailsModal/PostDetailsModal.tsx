@@ -6,6 +6,7 @@ import { PostComments } from '@/components/Post/PostComments/PostComments'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
 import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { UserProfile } from '@/lib/model'
 import { getPostImageAreaStyle } from '@/lib/utils'
 import { formatPostDate } from '@/lib/utils/formatPostDate'
 import { mockComments, mockLikedByUsers, type Post } from '@/mocks/posts'
@@ -14,12 +15,15 @@ import s from './PostDetailsModal.module.scss'
 type Props = {
   post: Post
   open: boolean
+  userProfile: UserProfile
   onClose: () => void
   onEdit: () => void
   onDelete: () => void
 }
 
-export const PostDetailsModal = ({ post, open, onClose, onEdit, onDelete }: Props) => {
+export const PostDetailsModal = ({ post, open, userProfile, onClose, onEdit, onDelete }: Props) => {
+  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
+
   const { isAuthenticated } = useAuth()
   const isMobileViewport = useIsMobileViewport()
 
@@ -41,9 +45,14 @@ export const PostDetailsModal = ({ post, open, onClose, onEdit, onDelete }: Prop
           {/* Header */}
           <div className={s.postHeader}>
             <div className={s.author}>
-              <Avatar userName={post.userName} size={'s'} delayMs={0} />
+              <Avatar
+                userName={profileUserName}
+                size={'s'}
+                delayMs={0}
+                src={avatarPreviewUrl?.url || ''}
+              />
 
-              <Typography variant={'subtitle2'}>{post.userName}</Typography>
+              <Typography variant={'subtitle2'}>{profileUserName}</Typography>
             </div>
 
             {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.userId` and pass isAuthor here. */}

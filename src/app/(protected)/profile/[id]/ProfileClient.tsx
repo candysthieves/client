@@ -41,11 +41,6 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     willBeDeletedIn: post.willBeDeleted ? new Date(post.willBeDeleted) : null,
   }))
   const isOwner = profile?.isOwner ?? false
-  const {
-    data: deletedPosts = [],
-    isError: isDeletedPostsError,
-    isLoading: isDeletedPostsLoading,
-  } = useDeletedPosts(isOwner ? userId : undefined)
 
   const selectedPost = profilePosts.find(post => post.postId === postId)
   const selectedIndex = selectedPost
@@ -120,19 +115,20 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
 
         {isOwner ? (
           <ProfilePostTabs
-            postsFeed={<PostsFeed posts={activeProfilePosts} userId={userId} />}
+            postsFeed={<PostsFeed posts={profilePostsResponse?.items ?? []} userId={userId} />}
             deletedPosts={
               <DeletedPosts
-                posts={deletedPosts}
+                posts={profilePosts}
                 userId={userId}
-                isError={isDeletedPostsError}
-                isLoading={isDeletedPostsLoading}
+                // isError={isDeletedPostsError}
+                // isLoading={isDeletedPostsLoading}
               />
             }
-            deletedPostsCount={deletedPosts.length}
+            // deletedPostsCount={deletedPosts.length}
+            deletedPostsCount={1}
           />
         ) : (
-          <PostsFeed posts={activeProfilePosts} userId={userId} />
+          <PostsFeed posts={profilePostsResponse?.items ?? []} userId={userId} />
         )}
       </div>
 

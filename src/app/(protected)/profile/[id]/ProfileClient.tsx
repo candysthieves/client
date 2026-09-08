@@ -4,8 +4,10 @@ import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { Post } from '@/mocks/posts'
+import { DeletedPosts } from '@/components/DeletedPosts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
+import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
 import { useProfile, useProfilePosts } from '@/lib/profile'
@@ -111,7 +113,22 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           </div>
         </section>
 
-        <PostsFeed posts={profilePostsResponse?.items ?? []} userId={userId} />
+        {isOwner ? (
+          <ProfilePostTabs
+            postsFeed={<PostsFeed posts={activeProfilePosts} userId={userId} />}
+            deletedPosts={
+              <DeletedPosts
+                posts={deletedPosts}
+                userId={userId}
+                isError={isDeletedPostsError}
+                isLoading={isDeletedPostsLoading}
+              />
+            }
+            deletedPostsCount={deletedPosts.length}
+          />
+        ) : (
+          <PostsFeed posts={activeProfilePosts} userId={userId} />
+        )}
       </div>
 
       {selectedPost &&

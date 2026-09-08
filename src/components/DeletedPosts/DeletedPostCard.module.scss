@@ -1,0 +1,105 @@
+@use '@/styles/mixins' as *;
+
+.card {
+  position: relative;
+
+  container-type: inline-size;
+  overflow: hidden;
+
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  min-width: 0;
+  border-radius: 0.125rem;
+
+  background: var(--color-dark-500);
+}
+
+.image {
+  object-fit: cover;
+}
+
+.postLink {
+  position: absolute;
+  inset: 0;
+
+  &:focus-visible {
+    border: 2px solid var(--color-accent-500);
+    outline: none;
+  }
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 62%);
+}
+
+.badge {
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 1;
+  top: min(0.75rem, 5.13cqi);
+  left: min(0.75rem, 5.13cqi);
+
+  padding: min(0.25rem, 1.71cqi) min(0.5rem, 3.42cqi);
+  border-radius: 0.25rem;
+
+  font-size: min(0.75rem, 5.13cqi) !important;
+  line-height: var(--line-height-s) !important;
+  color: var(--color-light-100);
+
+  background: rgb(255 255 255 / 32%);
+}
+
+.actions {
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: min(0.5rem, 3.42cqi);
+  align-items: center;
+  justify-content: center;
+
+  padding: min(3.25rem, 22.22cqi) min(1.5rem, 10.26cqi) min(1.25rem, 8.55cqi);
+
+  color: var(--color-light-100);
+  text-align: center;
+}
+
+.remainingTime {
+  font-size: min(var(--font-size-l), 6.84cqi) !important;
+  line-height: var(--line-height-s) !important;
+  white-space: nowrap;
+}
+
+.clockIcon {
+  @include width-height(min(2rem, 13.68cqi));
+
+  position: relative;
+  z-index: 1;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.restoreButton {
+  pointer-events: auto;
+  max-width: 100%;
+  margin-top: min(0.25rem, 1.71cqi);
+}
+
+.deleteButton {
+  pointer-events: auto;
+}
+
+.restoreButton button,
+.deleteButton button {
+  max-width: 100%;
+  padding: min(0.375rem, 2.56cqi) min(1.5rem, 10.26cqi);
+  font-size: min(var(--font-size-m), 6.84cqi) !important;
+  line-height: var(--line-height-m) !important;
+}

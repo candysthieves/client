@@ -1,5 +1,5 @@
 import { Avatar, HeartOutline, Typography } from '@candy.thieves/ui-kit-lumos'
-import type { Comment, Post } from '@/mocks/posts'
+import { Comment, Post } from '@/features/createPost'
 import s from './PostComments.module.scss'
 
 type Props = {

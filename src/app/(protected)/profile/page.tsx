@@ -1,11 +1,11 @@
 'use client'
 
 import { Typography } from '@candy.thieves/ui-kit-lumos'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useAuth } from '@/lib/hooks/useAuth'
-import { usePosts } from '@/lib/posts'
-import s from './page.module.scss'
+// import Image from 'next/image'
+// import Link from 'next/link'
+// import { useAuth } from '@/lib/hooks/useAuth'
+// import { usePosts } from '@/lib/posts'
+// import s from './page.module.scss'
 
 export default function ProfilePage() {
   // const { user } = useAuth()

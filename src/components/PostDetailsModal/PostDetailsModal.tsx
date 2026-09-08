@@ -4,11 +4,12 @@ import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
 import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostComments } from '@/components/Post/PostComments/PostComments'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
+import { Post } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { getPostImageAreaStyle } from '@/lib/utils'
 import { formatPostDate } from '@/lib/utils/formatPostDate'
-import { mockComments, mockLikedByUsers, type Post } from '@/mocks/posts'
+import { mockComments, mockLikedByUsers } from '@/mocks/posts'
 import s from './PostDetailsModal.module.scss'
 
 type Props = {

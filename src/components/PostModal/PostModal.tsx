@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import type { Post } from '@/mocks/posts'
 import { ConfirmDeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
+import { Post } from '@/features/createPost'
 import { useDeletePost, useUpdatePost } from '@/lib/posts'
 
 type PostModalProps = {

@@ -4,7 +4,7 @@ import { postsKeys } from '../postKeys'
 
 export const usePost = (postId?: string) =>
   useQuery({
-    queryKey: postsKeys.detail(postId ?? ''),
+    queryKey: postsKeys.post(postId ?? ''),
     queryFn: () => getPostById(postId!),
     enabled: Boolean(postId),
   })

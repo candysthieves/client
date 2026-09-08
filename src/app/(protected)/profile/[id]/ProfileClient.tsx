@@ -4,10 +4,9 @@ import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import type { Post } from '@/mocks/posts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
-import { CreatePostModal } from '@/features/createPost'
+import { CreatePostModal, Post } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
 import { usePost } from '@/lib/posts'
 import { useProfile, useProfilePosts } from '@/lib/profile'
@@ -24,13 +23,17 @@ type ProfileClientProps = {
 export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const router = useRouter()
   const isMobile = useIsMobileViewport()
+
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
+
   const {
     data: profilePostsResponse,
     isError: isPostsError,
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
+
   const { data: postDetails } = usePost(postId)
+
   const profilePosts: Post[] = (profilePostsResponse?.items ?? []).map(post => ({
     postId: post.id,
     description: post.description,
@@ -41,6 +44,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     createdAt: post.createdAt,
     willBeDeletedIn: post.willBeDeleted ? new Date(post.willBeDeleted) : null,
   }))
+
   const isOwner = profile?.isOwner ?? false
 
   useEffect(() => {
@@ -50,6 +54,10 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   }, [postDetails, router, userId])
 
   const selectedPost = profilePosts.find(post => post.postId === postId)
+  const selectedIndex = selectedPost
+    ? profilePosts.findIndex(post => post.postId === selectedPost.postId)
+    : 0
+
   const modalPost: Post | undefined =
     postDetails?.author.id === userId
       ? {
@@ -63,9 +71,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           willBeDeletedIn: null,
         }
       : undefined
-  const selectedIndex = selectedPost
-    ? profilePosts.findIndex(post => post.postId === selectedPost.postId)
-    : 0
+
   const showCreateModal = !postId && action === 'create'
   const handleClosePost = () => router.replace(`/profile/${userId}`)
 

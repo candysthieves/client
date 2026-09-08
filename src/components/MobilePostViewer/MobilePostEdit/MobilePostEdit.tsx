@@ -4,7 +4,7 @@ import { Avatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { useState } from 'react'
 import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
-import { Post } from '@/mocks/posts'
+import { Post } from '@/features/createPost'
 import s from './MobilePostEdit.module.scss'
 
 type Props = {

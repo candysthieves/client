@@ -1,4 +1,4 @@
-import { Comment } from '@/features/createPost'
+import type { Comment } from '@/lib/model'
 
 export type LikedByUser = {
   userName: string

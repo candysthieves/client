@@ -42,11 +42,6 @@ export const addPostResponseSchema = z.object({
   postId: z.uuid(),
 })
 
-export const authorSchema = z.object({
-  id: z.uuid(),
-  username: z.string(),
-})
-
 export const postMediaSchema = z.object({
   fileId: z.string(),
   url: z.url(),
@@ -83,30 +78,6 @@ export const postImageSchema = z
 
 export const postCreatedEventSchema = z.object({
   postId: z.uuid('Invalid postID format in add post SSE response'),
-})
-
-// Temporary used
-export const postPreviewSchema = z.object({
-  url: z.url(),
-})
-
-export const imageInPostSchema = z.object({
-  url: z.url(),
-  width: z.number().nonnegative(),
-  height: z.number().nonnegative(),
-  // add id
-}) // see usage in PostImagesCarousel
-
-export const postSchema = z.object({
-  postId: z.uuid(),
-  description: z.string().max(500).optional(),
-  images: z.array(imageInPostSchema), // change to z.array(imageSchema)
-  preview: postPreviewSchema, // change to imageSchema
-  userId: z.uuid(),
-  userName: z.string(),
-  createdAt: z.string(), // or z.date().nullable()
-  willBeDeletedIn: z.date().nullable(),
-  // add necessary fields
 })
 
 export const commentSchema = z.object({

@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import type { Post } from '@/lib/model'
 import { ConfirmDeletePostModal } from '@/components'
-import { Post } from '@/features/createPost'
 import { UserProfile } from '@/lib/model'
 import { useDeletePost, useUpdatePost } from '@/lib/posts'
 import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'

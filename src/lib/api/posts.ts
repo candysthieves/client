@@ -1,4 +1,4 @@
-import type { Post, PostDetails } from '@/lib/model'
+import type { PostDetails } from '@/lib/model'
 import { AddPostRequest, AddPostResponse } from '@/features/createPost'
 import { request } from '@/lib/api/request'
 

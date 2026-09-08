@@ -5,7 +5,6 @@ import type { Post } from '@/lib/model'
 import { ConfirmDeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
-import { Post } from '@/features/createPost'
 import { UserProfile } from '@/lib/model'
 import { useDeletePost, useUpdatePost } from '@/lib/posts'
 
@@ -19,7 +18,7 @@ type PostModalProps = {
 type Mode = 'edit' | 'view'
 
 export const PostModal = ({ userProfile, post, open, onClose }: PostModalProps) => {
-  const { mutate: deletePost, isPending } = useDeletePost(post.userId)
+  const { mutate: deletePost, isPending } = useDeletePost(post.author.id)
   const { mutate: updatePost, isPending: isUpdating } = useUpdatePost()
   const [mode, setMode] = useState<Mode>('view')
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)

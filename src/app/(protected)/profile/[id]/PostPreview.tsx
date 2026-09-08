@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import { Post } from '@/features/createPost'
+import type { Post } from '@/lib/model'
 import s from './ProfileClient.module.scss'
 
 type PostPreviewProps = {

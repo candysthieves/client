@@ -1,6 +1,6 @@
 import { Typography } from '@candy.thieves/ui-kit-lumos'
 import Skeleton from 'react-loading-skeleton'
-import { Post } from '@/features/createPost'
+import type { Post } from '@/lib/model'
 import { PostPreview } from './PostPreview'
 import s from './ProfileClient.module.scss'
 

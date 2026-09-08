@@ -3,13 +3,10 @@ import {
   addPostRequestSchema,
   addPostResponseSchema,
   addPostStateSchema,
-  commentSchema,
   draftPostFileSchema,
-  imageInPostSchema,
   locationSchema,
   postCreatedEventSchema,
   postFileSchema,
-  postSchema,
 } from '@/lib/model'
 
 // Posts
@@ -52,7 +49,3 @@ export enum AspectRatio {
 }
 
 export type PostCreatedEvent = z.infer<typeof postCreatedEventSchema>
-
-export type PostImage = z.infer<typeof imageInPostSchema>
-export type Post = z.infer<typeof postSchema>
-export type Comment = z.infer<typeof commentSchema>

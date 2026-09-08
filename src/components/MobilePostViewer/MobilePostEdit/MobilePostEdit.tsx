@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { useState } from 'react'
 import type { Post } from '@/lib/model'
 import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
-import { Post } from '@/features/createPost'
 import { UserProfile } from '@/lib/model'
 import s from './MobilePostEdit.module.scss'
 

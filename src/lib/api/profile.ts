@@ -1,4 +1,6 @@
 import {
+  DeletedPostItem,
+  DeletedPostItemSchema,
   GetDeletedPostsResponse,
   GetDeletedPostsResponseSchema,
   ProfilePostsResponse,
@@ -19,4 +21,10 @@ export const getDeletedPosts = async (): Promise<GetDeletedPostsResponse> => {
     method: 'GET',
   })
   return GetDeletedPostsResponseSchema.parse(response)
+}
+export const getDeletedPostById = async (postId: string): Promise<DeletedPostItem> => {
+  const response = await request<unknown>(`/posts/deleted-posts/${postId}`, {
+    method: 'GET',
+  })
+  return DeletedPostItemSchema.parse(response)
 }

@@ -4,7 +4,7 @@ import { DeletedPostItem } from '@/lib/model'
 // Статическая заглушка в одном экземпляре в памяти
 const FALLBACK_IMAGE = {
   fileId: 'placeholder',
-  url: '/post-placeholder.svg',
+  url: '/post/post-placeholder.svg',
   width: 300,
   height: 300,
 }

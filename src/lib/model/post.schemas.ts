@@ -2,12 +2,12 @@ import { z } from 'zod'
 import { MAX_FILE_SIZE } from '@/constants'
 
 export const LocationSchema = z.object({
-  fileId: z.string(),
+  id: z.uuid(),
   address: z.string(),
 })
 
 export const PostFileSchema = z.object({
-  id: z.string(),
+  id: z.uuid(),
   file: z.instanceof(File),
   url: z.url(),
   originalUrl: z.url(),
@@ -17,8 +17,11 @@ export const DraftPostFileSchema = z.object({
   file: z.instanceof(File),
 })
 
-export const ImageSchema = z.object({
+export const imageSchema = z.object({
+  fileId: z.uuid(),
   url: z.url(),
+  width: z.number().nonnegative(),
+  height: z.number().nonnegative(),
 })
 
 export const AddPostStateSchema = z.object({
@@ -36,7 +39,7 @@ export const AddPostRequestSchema = z.object({
 })
 
 export const AddPostResponseSchema = z.object({
-  postId: z.string(),
+  postId: z.uuid(),
 })
 
 export const postImageSchema = z
@@ -52,10 +55,10 @@ export const PostCreatedEventSchema = z.object({
 })
 
 export const ApiDeletedPostImageSchema = z.object({
-  fileId: z.string(),
-  url: z.string().url(),
-  width: z.number(),
-  height: z.number(),
+  fileId: z.uuid(),
+  url: z.url(),
+  width: z.number().nonnegative(),
+  height: z.number().nonnegative(),
 })
 
 // Схема для автора поста

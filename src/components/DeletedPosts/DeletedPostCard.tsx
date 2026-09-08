@@ -3,6 +3,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import type { Post } from '@/mocks/posts'
+import { ConfirmDeletePostModal } from '@/components'
+import { useHardDeletePost } from '@/lib/posts/mutations/useHardDeletePost'
+import { useRestorePost } from '@/lib/posts/mutations/useRestorePost'
 import s from './DeletedPostCard.module.scss'
 
 type DeletedPostCardProps = {
@@ -11,43 +14,39 @@ type DeletedPostCardProps = {
   href: string
 }
 
-//
-// const getRemainingTime = (deletionDate: Date) => {
-//   const remainingMilliseconds = Math.max(0, deletionDate.getTime() - Date.now())
-//   const remainingMinutes = Math.floor(remainingMilliseconds / 60_000)
-//   const hours = Math.floor(remainingMinutes / 60)
-//   const minutes = remainingMinutes % 60
-//
-//   return `${hours} h ${minutes} min left`
-// }
+const getRemainingTime = (deletionDate: Date) => {
+  const remainingMilliseconds = Math.max(0, deletionDate.getTime() - Date.now())
+  const remainingMinutes = Math.floor(remainingMilliseconds / 60_000)
+  const hours = Math.floor(remainingMinutes / 60)
+  const minutes = remainingMinutes % 60
+
+  return `${hours} h ${minutes} min left`
+}
 
 export const DeletedPostCard = ({ post, deletionDate, href }: DeletedPostCardProps) => {
-  //восстановление и нард-удаление на кнопки
-  // const { mutate: restorePost, isPending: isRestoring } = useRestorePost(post.userId)
-  // const { mutate: hardDeletePost, isPending: isDeleting } = useHardDeletePost(post.userId)
-  // const isPending = isRestoring || isDeleting
+  const { mutate: restorePost, isPending: isRestoring } = useRestorePost(post.userId)
+  const { mutate: hardDeletePost, isPending: isDeleting } = useHardDeletePost(post.userId)
+  const isPending = isRestoring || isDeleting
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  // const [remainingTime, setRemainingTime] = useState(() => getRemainingTime(deletionDate))
+  const [remainingTime, setRemainingTime] = useState(() => getRemainingTime(deletionDate))
 
   const handleConfirmDelete = () => {
-    // setIsDeleteModalOpen(false)
-    // hardDeletePost(post.postId)
+    setIsDeleteModalOpen(false)
+    hardDeletePost(post.postId)
   }
 
-  //чтобы время обнавлялось каждую минуту
+  useEffect(() => {
+    if (isPending) {
+      return
+    }
 
-  // useEffect(() => {
-  //   if (isPending) {
-  //     return
-  //   }
-  //
-  //   const updateRemainingTime = () => setRemainingTime(getRemainingTime(deletionDate))
-  //   const intervalId = window.setInterval(updateRemainingTime, 60_000)
-  //
-  //   updateRemainingTime()
-  //
-  //   return () => window.clearInterval(intervalId)
-  // }, [deletionDate, isPending])
+    const updateRemainingTime = () => setRemainingTime(getRemainingTime(deletionDate))
+    const intervalId = window.setInterval(updateRemainingTime, 60_000)
+
+    updateRemainingTime()
+
+    return () => window.clearInterval(intervalId)
+  }, [deletionDate, isPending])
 
   return (
     <>
@@ -78,19 +77,17 @@ export const DeletedPostCard = ({ post, deletionDate, href }: DeletedPostCardPro
           />
 
           <Typography className={s.remainingTime} variant={'h3'}>
-            {/*{remainingTime}*/}
-            00 . 00
+            {remainingTime}
           </Typography>
 
           <div className={s.restoreButton}>
             <Button
               type={'button'}
               variant={'outlined'}
-              // disabled={isPending}
-              // onClick={() => restorePost(post.postId)}
+              disabled={isPending}
+              onClick={() => restorePost(post.postId)}
             >
-              {/*{isRestoring ? 'Restoring...' : 'Restore'}*/}
-              Restore
+              {isRestoring ? 'Restoring...' : 'Restore'}
             </Button>
           </div>
 
@@ -98,23 +95,23 @@ export const DeletedPostCard = ({ post, deletionDate, href }: DeletedPostCardPro
             <Button
               type={'button'}
               variant={'text'}
-              // disabled={isPending}
-              // onClick={() => setIsDeleteModalOpen(true)}
+              disabled={isPending}
+              onClick={() => setIsDeleteModalOpen(true)}
             >
-              {/*{isDeleting ? 'Deleting...' : 'Delete'}*/}
+              {isDeleting ? 'Deleting...' : 'Delete'}
               Delete
             </Button>
           </div>
         </div>
       </article>
-      {/*модалка для хард удаления*/}
-      {/*<ConfirmDeletePostModal*/}
-      {/*  isDeleting={isDeleting}*/}
-      {/*  isPermanent*/}
-      {/*  open={isDeleteModalOpen}*/}
-      {/*  onClose={() => setIsDeleteModalOpen(false)}*/}
-      {/*  onConfirm={handleConfirmDelete}*/}
-      {/*/>*/}
+
+      <ConfirmDeletePostModal
+        isDeleting={isDeleting}
+        isPermanent
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </>
   )
 }

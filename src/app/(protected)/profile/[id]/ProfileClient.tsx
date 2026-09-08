@@ -2,7 +2,7 @@
 
 import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import type { Post } from '@/mocks/posts'
 import { DeletedPosts } from '@/components/DeletedPosts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
@@ -11,6 +11,7 @@ import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
 import { useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
+import { useDeletedPost } from '@/lib/profile/queries/useDeletedPost'
 import { mapDeletedPostToClient } from '@/lib/utils'
 import { PostsFeed } from './PostsFeed'
 import s from './ProfileClient.module.scss'
@@ -24,7 +25,12 @@ type ProfileClientProps = {
 
 export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const isMobile = useIsMobileViewport()
+
+  const postType = searchParams.get('type')
+  const isDeletedPost = postType === 'deleted'
+
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
   const {
     data: profilePostsResponse,
@@ -52,12 +58,21 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const deletedPosts: Post[] = (deletedPostsResponse?.items ?? []).map(post =>
     mapDeletedPostToClient(post, userId, profile?.username)
   )
+  const { data: requestedDeletedPostResponse } = useDeletedPost(postId, isOwner && isDeletedPost)
+  const requestedDeletedPost: Post | undefined = requestedDeletedPostResponse
+    ? mapDeletedPostToClient(requestedDeletedPostResponse, userId, profile?.username)
+    : undefined
 
-  const selectedPost = profilePosts.find(post => post.postId === postId)
+  const selectedPublishedPost = profilePosts.find(post => post.postId === postId)
+  const selectedDeletedPost =
+    requestedDeletedPost ?? deletedPosts.find(post => post.postId === postId)
+
+  const selectedPost = isDeletedPost ? selectedDeletedPost : selectedPublishedPost
+
   const selectedIndex = selectedPost
     ? profilePosts.findIndex(post => post.postId === selectedPost.postId)
     : 0
-  const showCreateModal = !postId && action === 'create'
+  const showCreateModal = isOwner && action === 'create' && !postId
   const handleClosePost = () => router.replace(`/profile/${userId}`)
 
   if (isProfileLoading || isPostsLoading) {
@@ -143,7 +158,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
       </div>
 
       {selectedPost &&
-        (isMobile ? (
+        (isMobile && !isDeletedPost ? (
           <MobilePostViewer
             onClose={handleClosePost}
             posts={profilePosts}
@@ -151,7 +166,12 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             userId={userId}
           />
         ) : (
-          <PostModal post={selectedPost} open onClose={handleClosePost} />
+          <PostModal
+            post={selectedPost}
+            mode={isDeletedPost ? 'deleted' : 'published'}
+            open
+            onClose={handleClosePost}
+          />
         ))}
 
       {showCreateModal && isOwner && <CreatePostModal userId={userId} />}

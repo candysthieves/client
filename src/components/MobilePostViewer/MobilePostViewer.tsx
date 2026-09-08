@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import type { Post } from '@/lib/model'
+import type { Post, UserProfile } from '@/lib/model'
 import { ConfirmDeletePostModal } from '@/components'
-import { UserProfile } from '@/lib/model'
 import { useDeletePost, useUpdatePost } from '@/lib/posts'
 import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'
 import { MobilePostFeed } from './MobilePostFeed/MobilePostFeed'

@@ -3,9 +3,8 @@
 import { Avatar, Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { useState } from 'react'
-import type { Post } from '@/lib/model'
+import type { Post, UserProfile } from '@/lib/model'
 import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
-import { UserProfile } from '@/lib/model'
 import s from './MobilePostEdit.module.scss'
 
 type Props = {

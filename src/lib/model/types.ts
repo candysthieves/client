@@ -13,7 +13,7 @@ import {
   userResponseSchema,
   validatePasswordRecoveryCodeSchema,
 } from './auth.schemas'
-import { feedPostSchema, feedPostsResponseSchema } from './feed.schemas'
+import { feedPostsResponseSchema } from './feed.schemas'
 import {
   commentSchema,
   imageMediaSchema,
@@ -52,5 +52,4 @@ export type PasswordRecoveryField = keyof PasswordRecoveryRequest
 // export type AuthType = 'github' | 'google'
 export type NewPasswordField = keyof NewPasswordRequest
 export type UsersCountResponse = z.infer<typeof usersCountResponseSchema>
-export type FeedPost = z.infer<typeof feedPostSchema>
 export type FeedPostsResponse = z.infer<typeof feedPostsResponseSchema>

@@ -1,24 +1,8 @@
-import type { FeedPost, FeedPostsResponse } from '@/lib/model'
-import type { Post } from '@/mocks/posts'
+import type { FeedPostsResponse, Post } from '@/lib/model'
 import { request } from '@/lib/api/request'
 
 type GetAllPostsParams = {
   limit?: number
-}
-
-const toPost = (feedPost: FeedPost): Post => {
-  const willBeDeletedIn = feedPost.willBeDeleted ? new Date(feedPost.willBeDeleted) : null
-
-  return {
-    postId: feedPost.id,
-    description: feedPost.description,
-    images: feedPost.images,
-    preview: feedPost.preview,
-    userId: feedPost.author.id,
-    userName: feedPost.author.username,
-    createdAt: feedPost.createdAt,
-    willBeDeletedIn,
-  }
 }
 
 export const getAllPosts = async (
@@ -35,6 +19,5 @@ export const getAllPosts = async (
   const resultQuery = query ? `?${query}` : ''
 
   const response = await request<FeedPostsResponse>(`/posts/all-posts${resultQuery}`, init)
-  // return response.items.map(toPost)
-  return response.items.map(toPost)
+  return response.items
 }

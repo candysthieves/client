@@ -15,7 +15,7 @@ type InteractOutsideEvent = Parameters<NonNullable<ModalProps['onInteractOutside
 type Props = {
   post: Post
   open: boolean
-  userProfile: UserProfile
+  userProfile?: UserProfile
   onClose: () => void
   onCancel: () => void
   onSave: (description: string) => void
@@ -31,7 +31,7 @@ export const EditPostModal = ({
   onSave,
   isSaving,
 }: Props) => {
-  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
+  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile ?? {}
 
   const initialDescription = post.description ?? ''
   const [description, setDescription] = useState(initialDescription)
@@ -101,13 +101,15 @@ export const EditPostModal = ({
           <div className={s.editSection}>
             <div className={s.user}>
               <Avatar
-                userName={profileUserName}
+                userName={profileUserName || post.author.username || ''}
                 size={'s'}
                 delayMs={0}
-                src={avatarPreviewUrl?.url || ''}
+                src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
               />
 
-              <Typography variant={'subtitle2'}>{profileUserName}</Typography>
+              <Typography variant={'subtitle2'}>
+                {profileUserName || post.author.username || ''}
+              </Typography>
             </div>
 
             <PostDescriptionEditor

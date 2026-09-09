@@ -8,7 +8,7 @@ import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal
 import { useDeletePost, useUpdatePost } from '@/lib/posts'
 
 type PostModalProps = {
-  userProfile: UserProfile
+  userProfile?: UserProfile
   post: Post
   open: boolean
   onClose: () => void

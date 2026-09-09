@@ -24,11 +24,9 @@ export const MainPage = () => {
   const postList = posts ?? []
 
   const postId = searchParams.get('postId')
-  const selectedPost = postId ? (postList.find(post => post.postId === postId) ?? null) : null
+  const selectedPost = postId ? (postList.find(post => post.id === postId) ?? null) : null
 
-  const selectedIndex = selectedPost
-    ? postList.findIndex(post => post.postId === selectedPost.postId)
-    : 0
+  const selectedIndex = selectedPost ? postList.findIndex(post => post.id === selectedPost.id) : 0
 
   const handleClose = () => router.push('/')
 
@@ -48,10 +46,10 @@ export const MainPage = () => {
             <PostCard
               caption={post.description ?? ''}
               images={post.images.map(image => image.url)}
-              key={post.postId}
-              postId={post.postId}
+              key={post.id}
+              postId={post.id}
               timeAgo={getTimeAgo(post.createdAt)}
-              username={post.userName}
+              username={post.author.username}
             />
           ))}
         </div>

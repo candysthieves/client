@@ -19,6 +19,12 @@ type PostsFeedProps = {
   userId: string
 }
 
+function PostsSkeletons() {
+  return Array.from({ length: POSTS_FEED_SKELETON_COUNT }, (_, index) => (
+    <Skeleton className={s.postSkeleton} key={index} />
+  ))
+}
+
 export function PostsFeed({
   hasNextPage,
   isLoading,
@@ -64,9 +70,7 @@ export function PostsFeed({
 
       {isLoading ? (
         <div className={s.postsGrid} aria-busy={'true'} aria-label={'Loading posts'}>
-          {Array.from({ length: POSTS_FEED_SKELETON_COUNT }, (_, index) => (
-            <Skeleton className={s.postSkeleton} key={index} />
-          ))}
+          <PostsSkeletons />
         </div>
       ) : isEmpty ? (
         <Typography color={'var(--color-light-900)'} variant={'body1'}>
@@ -81,9 +85,15 @@ export function PostsFeed({
           </div>
 
           {hasNextPage && (
-            <div ref={loadMoreRef} aria-live={'polite'}>
-              {isLoadingNextPage && <Skeleton className={s.postSkeleton} />}
-            </div>
+            <>
+              {isLoadingNextPage && (
+                <div className={s.postsGrid} aria-busy={'true'} aria-label={'Loading more posts'}>
+                  <PostsSkeletons />
+                </div>
+              )}
+
+              <div ref={loadMoreRef} aria-live={'polite'} />
+            </>
           )}
         </>
       )}

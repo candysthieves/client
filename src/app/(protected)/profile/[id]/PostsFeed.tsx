@@ -1,19 +1,55 @@
+'use client'
+
 import { Typography } from '@candy.thieves/ui-kit-lumos'
+import { useEffect, useRef } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import type { Post } from '@/lib/model'
 import { PostPreview } from './PostPreview'
 import s from './ProfileClient.module.scss'
 
 const POSTS_FEED_SKELETON_COUNT = 8
+const LOAD_MORE_ROOT_MARGIN = '200px'
 
 type PostsFeedProps = {
+  hasNextPage: boolean
   isLoading: boolean
+  isLoadingNextPage: boolean
+  onLoadMore: () => void
   posts: Post[]
   userId: string
 }
 
-export function PostsFeed({ isLoading, posts, userId }: PostsFeedProps) {
+export function PostsFeed({
+  hasNextPage,
+  isLoading,
+  isLoadingNextPage,
+  onLoadMore,
+  posts,
+  userId,
+}: PostsFeedProps) {
+  const loadMoreRef = useRef<HTMLDivElement>(null)
   const isEmpty = posts.length === 0
+
+  useEffect(() => {
+    const loadMoreElement = loadMoreRef.current
+
+    if (!loadMoreElement || !hasNextPage || isLoadingNextPage) {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0]?.isIntersecting) {
+          onLoadMore()
+        }
+      },
+      { rootMargin: LOAD_MORE_ROOT_MARGIN }
+    )
+
+    observer.observe(loadMoreElement)
+
+    return () => observer.disconnect()
+  }, [hasNextPage, isLoadingNextPage, onLoadMore])
 
   return (
     <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-labelledby={'posts-heading'}>
@@ -37,11 +73,19 @@ export function PostsFeed({ isLoading, posts, userId }: PostsFeedProps) {
           This user has not published any posts yet.
         </Typography>
       ) : (
-        <div className={s.postsGrid}>
-          {posts.map((post, index) => (
-            <PostPreview key={post.id} index={index} post={post} userId={userId} />
-          ))}
-        </div>
+        <>
+          <div className={s.postsGrid}>
+            {posts.map((post, index) => (
+              <PostPreview key={post.id} index={index} post={post} userId={userId} />
+            ))}
+          </div>
+
+          {hasNextPage && (
+            <div ref={loadMoreRef} aria-live={'polite'}>
+              {isLoadingNextPage && <Skeleton className={s.postSkeleton} />}
+            </div>
+          )}
+        </>
       )}
     </section>
   )

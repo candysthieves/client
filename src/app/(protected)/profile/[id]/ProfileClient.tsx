@@ -3,7 +3,7 @@
 import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
 import { CreatePostModal } from '@/features/createPost'
@@ -27,14 +27,17 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
 
   const {
-    data: profilePostsResponse,
+    data: profilePostsData,
+    fetchNextPage,
+    hasNextPage,
     isError: isPostsError,
+    isFetchingNextPage,
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
 
   const { data: postDetails } = usePost(postId)
   const isOwner = profile?.isOwner ?? false
-  const profilePosts = profilePostsResponse?.items ?? []
+  const profilePosts = profilePostsData?.pages.flatMap(page => page.items) ?? []
 
   // Check if this useEffect is needed
   useEffect(() => {
@@ -48,6 +51,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const mobilePosts = selectedIndex === -1 && modalPost ? [modalPost] : profilePosts
   const showCreateModal = !postId && action === 'create'
   const handleClosePost = () => router.replace(`/profile/${userId}`)
+  const handleLoadMorePosts = useCallback(() => void fetchNextPage(), [fetchNextPage])
 
   if (isProfileLoading) {
     return <ProfileSkeleton />
@@ -113,7 +117,14 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           </div>
         </section>
 
-        <PostsFeed isLoading={isPostsLoading} posts={profilePosts} userId={userId} />
+        <PostsFeed
+          hasNextPage={hasNextPage ?? false}
+          isLoading={isPostsLoading}
+          isLoadingNextPage={isFetchingNextPage}
+          onLoadMore={handleLoadMorePosts}
+          posts={profilePosts}
+          userId={userId}
+        />
       </div>
 
       {postId &&

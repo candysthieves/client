@@ -2,7 +2,7 @@ import { Button, Clock, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import type { Post } from '@/mocks/posts'
+import type { Post } from '@/lib/model'
 import { ConfirmDeletePostModal } from '@/components'
 import { useHardDeletePost } from '@/lib/posts/mutations/useHardDeletePost'
 import { useRestorePost } from '@/lib/posts/mutations/useRestorePost'
@@ -10,6 +10,7 @@ import s from './DeletedPostCard.module.scss'
 
 type DeletedPostCardProps = {
   post: Post
+  userId: string
   deletionDate: Date
   href: string
 }
@@ -23,16 +24,16 @@ const getRemainingTime = (deletionDate: Date) => {
   return `${hours} h ${minutes} min left`
 }
 
-export const DeletedPostCard = ({ post, deletionDate, href }: DeletedPostCardProps) => {
-  const { mutate: restorePost, isPending: isRestoring } = useRestorePost(post.userId)
-  const { mutate: hardDeletePost, isPending: isDeleting } = useHardDeletePost(post.userId)
+export const DeletedPostCard = ({ post, userId, deletionDate, href }: DeletedPostCardProps) => {
+  const { mutate: restorePost, isPending: isRestoring } = useRestorePost(userId)
+  const { mutate: hardDeletePost, isPending: isDeleting } = useHardDeletePost(userId)
   const isPending = isRestoring || isDeleting
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [remainingTime, setRemainingTime] = useState(() => getRemainingTime(deletionDate))
 
   const handleConfirmDelete = () => {
     setIsDeleteModalOpen(false)
-    hardDeletePost(post.postId)
+    hardDeletePost(post.id)
   }
 
   useEffect(() => {
@@ -85,7 +86,7 @@ export const DeletedPostCard = ({ post, deletionDate, href }: DeletedPostCardPro
               type={'button'}
               variant={'outlined'}
               disabled={isPending}
-              onClick={() => restorePost(post.postId)}
+              onClick={() => restorePost(post.id)}
             >
               {isRestoring ? 'Restoring...' : 'Restore'}
             </Button>

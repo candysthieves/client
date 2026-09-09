@@ -1,7 +1,7 @@
 'use client'
 
 import { Typography } from '@candy.thieves/ui-kit-lumos'
-import type { Post } from '@/mocks/posts'
+import type { Post } from '@/lib/model'
 import { DeletedPostCard } from './DeletedPostCard'
 import s from './DeletedPosts.module.scss'
 
@@ -65,10 +65,11 @@ export const DeletedPosts = ({ posts, userId, isError, isLoading }: DeletedPosts
     <section className={s.container} aria-label={'Recently deleted posts'}>
       {posts.map(post => (
         <DeletedPostCard
-          key={post.postId}
+          key={post.id}
           post={post}
-          deletionDate={new Date(post.willBeDeletedIn!)}
-          href={`/profile/${userId}?postId=${post.postId}&type=deleted`}
+          userId={userId}
+          deletionDate={new Date(post.willBeDeleted!)}
+          href={`/profile/${userId}?postId=${post.id}&type=deleted`}
         />
       ))}
     </section>

@@ -96,6 +96,11 @@
   outline: none;
 }
 
+.postSkeleton {
+  display: block;
+  aspect-ratio: 1 / 1;
+}
+
 .postPreview:focus-visible {
   box-shadow: 0 0 0 2px var(--color-accent-500);
 }

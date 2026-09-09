@@ -1,5 +1,6 @@
 'use client'
 import { Avatar, AvatarBlock, Button, Modal, Scroll, Typography } from '@candy.thieves/ui-kit-lumos'
+import type { Post, UserProfile } from '@/lib/model'
 import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
 import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostComments } from '@/components/Post/PostComments/PostComments'
@@ -8,12 +9,13 @@ import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { getPostImageAreaStyle } from '@/lib/utils'
 import { formatPostDate } from '@/lib/utils/formatPostDate'
-import { mockComments, mockLikedByUsers, type Post } from '@/mocks/posts'
+import { mockComments, mockLikedByUsers } from '@/mocks/posts'
 import s from './PostDetailsModal.module.scss'
 
 type Props = {
   post: Post
   open: boolean
+  userProfile: UserProfile
   onClose: () => void
   onEdit: () => void
   onDelete: () => void
@@ -24,15 +26,17 @@ type Props = {
 export const PostDetailsModal = ({
   post,
   open,
+  userProfile,
   onClose,
   onEdit,
   onDelete,
   canEdit = true,
   deleteLabel,
 }: Props) => {
+  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
   const { user, isAuthenticated } = useAuth()
   const isMobileViewport = useIsMobileViewport()
-  const isAuthor = !!user && user.id === post.userId
+  const isAuthor = !!user && user.id === (post.author?.id ?? userProfile.id)
   return (
     <Modal
       open={open}
@@ -44,16 +48,21 @@ export const PostDetailsModal = ({
     >
       <div className={s.postContainer} style={getPostImageAreaStyle(post.images[0])}>
         <div className={s.postImageContainer}>
-          <PostImagesCarousel images={post.images} alt={post.description || 'Post'} />
+          <PostImagesCarousel images={post.images} alt={post.description} />
         </div>
 
         <div className={s.postInfo}>
           {/* Header */}
           <div className={s.postHeader}>
             <div className={s.author}>
-              <Avatar userName={post.userName} size={'s'} delayMs={0} />
+              <Avatar
+                userName={profileUserName}
+                size={'s'}
+                delayMs={0}
+                src={avatarPreviewUrl?.url || ''}
+              />
 
-              <Typography variant={'subtitle2'}>{post.userName}</Typography>
+              <Typography variant={'subtitle2'}>{profileUserName}</Typography>
             </div>
 
             <PostActionMenu

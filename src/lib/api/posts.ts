@@ -1,4 +1,4 @@
-import type { Post } from '@/mocks/posts'
+import type { PostDetails } from '@/lib/model'
 import { AddPostRequest, AddPostResponse } from '@/features/createPost'
 import { request } from '@/lib/api/request'
 
@@ -59,7 +59,10 @@ export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> =>
   })
 }
 
-export const getPosts = () => apiClient<Post[]>('/posts')
+// export const getPosts = () => apiClient<Post[]>('/posts')
+
+export const getPostById = (postId: string): Promise<PostDetails> =>
+  request<PostDetails>(`/posts/${encodeURIComponent(postId)}`)
 
 export const deletePost = (postId: string) =>
   request<void>(`/posts/${postId}/soft-delete`, {

@@ -5,11 +5,12 @@ import { useEffect, useRef } from 'react'
 import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
 import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
+import { Post } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { UserProfile } from '@/lib/model'
 import { formatPostDate } from '@/lib/utils/formatPostDate'
-import { mockLikedByUsers, Post } from '@/mocks/posts'
+import { mockLikedByUsers } from '@/mocks/posts'
 import s from './MobilePostFeed.module.scss'
 
 type Props = {

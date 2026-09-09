@@ -3,7 +3,7 @@
 import { Carousel } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { useId } from 'react'
-import type { PostImage } from '@/mocks/posts'
+import { PostImage } from '@/features/createPost'
 import s from './PostImagesCarousel.module.scss'
 
 type Props = {

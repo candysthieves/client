@@ -3,11 +3,12 @@
 import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import type { Post } from '@/mocks/posts'
+import { useEffect } from 'react'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
-import { CreatePostModal } from '@/features/createPost'
+import { CreatePostModal, Post } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
+import { usePost } from '@/lib/posts'
 import { useProfile, useProfilePosts } from '@/lib/profile'
 import { PostsFeed } from './PostsFeed'
 import s from './ProfileClient.module.scss'
@@ -22,12 +23,17 @@ type ProfileClientProps = {
 export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const router = useRouter()
   const isMobile = useIsMobileViewport()
+
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
+
   const {
     data: profilePostsResponse,
     isError: isPostsError,
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
+
+  const { data: postDetails } = usePost(postId)
+
   const profilePosts: Post[] = (profilePostsResponse?.items ?? []).map(post => ({
     postId: post.id,
     description: post.description,
@@ -38,16 +44,39 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     createdAt: post.createdAt,
     willBeDeletedIn: post.willBeDeleted ? new Date(post.willBeDeleted) : null,
   }))
+
   const isOwner = profile?.isOwner ?? false
+
+  // Check if this useEffect is needed
+  useEffect(() => {
+    if (postDetails && postDetails.author.id !== userId) {
+      router.replace(`/profile/${userId}`)
+    }
+  }, [postDetails, router, userId])
 
   const selectedPost = profilePosts.find(post => post.postId === postId)
   const selectedIndex = selectedPost
     ? profilePosts.findIndex(post => post.postId === selectedPost.postId)
     : 0
+
+  const modalPost: Post | undefined =
+    postDetails?.author.id === userId // check if this condition is needed
+      ? {
+          postId: postDetails.id,
+          description: postDetails.description,
+          images: postDetails.images,
+          preview: postDetails.preview,
+          userId: postDetails.author.id,
+          userName: postDetails.author.username,
+          createdAt: postDetails.createdAt,
+          willBeDeletedIn: null,
+        }
+      : undefined
+
   const showCreateModal = !postId && action === 'create'
   const handleClosePost = () => router.replace(`/profile/${userId}`)
 
-  if (isProfileLoading || isPostsLoading) {
+  if (isProfileLoading) {
     return <ProfileSkeleton />
   }
 
@@ -111,22 +140,24 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           </div>
         </section>
 
-        <PostsFeed posts={profilePostsResponse?.items ?? []} userId={userId} />
+        <PostsFeed isLoading={isPostsLoading} posts={profilePosts} userId={userId} />
       </div>
 
-      {selectedPost &&
+      {postId &&
         profile &&
-        (isMobile ? (
-          <MobilePostViewer
-            userProfile={profile}
-            onClose={handleClosePost}
-            posts={profilePosts}
-            startIndex={selectedIndex}
-            userId={userId}
-          />
-        ) : (
-          <PostModal userProfile={profile} post={selectedPost} open onClose={handleClosePost} />
-        ))}
+        (isMobile
+          ? selectedPost && (
+              <MobilePostViewer
+                userProfile={profile}
+                onClose={handleClosePost}
+                posts={profilePosts}
+                startIndex={selectedIndex}
+                userId={userId}
+              />
+            )
+          : modalPost && (
+              <PostModal userProfile={profile} post={modalPost} open onClose={handleClosePost} />
+            ))}
 
       {showCreateModal && isOwner && profile && <CreatePostModal userProfile={profile} />}
     </>

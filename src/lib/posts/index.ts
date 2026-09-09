@@ -1,5 +1,6 @@
 export { useDeletePost } from './mutations/useDeletePost'
 export { postsKeys } from './postKeys'
-export { usePosts } from './queries/usePosts'
+// export { usePosts } from './queries/usePosts'
+export { usePost } from './queries/usePost'
 export { useAddPost } from './mutations/useAddPost'
 export { useUpdatePost } from './mutations/useUpdatePost'

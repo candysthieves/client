@@ -13,6 +13,7 @@ import {
   userResponseSchema,
   validatePasswordRecoveryCodeSchema,
 } from './auth.schemas'
+import { postDetailsSchema } from './post.schemas'
 import { profilePostSchema, profilePostsResponseSchema, userProfileSchema } from './profile.schemas'
 
 // Auth
@@ -23,6 +24,7 @@ export type LoginRequest = z.infer<typeof loginSchema>
 export type LoginResponse = z.infer<typeof loginResponseSchema>
 export type NewPasswordRequest = z.infer<typeof newPasswordSchema>
 export type PasswordRecoveryRequest = z.infer<typeof passwordRecoverySchema>
+export type PostDetails = z.infer<typeof postDetailsSchema>
 export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirmationSchema>
 export type RegistrationRequest = z.infer<typeof registrationSchema>
 export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEmailSchema>

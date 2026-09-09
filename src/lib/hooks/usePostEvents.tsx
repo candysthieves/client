@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { NEXT_PUBLIC_API_URL } from '@/constants'
 import { PostCreatedEvent } from '@/features/createPost'
-import { PostCreatedEventSchema } from '@/lib/model'
+import { postCreatedEventSchema } from '@/lib/model'
 import { isError } from '@/lib/utils'
 
 type UsePostEventsProps = {
@@ -18,7 +18,7 @@ export const usePostEvents = ({ onPostCreated }: UsePostEventsProps) => {
       try {
         const data = JSON.parse(event.data) as PostCreatedEvent
 
-        const validatedData = PostCreatedEventSchema.parse(data)
+        const validatedData = postCreatedEventSchema.parse(data)
 
         onPostCreated(validatedData.postId)
       } catch (error) {

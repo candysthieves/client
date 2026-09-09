@@ -15,7 +15,7 @@ export const PostComments = ({ post, comments }: Props) => {
   const descriptionComment: Comment | null = post.description
     ? {
         id: 'post-description',
-        username: post.author.username,
+        username: post.author.username, // check name (from user profile or from post comments)
         text: post.description,
         createdAt: '',
         avatarUrl: userProfileData?.avatarPreviewUrl?.url ?? '', // set avatarUrl (REFACTOR LATER)

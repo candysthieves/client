@@ -30,7 +30,7 @@ export function PostPreview({ index, post, userId }: PostPreviewProps) {
       ) : (
         <Image
           src={previewUrl}
-          alt={post.description}
+          alt={post.description || 'Post'}
           fill
           sizes={'(max-width: 640px) 50vw, (max-width: 768px) 33vw, 234px'}
           className={s.postImage}

@@ -43,7 +43,7 @@ export const MobilePostEdit = ({ post, userProfile, onCancel, onSave, isSaving }
         <div className={s.imageFrame}>
           <Image
             src={post.images[0].url}
-            alt={post.description}
+            alt={post.description || 'Post'}
             width={post.images[0].width ?? 986}
             height={post.images[0].height ?? 1130}
             className={s.postImage}

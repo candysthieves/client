@@ -1,13 +1,12 @@
 'use client'
 
 import { Typography } from '@candy.thieves/ui-kit-lumos'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import type { Post } from '@/lib/model'
 import { PostPreview } from './PostPreview'
 import s from './ProfileClient.module.scss'
 
 const POSTS_FEED_SKELETON_COUNT = 8
-const LOAD_MORE_ROOT_MARGIN = '200px'
 
 type PostsFeedProps = {
   hasNextPage: boolean
@@ -33,21 +32,12 @@ export function PostsFeed({
   userId,
 }: PostsFeedProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const [hasUserScrolled, setHasUserScrolled] = useState(false)
   const isEmpty = posts.length === 0
-
-  useEffect(() => {
-    const handleScroll = () => setHasUserScrolled(true)
-
-    window.addEventListener('scroll', handleScroll, { once: true, passive: true })
-
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [userId])
 
   useEffect(() => {
     const loadMoreElement = loadMoreRef.current
 
-    if (!hasUserScrolled || !loadMoreElement || !hasNextPage || isLoadingNextPage) {
+    if (!loadMoreElement || !hasNextPage || isLoadingNextPage) {
       return
     }
 
@@ -57,13 +47,13 @@ export function PostsFeed({
           onLoadMore()
         }
       },
-      { rootMargin: LOAD_MORE_ROOT_MARGIN }
+      { rootMargin: '0px' }
     )
 
     observer.observe(loadMoreElement)
 
     return () => observer.disconnect()
-  }, [hasNextPage, hasUserScrolled, isLoadingNextPage, onLoadMore])
+  }, [hasNextPage, isLoadingNextPage, onLoadMore])
 
   return (
     <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-labelledby={'posts-heading'}>

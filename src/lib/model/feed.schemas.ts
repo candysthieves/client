@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { profileMediaSchema } from './profile.schemas'
+import { imageMediaSchema } from '@/lib/model/post.schemas'
 
 export const feedPostAuthorSchema = z.object({
   id: z.uuid(),
@@ -9,8 +9,8 @@ export const feedPostAuthorSchema = z.object({
 export const feedPostSchema = z.object({
   id: z.uuid(),
   description: z.string().optional(),
-  images: z.array(profileMediaSchema),
-  preview: profileMediaSchema,
+  images: z.array(imageMediaSchema),
+  preview: imageMediaSchema,
   createdAt: z.string(),
   willBeDeleted: z.string().nullable(),
   author: feedPostAuthorSchema,

@@ -1,18 +1,7 @@
 import { z } from 'zod'
+import { imageMediaSchema, postSchema } from './post.schemas'
 
-export const profileMediaSchema = z.object({
-  fileId: z.string(),
-  url: z.url(),
-  width: z.number(),
-  height: z.number(),
-})
-
-export const profilePostSchema = z.object({
-  id: z.string(),
-  description: z.string(),
-  images: z.array(profileMediaSchema),
-  preview: profileMediaSchema,
-  createdAt: z.string(),
+export const profilePostSchema = postSchema.extend({
   willBeDeleted: z.string().nullable(),
 })
 
@@ -24,11 +13,11 @@ export const profilePostsResponseSchema = z.object({
 })
 
 export const userProfileSchema = z.object({
-  id: z.string(),
+  id: z.uuid(),
   username: z.string(),
   description: z.string(),
-  avatarUrl: profileMediaSchema,
-  avatarPreviewUrl: profileMediaSchema,
+  avatarUrl: imageMediaSchema,
+  avatarPreviewUrl: imageMediaSchema,
   followersCount: z.number(),
   followingCount: z.number(),
   publicationsCount: z.number(),

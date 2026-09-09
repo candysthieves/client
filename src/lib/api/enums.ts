@@ -15,13 +15,21 @@ export enum ErrorStatus {
   RecoveryCodeInvalid = 43,
   // VALIDATION
   ValidationError = 50, // common error code for all validation errors in forms
-  InvalidCredentials = 51,
+  InvalidCredentials = 51, // comes with 401
   RecaptchaInvalid = 52,
   PasswordsNotMatch = 53,
+  // POSTS
+  PostNotFound = 55,
+  PostAlreadyExists = 56,
+  FilesServiceUnavailable = 57,
+  PostAccessForbidden = 58,
   // REFRESH TOKEN
   RefreshTokenInvalid = 70,
   RefreshTokenMissing = 71,
   RefreshTokenExpired = 72,
+  // ACCESS TOKEN
+  AccessTokenInvalid = 73,
+  AccessTokenExpired = 74,
   //SESSIONS
   SessionNotFound = 80,
   SessionUserMismatch = 82,
@@ -41,23 +49,22 @@ export enum ErrorStatus {
 //   RecaptchaInvalid = 52, forgot password
 
 // {
-//   "code": 51,
-//   "errorsMessages": [{
-//   "field": "credentials",
-//   "message": "Invalid email or password"
-// }]
+//   "code": 74,
+//   "errorsMessages": [
+//   {
+//     "field": "token",
+//     "message": "Access token has expired"
+//   }
+// ]
 // }
+
+// Нет Access token в LS при отправке запроса
 // {
-//   "code": 22,
-//   "errorsMessages": [{
-//   "field": "email",
-//   "message": "Email is not confirmed"
-// }]
-// }
-// {
-//   "code": 20,
-//   "errorsMessages": [{
-//   "field": "email",
-//   "message": "Email already confirmed"
-// }]
+//   "code":80,
+//   "errorsMessages": [
+//     {
+//       "field":"session",
+//       "message":"Session not found"
+//     }
+//     ]
 // }

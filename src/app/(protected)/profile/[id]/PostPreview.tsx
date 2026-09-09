@@ -3,17 +3,19 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import type { ProfilePost } from '@/lib/model'
+import type { Post } from '@/lib/model'
 import s from './ProfileClient.module.scss'
 
 type PostPreviewProps = {
   index: number
-  post: ProfilePost
+  post: Post
   userId: string
 }
 
 export function PostPreview({ index, post, userId }: PostPreviewProps) {
   const [hasImageError, setHasImageError] = useState(false)
+  const previewUrl = post.preview?.url ?? ''
+  const showPlaceholder = hasImageError || !previewUrl
 
   return (
     <Link
@@ -21,14 +23,14 @@ export function PostPreview({ index, post, userId }: PostPreviewProps) {
       aria-label={`Open post ${index + 1}`}
       className={s.postPreview}
     >
-      {hasImageError ? (
+      {showPlaceholder ? (
         <span className={s.postPlaceholder} aria-hidden={'true'}>
-          {post.description?.slice(0, 1).toUpperCase() ?? 'P'}
+          {post.description.slice(0, 1).toUpperCase() ?? 'P'}
         </span>
       ) : (
         <Image
-          src={post.preview.url}
-          alt={post.description ?? `Post ${index + 1}`}
+          src={previewUrl}
+          alt={post.description || 'Post'}
           fill
           sizes={'(max-width: 640px) 50vw, (max-width: 768px) 33vw, 234px'}
           className={s.postImage}

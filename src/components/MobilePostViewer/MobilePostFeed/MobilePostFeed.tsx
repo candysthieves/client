@@ -1,25 +1,36 @@
 'use client'
 
-import { Avatar, AvatarBlock, Close, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Avatar, AvatarBlock, Button, Close, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useEffect, useRef } from 'react'
+import type { Post, UserProfile } from '@/lib/model'
 import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
 import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
 import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { formatPostDate } from '@/lib/utils/formatPostDate'
-import { mockLikedByUsers, Post } from '@/mocks/posts'
+import { mockLikedByUsers } from '@/mocks/posts'
 import s from './MobilePostFeed.module.scss'
 
 type Props = {
   posts: Post[]
+  userProfile: UserProfile
   startIndex: number
   onClose: () => void
   onDelete: (postId: string) => void
   onEdit: (index: number) => void
 }
 
-export const MobilePostFeed = ({ posts, startIndex, onClose, onDelete, onEdit }: Props) => {
+export const MobilePostFeed = ({
+  posts,
+  userProfile,
+  startIndex,
+  onClose,
+  onDelete,
+  onEdit,
+}: Props) => {
+  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
+
   const isMobile = useIsMobileViewport()
   const { isAuthenticated } = useAuth()
   const postRefs = useRef<(HTMLElement | null)[]>([])
@@ -35,30 +46,35 @@ export const MobilePostFeed = ({ posts, startIndex, onClose, onDelete, onEdit }:
 
   return (
     <>
-      <button type={'button'} aria-label={'Close'} className={s.closeButton} onClick={onClose}>
+      <Button type={'button'} aria-label={'Close'} className={s.closeButton} onClick={onClose}>
         <Close size={24} />
-      </button>
+      </Button>
 
       <div className={s.slides}>
         {posts.map((post, index) => {
           return (
             <article
-              key={post.postId}
+              key={post.id}
               className={s.slide}
               ref={element => {
                 postRefs.current[index] = element
               }}
             >
               <div className={s.author}>
-                <Avatar userName={post.userName} size={'s'} delayMs={0} />
+                <Avatar
+                  userName={profileUserName}
+                  size={'s'}
+                  delayMs={0}
+                  src={avatarPreviewUrl?.url || ''}
+                />
 
-                <Typography variant={'subtitle2'}>{post.userName}</Typography>
+                <Typography variant={'subtitle2'}>{profileUserName}</Typography>
 
-                {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.userId` and pass isAuthor here. */}
+                {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
                 <PostActionMenu
                   isAuthor={isAuthenticated}
                   onEdit={() => onEdit(index)}
-                  onDelete={() => onDelete(post.postId)}
+                  onDelete={() => onDelete(post.id)}
                 />
               </div>
               <div className={s.imageArea}>

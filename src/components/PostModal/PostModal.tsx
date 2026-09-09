@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import type { Post } from '@/mocks/posts'
+import type { Post, UserProfile } from '@/lib/model'
 import { ConfirmDeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
 import { useDeletePost, useUpdatePost } from '@/lib/posts'
 
 type PostModalProps = {
+  userProfile: UserProfile
   post: Post
   open: boolean
   onClose: () => void
@@ -15,8 +16,8 @@ type PostModalProps = {
 
 type Mode = 'edit' | 'view'
 
-export const PostModal = ({ post, open, onClose }: PostModalProps) => {
-  const { mutate: deletePost, isPending } = useDeletePost(post.userId)
+export const PostModal = ({ userProfile, post, open, onClose }: PostModalProps) => {
+  const { mutate: deletePost, isPending } = useDeletePost(post.author.id)
   const { mutate: updatePost, isPending: isUpdating } = useUpdatePost()
   const [mode, setMode] = useState<Mode>('view')
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -41,7 +42,7 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
 
   const handleSave = (description: string) => {
     updatePost(
-      { postId: post.postId, userId: post.userId, description },
+      { postId: post.id, userId: post.author.id, description },
       {
         onSuccess: () => setMode('view'),
       }
@@ -49,7 +50,7 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
   }
 
   const handleConfirmDelete = () => {
-    deletePost(post.postId, {
+    deletePost(post.id, {
       onSuccess: handleClose,
     })
   }
@@ -59,6 +60,7 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
       <EditPostModal
         post={post}
         open={open}
+        userProfile={userProfile}
         onClose={handleClose}
         onCancel={handleCancelEdit}
         onSave={handleSave}
@@ -72,6 +74,7 @@ export const PostModal = ({ post, open, onClose }: PostModalProps) => {
       <PostDetailsModal
         post={post}
         open={open}
+        userProfile={userProfile}
         onClose={handleClose}
         onEdit={handleEdit}
         onDelete={handleDelete}

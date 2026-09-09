@@ -90,12 +90,7 @@ export const PostCard = ({ postId, images, username, timeAgo, caption }: PostCar
         style={isExpanded && imageWidth ? { height: `${expandedImageHeight}px` } : undefined}
       >
         {showCarouselControls ? (
-          <Carousel
-            controlsSize={'s'}
-            slides={images.map((image, index) => (
-              <img alt={`Slide ${index + 1}`} className={s.image} key={image} src={image} />
-            ))}
-          />
+          <Carousel controlsSize={'s'} slides={images} />
         ) : (
           <img alt={username} className={s.image} src={images[0]} />
         )}

@@ -16,6 +16,12 @@
   color: var(--color-light-100);
 
   background: transparent;
+
+  @include transition-basic(color);
+
+  &:hover {
+    color: var(--color-danger-500);
+  }
 }
 
 .slides {

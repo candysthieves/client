@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { ProfilePostsResponse } from '@/lib/model'
-import type { Post } from '@/mocks/posts'
+import type { Post, ProfilePostsResponse } from '@/lib/model'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
 import { updatePost } from '@/lib/api'
 import { profileKeys } from '@/lib/profile/profileKeys'
@@ -33,7 +32,7 @@ export const useUpdatePost = () => {
       )
 
       queryClient.setQueryData<Post[]>(postsKeys.all, posts =>
-        posts?.map(post => (post.postId === postId ? { ...post, description } : post))
+        posts?.map(post => (post.id === postId ? { ...post, description } : post))
       )
 
       queryClient.setQueryData<ProfilePostsResponse>(profileKeys.posts(userId), data =>

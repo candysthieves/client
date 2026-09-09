@@ -1,42 +1,71 @@
 import { z } from 'zod'
 import { MAX_FILE_SIZE } from '@/constants'
 
-export const LocationSchema = z.object({
-  fileId: z.string(),
+export const locationSchema = z.object({
+  fileId: z.uuid(),
   address: z.string(),
 })
 
-export const PostFileSchema = z.object({
-  id: z.string(),
+export const postFileSchema = z.object({
+  id: z.uuid(),
   file: z.instanceof(File),
   url: z.url(),
   originalUrl: z.url(),
 })
 
-export const DraftPostFileSchema = z.object({
+export const draftPostFileSchema = z.object({
   file: z.instanceof(File),
 })
 
-export const ImageSchema = z.object({
+export const imageSchema = z.object({
+  fileId: z.uuid(),
   url: z.url(),
+  width: z.number().nonnegative(),
+  height: z.number().nonnegative(),
 })
 
-export const AddPostStateSchema = z.object({
-  files: z.array(PostFileSchema),
+export const addPostStateSchema = z.object({
+  files: z.array(postFileSchema),
   currentFileIndex: z.number().int().nonnegative(),
   step: z.enum(['crop', 'publication', 'upload']),
   description: z.string().max(500),
-  locations: z.array(LocationSchema),
+  locations: z.array(locationSchema),
 })
 
-export const AddPostRequestSchema = z.object({
+export const addPostRequestSchema = z.object({
   files: z.array(z.instanceof(File)),
   description: z.string().max(500),
-  locations: z.array(LocationSchema),
+  locations: z.array(locationSchema),
 })
 
-export const AddPostResponseSchema = z.object({
-  postId: z.string(),
+export const addPostResponseSchema = z.object({
+  postId: z.uuid(),
+})
+
+export const imageMediaSchema = z.object({
+  fileId: z.uuid(),
+  url: z.url(),
+  width: z.number().nonnegative(),
+  height: z.number().nonnegative(),
+})
+
+export const postAuthorSchema = z.object({
+  id: z.uuid(),
+  username: z.string(),
+})
+
+export const postSchema = z.object({
+  id: z.uuid(),
+  description: z.string(),
+  images: z.array(imageMediaSchema),
+  preview: imageMediaSchema,
+  createdAt: z.string(),
+  willBeDeleted: z.string().nullable().optional(),
+  author: postAuthorSchema,
+})
+
+export const postDetailsSchema = postSchema.extend({
+  isOwner: z.boolean(),
 })
 
 export const postImageSchema = z
@@ -47,6 +76,15 @@ export const postImageSchema = z
   )
   .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 300 kB')
 
-export const PostCreatedEventSchema = z.object({
-  postId: z.string(),
+export const postCreatedEventSchema = z.object({
+  postId: z.uuid('Invalid postID format in add post SSE response'),
+})
+
+export const commentSchema = z.object({
+  id: z.string().min(1, 'Comment ID is required'),
+  username: z.string(),
+  avatarUrl: z.url().optional(),
+  text: z.string().min(1, 'Comment text is required').max(500, 'Comment is too long'),
+  createdAt: z.string(), // or z.date().nullable()
+  likesCount: z.number().int().nonnegative().optional(),
 })

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { getUsersCount } from '@/lib/api'
-import { usersKeys } from '../usersKeys'
+import { usersKeys } from '@/lib/users'
 
 export const useUsersCount = () =>
   useQuery({

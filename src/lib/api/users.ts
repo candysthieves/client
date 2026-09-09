@@ -1,5 +1,4 @@
 import { request } from '@/lib/api/request'
 import { UsersCountResponse } from '@/lib/model'
 
-export const getUsersCount = (init?: RequestInit) =>
-  request<UsersCountResponse>('/users/count', init)
+export const getUsersCount = () => request<UsersCountResponse>('/users/count')

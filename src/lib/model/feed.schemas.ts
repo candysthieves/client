@@ -2,12 +2,12 @@ import { z } from 'zod'
 import { profileMediaSchema } from './profile.schemas'
 
 export const feedPostAuthorSchema = z.object({
-  id: z.string(),
+  id: z.uuid(),
   username: z.string(),
 })
 
 export const feedPostSchema = z.object({
-  id: z.string(),
+  id: z.uuid(),
   description: z.string().optional(),
   images: z.array(profileMediaSchema),
   preview: profileMediaSchema,

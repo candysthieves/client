@@ -30,6 +30,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     data: profilePostsData,
     fetchNextPage,
     hasNextPage,
+    isFetchNextPageError,
     isError: isPostsError,
     isFetchingNextPage,
     isLoading: isPostsLoading,
@@ -57,7 +58,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     return <ProfileSkeleton />
   }
 
-  if (isProfileError || isPostsError) {
+  if (isProfileError || (isPostsError && !profilePostsData)) {
     return (
       <section className={s.profileError} role={'alert'}>
         <Typography color={'var(--color-light-100)'} variant={'h1'}>
@@ -121,6 +122,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           hasNextPage={hasNextPage ?? false}
           isLoading={isPostsLoading}
           isLoadingNextPage={isFetchingNextPage}
+          isLoadMoreError={isFetchNextPageError}
           key={userId}
           onLoadMore={handleLoadMorePosts}
           posts={profilePosts}

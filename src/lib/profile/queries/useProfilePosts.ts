@@ -8,4 +8,5 @@ export const useProfilePosts = (userId: string) =>
     queryFn: ({ pageParam }) => getUserPosts(userId, pageParam),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => (lastPage.hasNextPage ? lastPage.nextCursor : undefined),
+    gcTime: 0,
   })

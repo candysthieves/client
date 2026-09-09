@@ -12,6 +12,7 @@ type PostsFeedProps = {
   hasNextPage: boolean
   isLoading: boolean
   isLoadingNextPage: boolean
+  isLoadMoreError: boolean
   onLoadMore: () => void
   posts: Post[]
   userId: string
@@ -27,6 +28,7 @@ export function PostsFeed({
   hasNextPage,
   isLoading,
   isLoadingNextPage,
+  isLoadMoreError,
   onLoadMore,
   posts,
   userId,
@@ -46,7 +48,13 @@ export function PostsFeed({
   useEffect(() => {
     const loadMoreElement = loadMoreRef.current
 
-    if (!hasUserScrolled || !loadMoreElement || !hasNextPage || isLoadingNextPage) {
+    if (
+      !hasUserScrolled ||
+      !loadMoreElement ||
+      !hasNextPage ||
+      isLoadingNextPage ||
+      isLoadMoreError
+    ) {
       return
     }
 
@@ -62,7 +70,7 @@ export function PostsFeed({
     observer.observe(loadMoreElement)
 
     return () => observer.disconnect()
-  }, [hasNextPage, hasUserScrolled, isLoadingNextPage, onLoadMore])
+  }, [hasNextPage, hasUserScrolled, isLoadingNextPage, isLoadMoreError, onLoadMore])
 
   return (
     <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-labelledby={'posts-heading'}>
@@ -96,6 +104,14 @@ export function PostsFeed({
               {isLoadingNextPage && (
                 <div className={s.postsGrid} aria-busy={'true'} aria-label={'Loading more posts'}>
                   <PostsSkeletons />
+                </div>
+              )}
+
+              {isLoadMoreError && (
+                <div className={s.loadMoreError} role={'alert'}>
+                  <Typography color={'var(--color-light-100)'} variant={'body1'}>
+                    Unable to load more posts. Please reload the page and try again.
+                  </Typography>
                 </div>
               )}
 

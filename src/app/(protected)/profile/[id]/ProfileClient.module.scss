@@ -109,6 +109,16 @@
   aspect-ratio: 1 / 1;
 }
 
+.postImageSkeleton {
+  position: absolute;
+  inset: 0;
+  display: block;
+
+  :global(.react-loading-skeleton) {
+    @include width-height(100%);
+  }
+}
+
 .postPreview:focus-visible {
   box-shadow: 0 0 0 2px var(--color-accent-500);
 }

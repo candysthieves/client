@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
+import Skeleton from 'react-loading-skeleton'
 import type { Post } from '@/lib/model'
 import s from './ProfileClient.module.scss'
 
@@ -15,6 +16,7 @@ type PostPreviewProps = {
 export function PostPreview({ index, post, userId }: PostPreviewProps) {
   const [hasImageError, setHasImageError] = useState(false)
   const previewUrl = post.preview?.url ?? ''
+  const [isImageLoading, setIsImageLoading] = useState(Boolean(previewUrl))
   const showPlaceholder = hasImageError || !previewUrl
 
   return (
@@ -28,14 +30,21 @@ export function PostPreview({ index, post, userId }: PostPreviewProps) {
           {post.description.slice(0, 1).toUpperCase() ?? 'P'}
         </span>
       ) : (
-        <Image
-          src={previewUrl}
-          alt={post.description || 'Post'}
-          fill
-          sizes={'(max-width: 640px) 50vw, (max-width: 768px) 33vw, 234px'}
-          className={s.postImage}
-          onError={() => setHasImageError(true)}
-        />
+        <>
+          <Image
+            src={previewUrl}
+            alt={post.description || 'Post'}
+            fill
+            sizes={'(max-width: 640px) 50vw, (max-width: 768px) 33vw, 234px'}
+            className={s.postImage}
+            onLoad={() => setIsImageLoading(false)}
+            onError={() => {
+              setHasImageError(true)
+              setIsImageLoading(false)
+            }}
+          />
+          {isImageLoading && <Skeleton containerClassName={s.postImageSkeleton} />}
+        </>
       )}
     </Link>
   )

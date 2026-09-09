@@ -1,7 +1,7 @@
 'use client'
 
 import { Typography } from '@candy.thieves/ui-kit-lumos'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Post } from '@/lib/model'
 import { PostPreview } from './PostPreview'
 import s from './ProfileClient.module.scss'
@@ -32,12 +32,21 @@ export function PostsFeed({
   userId,
 }: PostsFeedProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null)
+  const [hasUserScrolled, setHasUserScrolled] = useState(false)
   const isEmpty = posts.length === 0
+
+  useEffect(() => {
+    const handleScroll = () => setHasUserScrolled(true)
+
+    window.addEventListener('scroll', handleScroll, { once: true, passive: true })
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   useEffect(() => {
     const loadMoreElement = loadMoreRef.current
 
-    if (!loadMoreElement || !hasNextPage || isLoadingNextPage) {
+    if (!hasUserScrolled || !loadMoreElement || !hasNextPage || isLoadingNextPage) {
       return
     }
 
@@ -53,7 +62,7 @@ export function PostsFeed({
     observer.observe(loadMoreElement)
 
     return () => observer.disconnect()
-  }, [hasNextPage, isLoadingNextPage, onLoadMore])
+  }, [hasNextPage, hasUserScrolled, isLoadingNextPage, onLoadMore])
 
   return (
     <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-labelledby={'posts-heading'}>

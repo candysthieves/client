@@ -121,6 +121,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           hasNextPage={hasNextPage ?? false}
           isLoading={isPostsLoading}
           isLoadingNextPage={isFetchingNextPage}
+          key={userId}
           onLoadMore={handleLoadMorePosts}
           posts={profilePosts}
           userId={userId}

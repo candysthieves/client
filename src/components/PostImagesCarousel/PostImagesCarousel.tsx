@@ -68,11 +68,7 @@ export const PostImagesCarousel = ({ images, alt, natural = false }: Props) => {
 
   return (
     <div className={isCarousel ? `${s.container} ${scopeId}` : s.container} style={containerStyle}>
-      {isCarousel ? (
-        <Carousel slides={images.map(image => renderImage(image))} />
-      ) : (
-        renderImage(images[0])
-      )}
+      {isCarousel ? <Carousel slides={images.map(image => image.url)} /> : renderImage(images[0])}
       {isCarousel && containRules.length > 0 && <style>{containRules}</style>}
     </div>
   )

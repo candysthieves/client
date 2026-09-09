@@ -42,11 +42,11 @@ export const addPostResponseSchema = z.object({
   postId: z.uuid(),
 })
 
-export const postMediaSchema = z.object({
+export const imageMediaSchema = z.object({
   fileId: z.uuid(),
   url: z.url(),
-  width: z.number(),
-  height: z.number(),
+  width: z.number().nonnegative(),
+  height: z.number().nonnegative(),
 })
 
 export const postAuthorSchema = z.object({
@@ -57,8 +57,8 @@ export const postAuthorSchema = z.object({
 export const postSchema = z.object({
   id: z.uuid(),
   description: z.string(),
-  images: z.array(postMediaSchema),
-  preview: postMediaSchema,
+  images: z.array(imageMediaSchema),
+  preview: imageMediaSchema,
   createdAt: z.string(),
   willBeDeleted: z.string().nullable().optional(),
   author: postAuthorSchema,

@@ -1,5 +1,4 @@
-import type { Post } from '@/mocks/posts'
-import { DeletedPostItem } from '@/lib/model'
+import type { DeletedPostItem, Post } from '@/lib/model'
 
 // Статическая заглушка в одном экземпляре в памяти
 const FALLBACK_IMAGE = {
@@ -17,13 +16,15 @@ export const mapDeletedPostToClient = (
   const validImages = post.images.length > 0 ? post.images : [FALLBACK_IMAGE]
 
   return {
-    postId: post.id,
+    id: post.id,
     description: post.description ?? '',
     images: validImages,
     preview: post.preview ?? post.images[0] ?? FALLBACK_IMAGE,
-    userId,
-    userName: post.author.username ?? fallbackUsername ?? userId,
     createdAt: post.createdAt,
-    willBeDeletedIn: post.willBeDeleted ? new Date(post.willBeDeleted) : null,
+    willBeDeleted: post.willBeDeleted,
+    author: {
+      ...post.author,
+      username: post.author.username ?? fallbackUsername ?? userId,
+    },
   }
 }

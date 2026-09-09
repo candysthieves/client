@@ -9,7 +9,7 @@ import { MobilePostFeed } from './MobilePostFeed/MobilePostFeed'
 import s from './MobilePostViewer.module.scss'
 
 type Props = {
-  userProfile: UserProfile
+  userProfile?: UserProfile
   posts: Post[]
   startIndex: number
   userId: string

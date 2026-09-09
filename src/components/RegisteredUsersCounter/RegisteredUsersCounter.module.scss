@@ -1,0 +1,50 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  @include flex(flex, space-between, center);
+
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--color-dark-300);
+  border-radius: 0.125rem;
+  background-color: var(--color-dark-500);
+}
+
+.label {
+  @include typography(18px, 24px, 700);
+
+  color: var(--color-light-100);
+  white-space: nowrap;
+}
+
+.digitsBox {
+  @include flex(flex, null, center);
+  @include width-height(203px, 48px);
+
+  overflow: hidden;
+  border: 1px solid var(--color-dark-300);
+  border-radius: 0.125rem;
+  background-color: var(--color-dark-700);
+}
+
+.digit {
+  @include flex(flex, center, center);
+  @include typography(18px, 24px, 700);
+
+  position: relative;
+  flex: 1;
+  height: 100%;
+  color: var(--color-light-100);
+
+  &:not(:last-child)::after {
+    content: '';
+
+    position: absolute;
+    top: 9px;
+    right: 0;
+    bottom: 9px;
+
+    width: 1px;
+
+    background-color: var(--color-dark-300);
+  }
+}

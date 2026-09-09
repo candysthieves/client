@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import Skeleton from 'react-loading-skeleton'
 import type { Post } from '@/lib/model'
 import s from './ProfileClient.module.scss'
 
@@ -43,7 +42,7 @@ export function PostPreview({ index, post, userId }: PostPreviewProps) {
               setIsImageLoading(false)
             }}
           />
-          {isImageLoading && <Skeleton containerClassName={s.postImageSkeleton} />}
+          {isImageLoading && <span className={`${s.skeletonPost} ${s.postImageSkeleton}`} />}
         </>
       )}
     </Link>

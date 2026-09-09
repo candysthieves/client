@@ -2,7 +2,6 @@
 
 import { Typography } from '@candy.thieves/ui-kit-lumos'
 import { useEffect, useRef } from 'react'
-import Skeleton from 'react-loading-skeleton'
 import type { Post } from '@/lib/model'
 import { PostPreview } from './PostPreview'
 import s from './ProfileClient.module.scss'
@@ -21,7 +20,7 @@ type PostsFeedProps = {
 
 function PostsSkeletons() {
   return Array.from({ length: POSTS_FEED_SKELETON_COUNT }, (_, index) => (
-    <Skeleton className={s.postSkeleton} key={index} />
+    <div className={s.skeletonPost} key={index} />
   ))
 }
 

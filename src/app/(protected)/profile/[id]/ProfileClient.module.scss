@@ -112,11 +112,6 @@
 .postImageSkeleton {
   position: absolute;
   inset: 0;
-  display: block;
-
-  :global(.react-loading-skeleton) {
-    @include width-height(100%);
-  }
 }
 
 .postPreview:focus-visible {

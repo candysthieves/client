@@ -2,13 +2,12 @@
 
 import { Avatar, AvatarBlock, Button, Close, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useEffect, useRef } from 'react'
+import type { Post, UserProfile } from '@/lib/model'
 import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
 import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
-import { Post } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
-import { UserProfile } from '@/lib/model'
 import { formatPostDate } from '@/lib/utils/formatPostDate'
 import { mockLikedByUsers } from '@/mocks/posts'
 import s from './MobilePostFeed.module.scss'
@@ -55,7 +54,7 @@ export const MobilePostFeed = ({
         {posts.map((post, index) => {
           return (
             <article
-              key={post.postId}
+              key={post.id}
               className={s.slide}
               ref={element => {
                 postRefs.current[index] = element
@@ -71,11 +70,11 @@ export const MobilePostFeed = ({
 
                 <Typography variant={'subtitle2'}>{profileUserName}</Typography>
 
-                {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.userId` and pass isAuthor here. */}
+                {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
                 <PostActionMenu
                   isAuthor={isAuthenticated}
                   onEdit={() => onEdit(index)}
-                  onDelete={() => onDelete(post.postId)}
+                  onDelete={() => onDelete(post.id)}
                 />
               </div>
               <div className={s.imageArea}>

@@ -1,13 +1,12 @@
 'use client'
 import { Avatar, AvatarBlock, Button, Modal, Scroll, Typography } from '@candy.thieves/ui-kit-lumos'
+import type { Post, UserProfile } from '@/lib/model'
 import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
 import { PostActions } from '@/components/Post/PostActions/PostActions'
 import { PostComments } from '@/components/Post/PostComments/PostComments'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
-import { Post } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
-import { UserProfile } from '@/lib/model'
 import { getPostImageAreaStyle } from '@/lib/utils'
 import { formatPostDate } from '@/lib/utils/formatPostDate'
 import { mockComments, mockLikedByUsers } from '@/mocks/posts'
@@ -39,7 +38,7 @@ export const PostDetailsModal = ({ post, open, userProfile, onClose, onEdit, onD
     >
       <div className={s.postContainer} style={getPostImageAreaStyle(post.images[0])}>
         <div className={s.postImageContainer}>
-          <PostImagesCarousel images={post.images} alt={post.description || 'Post'} />
+          <PostImagesCarousel images={post.images} alt={post.description} />
         </div>
 
         <div className={s.postInfo}>
@@ -56,7 +55,7 @@ export const PostDetailsModal = ({ post, open, userProfile, onClose, onEdit, onD
               <Typography variant={'subtitle2'}>{profileUserName}</Typography>
             </div>
 
-            {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.userId` and pass isAuthor here. */}
+            {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
             <PostActionMenu isAuthor={isAuthenticated} onEdit={onEdit} onDelete={onDelete} />
           </div>
 

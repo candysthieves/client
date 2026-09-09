@@ -42,18 +42,29 @@ export const addPostResponseSchema = z.object({
   postId: z.uuid(),
 })
 
-export const authorSchema = z.object({
+export const imageMediaSchema = z.object({
+  fileId: z.uuid(),
+  url: z.url(),
+  width: z.number().nonnegative(),
+  height: z.number().nonnegative(),
+})
+
+export const postAuthorSchema = z.object({
   id: z.uuid(),
   username: z.string(),
 })
 
-export const postDetailsSchema = z.object({
+export const postSchema = z.object({
   id: z.uuid(),
-  description: z.string().max(500),
-  images: z.array(imageSchema),
-  preview: imageSchema,
-  createdAt: z.string(), // or z.date().nullable()
-  author: authorSchema,
+  description: z.string(),
+  images: z.array(imageMediaSchema),
+  preview: imageMediaSchema,
+  createdAt: z.string(),
+  willBeDeleted: z.string().nullable().optional(),
+  author: postAuthorSchema,
+})
+
+export const postDetailsSchema = postSchema.extend({
   isOwner: z.boolean(),
 })
 
@@ -69,32 +80,8 @@ export const postCreatedEventSchema = z.object({
   postId: z.uuid('Invalid postID format in add post SSE response'),
 })
 
-// Temporary used
-export const postPreviewSchema = z.object({
-  url: z.url(),
-})
-
-export const imageInPostSchema = z.object({
-  url: z.url(),
-  width: z.number().nonnegative(),
-  height: z.number().nonnegative(),
-  // add id
-}) // see usage in PostImagesCarousel
-
-export const postSchema = z.object({
-  postId: z.uuid(),
-  description: z.string().max(500).optional(),
-  images: z.array(imageInPostSchema), // change to z.array(imageSchema)
-  preview: postPreviewSchema, // change to imageSchema
-  userId: z.uuid(),
-  userName: z.string(),
-  createdAt: z.string(), // or z.date().nullable()
-  willBeDeletedIn: z.date().nullable(),
-  // add necessary fields
-})
-
 export const commentSchema = z.object({
-  id: z.string().min(1, 'Comment ID is required'), // change to z.uuid()
+  id: z.string().min(1, 'Comment ID is required'),
   username: z.string(),
   avatarUrl: z.url().optional(),
   text: z.string().min(1, 'Comment text is required').max(500, 'Comment is too long'),

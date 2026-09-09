@@ -3,10 +3,9 @@
 import type { ModalProps } from '@candy.thieves/ui-kit-lumos'
 import { Avatar, Button, Close, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useState } from 'react'
+import type { Post, UserProfile } from '@/lib/model'
 import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
 import { PostImagesCarousel } from '@/components/PostImagesCarousel/PostImagesCarousel'
-import { Post } from '@/features/createPost'
-import { UserProfile } from '@/lib/model'
 import { getPostImageAreaStyle } from '@/lib/utils'
 import { ConfirmCloseModal } from './ConfirmCloseModal'
 import s from './EditPostModal.module.scss'
@@ -96,7 +95,7 @@ export const EditPostModal = ({
           </div>
 
           <div className={s.imageSection}>
-            <PostImagesCarousel images={post.images} alt={post.description || 'Post'} />
+            <PostImagesCarousel images={post.images} alt={post.description} />
           </div>
 
           <div className={s.editSection}>

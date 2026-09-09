@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import type { Post, UserProfile } from '@/lib/model'
 import { ConfirmDeletePostModal } from '@/components'
-import { Post } from '@/features/createPost'
-import { UserProfile } from '@/lib/model'
 import { useDeletePost, useUpdatePost } from '@/lib/posts'
 import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'
 import { MobilePostFeed } from './MobilePostFeed/MobilePostFeed'
@@ -50,8 +49,8 @@ export const MobilePostViewer = ({ userProfile, posts, startIndex, userId, onClo
             onSave={description => {
               updatePost(
                 {
-                  postId: posts[editingIndex].postId,
-                  userId: posts[editingIndex].userId,
+                  postId: posts[editingIndex].id,
+                  userId: posts[editingIndex].author.id,
                   description,
                 },
                 { onSuccess: () => setIsEditing(false) }

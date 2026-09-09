@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { postSchema } from './post.schemas'
 
 export const profileMediaSchema = z.object({
-  fileId: z.string(),
+  fileId: z.uuid(),
   url: z.url(),
   width: z.number(),
   height: z.number(),
@@ -20,7 +20,7 @@ export const profilePostsResponseSchema = z.object({
 })
 
 export const userProfileSchema = z.object({
-  id: z.string(),
+  id: z.uuid(),
   username: z.string(),
   description: z.string(),
   avatarUrl: profileMediaSchema,

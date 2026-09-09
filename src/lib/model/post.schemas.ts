@@ -43,19 +43,19 @@ export const addPostResponseSchema = z.object({
 })
 
 export const postMediaSchema = z.object({
-  fileId: z.string(),
+  fileId: z.uuid(),
   url: z.url(),
   width: z.number(),
   height: z.number(),
 })
 
 export const postAuthorSchema = z.object({
-  id: z.string(),
+  id: z.uuid(),
   username: z.string(),
 })
 
 export const postSchema = z.object({
-  id: z.string(),
+  id: z.uuid(),
   description: z.string(),
   images: z.array(postMediaSchema),
   preview: postMediaSchema,
@@ -81,7 +81,7 @@ export const postCreatedEventSchema = z.object({
 })
 
 export const commentSchema = z.object({
-  id: z.string().min(1, 'Comment ID is required'), // change to z.uuid()
+  id: z.string().min(1, 'Comment ID is required'),
   username: z.string(),
   avatarUrl: z.url().optional(),
   text: z.string().min(1, 'Comment text is required').max(500, 'Comment is too long'),

@@ -1,5 +1,7 @@
+'use client'
+
 import { Typography } from '@candy.thieves/ui-kit-lumos'
-import Skeleton from 'react-loading-skeleton'
+import { useEffect, useRef, useState } from 'react'
 import type { Post } from '@/lib/model'
 import { PostPreview } from './PostPreview'
 import s from './ProfileClient.module.scss'
@@ -7,13 +9,68 @@ import s from './ProfileClient.module.scss'
 const POSTS_FEED_SKELETON_COUNT = 8
 
 type PostsFeedProps = {
+  hasNextPage: boolean
   isLoading: boolean
+  isLoadingNextPage: boolean
+  isLoadMoreError: boolean
+  onLoadMore: () => void
   posts: Post[]
   userId: string
 }
 
-export function PostsFeed({ isLoading, posts, userId }: PostsFeedProps) {
+function PostsSkeletons() {
+  return Array.from({ length: POSTS_FEED_SKELETON_COUNT }, (_, index) => (
+    <div className={s.skeletonPost} key={index} />
+  ))
+}
+
+export function PostsFeed({
+  hasNextPage,
+  isLoading,
+  isLoadingNextPage,
+  isLoadMoreError,
+  onLoadMore,
+  posts,
+  userId,
+}: PostsFeedProps) {
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const [hasUserScrolled, setHasUserScrolled] = useState(false)
   const isEmpty = posts.length === 0
+
+  useEffect(() => {
+    const handleScroll = () => setHasUserScrolled(true)
+
+    window.addEventListener('scroll', handleScroll, { once: true, passive: true })
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    const loadMoreElement = loadMoreRef.current
+
+    if (
+      !hasUserScrolled ||
+      !loadMoreElement ||
+      !hasNextPage ||
+      isLoadingNextPage ||
+      isLoadMoreError
+    ) {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0]?.isIntersecting) {
+          onLoadMore()
+        }
+      },
+      { rootMargin: '0px' }
+    )
+
+    observer.observe(loadMoreElement)
+
+    return () => observer.disconnect()
+  }, [hasNextPage, hasUserScrolled, isLoadingNextPage, isLoadMoreError, onLoadMore])
 
   return (
     <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-labelledby={'posts-heading'}>
@@ -28,20 +85,40 @@ export function PostsFeed({ isLoading, posts, userId }: PostsFeedProps) {
 
       {isLoading ? (
         <div className={s.postsGrid} aria-busy={'true'} aria-label={'Loading posts'}>
-          {Array.from({ length: POSTS_FEED_SKELETON_COUNT }, (_, index) => (
-            <Skeleton className={s.postSkeleton} key={index} />
-          ))}
+          <PostsSkeletons />
         </div>
       ) : isEmpty ? (
         <Typography color={'var(--color-light-900)'} variant={'body1'}>
           This user has not published any posts yet.
         </Typography>
       ) : (
-        <div className={s.postsGrid}>
-          {posts.map((post, index) => (
-            <PostPreview key={post.id} index={index} post={post} userId={userId} />
-          ))}
-        </div>
+        <>
+          <div className={s.postsGrid}>
+            {posts.map((post, index) => (
+              <PostPreview key={post.id} index={index} post={post} userId={userId} />
+            ))}
+          </div>
+
+          {hasNextPage && (
+            <>
+              {isLoadingNextPage && (
+                <div className={s.postsGrid} aria-busy={'true'} aria-label={'Loading more posts'}>
+                  <PostsSkeletons />
+                </div>
+              )}
+
+              {isLoadMoreError && (
+                <div className={s.loadMoreError} role={'alert'}>
+                  <Typography color={'var(--color-light-100)'} variant={'body1'}>
+                    Unable to load more posts. Please reload the page and try again.
+                  </Typography>
+                </div>
+              )}
+
+              <div ref={loadMoreRef} aria-live={'polite'} />
+            </>
+          )}
+        </>
       )}
     </section>
   )

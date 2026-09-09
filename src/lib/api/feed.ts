@@ -32,13 +32,9 @@ export const getAllPosts = async (
   }
 
   const query = searchParams.toString()
-  const response = await request<FeedPostsResponse>(
-    `/posts/all-posts${query ? `?${query}` : ''}`,
-    init
-  )
-  const posts = response.items.map(toPost)
+  const resultQuery = query ? `?${query}` : ''
 
-  // The backend ignores `limit` and always returns more than asked — slice
-  // defensively so callers actually get what they requested.
-  return limit ? posts.slice(0, limit) : posts
+  const response = await request<FeedPostsResponse>(`/posts/all-posts${resultQuery}`, init)
+  // return response.items.map(toPost)
+  return response.items.map(toPost)
 }

@@ -5,7 +5,12 @@ type RegisteredUsersCounterProps = {
   minDigits?: number
 }
 
-export const RegisteredUsersCounter = ({ count, minDigits = 6 }: RegisteredUsersCounterProps) => {
+const COUNTER_DIGIT_PLACE_VALUE = 6
+
+export const RegisteredUsersCounter = ({
+  count,
+  minDigits = COUNTER_DIGIT_PLACE_VALUE,
+}: RegisteredUsersCounterProps) => {
   const digits = String(count).padStart(minDigits, '0').split('')
 
   return (

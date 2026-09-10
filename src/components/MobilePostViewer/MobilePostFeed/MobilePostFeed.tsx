@@ -19,6 +19,8 @@ type Props = {
   onClose: () => void
   onDelete: (postId: string) => void
   onEdit: (index: number) => void
+  canEdit?: boolean
+  deleteLabel?: string
 }
 
 export const MobilePostFeed = ({
@@ -28,6 +30,8 @@ export const MobilePostFeed = ({
   onClose,
   onDelete,
   onEdit,
+  canEdit = true,
+  deleteLabel = 'Delete Post',
 }: Props) => {
   const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
 
@@ -75,6 +79,8 @@ export const MobilePostFeed = ({
                   isAuthor={isAuthenticated}
                   onEdit={() => onEdit(index)}
                   onDelete={() => onDelete(post.id)}
+                  canEdit={canEdit}
+                  deleteLabel={deleteLabel}
                 />
               </div>
               <div className={s.imageArea}>

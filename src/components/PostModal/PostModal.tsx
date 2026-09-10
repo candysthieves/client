@@ -6,30 +6,48 @@ import { ConfirmDeletePostModal } from '@/components'
 import { EditPostModal } from '@/components/EditPostModal/EditPostModal'
 import { PostDetailsModal } from '@/components/PostDetailsModal/PostDetailsModal'
 import { useDeletePost, useUpdatePost } from '@/lib/posts'
+import { useHardDeletePost } from '@/lib/posts/mutations/useHardDeletePost'
+
+export type PostViewMode = 'deleted' | 'published'
 
 type PostModalProps = {
   userProfile: UserProfile
   post: Post
+  mode?: PostViewMode
   open: boolean
   onClose: () => void
 }
 
-type Mode = 'edit' | 'view'
+type ModalState = 'edit' | 'view'
 
-export const PostModal = ({ userProfile, post, open, onClose }: PostModalProps) => {
-  const { mutate: deletePost, isPending } = useDeletePost(post.author.id)
+export const PostModal = ({
+  userProfile,
+  post,
+  mode = 'published',
+  open,
+  onClose,
+}: PostModalProps) => {
+  // Безопасное извлечение ID автора для исключения undefined ошибок
+  const authorId = post?.author?.id ?? userProfile?.id
+
+  const { mutate: softDeletePost, isPending: isSoftDeleting } = useDeletePost(authorId)
+  const { mutate: hardDeletePost, isPending: isHardDeleting } = useHardDeletePost(authorId)
   const { mutate: updatePost, isPending: isUpdating } = useUpdatePost()
-  const [mode, setMode] = useState<Mode>('view')
+
+  const [modalState, setModalState] = useState<ModalState>('view')
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
+  const isDeleted = mode === 'deleted'
+  const isDeleting = isSoftDeleting || isHardDeleting
+
   const handleClose = () => {
-    setMode('view')
+    setModalState('view')
     setIsDeleteModalOpen(false)
     onClose()
   }
 
   const handleEdit = () => {
-    setMode('edit')
+    setModalState('edit')
   }
 
   const handleDelete = () => {
@@ -37,25 +55,26 @@ export const PostModal = ({ userProfile, post, open, onClose }: PostModalProps) 
   }
 
   const handleCancelEdit = () => {
-    setMode('view')
+    setModalState('view')
   }
 
   const handleSave = (description: string) => {
     updatePost(
-      { postId: post.id, userId: post.author.id, description },
+      // ИСПРАВЛЕНО: Заменили post.author.id на безопасный authorId
+      { postId: post.id, userId: authorId, description },
       {
-        onSuccess: () => setMode('view'),
+        onSuccess: () => setModalState('view'),
       }
     )
   }
 
   const handleConfirmDelete = () => {
-    deletePost(post.id, {
-      onSuccess: handleClose,
-    })
+    const deletePostAction = isDeleted ? hardDeletePost : softDeletePost
+    handleClose()
+    deletePostAction(post.id)
   }
 
-  if (mode === 'edit') {
+  if (modalState === 'edit' && !isDeleted) {
     return (
       <EditPostModal
         post={post}
@@ -78,10 +97,13 @@ export const PostModal = ({ userProfile, post, open, onClose }: PostModalProps) 
         onClose={handleClose}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        canEdit={!isDeleted}
+        deleteLabel={isDeleted ? 'Delete permanently' : 'Delete Post'}
       />
 
       <ConfirmDeletePostModal
-        isDeleting={isPending}
+        isDeleting={isDeleting}
+        isPermanent={isDeleted}
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}

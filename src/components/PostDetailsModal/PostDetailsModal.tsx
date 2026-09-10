@@ -19,14 +19,24 @@ type Props = {
   onClose: () => void
   onEdit: () => void
   onDelete: () => void
+  canEdit: boolean
+  deleteLabel?: string
 }
 
-export const PostDetailsModal = ({ post, open, userProfile, onClose, onEdit, onDelete }: Props) => {
+export const PostDetailsModal = ({
+  post,
+  open,
+  userProfile,
+  onClose,
+  onEdit,
+  onDelete,
+  canEdit = true,
+  deleteLabel,
+}: Props) => {
   const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
-
-  const { isAuthenticated } = useAuth()
+  const { user, isAuthenticated } = useAuth()
   const isMobileViewport = useIsMobileViewport()
-
+  const isAuthor = !!user && user.id === (post.author?.id ?? userProfile.id)
   return (
     <Modal
       open={open}
@@ -55,8 +65,13 @@ export const PostDetailsModal = ({ post, open, userProfile, onClose, onEdit, onD
               <Typography variant={'subtitle2'}>{profileUserName}</Typography>
             </div>
 
-            {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
-            <PostActionMenu isAuthor={isAuthenticated} onEdit={onEdit} onDelete={onDelete} />
+            <PostActionMenu
+              isAuthor={isAuthor}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              canEdit={canEdit}
+              deleteLabel={deleteLabel}
+            />
           </div>
 
           {/* Scrollable: author's description + comments */}

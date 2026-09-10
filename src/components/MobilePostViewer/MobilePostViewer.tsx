@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { Post, UserProfile } from '@/lib/model'
 import { ConfirmDeletePostModal } from '@/components'
 import { useDeletePost, useUpdatePost } from '@/lib/posts'
+import { useHardDeletePost } from '@/lib/posts/mutations/useHardDeletePost'
 import { MobilePostEdit } from './MobilePostEdit/MobilePostEdit'
 import { MobilePostFeed } from './MobilePostFeed/MobilePostFeed'
 import s from './MobilePostViewer.module.scss'
@@ -14,23 +15,37 @@ type Props = {
   startIndex: number
   userId: string
   onClose: () => void
+  mode?: 'deleted' | 'published'
 }
 
-export const MobilePostViewer = ({ userProfile, posts, startIndex, userId, onClose }: Props) => {
+export const MobilePostViewer = ({
+  userProfile,
+  posts,
+  startIndex,
+  userId,
+  onClose,
+  mode = 'published',
+}: Props) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editingIndex, setEditingIndex] = useState(startIndex)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [postIdToDelete, setPostIdToDelete] = useState<null | string>(null)
   const { mutate: deletePost, isPending } = useDeletePost(userId)
+  const { mutate: hardDeletePost, isPending: isHardDeleting } = useHardDeletePost(userId)
   const { mutate: updatePost, isPending: isUpdating } = useUpdatePost()
+  const isDeleted = mode === 'deleted'
+  const isDeleting = isPending || isHardDeleting
 
   const handleConfirmDelete = () => {
     if (!postIdToDelete) return
 
-    deletePost(postIdToDelete, {
+    const deleteAction = isDeleted ? hardDeletePost : deletePost
+
+    setIsDeleteModalOpen(false)
+    onClose()
+    deleteAction(postIdToDelete, {
       onSuccess: () => {
-        setIsDeleteModalOpen(false)
-        onClose()
+        setPostIdToDelete(null)
       },
     })
   }
@@ -74,6 +89,8 @@ export const MobilePostViewer = ({ userProfile, posts, startIndex, userId, onClo
             setPostIdToDelete(postId)
             setIsDeleteModalOpen(true)
           }}
+          canEdit={!isDeleted}
+          deleteLabel={isDeleted ? 'Delete permanently' : 'Delete Post'}
           onEdit={index => {
             setEditingIndex(index)
             setIsEditing(true)
@@ -84,7 +101,7 @@ export const MobilePostViewer = ({ userProfile, posts, startIndex, userId, onClo
       </div>
 
       <ConfirmDeletePostModal
-        isDeleting={isPending}
+        isDeleting={isDeleting}
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}

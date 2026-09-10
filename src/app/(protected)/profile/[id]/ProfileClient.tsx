@@ -10,11 +10,9 @@ import { PostModal } from '@/components/PostModal/PostModal'
 import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
-import { Post } from '@/lib/model'
 import { usePost } from '@/lib/posts'
 import { useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
 import { useDeletedPost } from '@/lib/profile/queries/useDeletedPost'
-import { mapDeletedPostToClient } from '@/lib/utils'
 import { PostsFeed } from './PostsFeed'
 import s from './ProfileClient.module.scss'
 import { ProfileSkeleton } from './ProfileSkeleton'
@@ -49,13 +47,8 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     isLoading: isDeletedPostsLoading,
   } = useDeletedPosts(userId, isOwner)
 
-  const deletedPosts: Post[] = (deletedPostsResponse?.items ?? []).map(post =>
-    mapDeletedPostToClient(post, userId, profile?.username)
-  )
+  const deletedPosts = deletedPostsResponse?.items ?? []
   const { data: requestedDeletedPostResponse } = useDeletedPost(postId, isOwner && isDeletedPost)
-  const requestedDeletedPost: Post | undefined = requestedDeletedPostResponse
-    ? mapDeletedPostToClient(requestedDeletedPostResponse, userId, profile?.username)
-    : undefined
 
   useEffect(() => {
     // ИСПРАВЛЕНО: Проверка сработает только для активных постов
@@ -64,12 +57,14 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     }
   }, [postDetails, router, userId, isDeletedPost])
 
-  const selectedIndex = profilePosts.findIndex(post => post.id === postId)
   const modalPost = postDetails?.author?.id === userId ? postDetails : undefined
-  const mobilePosts = selectedIndex === -1 && modalPost ? [modalPost] : profilePosts
-
   const selectedPublishedPost = profilePosts.find(post => post.id === postId)
-  const selectedDeletedPost = requestedDeletedPost ?? deletedPosts.find(post => post.id === postId)
+  const selectedDeletedPost =
+    requestedDeletedPostResponse ?? deletedPosts.find(post => post.id === postId)
+  const selectedMobilePost = isDeletedPost
+    ? selectedDeletedPost
+    : (selectedPublishedPost ?? modalPost)
+  const mobilePosts = selectedMobilePost ? [selectedMobilePost] : []
 
   const selectedPost = isDeletedPost ? selectedDeletedPost : selectedPublishedPost
 
@@ -146,6 +141,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             }
             deletedPosts={
               <DeletedPosts
+                key={deletedPosts.map(post => post.id).join(',')}
                 posts={deletedPosts}
                 userId={userId}
                 isError={isDeletedPostsError}
@@ -161,13 +157,14 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
 
       {selectedPost &&
         profile &&
-        (isMobile && !isDeletedPost ? (
+        (isMobile ? (
           <MobilePostViewer
             userProfile={profile}
             onClose={handleClosePost}
             posts={mobilePosts}
-            startIndex={selectedIndex === -1 ? 0 : selectedIndex}
+            startIndex={0}
             userId={userId}
+            mode={isDeletedPost ? 'deleted' : 'published'}
           />
         ) : (
           <PostModal

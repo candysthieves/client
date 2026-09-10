@@ -100,7 +100,6 @@ export const DeletedPostCard = ({ post, userId, deletionDate, href }: DeletedPos
               onClick={() => setIsDeleteModalOpen(true)}
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
-              Delete
             </Button>
           </div>
         </div>

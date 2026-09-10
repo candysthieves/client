@@ -9,9 +9,16 @@ export const useDeletePost = (userId?: string) => {
 
   return useMutation({
     mutationFn: deletePost,
+    onMutate: async postId => {
+      await queryClient.cancelQueries({ queryKey: postsKeys.post(postId), exact: true })
+    },
     onSuccess: async () => {
       ToastSuccess({ message: 'Post deleted successfully' })
-      void queryClient.invalidateQueries({ queryKey: postsKeys.all })
+
+      void queryClient.invalidateQueries({
+        queryKey: postsKeys.all,
+        refetchType: 'none',
+      })
 
       if (userId) {
         await queryClient.invalidateQueries({ queryKey: profileKeys.posts(userId) })

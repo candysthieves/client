@@ -89,29 +89,28 @@ export const commentSchema = z.object({
   likesCount: z.number().int().nonnegative().optional(),
 })
 
-export const apiDeletedPostImageSchema = z.object({
-  fileId: z.uuid(),
-  url: z.url(),
-  width: z.number().nonnegative(),
-  height: z.number().nonnegative(),
-})
-
-// Схема для автора поста
 export const apiDeletedPostAuthorSchema = z.object({
-  id: z.string(),
+  id: z.uuid(),
   username: z.string(),
 })
 
-// Схема для одного удаленного поста
-export const deletedPostItemSchema = z.object({
-  id: z.string(),
+const deletedPostItemResponseSchema = z.object({
+  id: z.uuid(),
   description: z.string().nullable(), // описание может быть null
-  images: z.array(apiDeletedPostImageSchema),
-  preview: apiDeletedPostImageSchema.nullable(), // превью может быть null
+  images: z.array(imageSchema),
+  preview: imageSchema.nullable(), // превью может быть null
   createdAt: z.string(),
   willBeDeleted: z.string().nullable(), // дата окончательного удаления
   author: apiDeletedPostAuthorSchema,
 })
+
+export const deletedPostItemSchema = deletedPostItemResponseSchema
+  .refine(post => post.images.length > 0, 'Deleted post must have at least one image')
+  .transform(post => ({
+    ...post,
+    description: post.description ?? '',
+    preview: post.preview ?? post.images[0]!,
+  }))
 
 // Схема полного ответа сервера с курсорной пагинацией
 export const getDeletedPostsResponseSchema = z.object({

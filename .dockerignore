@@ -1,0 +1,59 @@
+node_modules
+
+# production
+/build
+dist
+
+# next.js
+/.next/
+/out/
+
+.git/
+.gitignore
+.gitattributes
+.gitmodules
+
+.prettierignore
+.editorconfig
+
+AGENTS.md
+CONTRIBUTING.md
+/agent-docs/
+
+.github/
+
+# CI / deploy
+Jenkinsfile
+nginx.conf
+deployment.yml
+preparingDeploy.sh
+.dockerignore
+
+eslint.config.mjs
+prettier.config.mjs
+commitlint.config.js
+stylelint.config.mjs
+.husky/
+
+# docker files (в образе не нужны)
+Dockerfile
+.docker-compose.yml
+.docker-compose.hub.yml
+
+coverage/
+src/database/
+test
+
+# misc
+.idea/
+.vscode/
+.DS_Store
+*.pem
+
+# env files (can opt-in for committing if needed)
+.env*
+
+certificates/
+
+# claude code (local agent config, not shared with the team)
+.claude/launch.json

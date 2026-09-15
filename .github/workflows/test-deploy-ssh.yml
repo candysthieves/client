@@ -2,6 +2,8 @@ name: Test deploy SSH
 
 on:
   push:
+    branches:
+      - chore/SCRUM-175-front-migration-to-new-server
 
 jobs:
   test-ssh:

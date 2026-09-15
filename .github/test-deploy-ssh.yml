@@ -1,7 +1,7 @@
 name: Test deploy SSH
 
 on:
-  workflow_dispatch:
+  push:
 
 jobs:
   test-ssh:

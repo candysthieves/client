@@ -121,7 +121,6 @@ RUN pnpm run build:production
 # Runner
 # =========================
 FROM node:24-alpine3.24 AS runner
-RUN npm install -g pnpm@10.34.5
 WORKDIR /app
 ENV NODE_ENV=production
 
@@ -137,4 +136,4 @@ COPY --from=builder /app/.next/static ./.next/static
 
 USER node
 EXPOSE 3000
-CMD ["pnpm", "start"]
+CMD ["node", "server.js"]

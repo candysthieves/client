@@ -41,7 +41,6 @@ Dockerfile
 .docker-compose.hub.yml
 
 coverage/
-src/database/
 test
 
 # misc
@@ -51,7 +50,9 @@ test
 *.pem
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
+.env.*
+!.env.example
 
 certificates/
 

@@ -48,7 +48,11 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   } = useDeletedPosts(userId, isOwner)
 
   const deletedPosts = deletedPostsResponse?.items ?? []
-  const { data: requestedDeletedPostResponse } = useDeletedPost(postId, isOwner && isDeletedPost)
+  const { data: requestedDeletedPostResponse } = useDeletedPost(
+    userId,
+    postId,
+    isOwner && isDeletedPost
+  )
 
   useEffect(() => {
     // ИСПРАВЛЕНО: Проверка сработает только для активных постов

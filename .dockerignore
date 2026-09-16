@@ -37,8 +37,8 @@ stylelint.config.mjs
 
 # docker files (в образе не нужны)
 Dockerfile
-.docker-compose.yml
-.docker-compose.hub.yml
+docker-compose*.yml
+.docker-compose*.yml
 
 coverage/
 test

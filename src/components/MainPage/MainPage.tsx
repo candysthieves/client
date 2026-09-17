@@ -45,7 +45,7 @@ export const MainPage = () => {
           {postList.map(post => (
             <PostCard
               caption={post.description ?? ''}
-              images={post.images.map(image => image.url)}
+              images={post.images.filter(Boolean).map(image => image.url)}
               key={post.id}
               postId={post.id}
               timeAgo={getTimeAgo(post.createdAt)}

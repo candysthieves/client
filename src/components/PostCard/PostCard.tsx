@@ -3,6 +3,7 @@
 import { Avatar, Carousel, ReadMore, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { type MouseEvent, useEffect, useRef, useState } from 'react'
+import { useTimeAgo } from '@/lib/utils'
 import s from './PostCard.module.scss'
 import { useReadMoreClamp } from './useReadMoreClamp'
 
@@ -21,7 +22,7 @@ type PostCardProps = {
   postId: string
   images: string[]
   username: string
-  timeAgo: string
+  createdAt: string
   caption: string
 }
 
@@ -29,12 +30,13 @@ type PostCardProps = {
 const isInteractiveElementTarget = (target: EventTarget | null) =>
   target instanceof Element && !!target.closest('button')
 
-export const PostCard = ({ postId, images, username, timeAgo, caption }: PostCardProps) => {
+export const PostCard = ({ postId, images, username, createdAt, caption }: PostCardProps) => {
   const captionWrapperRef = useRef<HTMLDivElement>(null)
   const imageWrapperRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const [imageWidth, setImageWidth] = useState(0)
   const showCarouselControls = !isExpanded
+  const timeAgo = useTimeAgo(createdAt)
 
   const { maxLength, text, expandedHeight } = useReadMoreClamp(
     captionWrapperRef,

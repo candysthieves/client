@@ -8,3 +8,5 @@ export const POST_DRAFT_LS_KEY = 'postDraft'
 export const FILES_UPLOAD_LIMIT = 3
 export const MAX_FILE_SIZE = 0.3 * 1024 * 1024
 export const MAX_POST_DESCRIPTION_LENGTH = 500
+export const HOME_PAGE_REFETCH_INTERVAL_MS = 60 * 1000
+export const TIME_AGO_TICK_INTERVAL_MS = 60 * 1000

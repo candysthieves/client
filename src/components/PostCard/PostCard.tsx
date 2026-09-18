@@ -1,8 +1,10 @@
 'use client'
 
 import { Avatar, Carousel, ReadMore, Typography } from '@candy.thieves/ui-kit-lumos'
+import Image from 'next/image'
 import Link from 'next/link'
 import { type MouseEvent, useEffect, useRef, useState } from 'react'
+import type { PostImage } from '@/lib/model'
 import { useTimeAgo } from '@/lib/utils'
 import s from './PostCard.module.scss'
 import { useReadMoreClamp } from './useReadMoreClamp'
@@ -20,7 +22,7 @@ const MIN_EXPANDED_IMAGE_HEIGHT = 60
 
 type PostCardProps = {
   postId: string
-  images: string[]
+  images: PostImage[]
   username: string
   createdAt: string
   caption: string
@@ -92,9 +94,15 @@ export const PostCard = ({ postId, images, username, createdAt, caption }: PostC
         style={isExpanded && imageWidth ? { height: `${expandedImageHeight}px` } : undefined}
       >
         {showCarouselControls ? (
-          <Carousel controlsSize={'s'} slides={images} />
+          <Carousel controlsSize={'s'} slides={images.map(image => image.url)} />
         ) : (
-          <img alt={username} className={s.image} src={images[0]} />
+          <Image
+            alt={username}
+            className={s.image}
+            fill
+            sizes={'(max-width: 360px) 100vw, (max-width: 768px) 50vw, 234px'}
+            src={images[0].url}
+          />
         )}
       </div>
 

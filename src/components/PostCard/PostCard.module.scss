@@ -23,6 +23,7 @@
 }
 
 .imageWrapper {
+  position: relative;
   overflow: hidden;
   aspect-ratio: 234 / 240;
   border-radius: 0.125rem;
@@ -47,8 +48,6 @@
 }
 
 .image {
-  @include width-height(100%);
-
   border-radius: 0.125rem;
   object-fit: cover;
 }

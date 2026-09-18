@@ -5,6 +5,8 @@ export const NEXT_PUBLIC_POSTS_API_URL =
 export const NEXT_PUBLIC_RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
 
 export const POST_DRAFT_LS_KEY = 'postDraft'
-export const FILES_UPLOAD_LIMIT = 3
-export const MAX_FILE_SIZE = 0.3 * 1024 * 1024
+export const FILES_UPLOAD_LIMIT = 8
+export const MAX_FILE_SIZE_MB = 5
+export const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024
+export const ALLOWED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg']
 export const MAX_POST_DESCRIPTION_LENGTH = 500

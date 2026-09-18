@@ -71,6 +71,18 @@ jobs:
     needs: build-and-push
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy Docker Compose file
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ vars.DEPLOY_HOST }}
+          username: ${{ vars.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          source: "docker-compose.yml"
+          target: "/opt/lumos"
+
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.2
         with:

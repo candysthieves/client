@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { Post, ProfilePostsResponse } from '@/lib/model'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
 import { updatePost } from '@/lib/api'
@@ -13,7 +13,7 @@ type UpdatePostInput = {
 
 type UpdatePostContext = {
   previousPosts?: Post[]
-  previousProfileResponse?: ProfilePostsResponse
+  previousProfileResponse?: InfiniteData<ProfilePostsResponse>
 }
 
 export const useUpdatePost = () => {
@@ -24,10 +24,10 @@ export const useUpdatePost = () => {
 
     onMutate: async ({ postId, userId, description }: UpdatePostInput) => {
       await queryClient.cancelQueries({ queryKey: postsKeys.all })
-      await queryClient.cancelQueries({ queryKey: profileKeys.detail(userId) })
+      await queryClient.cancelQueries({ queryKey: profileKeys.posts(userId) })
 
       const previousPosts = queryClient.getQueryData<Post[]>(postsKeys.all)
-      const previousProfileResponse = queryClient.getQueryData<ProfilePostsResponse>(
+      const previousProfileResponse = queryClient.getQueryData<InfiniteData<ProfilePostsResponse>>(
         profileKeys.posts(userId)
       )
 
@@ -35,13 +35,20 @@ export const useUpdatePost = () => {
         posts?.map(post => (post.id === postId ? { ...post, description } : post))
       )
 
-      queryClient.setQueryData<ProfilePostsResponse>(profileKeys.posts(userId), data =>
-        data
-          ? {
-              ...data,
-              items: data.items.map(item => (item.id === postId ? { ...item, description } : item)),
-            }
-          : data
+      queryClient.setQueryData<InfiniteData<ProfilePostsResponse>>(
+        profileKeys.posts(userId),
+        data =>
+          data
+            ? {
+                ...data,
+                pages: data.pages.map(page => ({
+                  ...page,
+                  items: page.items.map(item =>
+                    item.id === postId ? { ...item, description } : item
+                  ),
+                })),
+              }
+            : data
       )
 
       return { previousPosts, previousProfileResponse }
@@ -62,7 +69,7 @@ export const useUpdatePost = () => {
 
     onSettled: (_data, _error, variables) => {
       void queryClient.invalidateQueries({ queryKey: postsKeys.all })
-      void queryClient.invalidateQueries({ queryKey: profileKeys.detail(variables.userId) })
+      void queryClient.invalidateQueries({ queryKey: profileKeys.posts(variables.userId) })
     },
   })
 }

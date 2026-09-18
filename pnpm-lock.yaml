@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@candy.thieves/ui-kit-lumos':
-        specifier: ^0.0.50
-        version: 0.0.50(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.6.0(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)
+        specifier: ^0.0.52
+        version: 0.0.52(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.6.0(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@9.39.5(jiti@2.6.1))
@@ -233,8 +233,8 @@ packages:
   '@cacheable/utils@2.5.0':
     resolution: {integrity: sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA==}
 
-  '@candy.thieves/ui-kit-lumos@0.0.50':
-    resolution: {integrity: sha512-1u0W8lgPLC6EC4OUiKFxNnmPYs1elwxE7IQVE7eZ2DJ4D3wW/MbvyGSqu/9k/VhQ3jyXiJfnJrjtIfybsG1uqQ==}
+  '@candy.thieves/ui-kit-lumos@0.0.52':
+    resolution: {integrity: sha512-K5HbgzO54dLZG1iIDIx8GEImu75XMwJTgQ9ZO1S77MKwSvuaeJ+V3lJF8r6+jwA327Ehr0Jr+0xhx/HVUs33kA==}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
@@ -4949,7 +4949,7 @@ snapshots:
       hashery: 1.5.1
       keyv: 5.6.0
 
-  '@candy.thieves/ui-kit-lumos@0.0.50(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.6.0(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)':
+  '@candy.thieves/ui-kit-lumos@0.0.52(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.6.0(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)':
     dependencies:
       '@fontsource-variable/inter': 5.3.0
       '@fontsource-variable/roboto': 5.3.0

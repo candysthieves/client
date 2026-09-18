@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { MAX_FILE_SIZE } from '@/constants'
+import { ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/constants'
 
 export const locationSchema = z.object({
   fileId: z.uuid(),
@@ -70,11 +70,8 @@ export const postDetailsSchema = postSchema.extend({
 
 export const postImageSchema = z
   .instanceof(File)
-  .refine(
-    file => ['image/png', 'image/jpeg'].includes(file.type),
-    'Only PNG and JPEG images are allowed'
-  )
-  .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 300 kB')
+  .refine(file => ALLOWED_IMAGE_TYPES.includes(file.type), 'Only JPEG, JPG, PNG images are allowed')
+  .refine(file => file.size <= MAX_FILE_SIZE, `Image size must not exceed ${MAX_FILE_SIZE_MB} MB`)
 
 export const postCreatedEventSchema = z.object({
   postId: z.uuid('Invalid postID format in add post SSE response'),

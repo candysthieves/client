@@ -9,7 +9,6 @@ import { LATEST_POSTS_LIMIT, useFeedPosts } from '@/lib/feed'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
 import { useUsersCount } from '@/lib/users'
-import { getTimeAgo } from '@/lib/utils'
 import s from './MainPage.module.scss'
 
 export const MainPage = () => {
@@ -45,10 +44,10 @@ export const MainPage = () => {
           {postList.map(post => (
             <PostCard
               caption={post.description ?? ''}
-              images={post.images.map(image => image.url)}
+              createdAt={post.createdAt}
+              images={post.images.filter(Boolean).map(image => image.url)}
               key={post.id}
               postId={post.id}
-              timeAgo={getTimeAgo(post.createdAt)}
               username={post.author.username}
             />
           ))}

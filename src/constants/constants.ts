@@ -10,3 +10,5 @@ export const MAX_FILE_SIZE_MB = 5
 export const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024
 export const ALLOWED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg']
 export const MAX_POST_DESCRIPTION_LENGTH = 500
+export const HOME_PAGE_REFETCH_INTERVAL_MS = 60 * 1000
+export const TIME_AGO_TICK_INTERVAL_MS = 60 * 1000

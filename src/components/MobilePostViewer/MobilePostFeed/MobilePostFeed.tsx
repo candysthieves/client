@@ -14,7 +14,7 @@ import s from './MobilePostFeed.module.scss'
 
 type Props = {
   posts: Post[]
-  userProfile: UserProfile
+  userProfile?: UserProfile
   startIndex: number
   onClose: () => void
   onDelete: (postId: string) => void
@@ -29,7 +29,7 @@ export const MobilePostFeed = ({
   onDelete,
   onEdit,
 }: Props) => {
-  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
+  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile ?? {}
 
   const isMobile = useIsMobileViewport()
   const { isAuthenticated } = useAuth()
@@ -62,13 +62,15 @@ export const MobilePostFeed = ({
             >
               <div className={s.author}>
                 <Avatar
-                  userName={profileUserName}
+                  userName={profileUserName || post.author.username || ''}
                   size={'s'}
                   delayMs={0}
-                  src={avatarPreviewUrl?.url || ''}
+                  src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
                 />
 
-                <Typography variant={'subtitle2'}>{profileUserName}</Typography>
+                <Typography variant={'subtitle2'}>
+                  {profileUserName || post.author.username || ''}
+                </Typography>
 
                 {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
                 <PostActionMenu

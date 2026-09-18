@@ -5,10 +5,14 @@ const nextConfig: NextConfig = {
   reactStrictMode: false,
   reactCompiler: true,
   output: 'standalone',
+  turbopack: {
+    root: __dirname,
+  },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'i.pravatar.cc' },
+      { protocol: 'https', hostname: '*.s3.eu-north-1.amazonaws.com' },
       {
         protocol: 'https',
         hostname: 'lumusapp-528592447405-eu-north-1-an.s3.eu-north-1.amazonaws.com',

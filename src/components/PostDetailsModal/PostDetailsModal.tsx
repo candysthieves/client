@@ -15,14 +15,14 @@ import s from './PostDetailsModal.module.scss'
 type Props = {
   post: Post
   open: boolean
-  userProfile: UserProfile
+  userProfile?: UserProfile
   onClose: () => void
   onEdit: () => void
   onDelete: () => void
 }
 
 export const PostDetailsModal = ({ post, open, userProfile, onClose, onEdit, onDelete }: Props) => {
-  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
+  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile ?? {}
 
   const { isAuthenticated } = useAuth()
   const isMobileViewport = useIsMobileViewport()
@@ -46,13 +46,15 @@ export const PostDetailsModal = ({ post, open, userProfile, onClose, onEdit, onD
           <div className={s.postHeader}>
             <div className={s.author}>
               <Avatar
-                userName={profileUserName}
+                userName={profileUserName || post.author.username || ''}
                 size={'s'}
                 delayMs={0}
-                src={avatarPreviewUrl?.url || ''}
+                src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
               />
 
-              <Typography variant={'subtitle2'}>{profileUserName}</Typography>
+              <Typography variant={'subtitle2'}>
+                {profileUserName || post.author.username || ''}
+              </Typography>
             </div>
 
             {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}

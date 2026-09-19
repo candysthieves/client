@@ -11,7 +11,7 @@ import { useHardDeletePost } from '@/lib/posts/mutations/useHardDeletePost'
 export type PostViewMode = 'deleted' | 'published'
 
 type PostModalProps = {
-  userProfile: UserProfile
+  userProfile?: UserProfile
   post: Post
   mode?: PostViewMode
   open: boolean

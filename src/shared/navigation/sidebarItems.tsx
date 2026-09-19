@@ -19,7 +19,7 @@ import {
 export const sidebarItems: SidebarItem[] = [
   {
     activeIcon: <Home />,
-    href: '/feed',
+    href: '/',
     icon: <HomeOutline />,
     id: 'feed',
     label: 'Feed',

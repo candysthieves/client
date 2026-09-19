@@ -1,5 +1,7 @@
 export * from './auth.schemas'
+export * from './feed.schemas'
 export * from './post.schemas'
 export * from './profile.schemas'
+export * from './users.schemas'
 export * from './constants'
 export * from './types'

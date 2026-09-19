@@ -10,12 +10,13 @@ type Props = {
 
 export const PostComments = ({ post, comments }: Props) => {
   // TODO add userName and users avatar url (REFACTOR LATER)
-  const { data: userProfileData } = useProfile(post.author.id)
+  const authorId = post.author?.id
+  const { data: userProfileData } = useProfile(authorId ?? '', Boolean(authorId))
 
   const descriptionComment: Comment | null = post.description
     ? {
         id: 'post-description',
-        username: post.author.username, // check name (from user profile or from post comments)
+        username: post.author?.username ?? 'Unknown user', // check name (from user profile or from post comments)
         text: post.description,
         createdAt: '',
         avatarUrl: userProfileData?.avatarPreviewUrl?.url ?? '', // set avatarUrl (REFACTOR LATER)

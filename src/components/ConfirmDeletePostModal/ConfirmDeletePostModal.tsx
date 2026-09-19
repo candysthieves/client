@@ -5,6 +5,7 @@ import s from './ConfirmDeletePostModal.module.scss'
 
 type ConfirmDeletePostModalProps = {
   isDeleting?: boolean
+  isPermanent?: boolean
   open: boolean
   onClose: () => void
   onConfirm: () => void
@@ -12,6 +13,7 @@ type ConfirmDeletePostModalProps = {
 
 export const ConfirmDeletePostModal = ({
   isDeleting = false,
+  isPermanent = false,
   open,
   onClose,
   onConfirm,
@@ -20,7 +22,7 @@ export const ConfirmDeletePostModal = ({
     <Modal
       open={open}
       onClose={onClose}
-      modalTitle={'Delete Post'}
+      modalTitle={isPermanent ? 'Delete Post Permanently' : 'Delete Post'}
       size={'s'}
       showHeader
       showCloseButton
@@ -29,7 +31,9 @@ export const ConfirmDeletePostModal = ({
     >
       <div className={s.content}>
         <Typography variant={'subtitle1'} color={'var(--color-light-100)'} className={s.message}>
-          Are you sure you want to delete this post?
+          {isPermanent
+            ? 'Are you sure you want to permanently delete this post?'
+            : 'Are you sure you want to delete this post?'}
         </Typography>
 
         <div className={s.controls}>

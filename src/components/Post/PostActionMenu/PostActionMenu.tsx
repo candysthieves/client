@@ -4,9 +4,17 @@ type Props = {
   isAuthor?: boolean
   onEdit?: () => void
   onDelete?: () => void
+  canEdit?: boolean
+  deleteLabel?: string
 }
 
-export const PostActionMenu = ({ isAuthor, onEdit, onDelete = () => {} }: Props) => {
+export const PostActionMenu = ({
+  isAuthor,
+  onEdit,
+  onDelete = () => {},
+  canEdit = true,
+  deleteLabel = 'Delete Post',
+}: Props) => {
   if (!isAuthor) {
     return null
   }
@@ -15,16 +23,20 @@ export const PostActionMenu = ({ isAuthor, onEdit, onDelete = () => {} }: Props)
     <ActionMenu
       ariaLabel={'Open post actions'}
       items={[
-        {
-          icon: <EditOutline size={24} />,
-          id: 'edit-post',
-          label: 'Edit Post',
-          onSelect: onEdit,
-        },
+        ...(canEdit
+          ? [
+              {
+                icon: <EditOutline size={24} />,
+                id: 'edit-post',
+                label: 'Edit Post',
+                onSelect: onEdit,
+              },
+            ]
+          : []),
         {
           icon: <TrashOutline size={24} />,
           id: 'delete-post',
-          label: 'Delete Post',
+          label: deleteLabel,
           onSelect: onDelete,
         },
       ]}

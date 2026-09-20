@@ -73,7 +73,16 @@ export function PostsFeed({
   }, [hasNextPage, hasUserScrolled, isLoadingNextPage, isLoadMoreError, onLoadMore])
 
   return (
-    <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-label={'Posts'}>
+    <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-labelledby={'posts-heading'}>
+      <Typography
+        id={'posts-heading'}
+        className={s.postsTitle}
+        color={'var(--color-light-100)'}
+        variant={'h2'}
+      >
+        Posts
+      </Typography>
+
       {isLoading ? (
         <div className={s.postsGrid} aria-busy={'true'} aria-label={'Loading posts'}>
           <PostsSkeletons />

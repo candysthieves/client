@@ -104,6 +104,19 @@
 .postImageSkeleton {
   position: absolute;
   inset: 0;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 15%), transparent);
+
+    animation: post-image-shimmer 1.4s ease-in-out infinite;
+  }
 }
 
 .loadMoreError {
@@ -223,6 +236,12 @@
 
   100% {
     background-position: -100% 0;
+  }
+}
+
+@keyframes post-image-shimmer {
+  100% {
+    transform: translateX(100%);
   }
 }
 

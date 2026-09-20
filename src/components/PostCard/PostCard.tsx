@@ -39,6 +39,7 @@ export const PostCard = ({ postId, images, username, createdAt, caption }: PostC
   const [imageWidth, setImageWidth] = useState(0)
   const showCarouselControls = !isExpanded
   const timeAgo = useTimeAgo(createdAt)
+  const validImages = images.filter(image => image?.url)
 
   const { maxLength, text, expandedHeight } = useReadMoreClamp(
     captionWrapperRef,
@@ -80,6 +81,10 @@ export const PostCard = ({ postId, images, username, createdAt, caption }: PostC
     }
   }
 
+  if (validImages.length === 0) {
+    return null
+  }
+
   return (
     <Link
       aria-label={`Open post by ${username}`}
@@ -94,14 +99,14 @@ export const PostCard = ({ postId, images, username, createdAt, caption }: PostC
         style={isExpanded && imageWidth ? { height: `${expandedImageHeight}px` } : undefined}
       >
         {showCarouselControls ? (
-          <Carousel controlsSize={'s'} slides={images.map(image => image.url)} />
+          <Carousel controlsSize={'s'} slides={validImages.map(image => image.url)} />
         ) : (
           <Image
             alt={username}
             className={s.image}
             fill
             sizes={'(max-width: 360px) 100vw, (max-width: 768px) 50vw, 234px'}
-            src={images[0].url}
+            src={validImages[0].url}
           />
         )}
       </div>

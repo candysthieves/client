@@ -1,0 +1,1 @@
+export { DeletedPosts } from './DeletedPosts'

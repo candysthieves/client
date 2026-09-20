@@ -16,16 +16,7 @@ export function PostsFeed({ isLoading, posts, userId }: PostsFeedProps) {
   const isEmpty = posts.length === 0
 
   return (
-    <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-labelledby={'posts-heading'}>
-      <Typography
-        id={'posts-heading'}
-        className={s.postsTitle}
-        color={'var(--color-light-100)'}
-        variant={'h2'}
-      >
-        Posts
-      </Typography>
-
+    <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-label={'Posts'}>
       {isLoading ? (
         <div className={s.postsGrid} aria-busy={'true'} aria-label={'Loading posts'}>
           {Array.from({ length: POSTS_FEED_SKELETON_COUNT }, (_, index) => (

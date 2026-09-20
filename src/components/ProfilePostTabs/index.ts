@@ -1,0 +1,1 @@
+export { ProfilePostTabs } from './ProfilePostTabs'

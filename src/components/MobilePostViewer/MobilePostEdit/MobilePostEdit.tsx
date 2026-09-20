@@ -9,14 +9,14 @@ import s from './MobilePostEdit.module.scss'
 
 type Props = {
   post: Post
-  userProfile: UserProfile
+  userProfile?: UserProfile
   onCancel: () => void
   onSave: (description: string) => void
   isSaving?: boolean
 }
 
 export const MobilePostEdit = ({ post, userProfile, onCancel, onSave, isSaving }: Props) => {
-  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile
+  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile ?? {}
 
   const [description, setDescription] = useState(post.description ?? '')
 
@@ -53,13 +53,15 @@ export const MobilePostEdit = ({ post, userProfile, onCancel, onSave, isSaving }
       <div className={s.editContent}>
         <div className={s.editAuthor}>
           <Avatar
-            userName={profileUserName}
+            userName={profileUserName || post.author.username || ''}
             size={'s'}
             delayMs={0}
-            src={avatarPreviewUrl?.url || ''}
+            src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
           />
 
-          <Typography variant={'subtitle2'}>{profileUserName}</Typography>
+          <Typography variant={'subtitle2'}>
+            {profileUserName || post.author.username || ''}
+          </Typography>
         </div>
 
         <PostDescriptionEditor

@@ -1,0 +1,29 @@
+@use '@/styles/mixins' as *;
+
+.tabs {
+  width: 100%;
+
+  @include media-tablet-small {
+    :global([role='tab']) {
+      gap: 0;
+
+      min-width: 0;
+      padding: 0 0.5rem;
+
+      font-size: 0 !important;
+      white-space: nowrap;
+    }
+
+    :global([role='tab'] svg) {
+      display: block;
+    }
+  }
+}
+
+.content {
+  padding-top: 2.25rem;
+
+  @include media-tablet {
+    padding-top: 1.5rem;
+  }
+}

@@ -13,14 +13,18 @@ import {
   userResponseSchema,
   validatePasswordRecoveryCodeSchema,
 } from './auth.schemas'
+import { feedPostsResponseSchema } from './feed.schemas'
 import {
   commentSchema,
   imageMediaSchema,
   postAuthorSchema,
   postDetailsSchema,
   postSchema,
+  deletedPostItemSchema,
+  getDeletedPostsResponseSchema,
 } from './post.schemas'
 import { profilePostSchema, profilePostsResponseSchema, userProfileSchema } from './profile.schemas'
+import { usersCountResponseSchema } from './users.schemas'
 
 // Auth
 export type AccessTokenResponse = z.infer<typeof accessTokenResponseSchema>
@@ -49,3 +53,7 @@ export type LoginField = keyof LoginRequest
 export type PasswordRecoveryField = keyof PasswordRecoveryRequest
 // export type AuthType = 'github' | 'google'
 export type NewPasswordField = keyof NewPasswordRequest
+export type DeletedPostItem = z.infer<typeof deletedPostItemSchema>
+export type GetDeletedPostsResponse = z.infer<typeof getDeletedPostsResponseSchema>
+export type UsersCountResponse = z.infer<typeof usersCountResponseSchema>
+export type FeedPostsResponse = z.infer<typeof feedPostsResponseSchema>

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { MAX_FILE_SIZE } from '@/constants'
+import { ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/constants'
 
 export const locationSchema = z.object({
   fileId: z.uuid(),
@@ -70,11 +70,8 @@ export const postDetailsSchema = postSchema.extend({
 
 export const postImageSchema = z
   .instanceof(File)
-  .refine(
-    file => ['image/png', 'image/jpeg'].includes(file.type),
-    'Only PNG and JPEG images are allowed'
-  )
-  .refine(file => file.size <= MAX_FILE_SIZE, 'Image size must not exceed 300 kB')
+  .refine(file => ALLOWED_IMAGE_TYPES.includes(file.type), 'Only JPEG, JPG, PNG images are allowed')
+  .refine(file => file.size <= MAX_FILE_SIZE, `Image size must not exceed ${MAX_FILE_SIZE_MB} MB`)
 
 export const postCreatedEventSchema = z.object({
   postId: z.uuid('Invalid postID format in add post SSE response'),
@@ -87,4 +84,34 @@ export const commentSchema = z.object({
   text: z.string().min(1, 'Comment text is required').max(500, 'Comment is too long'),
   createdAt: z.string(), // or z.date().nullable()
   likesCount: z.number().int().nonnegative().optional(),
+})
+
+export const apiDeletedPostAuthorSchema = z.object({
+  id: z.uuid(),
+  username: z.string(),
+})
+
+const deletedPostItemResponseSchema = z.object({
+  id: z.uuid(),
+  description: z.string().nullable(), // описание может быть null
+  images: z.array(imageSchema),
+  preview: imageSchema.nullable(), // превью может быть null
+  createdAt: z.string(),
+  willBeDeleted: z.string().nullable(), // дата окончательного удаления
+  author: apiDeletedPostAuthorSchema,
+})
+
+export const deletedPostItemSchema = deletedPostItemResponseSchema
+  .refine(post => post.images.length > 0, 'Deleted post must have at least one image')
+  .transform(post => ({
+    ...post,
+    description: post.description ?? '',
+    preview: post.preview ?? post.images[0]!,
+  }))
+
+// Схема полного ответа сервера с курсорной пагинацией
+export const getDeletedPostsResponseSchema = z.object({
+  items: z.array(deletedPostItemSchema),
+  nextCursor: z.string().nullable(),
+  hasNextPage: z.boolean(),
 })

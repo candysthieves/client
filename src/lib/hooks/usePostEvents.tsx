@@ -30,7 +30,7 @@ export const usePostEvents = ({ onPostCreated }: UsePostEventsProps) => {
       }
     }
 
-    eventSource.addEventListener('post-created', handlePostCreated)
+    eventSource.addEventListener('post-media-updated', handlePostCreated)
 
     eventSource.onerror = error => {
       console.error('SSE connection error:', error)

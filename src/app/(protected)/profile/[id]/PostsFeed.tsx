@@ -3,10 +3,9 @@
 import { Typography } from '@candy.thieves/ui-kit-lumos'
 import { useEffect, useRef, useState } from 'react'
 import type { Post } from '@/lib/model'
+import { PROFILE_POSTS_PAGE_SIZE } from '@/lib/api'
 import { PostPreview } from './PostPreview'
 import s from './ProfileClient.module.scss'
-
-const POSTS_FEED_SKELETON_COUNT = 8
 
 type PostsFeedProps = {
   hasNextPage: boolean
@@ -19,7 +18,7 @@ type PostsFeedProps = {
 }
 
 function PostsSkeletons() {
-  return Array.from({ length: POSTS_FEED_SKELETON_COUNT }, (_, index) => (
+  return Array.from({ length: PROFILE_POSTS_PAGE_SIZE }, (_, index) => (
     <div className={s.skeletonPost} key={index} />
   ))
 }

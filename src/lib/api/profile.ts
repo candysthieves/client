@@ -10,7 +10,7 @@ import { request } from './request'
 
 const toUserPath = (userId: string) => `/users/${encodeURIComponent(userId)}`
 
-export const PROFILE_POSTS_PAGE_SIZE = 8
+export const PROFILE_POSTS_PAGE_SIZE = 12
 
 export const getUserProfile = (userId: string): Promise<UserProfile> =>
   request<UserProfile>(`${toUserPath(userId)}/profile`)

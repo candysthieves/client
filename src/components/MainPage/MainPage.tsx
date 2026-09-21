@@ -45,7 +45,7 @@ export const MainPage = () => {
             <PostCard
               caption={post.description ?? ''}
               createdAt={post.createdAt}
-              images={post.images.filter(Boolean).map(image => image.url)}
+              images={post.images}
               key={post.id}
               postId={post.id}
               username={post.author.username}

@@ -21,6 +21,7 @@ export const useDeletePost = (userId?: string) => {
       })
 
       if (userId) {
+        await queryClient.invalidateQueries({ queryKey: profileKeys.detail(userId) })
         await queryClient.invalidateQueries({ queryKey: profileKeys.posts(userId) })
         await queryClient.invalidateQueries({ queryKey: profileKeys.deletedPosts(userId) })
       }

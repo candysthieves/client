@@ -69,10 +69,14 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const selectedPublishedPost = profilePosts.find(post => post.id === postId) ?? modalPost
   const selectedDeletedPost =
     requestedDeletedPostResponse ?? deletedPosts.find(post => post.id === postId)
-  const selectedMobilePost = isDeletedPost ? selectedDeletedPost : selectedPublishedPost
-  const mobilePosts = selectedMobilePost ? [selectedMobilePost] : []
-
   const selectedPost = isDeletedPost ? selectedDeletedPost : selectedPublishedPost
+
+  // Определяем целевой массив постов для мобильной ленты
+  const mobilePosts = isDeletedPost ? deletedPosts : profilePosts
+
+  // Ищем индекс текущего открытого поста в этом массиве
+  const currentPostIndex = mobilePosts.findIndex(post => post.id === postId)
+  const mobileStartIndex = currentPostIndex !== -1 ? currentPostIndex : 0
 
   const showCreateModal = isOwner && action === 'create' && !postId
   const handleClosePost = () => router.replace(`/profile/${userId}`)
@@ -187,7 +191,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             userProfile={profile}
             onClose={handleClosePost}
             posts={mobilePosts}
-            startIndex={0}
+            startIndex={mobileStartIndex}
             userId={userId}
             mode={isDeletedPost ? 'deleted' : 'published'}
           />

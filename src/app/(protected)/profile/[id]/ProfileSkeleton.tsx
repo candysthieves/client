@@ -1,6 +1,5 @@
+import { PROFILE_POSTS_PAGE_SIZE } from '@/lib/api'
 import s from './ProfileClient.module.scss'
-
-const PROFILE_SKELETON_POSTS_COUNT = 8
 
 export function ProfileSkeleton() {
   return (
@@ -12,7 +11,7 @@ export function ProfileSkeleton() {
         <div className={s.skeletonText} />
       </div>
       <div className={s.skeletonGrid}>
-        {Array.from({ length: PROFILE_SKELETON_POSTS_COUNT }, (_, index) => (
+        {Array.from({ length: PROFILE_POSTS_PAGE_SIZE }, (_, index) => (
           <div className={s.skeletonPost} key={index} />
         ))}
       </div>

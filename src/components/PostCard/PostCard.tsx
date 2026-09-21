@@ -1,8 +1,10 @@
 'use client'
 
 import { Avatar, Carousel, ReadMore, Typography } from '@candy.thieves/ui-kit-lumos'
+import Image from 'next/image'
 import Link from 'next/link'
-import { type MouseEvent, useEffect, useRef, useState } from 'react'
+import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
+import type { PostImage } from '@/lib/model'
 import { useTimeAgo } from '@/lib/utils'
 import s from './PostCard.module.scss'
 import { useReadMoreClamp } from './useReadMoreClamp'
@@ -20,7 +22,7 @@ const MIN_EXPANDED_IMAGE_HEIGHT = 60
 
 type PostCardProps = {
   postId: string
-  images: string[]
+  images: PostImage[]
   username: string
   createdAt: string
   caption: string
@@ -37,6 +39,8 @@ export const PostCard = ({ postId, images, username, createdAt, caption }: PostC
   const [imageWidth, setImageWidth] = useState(0)
   const showCarouselControls = !isExpanded
   const timeAgo = useTimeAgo(createdAt)
+  const validImages = useMemo(() => images.filter(image => image?.url), [images])
+  const slides = useMemo(() => validImages.map(image => image.url), [validImages])
 
   const { maxLength, text, expandedHeight } = useReadMoreClamp(
     captionWrapperRef,
@@ -78,6 +82,10 @@ export const PostCard = ({ postId, images, username, createdAt, caption }: PostC
     }
   }
 
+  if (validImages.length === 0) {
+    return null
+  }
+
   return (
     <Link
       aria-label={`Open post by ${username}`}
@@ -92,9 +100,15 @@ export const PostCard = ({ postId, images, username, createdAt, caption }: PostC
         style={isExpanded && imageWidth ? { height: `${expandedImageHeight}px` } : undefined}
       >
         {showCarouselControls ? (
-          <Carousel controlsSize={'s'} slides={images} />
+          <Carousel controlsSize={'s'} slides={slides} />
         ) : (
-          <img alt={username} className={s.image} src={images[0]} />
+          <Image
+            alt={username}
+            className={s.image}
+            fill
+            sizes={'(max-width: 360px) 100vw, (max-width: 768px) 50vw, 234px'}
+            src={validImages[0].url}
+          />
         )}
       </div>
 

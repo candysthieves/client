@@ -37,6 +37,7 @@ export const PostDetailsModal = ({
   const { user, isAuthenticated } = useAuth()
   const isMobileViewport = useIsMobileViewport()
   const isAuthor = !!user && user.id === (post.author?.id ?? userProfile?.id)
+
   return (
     <Modal
       open={open}
@@ -67,6 +68,7 @@ export const PostDetailsModal = ({
               </Typography>
             </div>
 
+            {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
             <PostActionMenu
               isAuthor={isAuthor}
               onEdit={onEdit}

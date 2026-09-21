@@ -1,13 +1,9 @@
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { getUserPosts } from '@/lib/api'
 import { profileKeys } from '../profileKeys'
 
 export const useProfilePosts = (userId: string) =>
-  useInfiniteQuery({
+  useQuery({
     queryKey: profileKeys.posts(userId),
-    queryFn: ({ pageParam }) => getUserPosts(userId, pageParam),
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: lastPage =>
-      lastPage.hasNextPage ? (lastPage.nextCursor ?? undefined) : undefined,
-    gcTime: 0,
+    queryFn: () => getUserPosts(userId),
   })

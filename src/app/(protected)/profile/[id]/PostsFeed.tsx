@@ -1,99 +1,38 @@
-'use client'
-
 import { Typography } from '@candy.thieves/ui-kit-lumos'
-import { useEffect, useRef } from 'react'
+import Skeleton from 'react-loading-skeleton'
 import type { Post } from '@/lib/model'
-import { PROFILE_POSTS_PAGE_SIZE } from '@/lib/api'
 import { PostPreview } from './PostPreview'
 import s from './ProfileClient.module.scss'
 
+const POSTS_FEED_SKELETON_COUNT = 8
+
 type PostsFeedProps = {
-  hasNextPage: boolean
   isLoading: boolean
-  isLoadingNextPage: boolean
-  isLoadMoreError: boolean
-  onLoadMore: () => void
   posts: Post[]
   userId: string
 }
 
-function PostsSkeletons() {
-  return Array.from({ length: PROFILE_POSTS_PAGE_SIZE }, (_, index) => (
-    <div className={s.skeletonPost} key={index} />
-  ))
-}
-
-export function PostsFeed({
-  hasNextPage,
-  isLoading,
-  isLoadingNextPage,
-  isLoadMoreError,
-  onLoadMore,
-  posts,
-  userId,
-}: PostsFeedProps) {
-  const loadMoreRef = useRef<HTMLDivElement>(null)
+export function PostsFeed({ isLoading, posts, userId }: PostsFeedProps) {
   const isEmpty = posts.length === 0
-
-  useEffect(() => {
-    const loadMoreElement = loadMoreRef.current
-
-    if (!loadMoreElement || !hasNextPage || isLoadingNextPage || isLoadMoreError) {
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0]?.isIntersecting) {
-          onLoadMore()
-        }
-      },
-      { rootMargin: '0px' }
-    )
-
-    observer.observe(loadMoreElement)
-
-    return () => observer.disconnect()
-  }, [hasNextPage, isLoadingNextPage, isLoadMoreError, onLoadMore])
 
   return (
     <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-label={'Posts'}>
       {isLoading ? (
         <div className={s.postsGrid} aria-busy={'true'} aria-label={'Loading posts'}>
-          <PostsSkeletons />
+          {Array.from({ length: POSTS_FEED_SKELETON_COUNT }, (_, index) => (
+            <Skeleton className={s.postSkeleton} key={index} />
+          ))}
         </div>
       ) : isEmpty ? (
         <Typography color={'var(--color-light-900)'} variant={'body1'}>
           This user has not published any posts yet.
         </Typography>
       ) : (
-        <>
-          <div className={s.postsGrid}>
-            {posts.map((post, index) => (
-              <PostPreview key={post.id} index={index} post={post} userId={userId} />
-            ))}
-          </div>
-
-          {hasNextPage && (
-            <>
-              {isLoadingNextPage && (
-                <div className={s.postsGrid} aria-busy={'true'} aria-label={'Loading more posts'}>
-                  <PostsSkeletons />
-                </div>
-              )}
-
-              {isLoadMoreError && (
-                <div className={s.loadMoreError} role={'alert'}>
-                  <Typography color={'var(--color-light-100)'} variant={'body1'}>
-                    Unable to load more posts. Please reload the page and try again.
-                  </Typography>
-                </div>
-              )}
-
-              <div ref={loadMoreRef} aria-live={'polite'} />
-            </>
-          )}
-        </>
+        <div className={s.postsGrid}>
+          {posts.map((post, index) => (
+            <PostPreview key={post.id} index={index} post={post} userId={userId} />
+          ))}
+        </div>
       )}
     </section>
   )

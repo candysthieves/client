@@ -23,7 +23,7 @@ type NavigationItem = {
 export const mobileMenuItems: NavigationItem[] = [
   {
     activeIcon: <Home />,
-    href: '/feed',
+    href: '/',
     icon: <HomeOutline />,
     id: 'feed',
     label: 'Feed',

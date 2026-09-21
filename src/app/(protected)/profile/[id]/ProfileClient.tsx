@@ -3,7 +3,7 @@
 import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { DeletedPosts } from '@/components/DeletedPosts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
@@ -34,13 +34,17 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const isDeletedPost = postType === 'deleted'
 
   const {
-    data: profilePostsResponse,
+    data: profilePostsData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchNextPageError,
     isError: isPostsError,
+    isFetchingNextPage,
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
   const { data: postDetails } = usePost(isDeletedPost ? undefined : postId)
   const isOwner = profile?.isOwner ?? false
-  const profilePosts = profilePostsResponse?.items ?? []
+  const profilePosts = profilePostsData?.pages.flatMap(page => page.items) ?? []
   const {
     data: deletedPostsResponse,
     isError: isDeletedPostsError,
@@ -62,24 +66,23 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   }, [postDetails, router, userId, isDeletedPost])
 
   const modalPost = postDetails?.author?.id === userId ? postDetails : undefined
-  const selectedPublishedPost = profilePosts.find(post => post.id === postId)
+  const selectedPublishedPost = profilePosts.find(post => post.id === postId) ?? modalPost
   const selectedDeletedPost =
     requestedDeletedPostResponse ?? deletedPosts.find(post => post.id === postId)
-  const selectedMobilePost = isDeletedPost
-    ? selectedDeletedPost
-    : (selectedPublishedPost ?? modalPost)
+  const selectedMobilePost = isDeletedPost ? selectedDeletedPost : selectedPublishedPost
   const mobilePosts = selectedMobilePost ? [selectedMobilePost] : []
 
   const selectedPost = isDeletedPost ? selectedDeletedPost : selectedPublishedPost
 
   const showCreateModal = isOwner && action === 'create' && !postId
   const handleClosePost = () => router.replace(`/profile/${userId}`)
+  const handleLoadMorePosts = useCallback(() => void fetchNextPage(), [fetchNextPage])
 
   if (isProfileLoading || isPostsLoading) {
     return <ProfileSkeleton />
   }
 
-  if (isProfileError || isPostsError) {
+  if (isProfileError || (isPostsError && !profilePostsData)) {
     return (
       <section className={s.profileError} role={'alert'}>
         <Typography color={'var(--color-light-100)'} variant={'h1'}>
@@ -141,7 +144,16 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
         {isOwner ? (
           <ProfilePostTabs
             postsFeed={
-              <PostsFeed isLoading={isPostsLoading} posts={profilePosts} userId={userId} />
+              <PostsFeed
+                hasNextPage={hasNextPage ?? false}
+                isLoading={isPostsLoading}
+                isLoadingNextPage={isFetchingNextPage}
+                isLoadMoreError={isFetchNextPageError}
+                key={userId}
+                onLoadMore={handleLoadMorePosts}
+                posts={profilePosts}
+                userId={userId}
+              />
             }
             deletedPosts={
               <DeletedPosts
@@ -155,7 +167,16 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             deletedPostsCount={deletedPosts.length}
           />
         ) : (
-          <PostsFeed isLoading={isPostsLoading} posts={profilePosts} userId={userId} />
+          <PostsFeed
+            hasNextPage={hasNextPage ?? false}
+            isLoading={isPostsLoading}
+            isLoadingNextPage={isFetchingNextPage}
+            isLoadMoreError={isFetchNextPageError}
+            key={userId}
+            onLoadMore={handleLoadMorePosts}
+            posts={profilePosts}
+            userId={userId}
+          />
         )}
       </div>
 

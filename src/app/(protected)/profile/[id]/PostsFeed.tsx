@@ -1,7 +1,7 @@
 'use client'
 
 import { Typography } from '@candy.thieves/ui-kit-lumos'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import type { Post } from '@/lib/model'
 import { PROFILE_POSTS_PAGE_SIZE } from '@/lib/api'
 import { PostPreview } from './PostPreview'
@@ -33,27 +33,12 @@ export function PostsFeed({
   userId,
 }: PostsFeedProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const [hasUserScrolled, setHasUserScrolled] = useState(false)
   const isEmpty = posts.length === 0
-
-  useEffect(() => {
-    const handleScroll = () => setHasUserScrolled(true)
-
-    window.addEventListener('scroll', handleScroll, { once: true, passive: true })
-
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   useEffect(() => {
     const loadMoreElement = loadMoreRef.current
 
-    if (
-      !hasUserScrolled ||
-      !loadMoreElement ||
-      !hasNextPage ||
-      isLoadingNextPage ||
-      isLoadMoreError
-    ) {
+    if (!loadMoreElement || !hasNextPage || isLoadingNextPage || isLoadMoreError) {
       return
     }
 
@@ -69,7 +54,7 @@ export function PostsFeed({
     observer.observe(loadMoreElement)
 
     return () => observer.disconnect()
-  }, [hasNextPage, hasUserScrolled, isLoadingNextPage, isLoadMoreError, onLoadMore])
+  }, [hasNextPage, isLoadingNextPage, isLoadMoreError, onLoadMore])
 
   return (
     <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-label={'Posts'}>

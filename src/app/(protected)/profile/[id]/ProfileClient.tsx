@@ -66,12 +66,10 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   }, [postDetails, router, userId, isDeletedPost])
 
   const modalPost = postDetails?.author?.id === userId ? postDetails : undefined
-  const selectedPublishedPost = profilePosts.find(post => post.id === postId)
+  const selectedPublishedPost = profilePosts.find(post => post.id === postId) ?? modalPost
   const selectedDeletedPost =
     requestedDeletedPostResponse ?? deletedPosts.find(post => post.id === postId)
-  const selectedMobilePost = isDeletedPost
-    ? selectedDeletedPost
-    : (selectedPublishedPost ?? modalPost)
+  const selectedMobilePost = isDeletedPost ? selectedDeletedPost : selectedPublishedPost
   const mobilePosts = selectedMobilePost ? [selectedMobilePost] : []
 
   const selectedPost = isDeletedPost ? selectedDeletedPost : selectedPublishedPost

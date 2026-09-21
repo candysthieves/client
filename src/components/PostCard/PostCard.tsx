@@ -3,7 +3,7 @@
 import { Avatar, Carousel, ReadMore, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import Link from 'next/link'
-import { type MouseEvent, useEffect, useRef, useState } from 'react'
+import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 import type { PostImage } from '@/lib/model'
 import { useTimeAgo } from '@/lib/utils'
 import s from './PostCard.module.scss'
@@ -39,7 +39,8 @@ export const PostCard = ({ postId, images, username, createdAt, caption }: PostC
   const [imageWidth, setImageWidth] = useState(0)
   const showCarouselControls = !isExpanded
   const timeAgo = useTimeAgo(createdAt)
-  const validImages = images.filter(image => image?.url)
+  const validImages = useMemo(() => images.filter(image => image?.url), [images])
+  const slides = useMemo(() => validImages.map(image => image.url), [validImages])
 
   const { maxLength, text, expandedHeight } = useReadMoreClamp(
     captionWrapperRef,
@@ -99,7 +100,7 @@ export const PostCard = ({ postId, images, username, createdAt, caption }: PostC
         style={isExpanded && imageWidth ? { height: `${expandedImageHeight}px` } : undefined}
       >
         {showCarouselControls ? (
-          <Carousel controlsSize={'s'} slides={validImages.map(image => image.url)} />
+          <Carousel controlsSize={'s'} slides={slides} />
         ) : (
           <Image
             alt={username}

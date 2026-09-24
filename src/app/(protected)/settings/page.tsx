@@ -1,9 +1,9 @@
 import { Typography } from '@candy.thieves/ui-kit-lumos'
 
-export default function GeneralInformationPage() {
+export default function SettingsPage() {
   return (
     <Typography align={'center'} color={'white'} variant={'h1'}>
-      General Information
+      Settings
     </Typography>
   )
 }

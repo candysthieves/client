@@ -26,6 +26,13 @@
   gap: 1.5rem;
 }
 
+.content {
+  @include content;
+
+  position: relative;
+  min-width: 0;
+}
+
 .sidebar {
   position: sticky;
   top: $header-height;

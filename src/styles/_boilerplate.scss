@@ -1,7 +1,13 @@
 @use './mixins' as *;
 
 html {
+  // Reserve a stable vertical scrollbar gutter on the root scroller so the
+  // centered layout (and sticky sidebar) don't shift when the window
+  // scrollbar appears/disappears during navigation.
+  scrollbar-gutter: stable;
+
   box-sizing: border-box;
+
   font-size: 100%;
 
   -webkit-font-smoothing: antialiased;

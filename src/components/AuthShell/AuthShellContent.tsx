@@ -37,7 +37,7 @@ export const AuthShellContent = ({ children }: { children: ReactNode }) => {
 
       <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
 
-      {children}
+      <div className={s.content}>{children}</div>
 
       {!isMobileMenuHidden && (
         <div className={s.bottomNavigation}>

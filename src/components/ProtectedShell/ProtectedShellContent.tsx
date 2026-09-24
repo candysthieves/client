@@ -8,29 +8,17 @@ import { useAuth } from '@/lib/hooks'
 export const ProtectedShellContent = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname()
   const router = useRouter()
-  const { user, isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading } = useAuth()
 
-  const isPublicProfileRoute = pathname.startsWith('/profile/')
+  const isPublicRoute = pathname === '/'
 
   useEffect(() => {
-    if (!isLoading) {
-      // Редирект с /profile на /profile/{userId}
-      if (pathname === '/profile') {
-        if (isAuthenticated && user?.id) {
-          router.replace(`/profile/${user.id}`)
-        } else {
-          router.replace('/')
-        }
-        return
-      }
-
-      if (!isAuthenticated && !isPublicProfileRoute) {
-        router.replace('/')
-      }
+    if (!isLoading && !isAuthenticated && !isPublicRoute) {
+      router.replace('/')
     }
-  }, [isAuthenticated, isLoading, isPublicProfileRoute, router, pathname, user?.id])
+  }, [isAuthenticated, isLoading, isPublicRoute, router])
 
-  if (!isLoading || isPublicProfileRoute) {
+  if (!isLoading && (isAuthenticated || isPublicRoute)) {
     return <main className={s.content}>{children}</main>
   }
 

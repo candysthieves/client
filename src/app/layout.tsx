@@ -3,7 +3,7 @@ import '@candy.thieves/ui-kit-lumos/dist/index.css'
 import 'react-loading-skeleton/dist/skeleton.css'
 import '../styles/index.scss'
 import { ReactNode } from 'react'
-import { ClientLayout } from '@/components'
+import { AuthShell, ClientLayout } from '@/components'
 
 export const metadata: Metadata = {
   title: 'Client',
@@ -18,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang={'en'}>
       <body>
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout>
+          <AuthShell>{children}</AuthShell>
+        </ClientLayout>
       </body>
     </html>
   )

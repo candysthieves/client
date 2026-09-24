@@ -1,0 +1,54 @@
+@use '@/styles/mixins' as *;
+
+.headerWrapper {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+
+.layout {
+  @include container;
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.containerAuthenticated {
+  gap: 1.5rem;
+}
+
+.sidebar {
+  position: sticky;
+  top: $header-height;
+  flex-shrink: 0;
+  height: calc(100vh - $header-height);
+
+  @include media-tablet {
+    display: none;
+  }
+}
+
+.bottomNavigation {
+  display: none;
+
+  @include media-tablet {
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    left: 0;
+
+    display: block;
+
+    width: 100%;
+    height: $header-height;
+  }
+}

@@ -10,18 +10,20 @@ type ReadMoreClampOptions = {
 
 type ReadMoreClamp = {
   maxLength: number
+  /** Text to pass to ReadMore while collapsed — its cut point lands exactly at `maxLength`. */
+  collapsedText: string
   text: string
-  /** Actual rendered height (px) of `text` once expanded. */
+  /** Max height (px) of the expanded text — the same for every post, so cards stay aligned. */
   expandedHeight: number
 }
 
 const HEIGHT_TOLERANCE_PX = 1
 
-const truncateToWord = (text: string, length: number, ellipsis: string) => {
+const sliceToWord = (text: string, length: number) => {
   const sliced = text.slice(0, length)
   const lastSpace = sliced.lastIndexOf(' ')
 
-  return `${lastSpace === -1 ? sliced : sliced.slice(0, lastSpace)}${ellipsis}`
+  return lastSpace === -1 ? sliced : sliced.slice(0, lastSpace)
 }
 
 export const useReadMoreClamp = (
@@ -37,6 +39,7 @@ export const useReadMoreClamp = (
   }: ReadMoreClampOptions
 ): ReadMoreClamp => {
   const [clamp, setClamp] = useState<ReadMoreClamp>({
+    collapsedText: text,
     expandedHeight: 0,
     maxLength: initialMaxLength,
     text,
@@ -59,19 +62,24 @@ export const useReadMoreClamp = (
         return
       }
 
-      const { width, font, lineHeight, letterSpacing, wordBreak } = getComputedStyle(target)
+      const { width, font, lineHeight, letterSpacing, wordBreak, overflowWrap } =
+        getComputedStyle(target)
 
       measurer.style.width = width
       measurer.style.font = font
       measurer.style.lineHeight = lineHeight
       measurer.style.letterSpacing = letterSpacing
       measurer.style.wordBreak = wordBreak
+      measurer.style.overflowWrap = overflowWrap
 
-      const textFitsWithin = (maxHeight: number, reserve: string, charCount: number) => {
-        measurer.textContent = `${text.slice(0, charCount).trimEnd()}${reserve}`
+      const heightOf = (content: string) => {
+        measurer.textContent = content
 
-        return measurer.scrollHeight <= maxHeight
+        return measurer.scrollHeight
       }
+
+      const textFitsWithin = (maxHeight: number, reserve: string, charCount: number) =>
+        heightOf(`${text.slice(0, charCount).trimEnd()}${reserve}`) <= maxHeight
 
       const longestFittingLength = (maxHeight: number, reserve: string) => {
         if (textFitsWithin(maxHeight, reserve, text.length)) {
@@ -94,25 +102,54 @@ export const useReadMoreClamp = (
         return low
       }
 
-      const expandedMaxHeight = parseFloat(lineHeight) * expandedLines + HEIGHT_TOLERANCE_PX
+      // Prefer cutting at a word boundary, but a word longer than a line is broken by
+      // overflow-wrap, so backing off to the previous space would drop whole lines.
+      const truncate = (length: number) => {
+        const wordCut = sliceToWord(text, length)
+        const charCut = text.slice(0, length).trimEnd()
+
+        return heightOf(wordCut) < heightOf(charCut) ? charCut : wordCut
+      }
+
+      const expandedHeight = parseFloat(lineHeight) * expandedLines
+      const expandedMaxHeight = expandedHeight + HEIGHT_TOLERANCE_PX
       const expandedLength = longestFittingLength(expandedMaxHeight, expandedReserve)
+      const expandedText =
+        expandedLength < text.length ? `${truncate(expandedLength)}${expandedEllipsis}` : text
       const isCollapsed =
         container.closest<HTMLElement>('[data-expanded]')?.dataset.expanded !== 'true'
 
-      // Re-measure at the winning length — the measurer may hold a stale value.
-      textFitsWithin(expandedMaxHeight, expandedReserve, expandedLength)
-      const expandedHeight = measurer.scrollHeight
+      if (!isCollapsed) {
+        setClamp(previous => ({ ...previous, expandedHeight, text: expandedText }))
 
-      setClamp(previous => ({
+        return
+      }
+
+      const collapsedLength = longestFittingLength(
+        container.clientHeight + HEIGHT_TOLERANCE_PX,
+        collapsedReserve
+      )
+
+      if (collapsedLength >= text.length) {
+        setClamp({
+          collapsedText: text,
+          expandedHeight,
+          maxLength: text.length,
+          text: expandedText,
+        })
+
+        return
+      }
+
+      // ReadMore cuts at the last space before `maxLength`, so put one right at our cut point.
+      const collapsedCut = truncate(collapsedLength)
+
+      setClamp({
+        collapsedText: `${collapsedCut} ${text.slice(collapsedCut.length).trimStart()}`,
         expandedHeight,
-        maxLength: isCollapsed
-          ? longestFittingLength(container.clientHeight + HEIGHT_TOLERANCE_PX, collapsedReserve)
-          : previous.maxLength,
-        text:
-          expandedLength < text.length
-            ? truncateToWord(text, expandedLength, expandedEllipsis)
-            : text,
-      }))
+        maxLength: collapsedCut.length + 1,
+        text: expandedText,
+      })
     }
 
     measure()

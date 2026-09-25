@@ -1,0 +1,10 @@
+@use '@/styles/mixins' as *;
+
+.avatarContainer {
+  @include flex(flex, flex-start, center);
+
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 12.75rem;
+}

@@ -62,7 +62,7 @@ export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> =>
 // export const getPosts = () => apiClient<Post[]>('/posts')
 
 export const getPostById = (postId: string): Promise<PostDetails> =>
-  request<PostDetails>(`/posts/${encodeURIComponent(postId)}`)
+  request<PostDetails>(`/posts/user/${encodeURIComponent(postId)}`)
 
 export const deletePost = (postId: string) =>
   request<void>(`/posts/${postId}/soft-delete`, {

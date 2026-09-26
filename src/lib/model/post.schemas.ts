@@ -65,7 +65,7 @@ export const postSchema = z.object({
 })
 
 export const postDetailsSchema = postSchema.extend({
-  isOwner: z.boolean(),
+  viewerStatus: z.enum(['owner', 'user', 'friend']),
 })
 
 export const postImageSchema = z

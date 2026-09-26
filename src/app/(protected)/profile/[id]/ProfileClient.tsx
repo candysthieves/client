@@ -43,7 +43,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
   const { data: postDetails } = usePost(isDeletedPost ? undefined : postId)
-  const isOwner = profile?.isOwner ?? false
+  const isOwner = profile?.viewerStatus === 'owner'
   const profilePosts = profilePostsData?.pages.flatMap(page => page.items) ?? []
   const {
     data: deletedPostsResponse,

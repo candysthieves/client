@@ -52,7 +52,7 @@ export const mobileMenuItems: NavigationItem[] = [
   },
   {
     activeIcon: <Person />,
-    href: '/profile',
+    href: (userId: string) => `/profile/${userId}`,
     icon: <PersonOutline />,
     id: 'profile',
     label: 'My Profile',

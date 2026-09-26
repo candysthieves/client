@@ -18,9 +18,9 @@ export const ProtectedShellContent = ({ children }: { children: ReactNode }) => 
     }
   }, [isAuthenticated, isLoading, isPublicRoute, router])
 
-  if (!isLoading && (isAuthenticated || isPublicRoute)) {
-    return <main className={s.content}>{children}</main>
+  if (isLoading || (!isAuthenticated && !isPublicRoute)) {
+    return <div>Loading....</div> // change Loading... later
   }
 
-  return <div>Loading....</div> // change Loading... later
+  return <main className={s.content}>{children}</main>
 }

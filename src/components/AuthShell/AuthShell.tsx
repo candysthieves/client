@@ -8,9 +8,9 @@ import s from './AuthShell.module.scss'
 import { AuthShellContent } from './AuthShellContent'
 
 export function AuthShell({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading, isHydrated } = useAuth()
 
-  if (isLoading) return <div>Loading...</div>
+  if (!isHydrated || isLoading) return <div>Loading...</div>
 
   return (
     <>

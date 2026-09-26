@@ -3,19 +3,20 @@
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useAuth } from '@/lib/hooks'
-import { ACCESS_TOKEN_LS_KEY } from '@/lib/model'
 
 export default function ProfilePage() {
   const router = useRouter()
-  const { user } = useAuth()
+  const { user, isAuthenticated, isLoading, isHydrated } = useAuth()
 
   useEffect(() => {
-    if (user?.id) {
+    if (!isHydrated || isLoading) return
+
+    if (isAuthenticated && user?.id) {
       router.replace(`/profile/${user.id}`)
-    } else if (!localStorage.getItem(ACCESS_TOKEN_LS_KEY)) {
+    } else {
       router.replace('/')
     }
-  }, [router, user?.id])
+  }, [isAuthenticated, isHydrated, isLoading, router, user?.id])
 
   return null
 }

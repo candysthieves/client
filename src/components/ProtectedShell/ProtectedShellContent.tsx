@@ -8,17 +8,17 @@ import { useAuth } from '@/lib/hooks'
 export const ProtectedShellContent = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname()
   const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading, isHydrated } = useAuth()
 
   const isPublicRoute = pathname === '/'
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated && !isPublicRoute) {
+    if (isHydrated && !isLoading && !isAuthenticated && !isPublicRoute) {
       router.replace('/')
     }
-  }, [isAuthenticated, isLoading, isPublicRoute, router])
+  }, [isAuthenticated, isHydrated, isLoading, isPublicRoute, router])
 
-  if (isLoading || (!isAuthenticated && !isPublicRoute)) {
+  if (!isHydrated || isLoading || (!isAuthenticated && !isPublicRoute)) {
     return <div>Loading....</div> // change Loading... later
   }
 

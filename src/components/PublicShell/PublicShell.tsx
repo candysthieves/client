@@ -6,21 +6,21 @@ import { useAuth } from '@/lib/hooks/useAuth'
 
 export const PublicShell = ({ children }: { children: ReactNode }) => {
   const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading, isHydrated } = useAuth()
 
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
+    if (isHydrated && !isLoading && isAuthenticated) {
       router.replace('/')
     }
-  }, [isAuthenticated, isLoading, router])
+  }, [isAuthenticated, isHydrated, isLoading, router])
 
-  if (isLoading) {
+  if (!isHydrated || isLoading) {
     return <div>Loading..</div>
   }
 
-  // if (isAuthenticated) {
-  //   return null
-  // }
+  if (isAuthenticated) {
+    return null
+  }
 
   return children
 }

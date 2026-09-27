@@ -22,6 +22,7 @@ const MIN_EXPANDED_IMAGE_HEIGHT = 60
 
 type PostCardProps = {
   postId: string
+  userId: string
   images: PostImage[]
   username: string
   createdAt: string
@@ -32,7 +33,14 @@ type PostCardProps = {
 const isInteractiveElementTarget = (target: EventTarget | null) =>
   target instanceof Element && !!target.closest('button')
 
-export const PostCard = ({ postId, images, username, createdAt, caption }: PostCardProps) => {
+export const PostCard = ({
+  postId,
+  userId,
+  images,
+  username,
+  createdAt,
+  caption,
+}: PostCardProps) => {
   const captionWrapperRef = useRef<HTMLDivElement>(null)
   const imageWrapperRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -112,10 +120,10 @@ export const PostCard = ({ postId, images, username, createdAt, caption }: PostC
         )}
       </div>
 
-      <div className={s.userRow}>
+      <Link href={`/profile/${userId}`} className={s.userRow}>
         <Avatar userName={username} />
         <Typography variant={'h3'}>{username}</Typography>
-      </div>
+      </Link>
 
       <Typography className={s.time} color={'var(--color-light-900)'} variant={'caption1'}>
         {timeAgo}

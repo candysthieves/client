@@ -1,4 +1,5 @@
 import { Avatar, HeartOutline, Typography } from '@candy.thieves/ui-kit-lumos'
+import Link from 'next/link'
 import type { Comment, Post } from '@/lib/model'
 import { useProfile } from '@/lib/profile'
 import s from './PostComments.module.scss'
@@ -25,8 +26,13 @@ export const PostComments = ({ post, comments }: Props) => {
 
   const renderComment = (comment: Comment, isDescription = false) => (
     <div key={comment.id} className={s.comment}>
-      <Avatar userName={comment.username} src={comment.avatarUrl} size={'s'} delayMs={0} />
-
+      <Link
+        href={`/profile/${comment.username}`} // TODO: replace with comment.userId once comments backend adds author id
+        className={s.commentAvatarLink}
+      >
+        <Avatar userName={comment.username} src={comment.avatarUrl} size={'s'} delayMs={0} />
+      </Link>
+      {/*TODO: replace with <Link href={`/profile/${comment.userId}`}> once comments backend adds author id*/}
       <div className={s.commentBody}>
         <Typography variant={'subtitle2'} className={s.commentText}>
           {comment.username}&nbsp;

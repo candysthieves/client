@@ -29,7 +29,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const isMobile = useIsMobileViewport()
 
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
-
+  const isOwner = profile?.viewerStatus === 'owner'
   const postType = searchParams.get('type')
   const isDeletedPost = postType === 'deleted'
 
@@ -43,7 +43,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
   const { data: postDetails } = usePost(isDeletedPost ? undefined : postId)
-  const isOwner = profile?.viewerStatus === 'owner'
+
   const profilePosts = profilePostsData?.pages.flatMap(page => page.items) ?? []
   const {
     data: deletedPostsResponse,
@@ -59,7 +59,6 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   )
 
   useEffect(() => {
-    // ИСПРАВЛЕНО: Проверка сработает только для активных постов
     if (!isDeletedPost && postDetails && postDetails.author?.id !== userId) {
       router.replace(`/profile/${userId}`)
     }
@@ -71,10 +70,8 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     requestedDeletedPostResponse ?? deletedPosts.find(post => post.id === postId)
   const selectedPost = isDeletedPost ? selectedDeletedPost : selectedPublishedPost
 
-  // Определяем целевой массив постов для мобильной ленты
   const mobilePosts = isDeletedPost ? deletedPosts : profilePosts
 
-  // Ищем индекс текущего открытого поста в этом массиве
   const currentPostIndex = mobilePosts.findIndex(post => post.id === postId)
   const mobileStartIndex = currentPostIndex !== -1 ? currentPostIndex : 0
 

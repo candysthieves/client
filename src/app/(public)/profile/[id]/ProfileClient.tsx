@@ -125,7 +125,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
               <Button
                 as={Link}
                 className={s.settingsButton}
-                href={'/profile/general-information'}
+                href={'/settings'}
                 variant={'secondary'}
               >
                 Profile Settings

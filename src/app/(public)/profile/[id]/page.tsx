@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
-import { ProfileClient } from '@/app/(protected)/profile/[id]/ProfileClient'
+import { Suspense } from 'react'
+import { ProfileClient } from '@/app/(public)/profile/[id]/ProfileClient'
 
 type Params = { id: string }
 type SearchParams = { postId?: string; action?: string }
@@ -34,5 +35,9 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
     redirect(`/profile/${userId}?${newSearchParams.toString()}`)
   }
 
-  return <ProfileClient userId={userId} postId={postId} action={action} />
+  return (
+    <Suspense fallback={null}>
+      <ProfileClient userId={userId} postId={postId} action={action} />
+    </Suspense>
+  )
 }

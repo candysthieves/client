@@ -1,7 +1,23 @@
 @use './mixins' as *;
 
 html {
+  // Reserve a stable vertical scrollbar gutter on the root scroller so the
+  // centered layout (and sticky sidebar) don't shift when the window
+  // scrollbar appears/disappears during navigation.
+  scrollbar-gutter: stable;
+
+  // The feed overflows the root box horizontally (the Carousel slides inside
+  // the post cards report a right edge past the viewport), which adds a
+  // horizontal scrollbar to the page. That scrollbar then eats 15px of the
+  // viewport height and makes `body`'s `min-height: 100vh` overflow as well, so
+  // both scrollbars show up on a page that has no visible content out there.
+  // `clip` (not `hidden`) keeps the root out of scroll-container business, so
+  // `position: sticky` on the sidebar and `position: fixed` on the header keep
+  // resolving against the viewport.
+  overflow-x: clip;
+
   box-sizing: border-box;
+
   font-size: 100%;
 
   -webkit-font-smoothing: antialiased;
@@ -58,11 +74,20 @@ ul {
   z-index: 105 !important;
 }
 
-// react-remove-scroll (Radix Dialog scroll lock) zeroes body padding-top
-// assuming it is a scrollbar gap compensation, which collapses the space
-// reserved for the fixed header and shifts the layout on modal open.
+// react-remove-scroll (Radix Dialog scroll lock) writes onto body[data-scroll-locked]:
+//   1. `margin-right: <scrollbar width>px !important` — its own compensation for
+//      the scrollbar it hides. `scrollbar-gutter: stable` on the root already
+//      keeps that space reserved while the lock is on, so the margin is a second
+//      compensation: it narrows the centred column and shifts the sticky sidebar.
+//   2. `padding-top: <body margin-top>px` — 0 here — which drops the offset that
+//      reserves room for the fixed header, so the content jumps up under it.
+//   3. `position: relative !important`, which turns body into the containing
+//      block for portalled absolutely positioned overlays.
+// The layout is width-stable without any of this, so the lock is simply neutralised.
 html body[data-scroll-locked] {
-  padding-top: $header-height !important;
+  position: static !important;
+  margin-right: 0 !important;
+  padding: $header-height 0 0 0 !important;
 }
 
 [data-radix-popper-content-wrapper] {

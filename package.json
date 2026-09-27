@@ -25,6 +25,7 @@
     "@candy.thieves/ui-kit-lumos": "^0.0.52",
     "@eslint/js": "^10.0.1",
     "@hookform/resolvers": "^5.7.1",
+    "@lottiefiles/dotlottie-react": "^0.19.16",
     "@next/eslint-plugin-next": "^16.2.12",
     "@tanstack/react-query": "^5.102.8",
     "@tanstack/react-query-devtools": "^5.102.8",

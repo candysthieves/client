@@ -1,6 +1,7 @@
 'use client'
 
 import { Avatar, AvatarBlock, Button, Close, Typography } from '@candy.thieves/ui-kit-lumos'
+import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 import type { Post, UserProfile } from '@/lib/model'
 import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
@@ -65,16 +66,21 @@ export const MobilePostFeed = ({
               }}
             >
               <div className={s.author}>
-                <Avatar
-                  userName={profileUserName || post.author.username || ''}
-                  size={'s'}
-                  delayMs={0}
-                  src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
-                />
+                <Link
+                  href={`/profile/${post.author.id}`}
+                  className={s.userlink /* или актуальный класс этого блока */}
+                >
+                  <Avatar
+                    userName={profileUserName || post.author.username || ''}
+                    size={'s'}
+                    delayMs={0}
+                    src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
+                  />
 
-                <Typography variant={'subtitle2'}>
-                  {profileUserName || post.author.username || ''}
-                </Typography>
+                  <Typography variant={'subtitle2'}>
+                    {profileUserName || post.author.username || ''}
+                  </Typography>
+                </Link>
 
                 {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
                 <PostActionMenu

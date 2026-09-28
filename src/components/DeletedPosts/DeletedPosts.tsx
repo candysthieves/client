@@ -1,12 +1,12 @@
 'use client'
 
 import { Typography } from '@candy.thieves/ui-kit-lumos'
-import type { Post } from '@/lib/model'
+import type { DeletedPostItem, Post } from '@/lib/model'
 import { DeletedPostCard } from './DeletedPostCard'
 import s from './DeletedPosts.module.scss'
 
 type DeletedPostsProps = {
-  posts: Post[]
+  posts: DeletedPostItem[]
   userId: string
   isError?: boolean
   isLoading?: boolean

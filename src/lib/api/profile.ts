@@ -5,15 +5,23 @@ import {
   UserProfile,
   deletedPostItemSchema,
   getDeletedPostsResponseSchema,
+  userProfileSchema,
+  profilePostsResponseSchema,
 } from '@/lib/model'
 import { request } from './request'
 
 export const PROFILE_POSTS_PAGE_SIZE = 12
 
-export const getUserProfile = (userId: string): Promise<UserProfile> =>
-  request<UserProfile>(`/users/profile/${encodeURIComponent(userId)}`)
+export const getUserProfile = async (userId: string): Promise<UserProfile> => {
+  const data = await request<unknown>(`/users/profile/${encodeURIComponent(userId)}`)
 
-export const getUserPosts = (userId: string, cursor?: string): Promise<ProfilePostsResponse> => {
+  return userProfileSchema.parse(data)
+}
+
+export const getUserPosts = async (
+  userId: string,
+  cursor?: string
+): Promise<ProfilePostsResponse> => {
   const searchParams = new URLSearchParams({
     limit: String(PROFILE_POSTS_PAGE_SIZE),
   })
@@ -22,9 +30,11 @@ export const getUserPosts = (userId: string, cursor?: string): Promise<ProfilePo
     searchParams.set('cursor', cursor)
   }
 
-  return request<ProfilePostsResponse>(
+  const data = await request<unknown>(
     `/posts/user/${encodeURIComponent(userId)}?${searchParams.toString()}`
   )
+
+  return profilePostsResponseSchema.parse(data)
 }
 
 export const getDeletedPosts = async (): Promise<GetDeletedPostsResponse> => {

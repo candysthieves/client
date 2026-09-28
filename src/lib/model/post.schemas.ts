@@ -52,21 +52,20 @@ export const imageMediaSchema = z.object({
 export const postAuthorSchema = z.object({
   id: z.uuid(),
   username: z.string(),
+  avatarPreviewUrl: imageMediaSchema.nullable(),
 })
 
 export const postSchema = z.object({
   id: z.uuid(),
   description: z.string(),
   images: z.array(imageMediaSchema),
-  preview: imageMediaSchema,
+  preview: imageMediaSchema.nullable(),
   createdAt: z.string(),
   willBeDeleted: z.string().nullable().optional(),
   author: postAuthorSchema,
 })
 
-export const postDetailsSchema = postSchema.extend({
-  viewerStatus: z.enum(['owner', 'user', 'friend']),
-})
+export const postDetailsSchema = postSchema.extend({})
 
 export const postImageSchema = z
   .instanceof(File)
@@ -89,12 +88,13 @@ export const commentSchema = z.object({
 export const apiDeletedPostAuthorSchema = z.object({
   id: z.uuid(),
   username: z.string(),
+  avatarPreviewUrl: imageMediaSchema.nullable(),
 })
 
 const deletedPostItemResponseSchema = z.object({
   id: z.uuid(),
   description: z.string().nullable(), // описание может быть null
-  images: z.array(imageSchema),
+  images: z.array(imageMediaSchema).nullable(),
   preview: imageSchema.nullable(), // превью может быть null
   createdAt: z.string(),
   willBeDeleted: z.string().nullable(), // дата окончательного удаления
@@ -102,12 +102,17 @@ const deletedPostItemResponseSchema = z.object({
 })
 
 export const deletedPostItemSchema = deletedPostItemResponseSchema
-  .refine(post => post.images.length > 0, 'Deleted post must have at least one image')
-  .transform(post => ({
-    ...post,
-    description: post.description ?? '',
-    preview: post.preview ?? post.images[0]!,
-  }))
+  .refine(post => (post.images?.length ?? 0) > 0, 'Deleted post must have at least one image')
+  .transform(post => {
+    const images = post.images ?? []
+
+    return {
+      ...post,
+      description: post.description ?? '',
+      images,
+      preview: post.preview ?? images[0] ?? null,
+    }
+  })
 
 // Схема полного ответа сервера с курсорной пагинацией
 export const getDeletedPostsResponseSchema = z.object({

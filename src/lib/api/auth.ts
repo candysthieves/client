@@ -1,22 +1,27 @@
 import { request } from '@/lib/api/request'
 import {
-  AccessTokenResponse,
+  accessTokenResponseSchema,
   LoginRequest,
   LoginResponse,
+  loginResponseSchema,
   NewPasswordRequest,
   PasswordRecoveryRequest,
   RegistrationConfirmationRequest,
   RegistrationRequest,
   ResendConfirmationEmailRequest,
   UserResponse,
+  userResponseSchema,
   ValidatePasswordRecoveryCodeRequest,
 } from '@/lib/model'
 
-export const login = (data: LoginRequest) =>
-  request<LoginResponse>('/auth/login', {
+export const login = async (data: LoginRequest): Promise<LoginResponse> => {
+  const response = await request<unknown>('/auth/login', {
     method: 'POST',
     body: JSON.stringify(data),
   })
+
+  return loginResponseSchema.parse(response)
+}
 
 export const registration = (data: RegistrationRequest) =>
   request<void>('/auth/registration', {
@@ -49,10 +54,13 @@ export const newPassword = (data: NewPasswordRequest) =>
     body: JSON.stringify(data),
   })
 
-export const refreshToken = () =>
-  request<AccessTokenResponse>('/auth/refresh-token', {
+export const refreshToken = async () => {
+  const response = await request<unknown>('/auth/refresh-token', {
     method: 'POST',
   })
+
+  return accessTokenResponseSchema.parse(response)
+}
 
 export const logout = () =>
   request<void>('/auth/logout', {
@@ -60,7 +68,11 @@ export const logout = () =>
   })
 
 // method: 'GET'
-export const authMe = (): Promise<UserResponse> => request<UserResponse>('/auth/me')
+export const authMe = async (): Promise<UserResponse> => {
+  const response = await request<unknown>('/auth/me')
+
+  return userResponseSchema.parse(response)
+}
 
 // method: 'GET'
 export const validatePasswordRecoveryCode = ({

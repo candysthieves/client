@@ -1,6 +1,6 @@
-import type { PostDetails } from '@/lib/model'
 import { AddPostRequest, AddPostResponse } from '@/features/createPost'
 import { request } from '@/lib/api/request'
+import { addPostResponseSchema,  postSchema } from '@/lib/model'
 
 // TEMPORARY
 const API_BASE_URL = 'http://localhost:8080'
@@ -53,34 +53,39 @@ export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> =>
   })
   formData.append('locations', JSON.stringify(data.locations))
 
-  return request<AddPostResponse>('/posts', {
+  const response = await request<unknown>('/posts', {
     method: 'POST',
     body: formData,
   })
+
+  return addPostResponseSchema.parse(response)
 }
 
 // export const getPosts = () => apiClient<Post[]>('/posts')
 
-export const getPostById = (postId: string): Promise<PostDetails> =>
-  request<PostDetails>(`/posts/user/${encodeURIComponent(postId)}`)
+export const getPostById = async (postId: string): Promise<PostDetails> => {
+  const response = await request<unknown>(`/posts/${encodeURIComponent(postId)}`)
+
+  return postSchema.parse(response)
+}
 
 export const deletePost = (postId: string) =>
-  request<void>(`/posts/${postId}/soft-delete`, {
+  request<void>(`/posts/${encodeURIComponent(postId)}/soft-delete`, {
     method: 'DELETE',
   })
 
 export const restorePost = (postId: string) =>
-  request<void>(`/posts/${postId}/restore`, {
+  request<void>(`/posts/${encodeURIComponent(postId)}/restore`, {
     method: 'POST',
   })
 
 export const hardDeletePost = (postId: string) =>
-  request<void>(`/posts/${postId}/hard-delete`, {
+  request<void>(`/posts/${encodeURIComponent(postId)}/hard-delete`, {
     method: 'DELETE',
   })
 
 export const updatePost = (postId: string, description: string) =>
-  request<void>(`/posts/${postId}`, {
+  request<void>(`/posts/${encodeURIComponent(postId)}`, {
     method: 'PUT',
     body: JSON.stringify({ description }),
   })

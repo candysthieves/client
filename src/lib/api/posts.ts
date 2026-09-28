@@ -1,6 +1,6 @@
 import { AddPostRequest, AddPostResponse } from '@/features/createPost'
 import { request } from '@/lib/api/request'
-import { addPostResponseSchema,  postSchema } from '@/lib/model'
+import { addPostResponseSchema, Post, postSchema } from '@/lib/model'
 
 // TEMPORARY
 const API_BASE_URL = 'http://localhost:8080'
@@ -63,7 +63,7 @@ export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> =>
 
 // export const getPosts = () => apiClient<Post[]>('/posts')
 
-export const getPostById = async (postId: string): Promise<PostDetails> => {
+export const getPostById = async (postId: string): Promise<Post> => {
   const response = await request<unknown>(`/posts/${encodeURIComponent(postId)}`)
 
   return postSchema.parse(response)

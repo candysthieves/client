@@ -9,26 +9,37 @@ export type FormRecaptchaProps<T extends FieldValues> = Omit<
 > & {
   control: Control<T>
   name: Path<T>
+  onVerify?: (token: string) => void
 }
 
 const FormRecaptchaInner = <T extends FieldValues>(
-  { control, name, ...props }: FormRecaptchaProps<T>,
+  { control, name, onVerify, ...recaptchaProps }: FormRecaptchaProps<T>,
   ref: Ref<ReCAPTCHA>
 ) => {
   const {
-    field: { onChange },
+    field: { onChange: setToken },
     fieldState: { error },
   } = useController({
     control,
     name,
   })
 
+  const handleTokenChange = (token: null | string) => {
+    setToken(token)
+
+    if (token) {
+      onVerify?.(token)
+    }
+  }
+
+  const handleExpired = () => setToken('')
+
   return (
     <Recaptcha
       ref={ref}
-      {...props}
-      onChange={onChange}
-      onExpired={() => onChange('')}
+      {...recaptchaProps}
+      onChange={handleTokenChange}
+      onExpired={handleExpired}
       errorMessage={error?.message}
     />
   )

@@ -91,13 +91,13 @@ export const apiDeletedPostAuthorSchema = z.object({
   avatarPreviewUrl: imageMediaSchema.nullable(),
 })
 
-const deletedPostItemResponseSchema = z.object({
+export const deletedPostItemResponseSchema = z.object({
   id: z.uuid(),
-  description: z.string().nullable(), // описание может быть null
+  description: z.string().nullable(),
   images: z.array(imageMediaSchema).nullable(),
-  preview: imageSchema.nullable(), // превью может быть null
+  preview: imageSchema.nullable(),
   createdAt: z.string(),
-  willBeDeleted: z.string().nullable(), // дата окончательного удаления
+  willBeDeleted: z.string().nullable(),
   author: apiDeletedPostAuthorSchema,
 })
 

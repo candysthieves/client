@@ -2,14 +2,14 @@ import { Button, Clock, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import type { Post } from '@/lib/model'
+import type { DeletedPostItem, Post } from '@/lib/model'
 import { ConfirmDeletePostModal } from '@/components'
 import { useHardDeletePost } from '@/lib/posts/mutations/useHardDeletePost'
 import { useRestorePost } from '@/lib/posts/mutations/useRestorePost'
 import s from './DeletedPostCard.module.scss'
 
 type DeletedPostCardProps = {
-  post: Post
+  post: DeletedPostItem
   userId: string
   deletionDate: Date
   href: string

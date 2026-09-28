@@ -105,12 +105,17 @@ export const deletedPostItemSchema = deletedPostItemResponseSchema
   .refine(post => (post.images?.length ?? 0) > 0, 'Deleted post must have at least one image')
   .transform(post => {
     const images = post.images ?? []
+    const preview = post.preview ?? images[0]
+
+    if (!preview) {
+      throw new Error('Deleted post must have a preview image')
+    }
 
     return {
       ...post,
       description: post.description ?? '',
       images,
-      preview: post.preview ?? images[0] ?? null,
+      preview,
     }
   })
 

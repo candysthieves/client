@@ -1,7 +1,7 @@
 'use client'
 
 import { Typography } from '@candy.thieves/ui-kit-lumos'
-import type { DeletedPostItem, Post } from '@/lib/model'
+import type { DeletedPostItem } from '@/lib/model'
 import { DeletedPostCard } from './DeletedPostCard'
 import s from './DeletedPosts.module.scss'
 

@@ -37,7 +37,7 @@ export const MobilePostFeed = ({
   const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile ?? {}
 
   const isMobile = useIsMobileViewport()
-  const { isAuthenticated } = useAuth()
+  const { user } = useAuth()
   const postRefs = useRef<(HTMLElement | null)[]>([])
 
   useEffect(() => {
@@ -57,6 +57,7 @@ export const MobilePostFeed = ({
 
       <div className={s.slides}>
         {posts.map((post, index) => {
+          const isAuthor = user?.id === post.author.id
           return (
             <article
               key={post.id}
@@ -84,10 +85,10 @@ export const MobilePostFeed = ({
 
                 {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
                 <PostActionMenu
-                  isAuthor={isAuthenticated}
+                  isAuthor={isAuthor}
                   onEdit={() => onEdit(index)}
                   onDelete={() => onDelete(post.id)}
-                  canEdit={canEdit}
+                  canEdit={canEdit && isAuthor}
                   deleteLabel={deleteLabel}
                 />
               </div>

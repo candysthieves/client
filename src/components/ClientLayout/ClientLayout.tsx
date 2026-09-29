@@ -1,6 +1,5 @@
 'use client'
 
-import { LinearProgress } from '@candy.thieves/ui-kit-lumos'
 import { ReactNode } from 'react'
 import { ToastContainer } from '@/components'
 import { AppHeader } from '@/components/AppHeader'

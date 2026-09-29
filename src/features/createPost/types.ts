@@ -4,6 +4,7 @@ import {
   addPostResponseSchema,
   addPostStateSchema,
   draftPostFileSchema,
+  editProfileAvatarSchema,
   locationSchema,
   postCreatedEventSchema,
   postFileSchema,
@@ -27,9 +28,11 @@ export type AddPostState = z.infer<typeof addPostStateSchema>
 //   description: string
 //   locations: Location[]
 // }
+export type EditProfileAvatarState = z.infer<typeof editProfileAvatarSchema>
 
 export type CreatePostStep = z.infer<typeof addPostStateSchema>['step']
 // type CreatePostStep = 'crop' | 'publication' | 'upload'
+export type EditProfileAvatarStep = z.infer<typeof editProfileAvatarSchema>['step']
 
 export type AddPostRequest = z.infer<typeof addPostRequestSchema>
 // type AddPostRequest = {

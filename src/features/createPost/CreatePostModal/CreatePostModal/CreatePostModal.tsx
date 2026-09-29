@@ -217,7 +217,7 @@ export const CreatePostModal = ({ userProfile }: CreatePostModalProps) => {
     changeStep('upload')
   }
 
-  // ConfirmCloseCreatePostModal handlers
+  // ConfirmDeleteProfileAvatarModal handlers
   const handleConfirm = async () => {
     await saveToDraftHandler()
     closeCreation()

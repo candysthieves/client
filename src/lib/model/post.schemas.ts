@@ -32,6 +32,11 @@ export const addPostStateSchema = z.object({
   locations: z.array(locationSchema),
 })
 
+export const editProfileAvatarSchema = z.object({
+  file: postFileSchema.nullable(),
+  step: z.enum(['crop', 'upload']),
+})
+
 export const addPostRequestSchema = z.object({
   files: z.array(z.instanceof(File)),
   description: z.string().max(500),

@@ -1,8 +1,6 @@
-import { request } from '@/lib/api/request'
-import { UsersCountResponse, usersCountResponseSchema } from '@/lib/model'
+import { requestValidated } from '@/lib/api/requestValidated'
+import { usersCountResponseSchema } from '@/lib/model'
 
-export const getUsersCount = async (init?: RequestInit): Promise<UsersCountResponse> => {
-  const response = await request<unknown>('/users/count', init)
-
-  return usersCountResponseSchema.parse(response)
+export const getUsersCount = async (init?: RequestInit) => {
+  return requestValidated('/users/count', usersCountResponseSchema, init)
 }

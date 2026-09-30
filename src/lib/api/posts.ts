@@ -1,11 +1,12 @@
 import { AddPostRequest, AddPostResponse } from '@/features/createPost'
 import { request } from '@/lib/api/request'
+import { requestValidated } from '@/lib/api/requestValidated'
 import { addPostResponseSchema, Post, postSchema } from '@/lib/model'
 
 // TEMPORARY
 const API_BASE_URL = 'http://localhost:8080'
 
-export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> => {
+export const addPost = (data: AddPostRequest): Promise<AddPostResponse> => {
   const formData = new FormData()
 
   formData.append('description', data.description)
@@ -14,21 +15,16 @@ export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> =>
   })
   formData.append('locations', JSON.stringify(data.locations))
 
-  const response = await request<unknown>('/posts', {
+  return requestValidated('/posts', addPostResponseSchema, {
     method: 'POST',
     body: formData,
   })
-
-  return addPostResponseSchema.parse(response)
 }
 
 // export const getPosts = () => apiClient<Post[]>('/posts')
 
-export const getPostById = async (postId: string): Promise<Post> => {
-  const response = await request<unknown>(`/posts/${encodeURIComponent(postId)}`)
-
-  return postSchema.parse(response)
-}
+export const getPostById = (postId: string) =>
+  requestValidated(`/posts/${encodeURIComponent(postId)}`, postSchema)
 
 export const deletePost = (postId: string) =>
   request<void>(`/posts/${encodeURIComponent(postId)}/soft-delete`, {

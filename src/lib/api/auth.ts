@@ -1,4 +1,5 @@
 import { request } from '@/lib/api/request'
+import { requestValidated } from '@/lib/api/requestValidated'
 import {
   accessTokenResponseSchema,
   LoginRequest,
@@ -14,13 +15,11 @@ import {
   ValidatePasswordRecoveryCodeRequest,
 } from '@/lib/model'
 
-export const login = async (data: LoginRequest): Promise<LoginResponse> => {
-  const response = await request<unknown>('/auth/login', {
+export const login = (data: LoginRequest): Promise<LoginResponse> => {
+  return requestValidated('/auth/login', loginResponseSchema, {
     method: 'POST',
     body: JSON.stringify(data),
   })
-
-  return loginResponseSchema.parse(response)
 }
 
 export const registration = (data: RegistrationRequest) =>
@@ -54,13 +53,10 @@ export const newPassword = (data: NewPasswordRequest) =>
     body: JSON.stringify(data),
   })
 
-export const refreshToken = async () => {
-  const response = await request<unknown>('/auth/refresh-token', {
+export const refreshToken = () =>
+  requestValidated('/auth/refresh-token', accessTokenResponseSchema, {
     method: 'POST',
   })
-
-  return accessTokenResponseSchema.parse(response)
-}
 
 export const logout = () =>
   request<void>('/auth/logout', {
@@ -68,11 +64,7 @@ export const logout = () =>
   })
 
 // method: 'GET'
-export const authMe = async (): Promise<UserResponse> => {
-  const response = await request<unknown>('/auth/me')
-
-  return userResponseSchema.parse(response)
-}
+export const authMe = (): Promise<UserResponse> => requestValidated('/auth/me', userResponseSchema)
 
 // method: 'GET'
 export const validatePasswordRecoveryCode = ({

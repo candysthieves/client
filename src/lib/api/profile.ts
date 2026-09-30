@@ -1,3 +1,4 @@
+import { requestValidated } from '@/lib/api/requestValidated'
 import {
   DeletedPostItem,
   GetDeletedPostsResponse,
@@ -12,16 +13,10 @@ import { request } from './request'
 
 export const PROFILE_POSTS_PAGE_SIZE = 12
 
-export const getUserProfile = async (userId: string): Promise<UserProfile> => {
-  const data = await request<unknown>(`/users/profile/${encodeURIComponent(userId)}`)
+export const getUserProfile = (userId: string): Promise<UserProfile> =>
+  requestValidated(`/users/profile/${encodeURIComponent(userId)}`, userProfileSchema)
 
-  return userProfileSchema.parse(data)
-}
-
-export const getUserPosts = async (
-  userId: string,
-  cursor?: string
-): Promise<ProfilePostsResponse> => {
+export const getUserPosts = (userId: string, cursor?: string): Promise<ProfilePostsResponse> => {
   const searchParams = new URLSearchParams({
     limit: String(PROFILE_POSTS_PAGE_SIZE),
   })
@@ -30,22 +25,18 @@ export const getUserPosts = async (
     searchParams.set('cursor', cursor)
   }
 
-  const data = await request<unknown>(
-    `/posts/user/${encodeURIComponent(userId)}?${searchParams.toString()}`
+  return requestValidated(
+    `/posts/user/${encodeURIComponent(userId)}?${searchParams.toString()}`,
+    profilePostsResponseSchema
   )
-
-  return profilePostsResponseSchema.parse(data)
 }
 
-export const getDeletedPosts = async (): Promise<GetDeletedPostsResponse> => {
-  const response = await request<unknown>('/posts/deleted-posts', {
+export const getDeletedPosts = (): Promise<GetDeletedPostsResponse> =>
+  requestValidated('/posts/deleted-posts', getDeletedPostsResponseSchema, {
     method: 'GET',
   })
-  return getDeletedPostsResponseSchema.parse(response)
-}
-export const getDeletedPostById = async (postId: string): Promise<DeletedPostItem> => {
-  const response = await request<unknown>(`/posts/deleted-posts/${postId}`, {
+
+export const getDeletedPostById = (postId: string): Promise<DeletedPostItem> =>
+  requestValidated(`/posts/deleted-posts/${encodeURIComponent(postId)}`, deletedPostItemSchema, {
     method: 'GET',
   })
-  return deletedPostItemSchema.parse(response)
-}

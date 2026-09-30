@@ -16,7 +16,7 @@ export const profilePostsResponseSchema = z.object({
 })
 
 export const userProfileSchema = z.object({
-  id: z.uuid(),
+  id: z.string(),
   username: z.string(),
   description: z.string().nullable(),
   avatarUrl: imageSchema.nullable(),

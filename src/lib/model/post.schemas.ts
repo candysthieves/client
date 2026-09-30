@@ -37,7 +37,7 @@ export const addPostResponseSchema = z.object({
 })
 
 export const postAuthorSchema = z.object({
-  id: z.uuid(),
+  id: z.string(),
   username: z.string(),
   avatarPreviewUrl: imageSchema.nullable(),
 })
@@ -70,12 +70,6 @@ export const commentSchema = z.object({
   likesCount: z.number().int().nonnegative().optional(),
 })
 
-export const apiDeletedPostAuthorSchema = z.object({
-  id: z.uuid(),
-  username: z.string(),
-  avatarPreviewUrl: imageSchema.nullable(),
-})
-
 export const deletedPostItemResponseSchema = z.object({
   id: z.uuid(),
   description: z.string().nullable(),
@@ -83,7 +77,7 @@ export const deletedPostItemResponseSchema = z.object({
   preview: imageSchema.nullable(),
   createdAt: z.string(),
   willBeDeleted: z.string().nullable(),
-  author: apiDeletedPostAuthorSchema,
+  author: postAuthorSchema,
 })
 
 export const deletedPostItemSchema = deletedPostItemResponseSchema

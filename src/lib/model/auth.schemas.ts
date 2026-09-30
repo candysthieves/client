@@ -109,7 +109,7 @@ export const apiErrorResponseSchema = z.object({
 })
 
 export const userResponseSchema = z.object({
-  id: z.uuid(),
+  id: z.string(),
   email: emailSchema,
   username: usernameSchema,
   firstName: z.string().nullable(),

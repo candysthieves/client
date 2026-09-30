@@ -1,5 +1,5 @@
-import { ToastError } from '@/components'
-import { ApiError } from '@/lib/api'
+import { ToastError } from '@/components/Toast/Toast'
+import { ApiError } from '@/lib/api/apiError'
 import { ResponseValidationError } from '@/lib/api/responseValidationError'
 
 export function showGlobalError(error: unknown) {

@@ -9,7 +9,6 @@ import {
   userProfileSchema,
   profilePostsResponseSchema,
 } from '@/lib/model'
-import { request } from './request'
 
 export const PROFILE_POSTS_PAGE_SIZE = 12
 

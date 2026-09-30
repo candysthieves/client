@@ -5,5 +5,8 @@ import { RegistrationConfirmationRequest } from '@/lib/model'
 export function useRegistrationConfirmation() {
   return useMutation({
     mutationFn: (data: RegistrationConfirmationRequest) => registrationConfirmation(data),
+    meta: {
+      skipGlobalError: true,
+    },
   })
 }

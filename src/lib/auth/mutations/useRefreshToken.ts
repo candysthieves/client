@@ -8,7 +8,9 @@ export function useRefreshToken() {
 
   return useMutation({
     mutationFn: refreshToken,
-
+    meta: {
+      skipGlobalError: true,
+    },
     onSuccess: async ({ accessToken }) => {
       localStorage.setItem(ACCESS_TOKEN_LS_KEY, accessToken)
 

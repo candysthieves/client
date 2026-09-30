@@ -97,7 +97,7 @@ export default function SignUpPage() {
           }
           return
         }
-        throw error
+        ToastError({ messages: 'Something went wrong. Please try again.' })
       },
     })
   }

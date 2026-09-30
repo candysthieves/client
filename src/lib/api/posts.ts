@@ -1,10 +1,7 @@
 import { AddPostRequest, AddPostResponse } from '@/features/createPost'
 import { request } from '@/lib/api/request'
 import { requestValidated } from '@/lib/api/requestValidated'
-import { addPostResponseSchema, Post, postSchema } from '@/lib/model'
-
-// TEMPORARY
-const API_BASE_URL = 'http://localhost:8080'
+import { addPostResponseSchema, postSchema } from '@/lib/model'
 
 export const addPost = (data: AddPostRequest): Promise<AddPostResponse> => {
   const formData = new FormData()

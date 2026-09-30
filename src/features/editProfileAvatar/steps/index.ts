@@ -1,2 +1,2 @@
-export { CropStep } from './PreviewStep/PreviewStep'
-export { UploadStep } from './UploadStep/UploadStep'
+export { PreviewStep } from './PreviewStep/PreviewStep'
+export { UploadAvatarStep } from '@/features/editProfileAvatar/steps/UploadAvatarStep/UploadAvatarStep'

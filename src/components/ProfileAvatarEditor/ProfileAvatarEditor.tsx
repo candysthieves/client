@@ -2,6 +2,8 @@ import { Button, MainAvatar } from '@candy.thieves/ui-kit-lumos'
 import { useState } from 'react'
 import { ProfileAvatarModal } from '@/features/editProfileAvatar'
 import { ConfirmDeleteProfileAvatarModal } from '@/features/editProfileAvatar/EditProfileAvatarModal'
+import { useDeleteAvatar } from '@/lib/avatar'
+import { useDeletePost } from '@/lib/posts'
 import s from './ProfileAvatarEditor.module.scss'
 
 type ProfileAvatarEditorProps = {
@@ -13,6 +15,8 @@ export const ProfileAvatarEditor = ({
   avatarSource,
   userName = 'UserName',
 }: ProfileAvatarEditorProps) => {
+  const { mutate: deleteAvatar, isPending: isDeletingAvatar } = useDeleteAvatar()
+
   const [isAvatarEditModalOpen, setIsAvatarEditModalOpen] = useState(false)
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false)
 
@@ -33,9 +37,8 @@ export const ProfileAvatarEditor = ({
   }
 
   const handleConfirm = async () => {
-    // await saveToDraftHandler() <- delete
-    // await deleteProfileAvatar()
-    // closeConfirmDeleteModal()
+    await deleteAvatar()
+    closeConfirmDeleteModal()
   }
 
   return (

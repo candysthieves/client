@@ -34,7 +34,7 @@ export const addPostStateSchema = z.object({
 
 export const editProfileAvatarSchema = z.object({
   file: postFileSchema.nullable(),
-  step: z.enum(['crop', 'upload']),
+  step: z.enum(['preview', 'upload']),
 })
 
 export const addPostRequestSchema = z.object({
@@ -43,8 +43,16 @@ export const addPostRequestSchema = z.object({
   locations: z.array(locationSchema),
 })
 
+export const updateAvatarRequestSchema = z.object({
+  file: z.instanceof(File),
+})
+
 export const addPostResponseSchema = z.object({
   postId: z.uuid(),
+})
+
+export const updateAvatarResponseSchema = z.object({
+  userId: z.string(),
 })
 
 export const imageMediaSchema = z.object({
@@ -71,6 +79,11 @@ export const postSchema = z.object({
 
 export const postDetailsSchema = postSchema.extend({
   isOwner: z.boolean(),
+})
+
+export const avatarSchema = z.object({
+  avatarUrl: imageMediaSchema,
+  avatarPreviewUrl: imageMediaSchema,
 })
 
 export const postImageSchema = z

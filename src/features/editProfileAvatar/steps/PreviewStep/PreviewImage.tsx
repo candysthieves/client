@@ -1,15 +1,16 @@
 import { clsx } from '@candy.thieves/ui-kit-lumos'
+import Image from 'next/image'
 import { useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
-import s from './CropStep.module.scss'
+import s from './PreviewStep.module.scss'
 
-type CropImagePreviewProps = {
+type PreviewImageProps = {
   src: string
   alt: string
   className?: string
 }
 
-export const CropImagePreview = ({ src, alt, className }: CropImagePreviewProps) => {
+export const PreviewImage = ({ src, alt, className }: PreviewImageProps) => {
   const [isImgLoading, setIsImgLoading] = useState(true)
 
   return (
@@ -26,10 +27,12 @@ export const CropImagePreview = ({ src, alt, className }: CropImagePreviewProps)
         />
       )}
 
-      <img
+      <Image
         src={src}
-        alt={alt}
-        className={clsx(className, {
+        alt={''}
+        width={332}
+        height={340}
+        className={clsx(className, s.imageItem, {
           [s.hidden]: isImgLoading,
         })}
         onLoad={() => setIsImgLoading(false)}

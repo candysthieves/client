@@ -8,6 +8,8 @@ import {
   locationSchema,
   postCreatedEventSchema,
   postFileSchema,
+  updateAvatarRequestSchema,
+  updateAvatarResponseSchema,
 } from '@/lib/model'
 
 // Posts
@@ -40,10 +42,14 @@ export type AddPostRequest = z.infer<typeof addPostRequestSchema>
 //   description: string
 //   locations: Location[]
 // }
+export type UpdateAvatarRequest = z.infer<typeof updateAvatarRequestSchema>
+
 export type AddPostResponse = z.infer<typeof addPostResponseSchema>
 // {
 //   "postId": string
 // }
+
+export type UpdateAvatarResponse = z.infer<typeof updateAvatarResponseSchema>
 
 export enum AspectRatio {
   PORTRAIT = 'portrait', // 4:5

@@ -299,7 +299,7 @@ export const CreatePostModal = ({ userProfile }: CreatePostModalProps) => {
         publishingPostIdRef.current = postId
         setIsProcessing(true)
       },
-      onError: error => {
+      onError: () => {
         ToastError({
           title: 'Post publish Error',
           messages: 'Failed to publish post',

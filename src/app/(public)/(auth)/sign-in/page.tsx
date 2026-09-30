@@ -46,7 +46,7 @@ export default function SignInForm() {
           message: SIGN_IN_SUCCESS_MESSAGE,
         })
 
-        router.replace('/profile')
+        router.replace('/')
       },
 
       onError: error => {

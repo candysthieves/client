@@ -1,0 +1,37 @@
+@use '@/styles/mixins' as *;
+
+.notFoundContainer {
+  @include flex(flex, center, center);
+
+  box-sizing: border-box;
+  min-height: calc(100vh - 3.75rem);
+  padding: 1.5rem;
+  background-color: var(--color-dark-900);
+}
+
+.notFoundContent {
+  @include flex(flex, center, center);
+
+  flex-direction: column;
+  gap: 1rem;
+
+  width: 100%;
+  max-width: 25rem;
+
+  text-align: center;
+}
+
+.animationWrapper,
+.animationPlaceholder {
+  @include width-height(20rem);
+
+  @include media-mobile {
+    @include width-height(15rem);
+
+    margin-bottom: 1rem;
+  }
+}
+
+.animationWrapper {
+  position: relative;
+}

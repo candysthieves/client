@@ -33,7 +33,7 @@ export const sidebarItems: SidebarItem[] = [
   },
   {
     activeIcon: <Person />,
-    href: '/profile',
+    href: (userId: string) => `/profile/${userId}`,
     icon: <PersonOutline />,
     id: 'profile',
     label: 'My Profile',

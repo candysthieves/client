@@ -3,11 +3,11 @@
 import { Carousel } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
 import { useId } from 'react'
-import type { PostImage } from '@/lib/model'
+import type { ImageData } from '@/lib/model'
 import s from './PostImagesCarousel.module.scss'
 
 type Props = {
-  images: PostImage[]
+  images: ImageData[]
   alt?: string
   /** 'natural' — контейнер сжимается под первую картинку (object-fit: contain), без рамок, пока размеры совпадают */
   natural?: boolean
@@ -15,9 +15,9 @@ type Props = {
 
 // широкоформатные изображения (например 16:9) вписываются в область целиком,
 // остальные заполняют её с кадрированием
-const isWideImage = ({ width = 0, height = 0 }: PostImage) => height > 0 && width / height > 1
+const isWideImage = ({ width = 0, height = 0 }: ImageData) => height > 0 && width / height > 1
 
-const getRatio = ({ width = 0, height = 0 }: PostImage) =>
+const getRatio = ({ width = 0, height = 0 }: ImageData) =>
   height > 0 && width > 0 ? width / height : null
 
 const KIT_SLIDE_CLASS = '_slide_1abcz_62'
@@ -49,7 +49,7 @@ export const PostImagesCarousel = ({ images, alt, natural = false }: Props) => {
     )
     .join('\n')
 
-  const renderImage = (image: PostImage) => (
+  const renderImage = (image: ImageData) => (
     <Image
       key={image.url}
       src={image.url}

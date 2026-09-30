@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/constants'
+import { imageSchema } from './image.schemas'
 
 export const locationSchema = z.object({
   fileId: z.uuid(),
@@ -15,13 +16,6 @@ export const postFileSchema = z.object({
 
 export const draftPostFileSchema = z.object({
   file: z.instanceof(File),
-})
-
-export const imageSchema = z.object({
-  fileId: z.uuid(),
-  url: z.url(),
-  width: z.number().nonnegative(),
-  height: z.number().nonnegative(),
 })
 
 export const addPostStateSchema = z.object({
@@ -42,30 +36,21 @@ export const addPostResponseSchema = z.object({
   postId: z.uuid(),
 })
 
-export const imageMediaSchema = z.object({
-  fileId: z.uuid(),
-  url: z.url(),
-  width: z.number().nonnegative(),
-  height: z.number().nonnegative(),
-})
-
 export const postAuthorSchema = z.object({
   id: z.uuid(),
   username: z.string(),
-  avatarPreviewUrl: imageMediaSchema.nullable(),
+  avatarPreviewUrl: imageSchema.nullable(),
 })
 
 export const postSchema = z.object({
   id: z.uuid(),
   description: z.string(),
-  images: z.array(imageMediaSchema),
-  preview: imageMediaSchema.nullable(),
+  images: z.array(imageSchema),
+  preview: imageSchema.nullable(),
   createdAt: z.string(),
   willBeDeleted: z.string().nullable().optional(),
   author: postAuthorSchema,
 })
-
-export const postDetailsSchema = postSchema.extend({})
 
 export const postImageSchema = z
   .instanceof(File)
@@ -88,13 +73,13 @@ export const commentSchema = z.object({
 export const apiDeletedPostAuthorSchema = z.object({
   id: z.uuid(),
   username: z.string(),
-  avatarPreviewUrl: imageMediaSchema.nullable(),
+  avatarPreviewUrl: imageSchema.nullable(),
 })
 
 export const deletedPostItemResponseSchema = z.object({
   id: z.uuid(),
   description: z.string().nullable(),
-  images: z.array(imageMediaSchema).nullable(),
+  images: z.array(imageSchema).nullable(),
   preview: imageSchema.nullable(),
   createdAt: z.string(),
   willBeDeleted: z.string().nullable(),

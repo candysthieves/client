@@ -4,7 +4,7 @@ import { Avatar, Carousel, ReadMore, Typography } from '@candy.thieves/ui-kit-lu
 import Image from 'next/image'
 import Link from 'next/link'
 import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
-import type { PostImage } from '@/lib/model'
+import type { ImageData } from '@/lib/model'
 import { useTimeAgo } from '@/lib/utils'
 import s from './PostCard.module.scss'
 import { useReadMoreClamp } from './useReadMoreClamp'
@@ -22,7 +22,7 @@ const MIN_EXPANDED_IMAGE_HEIGHT = 60
 
 type PostCardProps = {
   postId: string
-  images: PostImage[]
+  images: ImageData[]
   username: string
   createdAt: string
   caption: string

@@ -1,6 +1,10 @@
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
+import type { ProfilePostsResponse } from '@/lib/model'
 import { ProfileClient } from '@/app/(public)/profile/[id]/ProfileClient'
+import { getServerAccessToken, getServerUserPosts, getServerUserProfile } from '@/lib/api/server'
+import { profileKeys } from '@/lib/profile/profileKeys'
 
 type Params = { id: string }
 type SearchParams = { postId?: string; action?: string }
@@ -35,9 +39,41 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
     redirect(`/profile/${userId}?${newSearchParams.toString()}`)
   }
 
+  const queryClient = new QueryClient()
+
+  /**
+   * Access token is stored in localStorage, so it is not available on the server.
+   * We get a new one from the HttpOnly refresh cookie.
+   */
+  const accessToken = await getServerAccessToken()
+
+  /**
+   * If the token is not available (guest, invalid refresh cookie, api is down),
+   * the page is rendered without prefetched data and the client queries take over.
+   */
+  if (accessToken) {
+    await Promise.all([
+      queryClient.prefetchQuery({
+        queryKey: profileKeys.detail(userId),
+        queryFn: () => getServerUserProfile(userId, accessToken),
+        retry: false,
+      }),
+      queryClient.prefetchInfiniteQuery({
+        queryKey: profileKeys.posts(userId),
+        queryFn: ({ pageParam }) => getServerUserPosts(userId, accessToken, pageParam),
+        initialPageParam: undefined as string | undefined,
+        getNextPageParam: (lastPage: ProfilePostsResponse) =>
+          lastPage.hasNextPage ? (lastPage.nextCursor ?? undefined) : undefined,
+        retry: false,
+      }),
+    ])
+  }
+
   return (
-    <Suspense fallback={null}>
-      <ProfileClient userId={userId} postId={postId} action={action} />
-    </Suspense>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Suspense fallback={null}>
+        <ProfileClient userId={userId} postId={postId} action={action} />
+      </Suspense>
+    </HydrationBoundary>
   )
 }

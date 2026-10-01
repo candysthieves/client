@@ -8,6 +8,11 @@
   left: 0;
 }
 
+.headerPlaceholder {
+  min-height: $header-height;
+  background-color: var(--color-dark-700);
+}
+
 .layout {
   @include container;
 

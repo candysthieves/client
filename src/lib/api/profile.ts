@@ -1,7 +1,9 @@
 import {
   DeletedPostItem,
   GetDeletedPostsResponse,
+  MyProfileResponse,
   ProfilePostsResponse,
+  UpdateMyProfileRequest,
   UserProfile,
   deletedPostItemSchema,
   getDeletedPostsResponseSchema,
@@ -37,3 +39,12 @@ export const getDeletedPostById = async (postId: string): Promise<DeletedPostIte
   })
   return deletedPostItemSchema.parse(response)
 }
+
+export const updateMyProfile = (body: UpdateMyProfileRequest): Promise<MyProfileResponse> =>
+  request<MyProfileResponse>('/users/my-profile', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+
+// Backend has no GET for the current user's profile: PATCH with an empty body returns it unchanged.
+export const getMyProfile = (): Promise<MyProfileResponse> => updateMyProfile({})

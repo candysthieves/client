@@ -14,17 +14,21 @@ import {
   validatePasswordRecoveryCodeSchema,
 } from './auth.schemas'
 import { feedPostsResponseSchema } from './feed.schemas'
+import { imageSchema } from './image.schemas'
 import {
   commentSchema,
-  imageMediaSchema,
   postAuthorSchema,
-  postDetailsSchema,
   postSchema,
   deletedPostItemSchema,
   getDeletedPostsResponseSchema,
   avatarSchema,
 } from './post.schemas'
-import { profilePostSchema, profilePostsResponseSchema, userProfileSchema } from './profile.schemas'
+import {
+  profilePostSchema,
+  profilePostsResponseSchema,
+  userProfileSchema,
+  viewerStatusSchema,
+} from './profile.schemas'
 import { usersCountResponseSchema } from './users.schemas'
 
 // Auth
@@ -37,8 +41,6 @@ export type NewPasswordRequest = z.infer<typeof newPasswordSchema>
 export type PasswordRecoveryRequest = z.infer<typeof passwordRecoverySchema>
 export type Post = z.infer<typeof postSchema>
 export type PostAuthor = z.infer<typeof postAuthorSchema>
-export type PostDetails = z.infer<typeof postDetailsSchema>
-export type PostImage = z.infer<typeof imageMediaSchema>
 export type Avatar = z.infer<typeof avatarSchema>
 export type Comment = z.infer<typeof commentSchema>
 export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirmationSchema>
@@ -59,3 +61,5 @@ export type DeletedPostItem = z.infer<typeof deletedPostItemSchema>
 export type GetDeletedPostsResponse = z.infer<typeof getDeletedPostsResponseSchema>
 export type UsersCountResponse = z.infer<typeof usersCountResponseSchema>
 export type FeedPostsResponse = z.infer<typeof feedPostsResponseSchema>
+export type ImageData = z.infer<typeof imageSchema>
+export type ViewerStatus = z.infer<typeof viewerStatusSchema>

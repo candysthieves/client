@@ -1,22 +1,26 @@
 import { request } from '@/lib/api/request'
+import { requestValidated } from '@/lib/api/requestValidated'
 import {
-  AccessTokenResponse,
+  accessTokenResponseSchema,
   LoginRequest,
   LoginResponse,
+  loginResponseSchema,
   NewPasswordRequest,
   PasswordRecoveryRequest,
   RegistrationConfirmationRequest,
   RegistrationRequest,
   ResendConfirmationEmailRequest,
   UserResponse,
+  userResponseSchema,
   ValidatePasswordRecoveryCodeRequest,
 } from '@/lib/model'
 
-export const login = (data: LoginRequest) =>
-  request<LoginResponse>('/auth/login', {
+export const login = (data: LoginRequest): Promise<LoginResponse> => {
+  return requestValidated('/auth/login', loginResponseSchema, {
     method: 'POST',
     body: JSON.stringify(data),
   })
+}
 
 export const registration = (data: RegistrationRequest) =>
   request<void>('/auth/registration', {
@@ -50,7 +54,7 @@ export const newPassword = (data: NewPasswordRequest) =>
   })
 
 export const refreshToken = () =>
-  request<AccessTokenResponse>('/auth/refresh-token', {
+  requestValidated('/auth/refresh-token', accessTokenResponseSchema, {
     method: 'POST',
   })
 
@@ -60,7 +64,7 @@ export const logout = () =>
   })
 
 // method: 'GET'
-export const authMe = (): Promise<UserResponse> => request<UserResponse>('/auth/me')
+export const authMe = (): Promise<UserResponse> => requestValidated('/auth/me', userResponseSchema)
 
 // method: 'GET'
 export const validatePasswordRecoveryCode = ({

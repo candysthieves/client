@@ -9,7 +9,9 @@ export function useHardDeletePost(userId?: string) {
 
   return useMutation({
     mutationFn: (postId: string) => hardDeletePost(postId),
-
+    meta: {
+      skipGlobalError: true,
+    },
     onSuccess: async (_, postId) => {
       ToastSuccess({ message: 'Post permanently deleted' })
 

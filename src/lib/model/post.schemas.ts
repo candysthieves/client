@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/constants'
+import { imageSchema } from './image.schemas'
 
 export const locationSchema = z.object({
   fileId: z.uuid(),
@@ -15,13 +16,6 @@ export const postFileSchema = z.object({
 
 export const draftPostFileSchema = z.object({
   file: z.instanceof(File),
-})
-
-export const imageSchema = z.object({
-  fileId: z.uuid(),
-  url: z.url(),
-  width: z.number().nonnegative(),
-  height: z.number().nonnegative(),
 })
 
 export const addPostStateSchema = z.object({
@@ -63,22 +57,19 @@ export const imageMediaSchema = z.object({
 })
 
 export const postAuthorSchema = z.object({
-  id: z.uuid(),
+  id: z.string(),
   username: z.string(),
+  avatarPreviewUrl: imageSchema.nullable(),
 })
 
 export const postSchema = z.object({
   id: z.uuid(),
   description: z.string(),
-  images: z.array(imageMediaSchema),
-  preview: imageMediaSchema,
+  images: z.array(imageSchema),
+  preview: imageSchema.nullable(),
   createdAt: z.string(),
   willBeDeleted: z.string().nullable().optional(),
   author: postAuthorSchema,
-})
-
-export const postDetailsSchema = postSchema.extend({
-  isOwner: z.boolean(),
 })
 
 export const avatarSchema = z.object({
@@ -104,28 +95,33 @@ export const commentSchema = z.object({
   likesCount: z.number().int().nonnegative().optional(),
 })
 
-export const apiDeletedPostAuthorSchema = z.object({
+export const deletedPostItemResponseSchema = z.object({
   id: z.uuid(),
-  username: z.string(),
-})
-
-const deletedPostItemResponseSchema = z.object({
-  id: z.uuid(),
-  description: z.string().nullable(), // описание может быть null
-  images: z.array(imageSchema),
-  preview: imageSchema.nullable(), // превью может быть null
+  description: z.string().nullable(),
+  images: z.array(imageSchema).nullable(),
+  preview: imageSchema.nullable(),
   createdAt: z.string(),
-  willBeDeleted: z.string().nullable(), // дата окончательного удаления
-  author: apiDeletedPostAuthorSchema,
+  willBeDeleted: z.string().nullable(),
+  author: postAuthorSchema,
 })
 
 export const deletedPostItemSchema = deletedPostItemResponseSchema
-  .refine(post => post.images.length > 0, 'Deleted post must have at least one image')
-  .transform(post => ({
-    ...post,
-    description: post.description ?? '',
-    preview: post.preview ?? post.images[0]!,
-  }))
+  .refine(post => (post.images?.length ?? 0) > 0, 'Deleted post must have at least one image')
+  .transform(post => {
+    const images = post.images ?? []
+    const preview = post.preview ?? images[0]
+
+    if (!preview) {
+      throw new Error('Deleted post must have a preview image')
+    }
+
+    return {
+      ...post,
+      description: post.description ?? '',
+      images,
+      preview,
+    }
+  })
 
 // Схема полного ответа сервера с курсорной пагинацией
 export const getDeletedPostsResponseSchema = z.object({

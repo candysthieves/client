@@ -5,5 +5,8 @@ import { ResendConfirmationEmailRequest } from '@/lib/model'
 export function useResendConfirmationEmail() {
   return useMutation({
     mutationFn: (data: ResendConfirmationEmailRequest) => resendConfirmationEmail(data),
+    meta: {
+      skipGlobalError: true,
+    },
   })
 }

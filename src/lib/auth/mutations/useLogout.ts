@@ -9,7 +9,9 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: logout,
-
+    meta: {
+      skipGlobalError: true,
+    },
     // или возможно onSuccess
     onSettled: () => {
       localStorage.removeItem(ACCESS_TOKEN_LS_KEY)

@@ -5,6 +5,7 @@ import { addPost } from '@/lib/api/posts'
 export function useAddPost() {
   return useMutation({
     mutationFn: (data: AddPostRequest) => addPost(data),
+    meta: { skipGlobalError: true },
   })
 }
 

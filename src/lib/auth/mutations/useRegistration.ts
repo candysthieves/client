@@ -5,5 +5,8 @@ import { RegistrationRequest } from '@/lib/model'
 export function useRegistration() {
   return useMutation({
     mutationFn: (data: RegistrationRequest) => registration(data),
+    meta: {
+      skipGlobalError: true,
+    },
   })
 }

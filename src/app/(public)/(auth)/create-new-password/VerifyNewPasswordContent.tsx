@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
+import { ToastError } from '@/components'
 import { ApiError } from '@/lib/api'
 import { useValidatePasswordRecoveryCode } from '@/lib/auth'
 import { mapNewPasswordConfirmationError } from '@/lib/utils/mapNewPasswordConfirmationError'
@@ -32,7 +33,7 @@ export const VerifyNewPasswordContent = () => {
         return
       }
       console.error(error)
-      throw error
+      ToastError({ messages: 'Something went wrong. Please try again.' })
     }
   }, [recoveryCode, router, isSuccess, isError, error])
 

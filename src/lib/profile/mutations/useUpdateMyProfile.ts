@@ -9,6 +9,8 @@ export const useUpdateMyProfile = () => {
 
   return useMutation({
     mutationFn: (body: UpdateMyProfileRequest) => updateMyProfile(body),
+    // GeneralInformationForm shows its own field errors and "Server is not available!" toast.
+    meta: { skipGlobalError: true },
     onSuccess: profile => {
       queryClient.setQueryData(profileKeys.me(), profile)
       // username is also part of auth/me

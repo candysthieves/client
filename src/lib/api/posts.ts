@@ -1,50 +1,9 @@
-import type { PostDetails } from '@/lib/model'
 import { AddPostRequest, AddPostResponse } from '@/features/createPost'
 import { request } from '@/lib/api/request'
+import { requestValidated } from '@/lib/api/requestValidated'
+import { addPostResponseSchema, postSchema } from '@/lib/model'
 
-// TEMPORARY
-const API_BASE_URL = 'http://localhost:8080'
-
-async function apiClient<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`
-
-  // является ли тело FormData
-  const isFormData = options.body instanceof FormData
-
-  const response = await fetch(url, {
-    headers: {
-      Accept: 'application/json',
-      // Добавляем Content-Type только если это НЕ FormData
-      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
-      ...options.headers,
-    },
-    ...options,
-  })
-
-  // Обработка ошибок
-  if (!response.ok) {
-    let errorMessage = `Request failed with status ${response.status}`
-
-    try {
-      const errorData = await response.json()
-      errorMessage = errorData.message || errorData.error || errorMessage
-    } catch {
-      // ошибка парсинга JSON
-      errorMessage = (await response.text()) || errorMessage
-    }
-
-    throw new Error(errorMessage)
-  }
-
-  // Для статуса 204 No Content
-  if (response.status === 204) {
-    return {} as T
-  }
-
-  return response.json()
-}
-
-export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> => {
+export const addPost = (data: AddPostRequest): Promise<AddPostResponse> => {
   const formData = new FormData()
 
   formData.append('description', data.description)
@@ -53,7 +12,7 @@ export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> =>
   })
   formData.append('locations', JSON.stringify(data.locations))
 
-  return request<AddPostResponse>('/posts', {
+  return requestValidated('/posts', addPostResponseSchema, {
     method: 'POST',
     body: formData,
   })
@@ -61,26 +20,26 @@ export const addPost = async (data: AddPostRequest): Promise<AddPostResponse> =>
 
 // export const getPosts = () => apiClient<Post[]>('/posts')
 
-export const getPostById = (postId: string): Promise<PostDetails> =>
-  request<PostDetails>(`/posts/${encodeURIComponent(postId)}`)
+export const getPostById = (postId: string) =>
+  requestValidated(`/posts/${encodeURIComponent(postId)}`, postSchema)
 
 export const deletePost = (postId: string) =>
-  request<void>(`/posts/${postId}/soft-delete`, {
+  request<void>(`/posts/${encodeURIComponent(postId)}/soft-delete`, {
     method: 'DELETE',
   })
 
 export const restorePost = (postId: string) =>
-  request<void>(`/posts/${postId}/restore`, {
+  request<void>(`/posts/${encodeURIComponent(postId)}/restore`, {
     method: 'POST',
   })
 
 export const hardDeletePost = (postId: string) =>
-  request<void>(`/posts/${postId}/hard-delete`, {
+  request<void>(`/posts/${encodeURIComponent(postId)}/hard-delete`, {
     method: 'DELETE',
   })
 
 export const updatePost = (postId: string, description: string) =>
-  request<void>(`/posts/${postId}`, {
+  request<void>(`/posts/${encodeURIComponent(postId)}`, {
     method: 'PUT',
     body: JSON.stringify({ description }),
   })

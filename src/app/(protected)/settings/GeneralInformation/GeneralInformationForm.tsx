@@ -2,13 +2,13 @@
 
 import { Button, Input, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { FormInput } from '@/components/FormInput'
 import { FormTextArea } from '@/components/FormTextArea'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
 import { MAX_ABOUT_ME_LENGTH } from '@/constants'
 import { ApiError } from '@/lib/api'
+import { ResponseValidationError } from '@/lib/api/responseValidationError'
 import {
   type EditProfileRequest,
   editProfileSchema,
@@ -22,14 +22,18 @@ import {
   isErrorResponse,
   mapEditProfileDomainError,
   mapEditProfileValidationError,
+  showGlobalError,
 } from '@/lib/utils'
 import s from './GeneralInformationForm.module.scss'
 
 const SERVER_ERROR_MIN_STATUS = 500
 
-// fetch rejects with a TypeError when the server is unreachable, so anything that is not an ApiError is a network failure.
+// fetch rejects with a TypeError when the server is unreachable, so a non-API error that is not a
+// response-contract violation is a network failure.
 const isServerUnavailableError = (error: Error) =>
-  !(error instanceof ApiError) || error.status >= SERVER_ERROR_MIN_STATUS
+  error instanceof ApiError
+    ? error.status >= SERVER_ERROR_MIN_STATUS
+    : !(error instanceof ResponseValidationError)
 
 const showServerUnavailableToast = () =>
   ToastError({ title: SERVER_UNAVAILABLE_ERROR_TITLE, messages: SERVER_UNAVAILABLE_ERROR_MESSAGE })
@@ -42,7 +46,8 @@ const toFormValues = (profile: MyProfileResponse): EditProfileRequest => ({
 })
 
 export const GeneralInformationForm = () => {
-  const { data: profile, isPending: isProfileLoading, error: profileError } = useMyProfile()
+  // Load errors are reported by the global query error handler (showGlobalError).
+  const { data: profile, isPending: isProfileLoading } = useMyProfile()
   const { mutate: updateProfile, isPending: isSaving } = useUpdateMyProfile()
 
   const {
@@ -65,13 +70,6 @@ export const GeneralInformationForm = () => {
 
   const aboutMeValue = useWatch({ control, name: 'aboutMe' })
 
-  useEffect(() => {
-    // Auth errors (401) are handled by the protected layout, so only report an unreachable server here.
-    if (profileError && isServerUnavailableError(profileError)) {
-      showServerUnavailableToast()
-    }
-  }, [profileError])
-
   const handleSaveError = (error: Error) => {
     if (error instanceof ApiError && isErrorResponse(error.data)) {
       const isValidationError = mapEditProfileValidationError(error, setError)
@@ -89,7 +87,8 @@ export const GeneralInformationForm = () => {
       return
     }
 
-    ToastError({ messages: error.message })
+    // Auth errors, unexpected statuses and response-contract violations: same handling as the rest of the app.
+    showGlobalError(error)
   }
 
   const onSubmit = handleSubmit(({ username, firstName, lastName, aboutMe }) => {

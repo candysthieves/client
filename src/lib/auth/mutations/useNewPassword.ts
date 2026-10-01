@@ -5,5 +5,8 @@ import { NewPasswordRequest } from '@/lib/model'
 export function useNewPassword() {
   return useMutation({
     mutationFn: (data: NewPasswordRequest) => newPassword(data),
+    meta: {
+      skipGlobalError: true,
+    },
   })
 }

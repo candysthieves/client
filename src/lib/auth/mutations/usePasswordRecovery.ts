@@ -5,5 +5,8 @@ import { PasswordRecoveryRequest } from '@/lib/model'
 export function usePasswordRecovery() {
   return useMutation({
     mutationFn: (data: PasswordRecoveryRequest) => passwordRecovery(data),
+    meta: {
+      skipGlobalError: true,
+    },
   })
 }

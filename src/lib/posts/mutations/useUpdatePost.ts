@@ -21,7 +21,9 @@ export const useUpdatePost = () => {
 
   return useMutation({
     mutationFn: ({ postId, description }: UpdatePostInput) => updatePost(postId, description),
-
+    meta: {
+      skipGlobalError: true,
+    },
     onMutate: async ({ postId, userId, description }: UpdatePostInput) => {
       await queryClient.cancelQueries({ queryKey: postsKeys.all })
       await queryClient.cancelQueries({ queryKey: profileKeys.detail(userId) })

@@ -8,7 +8,9 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: (data: LoginRequest) => login(data),
-
+    meta: {
+      skipGlobalError: true,
+    },
     onSuccess: response => {
       localStorage.setItem(ACCESS_TOKEN_LS_KEY, response.accessToken)
 

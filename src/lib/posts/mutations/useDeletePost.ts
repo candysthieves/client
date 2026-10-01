@@ -9,6 +9,9 @@ export const useDeletePost = (userId?: string) => {
 
   return useMutation({
     mutationFn: deletePost,
+    meta: {
+      skipGlobalError: true,
+    },
     onMutate: async postId => {
       await queryClient.cancelQueries({ queryKey: postsKeys.post(postId), exact: true })
     },

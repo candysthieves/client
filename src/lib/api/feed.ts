@@ -1,11 +1,11 @@
-import type { FeedPostsResponse, Post } from '@/lib/model'
-import { request } from '@/lib/api/request'
+import { requestValidated } from '@/lib/api/requestValidated'
+import { feedPostsResponseSchema, Post } from '@/lib/model'
 
 type GetAllPostsParams = {
   limit?: number
 }
 
-export const getAllPosts = async (
+export const getAllPosts = (
   { limit }: GetAllPostsParams = {},
   init?: RequestInit
 ): Promise<Post[]> => {
@@ -18,6 +18,7 @@ export const getAllPosts = async (
   const query = searchParams.toString()
   const resultQuery = query ? `?${query}` : ''
 
-  const response = await request<FeedPostsResponse>(`/posts/all-posts${resultQuery}`, init)
-  return response.items
+  return requestValidated(`/posts/all-posts${resultQuery}`, feedPostsResponseSchema, init).then(
+    data => data.items
+  )
 }

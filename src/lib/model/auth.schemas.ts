@@ -109,10 +109,10 @@ export const apiErrorResponseSchema = z.object({
 })
 
 export const userResponseSchema = z.object({
-  id: z.uuid(),
+  id: z.string(),
   email: emailSchema,
   username: usernameSchema,
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
+  firstName: z.string().nullable(),
+  lastName: z.string().nullable(),
   isEmailConfirmed: z.boolean(),
 })

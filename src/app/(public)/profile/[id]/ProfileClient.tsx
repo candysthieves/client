@@ -131,13 +131,12 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
 
             <dl className={s.stats}>
               <div className={s.stat}>
-                <dt className={s.statLabel}>Publications</dt>
                 <dd className={s.statValue}>{profile?.publicationsCount ?? 0}</dd>
+                <dt className={s.statLabel}>Publications</dt>
               </div>
             </dl>
 
             <Typography className={s.about} variant={'body1'}>
-              <span className={s.aboutLabel}>About me</span>
               {profile?.description ?? ''}
             </Typography>
           </div>

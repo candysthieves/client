@@ -31,11 +31,7 @@ export const getUserPosts = (userId: string, cursor?: string): Promise<ProfilePo
 }
 
 export const getDeletedPosts = (): Promise<GetDeletedPostsResponse> =>
-  requestValidated('/posts/deleted-posts', getDeletedPostsResponseSchema, {
-    method: 'GET',
-  })
+  requestValidated('/posts/deleted-posts', getDeletedPostsResponseSchema)
 
 export const getDeletedPostById = (postId: string): Promise<DeletedPostItem> =>
-  requestValidated(`/posts/deleted-posts/${encodeURIComponent(postId)}`, deletedPostItemSchema, {
-    method: 'GET',
-  })
+  requestValidated(`/posts/deleted-posts/${encodeURIComponent(postId)}`, deletedPostItemSchema)

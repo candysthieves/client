@@ -18,9 +18,10 @@ export const initialProfileAvatarState: EditProfileAvatarState = {
 type ProfileAvatarModalProps = {
   open: boolean
   onClose: () => void
+  onAvatarUpdated: () => void
 }
 
-export const ProfileAvatarModal = ({ open, onClose }: ProfileAvatarModalProps) => {
+export const ProfileAvatarModal = ({ open, onClose, onAvatarUpdated }: ProfileAvatarModalProps) => {
   const { mutate: updateAvatar, isPending } = useUpdateAvatar()
   const queryClient = useQueryClient()
 
@@ -104,6 +105,8 @@ export const ProfileAvatarModal = ({ open, onClose }: ProfileAvatarModalProps) =
 
       editingAvatarIdRef.current = null
 
+      onAvatarUpdated() // разрешаем запрос useAvatar
+
       await queryClient.invalidateQueries({
         queryKey: avatarKeys.avatar(),
       })
@@ -117,7 +120,7 @@ export const ProfileAvatarModal = ({ open, onClose }: ProfileAvatarModalProps) =
 
       closeCreation()
     },
-    [closeCreation, queryClient]
+    [onAvatarUpdated, closeCreation, queryClient]
   )
 
   // ConfirmDeleteProfileAvatarModal handlers

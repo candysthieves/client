@@ -26,11 +26,11 @@ export const ProfileAvatarEditor = ({
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false)
   // Включается только после подтверждения удаления. До этого момента
   // getAvatar не вызывается вообще (чтобы не было конфликта с avatarSource полученным из родителя)
-  const [isDeletionFlowActive, setIsDeletionFlowActive] = useState(false)
+  const [isAvatarQueryActive, setIsAvatarQueryActive] = useState(false)
 
-  const { data: avatarData } = useAvatar({ enabled: isDeletionFlowActive })
+  const { data: avatarData } = useAvatar({ enabled: isAvatarQueryActive })
 
-  const resolvedAvatarSource = isDeletionFlowActive
+  const resolvedAvatarSource = isAvatarQueryActive
     ? (avatarData?.avatarUrl?.url ?? null)
     : avatarSource
 
@@ -50,14 +50,29 @@ export const ProfileAvatarEditor = ({
     openConfirmDeleteModal()
   }
 
+  const handleAvatarUpdated = () => {
+    setIsAvatarQueryActive(true)
+  }
+
   const handleConfirm = () => {
+    /*
+     * Перед переключением на avatar query кладём
+     * текущее значение из Profile в его cache.
+     */
     queryClient.setQueryData<Avatar | null>(
       avatarKeys.avatar(),
       avatarSource ? ({ avatarUrl: { url: avatarSource } } as Avatar) : null
     )
 
-    setIsDeletionFlowActive(true)
+    /*
+     * Теперь запрос useAvatar становится активным.
+     */
+    setIsAvatarQueryActive(true)
 
+    /*
+     * useDeleteAvatar.onMutate ->
+     * cache Avatar -> null (optimistic update)
+     */
     deleteAvatar()
     closeConfirmDeleteModal()
   }
@@ -78,7 +93,11 @@ export const ProfileAvatarEditor = ({
         Select Profile Photo
       </Button>
 
-      <ProfileAvatarModal open={isAvatarEditModalOpen} onClose={closeProfileAvatarEditorModal} />
+      <ProfileAvatarModal
+        open={isAvatarEditModalOpen}
+        onClose={closeProfileAvatarEditorModal}
+        onAvatarUpdated={handleAvatarUpdated}
+      />
 
       <ConfirmDeleteProfileAvatarModal
         open={isConfirmDeleteModalOpen}

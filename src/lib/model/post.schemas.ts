@@ -86,6 +86,10 @@ export const postCreatedEventSchema = z.object({
   postId: z.uuid('Invalid postID format in add post SSE response'),
 })
 
+export const avatarEditedEventSchema = z.object({
+  userId: z.string('Invalid userID format in edit avatar SSE response'),
+})
+
 export const commentSchema = z.object({
   id: z.string().min(1, 'Comment ID is required'),
   username: z.string(),

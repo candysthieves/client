@@ -2,13 +2,11 @@
 
 import { clsx, Modal } from '@candy.thieves/ui-kit-lumos'
 import { useQueryClient } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
 import { useCallback, useRef, useState } from 'react'
-import { ToastWarning } from '@/components'
+import { ToastError, ToastSuccess, ToastWarning } from '@/components'
 import { EditProfileAvatarState } from '@/features/createPost'
-import { CropStepApi } from '@/features/createPost/steps/CropStep/CropImage/CropImage'
+import { avatarKeys, useUpdateAvatar } from '@/lib/avatar'
 import { postImageSchema } from '@/lib/model'
-import { useAddPost } from '@/lib/posts'
 import { PreviewStep, UploadAvatarStep } from '../../steps'
 import s from './ProfileAvatarModal.module.scss'
 
@@ -23,34 +21,31 @@ type ProfileAvatarModalProps = {
 }
 
 export const ProfileAvatarModal = ({ open, onClose }: ProfileAvatarModalProps) => {
-  const { mutate: addPost, isPending } = useAddPost()
-  // const router = useRouter()
-  // const queryClient = useQueryClient()
+  const { mutate: updateAvatar, isPending } = useUpdateAvatar()
+  const queryClient = useQueryClient()
 
   const [state, setState] = useState<EditProfileAvatarState>(initialProfileAvatarState)
-  const [isCreationOpen, setIsCreationOpen] = useState(true)
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
-  const isPublishing = isPending || isProcessing
-  const cropStepApiRef = useRef<CropStepApi | null>(null)
-  const publishingPostIdRef = useRef<null | string>(null)
+  const isEditing = isPending || isProcessing
 
-  // const openConfirm = () => setIsConfirmOpen(true)
-  // const closeConfirm = () => setIsConfirmOpen(false)
+  // const cropStepApiRef = useRef<CropStepApi | null>(null)
+  const editingAvatarIdRef = useRef<null | string>(null)
 
   const isFullSize = state.step !== 'upload'
   const modalSize = 'm'
 
+  // Set state to initial condition onClose modal window
   const closeCreation = useCallback(() => {
-    // Release object URL
     if (state.file) {
       URL.revokeObjectURL(state.file.url)
     }
 
+    setState(prev => ({ ...prev, step: 'upload', file: null }))
+
     onClose()
   }, [state.file, onClose])
 
-  // Upload file step
+  // Upload file selection step
   const handleFileSelected = (file: File) => {
     const result = postImageSchema.safeParse(file)
     if (!result.success) {
@@ -76,38 +71,60 @@ export const ProfileAvatarModal = ({ open, onClose }: ProfileAvatarModalProps) =
     }))
   }
 
-  // Set updated cropped file to state
-  const handleUpdateFile = (newFile: File) => {
-    // !!!!!!!!!!!!!!! SEND FILE
-    // setState(prev => {
-    //   const currentFile = prev.file
-    //   const newUrl = URL.createObjectURL(newFile)
-    //
-    //   if (currentFile && (currentFile.url !== currentFile.originalUrl)) {
-    //     URL.revokeObjectURL(currentFile.url)
-    //   }
-    //
-    //   return {
-    //     ...prev,
-    //     files: prev.files.map((file, index) =>
-    //       index === fileIndex
-    //         ? {
-    //             ...file,
-    //             file: newFile,
-    //             url: newUrl,
-    //           }
-    //         : file
-    //     ),
-    //   }
-    // })
-  }
+  // Update (send) new avatar file to the server
+  const handleUpdateAvatarFile = useCallback(
+    (newFile: File) => {
+      // Prepare data to send
+      const avatarData = {
+        file: newFile,
+      }
+
+      updateAvatar(avatarData, {
+        onSuccess: ({ userId }) => {
+          editingAvatarIdRef.current = userId
+          setIsProcessing(true)
+        },
+        onError: () => {
+          ToastError({
+            title: 'Avatar update Error',
+            messages: 'Failed to update avatar',
+          })
+        },
+      })
+    },
+    [updateAvatar]
+  )
+
+  // Invalidate GET new avatar request when SSE message came successfully, then close modal window
+  const handleAvatarEdited = useCallback(
+    async (userId: string) => {
+      if (userId !== editingAvatarIdRef.current) {
+        return
+      }
+
+      editingAvatarIdRef.current = null
+
+      await queryClient.invalidateQueries({
+        queryKey: avatarKeys.avatar(),
+      })
+
+      setIsProcessing(false)
+
+      ToastSuccess({
+        title: 'Success!',
+        message: 'Your avatar has been updated',
+      })
+
+      closeCreation()
+    },
+    [closeCreation, queryClient]
+  )
 
   // ConfirmDeleteProfileAvatarModal handlers
   const handleCloseClick = () => {
-    if (isPublishing) {
+    if (isEditing) {
       return
     }
-
     closeCreation()
   }
 
@@ -115,55 +132,6 @@ export const ProfileAvatarModal = ({ open, onClose }: ProfileAvatarModalProps) =
     event.preventDefault()
     handleCloseClick()
   }
-
-  // const handlePostCreated = useCallback(
-  //   async (postId: string) => {
-  //     if (postId !== publishingPostIdRef.current) {
-  //       return
-  //     }
-  //
-  //     publishingPostIdRef.current = null
-  //     setIsProcessing(false)
-  //
-  //     // if (userId) {
-  //     //   await queryClient.invalidateQueries({
-  //     //     queryKey: profileKeys.detail(userId),
-  //     //   })
-  //     // }
-  //
-  //     ToastSuccess({
-  //       title: 'Success!',
-  //       message: 'Your post has been published',
-  //     })
-  //
-  //     clearPostDraft()
-  //     closeCreation()
-  //   },
-  //   // [closeCreation, queryClient, userId]
-  //   [closeCreation, queryClient]
-  // )
-
-  const handlePublish = useCallback(() => {
-    // // Prepare data to send
-    // const postData = {
-    //   files: state.files.map(({ file }) => file),
-    //   description: state.description,
-    //   locations: state.locations,
-    // }
-    //
-    // addPost(postData, {
-    //   onSuccess: ({ postId }) => {
-    //     publishingPostIdRef.current = postId
-    //     setIsProcessing(true)
-    //   },
-    //   onError: error => {
-    //     ToastError({
-    //       title: 'Post publish Error',
-    //       messages: 'Failed to publish post',
-    //     })
-    //   },
-    // })
-  }, [state, addPost])
 
   const renderStep = () => {
     switch (state.step) {
@@ -174,8 +142,9 @@ export const ProfileAvatarModal = ({ open, onClose }: ProfileAvatarModalProps) =
         return (
           <PreviewStep
             file={state.file}
-            updateAvatarFile={handleUpdateFile}
-            onClose={handleCloseClick}
+            updateAvatarFile={handleUpdateAvatarFile}
+            onAvatarUpdated={handleAvatarEdited}
+            isPublishing={isEditing}
             // apiRef={cropStepApiRef}
           />
         )

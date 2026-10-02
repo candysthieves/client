@@ -3,6 +3,7 @@ import {
   addPostRequestSchema,
   addPostResponseSchema,
   addPostStateSchema,
+  avatarEditedEventSchema,
   draftPostFileSchema,
   editProfileAvatarSchema,
   locationSchema,
@@ -58,3 +59,4 @@ export enum AspectRatio {
 }
 
 export type PostCreatedEvent = z.infer<typeof postCreatedEventSchema>
+export type AvatarEditedEvent = z.infer<typeof avatarEditedEventSchema>

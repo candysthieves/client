@@ -9,7 +9,7 @@ export const updateAvatar = async (data: UpdateAvatarRequest): Promise<UpdateAva
   formData.append('file', data.file)
 
   return request<UpdateAvatarResponse>('/users/my-avatar', {
-    method: 'POST',
+    method: 'PUT',
     body: formData,
   })
 }

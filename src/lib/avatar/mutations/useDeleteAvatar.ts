@@ -13,6 +13,7 @@ export const useDeleteAvatar = () => {
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: avatarKeys.avatar() })
       const previousAvatar = queryClient.getQueryData<Avatar | null>(avatarKeys.avatar())
+      // Optimistic Update
       queryClient.setQueryData<Avatar | null>(avatarKeys.avatar(), null)
 
       return { previousAvatar }
@@ -30,6 +31,7 @@ export const useDeleteAvatar = () => {
       ToastSuccess({ message: 'Avatar deleted successfully' })
     },
 
+    // TODO: check to delete if needed
     onSettled: () => {
       // success → сервер подтвердит null, error → берем актуальное значение с сервера
       void queryClient.invalidateQueries({ queryKey: avatarKeys.avatar() })

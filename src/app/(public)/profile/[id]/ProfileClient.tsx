@@ -4,6 +4,7 @@ import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
+import { ProfileActions } from '@/app/(public)/profile/[id]/ProfileActions/ProfileActions'
 import { DeletedPosts } from '@/components/DeletedPosts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
@@ -83,7 +84,8 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     return <ProfileSkeleton />
   }
 
-  if (isProfileError || (isPostsError && !profilePostsData)) {
+  // if (isProfileError || (isPostsError && !profilePostsData)) {
+  if (!profile || isProfileError || (isPostsError && !profilePostsData)) {
     return (
       <section className={s.profileError} role={'alert'}>
         <Typography color={'var(--color-light-100)'} variant={'h1'}>
@@ -118,16 +120,17 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
               {profile?.username ?? userId}
             </Typography>
 
-            {isOwner && (
-              <Button
-                as={Link}
-                className={s.settingsButton}
-                href={'/settings'}
-                variant={'secondary'}
-              >
-                Profile Settings
-              </Button>
-            )}
+            {/*{isOwner && (*/}
+            {/*  <Button*/}
+            {/*    as={Link}*/}
+            {/*    className={s.settingsButton}*/}
+            {/*    href={'/settings'}*/}
+            {/*    variant={'secondary'}*/}
+            {/*  >*/}
+            {/*    Profile Settings*/}
+            {/*  </Button>*/}
+            {/*)}*/}
+            <ProfileActions status={profile.viewerStatus} userId={profile.id} />
 
             <dl className={s.stats}>
               <div className={s.stat}>

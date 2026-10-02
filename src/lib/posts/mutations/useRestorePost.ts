@@ -8,7 +8,9 @@ export function useRestorePost(userId?: string) {
 
   return useMutation({
     mutationFn: (postId: string) => restorePost(postId),
-
+    meta: {
+      skipGlobalError: true,
+    },
     onSuccess: async () => {
       ToastSuccess({ message: 'Post restored successfully' })
 

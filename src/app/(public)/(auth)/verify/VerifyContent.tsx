@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
+import { ToastError } from '@/components'
 import { ApiError } from '@/lib/api'
 import { useRegistrationConfirmation } from '@/lib/auth'
 import { mapRegistrationConfirmationError } from '@/lib/utils'
@@ -36,7 +37,7 @@ export const VerifyContent = () => {
             }
           }
           console.error(error)
-          throw error
+          ToastError({ messages: 'Something went wrong. Please try again.' })
         },
       }
     )

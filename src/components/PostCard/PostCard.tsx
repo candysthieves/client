@@ -1,10 +1,9 @@
 'use client'
 
 import { Avatar, Carousel, ReadMore, Typography } from '@candy.thieves/ui-kit-lumos'
-import Image from 'next/image'
 import Link from 'next/link'
 import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
-import type { PostImage } from '@/lib/model'
+import type { ImageData } from '@/lib/model'
 import { useTimeAgo } from '@/lib/utils'
 import s from './PostCard.module.scss'
 import { useReadMoreClamp } from './useReadMoreClamp'
@@ -22,14 +21,14 @@ const MIN_EXPANDED_IMAGE_HEIGHT = 60
 
 type PostCardProps = {
   postId: string
+  images: ImageData[]
   userId: string
-  images: PostImage[]
   username: string
   createdAt: string
   caption: string
 }
 
-// Clicks on nested buttons (carousel arrows, ReadMore toggle) shouldn't navigate the Link.
+// Clicks on carousel controls (arrows, dots) shouldn't navigate the Link.
 const isInteractiveElementTarget = (target: EventTarget | null) =>
   target instanceof Element && !!target.closest('button')
 
@@ -45,12 +44,11 @@ export const PostCard = ({
   const imageWrapperRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const [imageWidth, setImageWidth] = useState(0)
-  const showCarouselControls = !isExpanded
   const timeAgo = useTimeAgo(createdAt)
   const validImages = useMemo(() => images.filter(image => image?.url), [images])
   const slides = useMemo(() => validImages.map(image => image.url), [validImages])
 
-  const { maxLength, text, expandedHeight } = useReadMoreClamp(
+  const { maxLength, collapsedText, text, expandedHeight } = useReadMoreClamp(
     captionWrapperRef,
     `.${s.caption}`,
     caption,
@@ -95,40 +93,30 @@ export const PostCard = ({
   }
 
   return (
-    <Link
-      aria-label={`Open post by ${username}`}
-      className={s.root}
-      data-expanded={isExpanded}
-      href={`/?postId=${postId}`}
-      onClick={handleClick}
-    >
-      <div
-        className={s.imageWrapper}
-        ref={imageWrapperRef}
-        style={isExpanded && imageWidth ? { height: `${expandedImageHeight}px` } : undefined}
+    <div className={s.root} data-expanded={isExpanded}>
+      <Link
+        aria-label={`Open post by ${username}`}
+        className={s.imageLink}
+        href={`/?postId=${postId}`}
+        onClick={handleClick}
       >
-        {showCarouselControls ? (
+        <div
+          className={s.imageWrapper}
+          ref={imageWrapperRef}
+          style={isExpanded && imageWidth ? { height: `${expandedImageHeight}px` } : undefined}
+        >
+          {/* Stays mounted while expanded (controls hidden via CSS) to keep the current slide. */}
           <Carousel controlsSize={'s'} slides={slides} />
-        ) : (
-          <Image
-            alt={username}
-            className={s.image}
-            fill
-            sizes={'(max-width: 360px) 100vw, (max-width: 768px) 50vw, 234px'}
-            src={validImages[0].url}
-          />
-        )}
-      </div>
-
+        </div>
+      </Link>
       <Link href={`/profile/${userId}`} className={s.userRow}>
         <Avatar userName={username} />
         <Typography variant={'h3'}>{username}</Typography>
       </Link>
-
+      вс
       <Typography className={s.time} color={'var(--color-light-900)'} variant={'caption1'}>
         {timeAgo}
       </Typography>
-
       <div className={s.captionWrapper} ref={captionWrapperRef}>
         <ReadMore
           className={s.caption}
@@ -136,9 +124,9 @@ export const PostCard = ({
           expandLabel={READ_MORE_EXPAND_LABEL}
           maxLength={maxLength}
           onExpandedChange={setIsExpanded}
-          text={text}
+          text={isExpanded ? text : collapsedText}
         />
       </div>
-    </Link>
+    </div>
   )
 }

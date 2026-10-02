@@ -27,7 +27,7 @@ export const PostComments = ({ post, comments }: Props) => {
   const renderComment = (comment: Comment, isDescription = false) => (
     <div key={comment.id} className={s.comment}>
       <Link
-        href={`/profile/${comment.username}`} // TODO: replace with comment.userId once comments backend adds author id
+        href={`/profile/${post.author.id}`} // TODO: replace with comment.userId once comments backend adds author id
         className={s.commentAvatarLink}
       >
         <Avatar userName={comment.username} src={comment.avatarUrl} size={'s'} delayMs={0} />

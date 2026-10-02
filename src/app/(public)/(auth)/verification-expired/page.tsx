@@ -73,7 +73,7 @@ export default function VerificationExpiredPage() {
           }
           return
         }
-        throw error
+        ToastError({ messages: 'Something went wrong. Please try again.' })
       },
     })
   }

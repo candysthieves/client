@@ -29,7 +29,7 @@ export const PreviewImage = ({ src, alt, className }: PreviewImageProps) => {
 
       <Image
         src={src}
-        alt={''}
+        alt={alt}
         width={332}
         height={340}
         className={clsx(className, s.imageItem, {

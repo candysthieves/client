@@ -20,20 +20,16 @@ export const ProfileAvatarEditor = ({
 }: ProfileAvatarEditorProps) => {
   const queryClient = useQueryClient()
 
-  const { mutate: deleteAvatar, isPending: isDeletingAvatar } = useDeleteAvatar()
+  const { mutate: deleteAvatar } = useDeleteAvatar()
 
   const [isAvatarEditModalOpen, setIsAvatarEditModalOpen] = useState(false)
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false)
   // Включается только после подтверждения удаления. До этого момента
-  // getAvatar не вызывается вообще.
+  // getAvatar не вызывается вообще (чтобы не было конфликта с avatarSource полученным из родителя)
   const [isDeletionFlowActive, setIsDeletionFlowActive] = useState(false)
 
   const { data: avatarData } = useAvatar({ enabled: isDeletionFlowActive })
 
-  // До удаления — проп как есть. После старта удаления — только кэш
-  // (тот же queryKey, что мутирует useDeleteAvatar через setQueryData).
-  // Намеренно НЕ падаем обратно на проп, если кэш пуст: иначе во время
-  // optimistic-удаления мелькал бы старый avatarSource.
   const resolvedAvatarSource = isDeletionFlowActive
     ? (avatarData?.avatarUrl?.url ?? null)
     : avatarSource
@@ -55,18 +51,13 @@ export const ProfileAvatarEditor = ({
   }
 
   const handleConfirm = () => {
-    /* * Перед включением useAvatar синхронизируем его cache
-     * * с avatarSource, который уже получили через Profile.
-     * * * Это важно: useAvatar не стартует с пустого cache.
-     * */
     queryClient.setQueryData<Avatar | null>(
       avatarKeys.avatar(),
       avatarSource ? ({ avatarUrl: { url: avatarSource } } as Avatar) : null
     )
-    /* * Теперь useAvatar начинает смотреть на тот же query,
-     * * который будет изменять mutation. */
+
     setIsDeletionFlowActive(true)
-    /* * useDeleteAvatar.onMutate: * * cache: * Avatar -> null * * UI: * старый avatar -> null */
+
     deleteAvatar()
     closeConfirmDeleteModal()
   }

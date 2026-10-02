@@ -36,8 +36,7 @@ export const PreviewStep = ({
   return (
     <div className={s.imageContent}>
       {/* Replace the following blocks of code with a component that centers the avatar */}
-
-      <PreviewImage src={imageUrl} alt={''} />
+      <PreviewImage src={imageUrl} alt={`Avatar-preview-${file?.id}`} />
       {/*<CropImage*/}
       {/*  key={file.id}*/}
       {/*  imageUrl={imageUrl}*/}

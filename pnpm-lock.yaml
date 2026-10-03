@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@candy.thieves/ui-kit-lumos':
-        specifier: ^0.0.52
-        version: 0.0.52(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.6.0(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)
+        specifier: ^0.0.57
+        version: 0.0.57(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.6.0(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@9.39.5(jiti@2.6.1))
@@ -236,8 +236,8 @@ packages:
   '@cacheable/utils@2.5.0':
     resolution: {integrity: sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA==}
 
-  '@candy.thieves/ui-kit-lumos@0.0.52':
-    resolution: {integrity: sha512-K5HbgzO54dLZG1iIDIx8GEImu75XMwJTgQ9ZO1S77MKwSvuaeJ+V3lJF8r6+jwA327Ehr0Jr+0xhx/HVUs33kA==}
+  '@candy.thieves/ui-kit-lumos@0.0.57':
+    resolution: {integrity: sha512-A0Y/W8FkTwXyRLTenZ//6mbvWiRWwPqybE9zzY78hTf+x20EhQVJyKUGKh5i5pyo1YiDyVwlESGs8vwwEzZQdQ==}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
@@ -2112,8 +2112,8 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
-  '@testing-library/dom@10.4.1':
-    resolution: {integrity: sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==}
+  '@testing-library/dom@10.4.2':
+    resolution: {integrity: sha512-yzr2S9HyAIdhz2/6qHgbs665Q7PKVcDF05vsOlHPxG1mo36gKVesdYVeDLnXgfjJ03CrKRk08knc6+E/9m8v2Q==}
     engines: {node: '>=18'}
 
   '@testing-library/jest-dom@6.9.1':
@@ -2608,8 +2608,8 @@ packages:
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
-  bundle-name@4.1.0:
-    resolution: {integrity: sha512-tjwM5exMg6BGRI+kNmTntNsvdZS1X8BFYS6tnJ2hdH0kVxM6/eVZ2xy+FqStSWvYmtfFMDLIxurorHwDKfDz5Q==}
+  bundle-name@4.1.1:
+    resolution: {integrity: sha512-DdH81/zPLVS11EUgWq3tEu/xn+EzljlMYooDNdzWEnFha3R3NBMpMV1UqYIpjYHV/SgpFKMIX1Oh7o06SjM/oA==}
     engines: {node: '>=18'}
 
   busboy@1.6.0:
@@ -4118,8 +4118,8 @@ packages:
     peerDependencies:
       typescript: '>= 4.3.x'
 
-  react-docgen@8.0.3:
-    resolution: {integrity: sha512-aEZ9qP+/M+58x2qgfSFEWH1BxLyHe5+qkLNJOZQb5iGS017jpbRnoKhNRrXPeA6RfBrZO5wZrT9DMC1UqE1f1w==}
+  react-docgen@8.0.4:
+    resolution: {integrity: sha512-gIYjtVTU4NCWZnb/LXVSWfClZXnjzX3+xxi69Tkfu4YsmYuqiOk8giLkKt/WwxWqh+U66CTh8Kqbha1uPv8/qQ==}
     engines: {node: ^20.9.0 || >=22}
 
   react-dom@19.2.4:
@@ -4783,8 +4783,8 @@ packages:
     resolution: {integrity: sha512-OTIk8iR8/aCRWBqvxrzxR0hgxWpnYBblY1S5hDWBQfk/VFmJwzmJgQFN3WsoUKHISv2eAwe+PpbUzyL1CKTLXg==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  ws@8.21.3:
-    resolution: {integrity: sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==}
+  ws@8.22.0:
+    resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -4962,7 +4962,7 @@ snapshots:
       hashery: 1.5.1
       keyv: 5.6.0
 
-  '@candy.thieves/ui-kit-lumos@0.0.52(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.6.0(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)':
+  '@candy.thieves/ui-kit-lumos@0.0.57(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(eslint@9.39.5(jiti@2.6.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.6.0(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))(typescript@5.9.3)':
     dependencies:
       '@fontsource-variable/inter': 5.3.0
       '@fontsource-variable/roboto': 5.3.0
@@ -6556,7 +6556,7 @@ snapshots:
       '@storybook/global': 5.0.0
       '@storybook/react-dom-shim': 10.6.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@10.6.0(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4))
       react: 19.2.4
-      react-docgen: 8.0.3
+      react-docgen: 8.0.4
       react-docgen-typescript: 2.4.0(typescript@5.9.3)
       react-dom: 19.2.4(react@19.2.4)
       storybook: 10.6.0(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.4)
@@ -6586,7 +6586,7 @@ snapshots:
       '@tanstack/query-core': 5.102.8
       react: 19.2.4
 
-  '@testing-library/dom@10.4.1':
+  '@testing-library/dom@10.4.2':
     dependencies:
       '@babel/code-frame': 7.29.7
       '@babel/runtime': 7.29.7
@@ -6606,9 +6606,9 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
 
-  '@testing-library/user-event@14.6.7(@testing-library/dom@10.4.1)':
+  '@testing-library/user-event@14.6.7(@testing-library/dom@10.4.2)':
     dependencies:
-      '@testing-library/dom': 10.4.1
+      '@testing-library/dom': 10.4.2
 
   '@tsconfig/node10@1.0.13': {}
 
@@ -7126,7 +7126,7 @@ snapshots:
 
   buffer-from@1.1.2: {}
 
-  bundle-name@4.1.0:
+  bundle-name@4.1.1:
     dependencies:
       run-applescript: 7.1.0
 
@@ -7367,7 +7367,7 @@ snapshots:
 
   default-browser@5.5.1:
     dependencies:
-      bundle-name: 4.1.0
+      bundle-name: 4.1.1
       default-browser-id: 5.0.1
 
   define-data-property@1.1.4:
@@ -8889,7 +8889,7 @@ snapshots:
     dependencies:
       typescript: 5.9.3
 
-  react-docgen@8.0.3:
+  react-docgen@8.0.4:
     dependencies:
       '@babel/core': 7.29.7
       '@babel/traverse': 7.29.7
@@ -9243,9 +9243,9 @@ snapshots:
     dependencies:
       '@storybook/global': 5.0.0
       '@storybook/icons': 2.1.0(react@19.2.4)
-      '@testing-library/dom': 10.4.1
+      '@testing-library/dom': 10.4.2
       '@testing-library/jest-dom': 6.9.1
-      '@testing-library/user-event': 14.6.7(@testing-library/dom@10.4.1)
+      '@testing-library/user-event': 14.6.7(@testing-library/dom@10.4.2)
       '@vitest/expect': 3.2.4
       '@vitest/spy': 3.2.4
       '@webcontainer/env': 1.1.1
@@ -9257,7 +9257,7 @@ snapshots:
       recast: 0.23.21
       semver: 7.8.5
       use-sync-external-store: 1.7.0(react@19.2.4)
-      ws: 8.21.3
+      ws: 8.22.0
     optionalDependencies:
       '@types/react': 19.2.17
       prettier: 3.9.5
@@ -9742,7 +9742,7 @@ snapshots:
     dependencies:
       signal-exit: 4.1.0
 
-  ws@8.21.3: {}
+  ws@8.22.0: {}
 
   wsl-utils@0.1.0:
     dependencies:

@@ -1,5 +1,6 @@
 'use client'
 import { Avatar, AvatarBlock, Button, Modal, Scroll, Typography } from '@candy.thieves/ui-kit-lumos'
+import Link from 'next/link'
 import type { Post, UserProfile } from '@/lib/model'
 import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
 import { PostActions } from '@/components/Post/PostActions/PostActions'
@@ -55,7 +56,7 @@ export const PostDetailsModal = ({
         <div className={s.postInfo}>
           {/* Header */}
           <div className={s.postHeader}>
-            <div className={s.author}>
+            <Link href={`/profile/${post.author.id}`} className={s.author}>
               <Avatar
                 userName={profileUserName || post.author.username || ''}
                 size={'s'}
@@ -66,7 +67,7 @@ export const PostDetailsModal = ({
               <Typography variant={'subtitle2'}>
                 {profileUserName || post.author.username || ''}
               </Typography>
-            </div>
+            </Link>
 
             {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
             <PostActionMenu
@@ -91,6 +92,8 @@ export const PostDetailsModal = ({
           {/* Footer: likes + date */}
           <div className={`${s.postFooter} ${!isAuthenticated ? s.postFooterGuest : ''}`}>
             <div className={s.likes}>
+              {/* TODO: wrap in a button that opens a "Liked by" list modal once implemented;
+      each user in that list should link to /profile/${user.id} */}
               <AvatarBlock users={mockLikedByUsers} />
 
               <Typography variant={'body2'}>2 243 &quot;Like&quot;</Typography>

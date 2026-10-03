@@ -28,6 +28,11 @@ import {
   userProfileSchema,
   viewerStatusSchema,
 } from './profile.schemas'
+import {
+  editProfileSchema,
+  myProfileResponseSchema,
+  updateMyProfileSchema,
+} from './profileSettings.schemas'
 import { usersCountResponseSchema } from './users.schemas'
 
 // Auth
@@ -49,12 +54,16 @@ export type UserResponse = z.infer<typeof userResponseSchema>
 export type ProfilePost = z.infer<typeof profilePostSchema>
 export type ProfilePostsResponse = z.infer<typeof profilePostsResponseSchema>
 export type UserProfile = z.infer<typeof userProfileSchema>
+export type EditProfileRequest = z.infer<typeof editProfileSchema>
+export type MyProfileResponse = z.infer<typeof myProfileResponseSchema>
+export type UpdateMyProfileRequest = z.infer<typeof updateMyProfileSchema>
 export type RegistrationErrorField = keyof RegistrationRequest
 export type LoginErrorField = 'credentials' | 'email'
 export type LoginField = keyof LoginRequest
 export type PasswordRecoveryField = keyof PasswordRecoveryRequest
 // export type AuthType = 'github' | 'google'
 export type NewPasswordField = keyof NewPasswordRequest
+export type EditProfileField = keyof EditProfileRequest
 export type DeletedPostItem = z.infer<typeof deletedPostItemSchema>
 export type GetDeletedPostsResponse = z.infer<typeof getDeletedPostsResponseSchema>
 export type UsersCountResponse = z.infer<typeof usersCountResponseSchema>

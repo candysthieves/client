@@ -2,6 +2,7 @@
 
 import { Tabs } from '@candy.thieves/ui-kit-lumos'
 import { useRouter } from 'next/navigation'
+import { GeneralInformation } from './GeneralInformation'
 import s from './SettingsTabs.module.scss'
 import { SETTINGS_PARTS, SETTINGS_TAB_LABELS, type SettingsPart } from './tabs'
 
@@ -15,7 +16,7 @@ export const SettingsTabs = ({ part }: SettingsTabsProps) => {
   const tabs = SETTINGS_PARTS.map(value => ({
     value,
     label: SETTINGS_TAB_LABELS[value],
-    content: null,
+    content: value === 'info' ? <GeneralInformation /> : null,
   }))
 
   const handleValueChange = (value: string) => {

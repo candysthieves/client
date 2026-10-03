@@ -1,4 +1,5 @@
 import {
+  EditProfileField,
   LoginErrorField,
   LoginField,
   PasswordRecoveryField,
@@ -7,11 +8,15 @@ import {
 
 export const USERNAME_PATTERN = /^[A-Za-z0-9_-]+$/
 
+export const NAME_PATTERN = /^[A-Za-zА-Яа-яЁё]+$/
+
 export const PASSWORD_PATTERN =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!"#$%&'()*+,\-./:;<=>?@[\\\]^_{|}~]+$/
 
 export const USERNAME_PATTERN_MESSAGE =
   'Username may only include letters, numbers, underscores, and hyphens'
+
+export const NAME_PATTERN_MESSAGE = 'May only include Latin and Cyrillic letters'
 
 export const PASSWORD_PATTERN_MESSAGE = `Password must contain at least one uppercase / lowercase letter, one digit and may have one special character`
 
@@ -63,3 +68,16 @@ export const VALID_NEW_PASSWORD_FIELDS = [
   'newPassword',
   'newPasswordConfirmation',
 ] as const
+
+// Date of birth, country and city are not sent yet, so backend errors can only target these fields.
+export const VALID_EDIT_PROFILE_FIELDS: EditProfileField[] = [
+  'username',
+  'firstName',
+  'lastName',
+  'aboutMe',
+] as const
+
+export const PROFILE_SETTINGS_SAVED_MESSAGE = 'Your settings are saved!'
+
+export const SERVER_UNAVAILABLE_ERROR_TITLE = 'Error!'
+export const SERVER_UNAVAILABLE_ERROR_MESSAGE = 'Server is not available!'

@@ -15,6 +15,8 @@ export { mapPasswordRecoveryDomainError } from './mapPasswordRecoveryDomainError
 export { mapPasswordRecoveryValidationError } from './mapPasswordRecoveryValidationError'
 export { mapNewPasswordDomainError } from './mapNewPasswordDomainError'
 export { mapNewPasswordValidationError } from './mapNewPasswordValidationError'
+export { mapEditProfileDomainError } from './mapEditProfileDomainError'
+export { mapEditProfileValidationError } from './mapEditProfileValidationError'
 export { isError } from './isError'
 export * from './createPostDraft'
 export { createCroppedImage } from './createCroppedImage'

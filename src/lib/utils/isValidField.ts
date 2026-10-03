@@ -1,4 +1,5 @@
 import {
+  EditProfileField,
   LoginErrorField,
   LoginField,
   PasswordRecoveryField,
@@ -9,6 +10,7 @@ import {
   VALID_PASSWORD_RECOVERY_FIELDS,
   VALID_NEW_PASSWORD_FIELDS,
   VALID_REGISTRATION_FIELDS,
+  VALID_EDIT_PROFILE_FIELDS,
 } from '@/lib/model'
 
 // isValidRegistrationField === isValidErrorRegistrationField согласно ответам от бэкенда
@@ -35,4 +37,9 @@ export const isValidPasswordRecoveryField = (field: string): field is PasswordRe
 
 export const isValidNewPasswordField = (field: string): field is NewPasswordField => {
   return VALID_NEW_PASSWORD_FIELDS.includes(field as NewPasswordField)
+}
+
+// используем для setError соотвествующего поля формы General Information при Validation / Domain Error
+export const isValidEditProfileField = (field: string): field is EditProfileField => {
+  return VALID_EDIT_PROFILE_FIELDS.includes(field as EditProfileField)
 }

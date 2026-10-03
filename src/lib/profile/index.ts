@@ -1,4 +1,6 @@
 export { profileKeys } from './profileKeys'
+export { useMyProfile } from './queries/useMyProfile'
 export { useProfile } from './queries/useProfile'
 export { useProfilePosts } from './queries/useProfilePosts'
 export { useDeletedPosts } from './queries/useDeletedPosts'
+export { useUpdateMyProfile } from './mutations/useUpdateMyProfile'

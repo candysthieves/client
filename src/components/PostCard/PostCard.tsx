@@ -113,7 +113,6 @@ export const PostCard = ({
         <Avatar userName={username} />
         <Typography variant={'h3'}>{username}</Typography>
       </Link>
-      вс
       <Typography className={s.time} color={'var(--color-light-900)'} variant={'caption1'}>
         {timeAgo}
       </Typography>

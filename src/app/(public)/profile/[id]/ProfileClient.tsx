@@ -32,11 +32,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const { data: authMe, isHydrated } = useAuthMe()
   const isAuth = isHydrated && !!authMe
 
-  const {
-    data: profile,
-    isError: isProfileError,
-    isLoading: isProfileLoading,
-  } = useProfile(userId, isHydrated)
+  const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
   const isOwner = profile?.viewerStatus === 'owner'
   const postType = searchParams.get('type')
   const isDeletedPost = postType === 'deleted'
@@ -111,8 +107,8 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
         <section className={s.profileHeader} aria-labelledby={'profile-name'}>
           <MainAvatar
             className={s.profileAvatar}
-            userName={profile?.username ?? userId}
-            src={profile?.avatarPreviewUrl?.url ?? ''}
+            userName={profile.username ?? userId}
+            src={profile.avatarPreviewUrl?.url ?? ''}
             size={'xxl'}
             delayMs={0}
           />
@@ -125,7 +121,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
                 color={'white'}
                 variant={'h1'}
               >
-                {profile?.username ?? userId}
+                {profile.username}
               </Typography>
               {isAuth && <ProfileActions status={profile.viewerStatus} />}
             </div>
@@ -143,7 +139,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             </Typography>
           </div>
         </section>
-        {isAuth && isOwner ? (
+        {isOwner ? (
           <ProfilePostTabs
             postsFeed={
               <PostsFeed
@@ -203,7 +199,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           />
         ))}
 
-      {showCreateModal && isOwner && profile && <CreatePostModal userProfile={profile} />}
+      {showCreateModal && <CreatePostModal userProfile={profile} />}
     </>
   )
 }

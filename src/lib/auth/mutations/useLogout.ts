@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { logout } from '@/lib/api'
 import { authKeys } from '@/lib/auth'
 import { ACCESS_TOKEN_LS_KEY } from '@/lib/model'
+import { profileKeys } from '@/lib/profile'
 import { clearPostDraft } from '@/lib/utils'
 
 export function useLogout() {
@@ -19,7 +20,8 @@ export function useLogout() {
 
       queryClient.setQueryData(authKeys.me(), null)
       queryClient.removeQueries({ queryKey: authKeys.me() })
-      queryClient.invalidateQueries({ queryKey: authKeys.me() }) // check if needed
+      queryClient.invalidateQueries({ queryKey: authKeys.me() })
+      queryClient.invalidateQueries({ queryKey: profileKeys.all }) // check if needed
     },
   })
 }

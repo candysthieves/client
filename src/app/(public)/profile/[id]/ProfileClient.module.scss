@@ -46,17 +46,18 @@
 .stat {
   display: grid;
   gap: 0.125rem;
+  justify-items: start;
 }
 
 .statValue {
+  margin: 0;
   font-weight: var(--font-weight-bold);
   color: var(--color-light-100);
 }
 
-.statLabel,
-.aboutLabel {
-  font-size: var(--font-size-xs);
-  color: var(--color-light-900);
+.statLabel {
+  font-size: var(--font-size-s);
+  color: var(--color-light-100);
 }
 
 .about {
@@ -64,11 +65,6 @@
   margin: 0;
   line-height: var(--line-height-m);
   color: var(--color-light-100);
-}
-
-.aboutLabel {
-  display: block;
-  margin-bottom: 0.25rem;
 }
 
 .postsGrid {

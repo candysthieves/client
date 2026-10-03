@@ -1,3 +1,4 @@
+import { getProfileUrl, getProfilePostsUrl } from '@/lib/api/profileUrls'
 import { requestValidated } from '@/lib/api/requestValidated'
 import {
   DeletedPostItem,
@@ -10,25 +11,13 @@ import {
   profilePostsResponseSchema,
 } from '@/lib/model'
 
-export const PROFILE_POSTS_PAGE_SIZE = 12
+export { PROFILE_POSTS_PAGE_SIZE } from '@/lib/api/profileUrls'
 
 export const getUserProfile = (userId: string): Promise<UserProfile> =>
-  requestValidated(`/users/profile/${encodeURIComponent(userId)}`, userProfileSchema)
+  requestValidated(getProfileUrl(userId), userProfileSchema)
 
-export const getUserPosts = (userId: string, cursor?: string): Promise<ProfilePostsResponse> => {
-  const searchParams = new URLSearchParams({
-    limit: String(PROFILE_POSTS_PAGE_SIZE),
-  })
-
-  if (cursor) {
-    searchParams.set('cursor', cursor)
-  }
-
-  return requestValidated(
-    `/posts/user/${encodeURIComponent(userId)}?${searchParams.toString()}`,
-    profilePostsResponseSchema
-  )
-}
+export const getUserPosts = (userId: string, cursor?: string): Promise<ProfilePostsResponse> =>
+  requestValidated(getProfilePostsUrl(userId, cursor), profilePostsResponseSchema)
 
 export const getDeletedPosts = (): Promise<GetDeletedPostsResponse> =>
   requestValidated('/posts/deleted-posts', getDeletedPostsResponseSchema)

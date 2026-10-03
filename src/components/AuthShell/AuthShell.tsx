@@ -10,17 +10,22 @@ import { AuthShellContent } from './AuthShellContent'
 export function AuthShell({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, isHydrated } = useAuth()
 
-  if (!isHydrated || isLoading) return <div>Loading...</div>
+  /**
+   * Server cannot read localStorage, so auth state is unknown during SSR and
+   * the first client render. Until it is resolved we render children as-is,
+   * otherwise the whole page would be replaced by a loading stub and SSR HTML would be lost.
+   */
+  const isSessionResolved = isHydrated && !isLoading
 
   return (
     <>
       <div className={s.headerWrapper}>
-        <AppHeader />
+        {isSessionResolved ? <AppHeader /> : <div className={s.headerPlaceholder} />}
         <GlobalLoader />
       </div>
 
       <div className={s.layout}>
-        {isAuthenticated ? (
+        {isSessionResolved && isAuthenticated ? (
           <Suspense fallback={null}>
             <AuthShellContent>{children}</AuthShellContent>
           </Suspense>

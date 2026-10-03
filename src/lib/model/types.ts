@@ -1,5 +1,12 @@
 import { z } from 'zod'
 import {
+  cityIdSchema,
+  countryIdSchema,
+  editProfileSchema,
+  locationCitySchema,
+  locationCountrySchema,
+} from '@/lib/model/profileSettings.schemas'
+import {
   accessTokenResponseSchema,
   apiErrorResponseSchema,
   errorMessageSchema,
@@ -17,10 +24,10 @@ import { feedPostsResponseSchema } from './feed.schemas'
 import { imageSchema } from './image.schemas'
 import {
   commentSchema,
-  postAuthorSchema,
-  postSchema,
   deletedPostItemSchema,
   getDeletedPostsResponseSchema,
+  postAuthorSchema,
+  postSchema,
 } from './post.schemas'
 import {
   profilePostSchema,
@@ -61,3 +68,8 @@ export type UsersCountResponse = z.infer<typeof usersCountResponseSchema>
 export type FeedPostsResponse = z.infer<typeof feedPostsResponseSchema>
 export type ImageData = z.infer<typeof imageSchema>
 export type ViewerStatus = z.infer<typeof viewerStatusSchema>
+export type CountryId = z.infer<typeof countryIdSchema>
+export type CityId = z.infer<typeof cityIdSchema>
+export type LocationCountry = z.infer<typeof locationCountrySchema>
+export type LocationCity = z.infer<typeof locationCitySchema>
+export type EditProfileRequest = z.infer<typeof editProfileSchema>

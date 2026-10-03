@@ -45,6 +45,7 @@ export const MainPage = () => {
             <PostCard
               caption={post.description ?? ''}
               createdAt={post.createdAt}
+              userId={post.author.id}
               images={post.images}
               key={post.id}
               postId={post.id}

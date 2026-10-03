@@ -22,6 +22,7 @@ const MIN_EXPANDED_IMAGE_HEIGHT = 60
 type PostCardProps = {
   postId: string
   images: ImageData[]
+  userId: string
   username: string
   createdAt: string
   caption: string
@@ -31,7 +32,14 @@ type PostCardProps = {
 const isInteractiveElementTarget = (target: EventTarget | null) =>
   target instanceof Element && !!target.closest('button')
 
-export const PostCard = ({ postId, images, username, createdAt, caption }: PostCardProps) => {
+export const PostCard = ({
+  postId,
+  userId,
+  images,
+  username,
+  createdAt,
+  caption,
+}: PostCardProps) => {
   const captionWrapperRef = useRef<HTMLDivElement>(null)
   const imageWrapperRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -101,18 +109,13 @@ export const PostCard = ({ postId, images, username, createdAt, caption }: PostC
           <Carousel controlsSize={'s'} slides={slides} />
         </div>
       </Link>
-
-      <div className={s.userRow}>
-        <Avatar className={s.avatar} userName={username} />
-        <Typography className={s.username} noWrap title={username} variant={'h3'}>
-          {username}
-        </Typography>
-      </div>
-
+      <Link href={`/profile/${userId}`} className={s.userRow}>
+        <Avatar userName={username} />
+        <Typography variant={'h3'}>{username}</Typography>
+      </Link>
       <Typography className={s.time} color={'var(--color-light-900)'} variant={'caption1'}>
         {timeAgo}
       </Typography>
-
       <div className={s.captionWrapper} ref={captionWrapperRef}>
         <ReadMore
           className={s.caption}

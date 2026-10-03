@@ -20,7 +20,10 @@
 .comment {
   @include flex(flex, flex-start, flex-start);
 
+  display: inline-flex;
+  flex-shrink: 0;
   min-width: 0;
+  line-height: 0;
 
   .actionButton {
     flex-shrink: 0;

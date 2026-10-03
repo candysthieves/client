@@ -1,25 +1,17 @@
-import { Button } from '@candy.thieves/ui-kit-lumos'
-import Link from 'next/link'
 import type { ViewerStatus } from '@/lib/model'
+import { OwnerProfileActions } from '@/app/(public)/profile/[id]/ProfileActions/OwnerProfileActions/OwnerProfileActions'
+import { UserProfileActions } from '@/app/(public)/profile/[id]/ProfileActions/UserProfileActions/UserProfileActions'
 
 type ProfileActionsProps = {
   status: ViewerStatus
-  userId: string
 }
 
-export function ProfileActions({ status, userId }: ProfileActionsProps) {
+export function ProfileActions({ status }: ProfileActionsProps) {
   switch (status) {
     case 'owner':
-      return (
-        <Button as={Link} href={'/settings'} variant={'secondary'}>
-          Profile Settings
-        </Button>
-      )
+      return <OwnerProfileActions />
 
     case 'user':
-      return null
-
-    case 'friend':
-      return <Button variant={'secondary'}>Remove friend</Button>
+      return <UserProfileActions />
   }
 }

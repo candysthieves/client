@@ -28,8 +28,16 @@
 }
 
 .profileName {
-  color: var(--color-light-100);
+  min-width: 0;
+  text-overflow: ellipsis;
   overflow-wrap: anywhere;
+  white-space: nowrap;
+
+  @include media-tablet {
+    .profileName {
+      font-size: 1.5rem !important;
+    }
+  }
 }
 
 .settingsButton {
@@ -290,5 +298,22 @@
   .skeletonGrid {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.5rem;
+  }
+}
+
+.profileTop {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+
+  min-width: 0;
+}
+
+@include media-tablet {
+  .profileTop {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
   }
 }

@@ -1,7 +1,6 @@
 'use client'
 
-import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
-import Link from 'next/link'
+import { MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { ProfileActions } from '@/app/(public)/profile/[id]/ProfileActions/ProfileActions'
@@ -10,6 +9,7 @@ import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer
 import { PostModal } from '@/components/PostModal/PostModal'
 import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
+import { useAuthMe } from '@/lib/auth'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
 import { usePost } from '@/lib/posts'
 import { useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
@@ -29,7 +29,14 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const searchParams = useSearchParams()
   const isMobile = useIsMobileViewport()
 
-  const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
+  const { data: authMe, isHydrated } = useAuthMe()
+  const isAuth = isHydrated && !!authMe
+
+  const {
+    data: profile,
+    isError: isProfileError,
+    isLoading: isProfileLoading,
+  } = useProfile(userId, isHydrated)
   const isOwner = profile?.viewerStatus === 'owner'
   const postType = searchParams.get('type')
   const isDeletedPost = postType === 'deleted'
@@ -111,26 +118,17 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           />
 
           <div className={s.profileInfo}>
-            <Typography
-              id={'profile-name'}
-              className={s.profileName}
-              color={'white'}
-              variant={'h1'}
-            >
-              {profile?.username ?? userId}
-            </Typography>
-
-            {/*{isOwner && (*/}
-            {/*  <Button*/}
-            {/*    as={Link}*/}
-            {/*    className={s.settingsButton}*/}
-            {/*    href={'/settings'}*/}
-            {/*    variant={'secondary'}*/}
-            {/*  >*/}
-            {/*    Profile Settings*/}
-            {/*  </Button>*/}
-            {/*)}*/}
-            <ProfileActions status={profile.viewerStatus} userId={profile.id} />
+            <div className={s.profileTop}>
+              <Typography
+                id={'profile-name'}
+                className={s.profileName}
+                color={'white'}
+                variant={'h1'}
+              >
+                {profile?.username ?? userId}
+              </Typography>
+              {isAuth && <ProfileActions status={profile.viewerStatus} />}
+            </div>
 
             <dl className={s.stats}>
               <div className={s.stat}>
@@ -145,7 +143,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             </Typography>
           </div>
         </section>
-        {isOwner ? (
+        {isAuth && isOwner ? (
           <ProfilePostTabs
             postsFeed={
               <PostsFeed

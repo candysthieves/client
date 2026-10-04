@@ -26,7 +26,6 @@ export const TestLocationForm = () => {
   })
 
   const onSubmit = handleSubmit(data => {
-    // сюда прилетит { location: { countryId, cityId } }
     console.log('submit', data)
     alert(JSON.stringify(data, null, 2))
   })

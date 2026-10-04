@@ -2,10 +2,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
 import { deleteAvatar } from '@/lib/api/avatar'
 import { avatarKeys } from '@/lib/avatar'
+import { feedKeys } from '@/lib/feed'
+import { useAuth } from '@/lib/hooks'
 import { Avatar } from '@/lib/model'
+import { profileKeys } from '@/lib/profile'
 
 export const useDeleteAvatar = () => {
   const queryClient = useQueryClient()
+  const { user } = useAuth()
 
   return useMutation({
     mutationFn: deleteAvatar,
@@ -27,7 +31,11 @@ export const useDeleteAvatar = () => {
       ToastError({ messages: 'Failed to delete avatar. Please try again.' })
     },
 
-    onSuccess: () => {
+    onSuccess: async () => {
+      if (user?.id) {
+        await queryClient.invalidateQueries({ queryKey: profileKeys.detail(user.id) })
+      }
+      await queryClient.invalidateQueries({ queryKey: feedKeys.all })
       ToastSuccess({ message: 'Avatar deleted successfully' })
     },
 

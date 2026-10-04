@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { ProfileAvatarModal } from '@/features/editProfileAvatar'
 import { ConfirmDeleteProfileAvatarModal } from '@/features/editProfileAvatar/EditProfileAvatarModal'
 import { avatarKeys, useAvatar, useDeleteAvatar } from '@/lib/avatar'
+import { useAuth } from '@/lib/hooks'
 import { Avatar } from '@/lib/model'
 import s from './ProfileAvatarEditor.module.scss'
 
@@ -19,7 +20,6 @@ export const ProfileAvatarEditor = ({
   userName = 'UserName',
 }: ProfileAvatarEditorProps) => {
   const queryClient = useQueryClient()
-
   const { mutate: deleteAvatar } = useDeleteAvatar()
 
   const [isAvatarEditModalOpen, setIsAvatarEditModalOpen] = useState(false)

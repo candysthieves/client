@@ -6,7 +6,9 @@ import { useCallback, useRef, useState } from 'react'
 import { ToastError, ToastSuccess, ToastWarning } from '@/components'
 import { EditProfileAvatarState } from '@/features/createPost'
 import { avatarKeys, useUpdateAvatar } from '@/lib/avatar'
+import { feedKeys } from '@/lib/feed'
 import { postImageSchema } from '@/lib/model'
+import { profileKeys } from '@/lib/profile'
 import { PreviewStep, UploadAvatarStep } from '../../steps'
 import s from './ProfileAvatarModal.module.scss'
 
@@ -107,9 +109,11 @@ export const ProfileAvatarModal = ({ open, onClose, onAvatarUpdated }: ProfileAv
 
       onAvatarUpdated() // разрешаем запрос useAvatar
 
-      await queryClient.invalidateQueries({
-        queryKey: avatarKeys.avatar(),
-      })
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: avatarKeys.avatar() }),
+        queryClient.invalidateQueries({ queryKey: profileKeys.detail(userId) }),
+        queryClient.invalidateQueries({ queryKey: feedKeys.all }), // check for correct work with SSG
+      ])
 
       setIsProcessing(false)
 

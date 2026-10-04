@@ -1,0 +1,21 @@
+@use '@/styles/mixins' as *;
+
+.modal {
+  width: min($modal-width-s, calc(100vw - 2rem));
+}
+
+.confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem; // 3.375rem in mockup
+}
+
+.controls {
+  @include flex(flex, flex-end, сenter);
+
+  gap: 1.25rem; // 1.5rem in mockup
+
+  button {
+    min-width: 6rem;
+  }
+}

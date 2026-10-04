@@ -61,7 +61,7 @@ export const LocationInput = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [editingId, inputValue, locations])
+  }, [updateLocations, editingId, inputValue, locations])
 
   // Enter key to confirm input after editing
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {

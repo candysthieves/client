@@ -1,8 +1,9 @@
 import { UpdateAvatarRequest, UpdateAvatarResponse } from '@/features/createPost'
 import { request } from '@/lib/api/request'
-import { Avatar } from '@/lib/model'
+import { requestValidated } from '@/lib/api/requestValidated'
+import { Avatar, avatarSchema } from '@/lib/model'
 
-export const getAvatar = (): Promise<Avatar> => request<Avatar>(`/users/my-avatar`)
+export const getAvatar = (): Promise<Avatar> => requestValidated(`/users/my-avatar`, avatarSchema)
 
 export const updateAvatar = async (data: UpdateAvatarRequest): Promise<UpdateAvatarResponse> => {
   const formData = new FormData()

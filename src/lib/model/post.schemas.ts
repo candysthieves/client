@@ -73,8 +73,8 @@ export const postSchema = z.object({
 })
 
 export const avatarSchema = z.object({
-  avatarUrl: imageMediaSchema,
-  avatarPreviewUrl: imageMediaSchema,
+  avatarUrl: imageMediaSchema.nullable(),
+  avatarPreviewUrl: imageMediaSchema.nullable(),
 })
 
 export const postImageSchema = z

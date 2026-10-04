@@ -2,6 +2,7 @@
 
 import type { ModalProps } from '@candy.thieves/ui-kit-lumos'
 import { Avatar, Button, Close, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
+import Link from 'next/link'
 import { useState } from 'react'
 import type { Post, UserProfile } from '@/lib/model'
 import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
@@ -99,7 +100,7 @@ export const EditPostModal = ({
           </div>
 
           <div className={s.editSection}>
-            <div className={s.user}>
+            <Link href={`/profile/${post.author.id}`} className={s.user}>
               <Avatar
                 userName={profileUserName || post.author.username || ''}
                 size={'s'}
@@ -110,7 +111,7 @@ export const EditPostModal = ({
               <Typography variant={'subtitle2'}>
                 {profileUserName || post.author.username || ''}
               </Typography>
-            </div>
+            </Link>
 
             <PostDescriptionEditor
               value={description}

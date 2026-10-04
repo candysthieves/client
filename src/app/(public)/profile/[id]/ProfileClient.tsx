@@ -123,19 +123,20 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
               >
                 {profile.username}
               </Typography>
+
               {isAuth && <ProfileActions status={profile.viewerStatus} />}
             </div>
 
             <dl className={s.stats}>
               <div className={s.stat}>
                 <dt className={s.statLabel}>Publications</dt>
-                <dd className={s.statValue}>{profile?.publicationsCount ?? 0}</dd>
+                <dd className={s.statValue}>{profile.publicationsCount ?? 0}</dd>
               </div>
             </dl>
 
             <Typography className={s.about} variant={'body1'}>
               <span className={s.aboutLabel}>About me</span>
-              {profile?.description ?? ''}
+              {profile.description ?? ''}
             </Typography>
           </div>
         </section>

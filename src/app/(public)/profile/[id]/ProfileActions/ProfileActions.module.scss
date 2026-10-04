@@ -2,17 +2,56 @@
 
 .actions {
   display: flex;
-  gap: 1rem;
+  gap: 12px;
   align-items: center;
-}
 
-@include media-tablet-small {
-  .actions {
-    flex-direction: column;
-    width: 100%;
+  box-sizing: border-box;
+
+  // width: 272px;          /* Общая ширина для двух кнопок */
+  max-width: 100%;
+
+  :global(button),
+  :global(a) {
+    overflow: hidden !important;
+    flex: 1 1 auto;
+    flex-shrink: 1 !important;
+
+    min-width: 0 !important;
+
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
   }
 
-  .actions > * {
+  // ВЛОЖЕННОСТЬ: Стили для мобильных экранов
+  @include media-tablet-small {
+    flex-direction: column;
+    gap: 8px;
     width: 100%;
+
+    > * {
+      width: 100% !important;
+    }
+  }
+}
+
+.buttons {
+  display: flex;
+  box-sizing: border-box;
+  max-width: 100%;
+
+  @include media-tablet {
+    display: none;
+  }
+
+  button,
+  a {
+    overflow: hidden !important;
+
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
   }
 }

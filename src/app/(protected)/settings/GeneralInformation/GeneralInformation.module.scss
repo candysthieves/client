@@ -1,14 +1,9 @@
 @use '@/styles/mixins' as *;
 
-.content {
-  display: flex;
-  gap: 2.25rem;
-  align-items: flex-start;
+.root {
   padding: 1.5rem 0 3rem;
 
   @include media-tablet-small {
-    flex-direction: column;
-    align-items: stretch;
     padding: 1rem 0 2rem;
   }
 }
@@ -20,9 +15,4 @@
   @include media-tablet-small {
     width: 100%;
   }
-}
-
-.form {
-  flex: 1;
-  min-width: 0;
 }

@@ -3,13 +3,9 @@ import { GeneralInformationForm } from './GeneralInformationForm'
 
 export const GeneralInformation = () => {
   return (
-    <div className={s.content}>
+    <div className={s.root}>
       {/* TODO: profile photo with "Select Profile Photo" button — component is built by another developer. */}
-      <div className={s.photoSlot} />
-
-      <div className={s.form}>
-        <GeneralInformationForm />
-      </div>
+      <GeneralInformationForm photoSlot={<div className={s.photoSlot} />} />
     </div>
   )
 }

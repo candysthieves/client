@@ -1,51 +1,38 @@
 'use client'
 
-import { Button, Input, Typography } from '@candy.thieves/ui-kit-lumos'
+import type { ReactNode } from 'react'
+import { Button, Input } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { FormInput } from '@/components/FormInput'
 import { FormTextArea } from '@/components/FormTextArea'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
 import { MAX_ABOUT_ME_LENGTH } from '@/constants'
 import { ApiError } from '@/lib/api'
-import { ResponseValidationError } from '@/lib/api/responseValidationError'
 import {
   type EditProfileRequest,
   editProfileSchema,
-  type MyProfileResponse,
   PROFILE_SETTINGS_SAVED_MESSAGE,
-  SERVER_UNAVAILABLE_ERROR_MESSAGE,
-  SERVER_UNAVAILABLE_ERROR_TITLE,
 } from '@/lib/model'
 import { useMyProfile, useUpdateMyProfile } from '@/lib/profile'
 import {
+  getChangedProfileFields,
   isErrorResponse,
+  isServerUnavailableError,
   mapEditProfileDomainError,
   mapEditProfileValidationError,
   showGlobalError,
+  showServerUnavailableToast,
+  toFormValues,
 } from '@/lib/utils'
 import s from './GeneralInformationForm.module.scss'
 
-const SERVER_ERROR_MIN_STATUS = 500
+type Props = {
+  // Rendered next to the fields, above the divider; the Save button stays below it.
+  photoSlot?: ReactNode
+}
 
-// fetch rejects with a TypeError when the server is unreachable, so a non-API error that is not a
-// response-contract violation is a network failure.
-const isServerUnavailableError = (error: Error) =>
-  error instanceof ApiError
-    ? error.status >= SERVER_ERROR_MIN_STATUS
-    : !(error instanceof ResponseValidationError)
-
-const showServerUnavailableToast = () =>
-  ToastError({ title: SERVER_UNAVAILABLE_ERROR_TITLE, messages: SERVER_UNAVAILABLE_ERROR_MESSAGE })
-
-const toFormValues = (profile: MyProfileResponse): EditProfileRequest => ({
-  username: profile.username,
-  firstName: profile.firstName ?? '',
-  lastName: profile.lastName ?? '',
-  aboutMe: profile.aboutMe ?? '',
-})
-
-export const GeneralInformationForm = () => {
+export const GeneralInformationForm = ({ photoSlot }: Props) => {
   // Load errors are reported by the global query error handler (showGlobalError).
   const { data: profile, isPending: isProfileLoading } = useMyProfile()
   const { mutate: updateProfile, isPending: isSaving } = useUpdateMyProfile()
@@ -54,7 +41,8 @@ export const GeneralInformationForm = () => {
     control,
     handleSubmit,
     setError,
-    formState: { errors, isValid },
+    reset,
+    formState: { errors, isValid, isDirty, dirtyFields },
   } = useForm<EditProfileRequest>({
     resolver: zodResolver(editProfileSchema),
     mode: 'onChange',
@@ -67,8 +55,6 @@ export const GeneralInformationForm = () => {
     values: profile ? toFormValues(profile) : undefined,
     resetOptions: { keepDirtyValues: true },
   })
-
-  const aboutMeValue = useWatch({ control, name: 'aboutMe' })
 
   const handleSaveError = (error: Error) => {
     if (error instanceof ApiError && isErrorResponse(error.data)) {
@@ -91,58 +77,58 @@ export const GeneralInformationForm = () => {
     showGlobalError(error)
   }
 
-  const onSubmit = handleSubmit(({ username, firstName, lastName, aboutMe }) => {
-    // Date of birth, country and city are visual placeholders for now and are not sent.
-    updateProfile(
-      { username, firstName, lastName, aboutMe: aboutMe || null },
-      {
-        onSuccess: () => ToastSuccess({ message: PROFILE_SETTINGS_SAVED_MESSAGE }),
-        onError: handleSaveError,
-      }
-    )
+  const onSubmit = handleSubmit(values => {
+    updateProfile(getChangedProfileFields(values, dirtyFields), {
+      onSuccess: savedProfile => {
+        // Saved values become the new baseline, so the button is disabled until the next change.
+        reset(toFormValues(savedProfile))
+        ToastSuccess({ message: PROFILE_SETTINGS_SAVED_MESSAGE })
+      },
+      onError: handleSaveError,
+    })
   })
 
   return (
     <form onSubmit={onSubmit} noValidate>
-      <div className={s.fields}>
-        <FormInput
-          control={control}
-          name={'username'}
-          label={'Username'}
-          placeholder={'Epam11'}
-          autoComplete={'username'}
-          required
-          aria-invalid={Boolean(errors.username)}
-        />
+      <div className={s.content}>
+        {photoSlot}
 
-        <FormInput
-          control={control}
-          name={'firstName'}
-          label={'First Name'}
-          placeholder={'John'}
-          required
-          aria-invalid={Boolean(errors.firstName)}
-        />
+        <div className={s.fields}>
+          <FormInput
+            control={control}
+            name={'username'}
+            label={'Username'}
+            placeholder={'Epam11'}
+            autoComplete={'username'}
+            required
+            aria-invalid={Boolean(errors.username)}
+          />
 
-        <FormInput
-          control={control}
-          name={'lastName'}
-          label={'Last Name'}
-          placeholder={'Doe'}
-          required
-          aria-invalid={Boolean(errors.lastName)}
-        />
+          <FormInput
+            control={control}
+            name={'firstName'}
+            label={'First Name'}
+            placeholder={'John'}
+            aria-invalid={Boolean(errors.firstName)}
+          />
 
-        {/* Placeholder: real calendar date-picker is being built separately and will replace this input. */}
-        <Input label={'Date of birth'} placeholder={'dd.mm.yyyy'} disabled />
+          <FormInput
+            control={control}
+            name={'lastName'}
+            label={'Last Name'}
+            placeholder={'Doe'}
+            aria-invalid={Boolean(errors.lastName)}
+          />
 
-        {/* Placeholder: country/city picker library is still being chosen by the team. */}
-        <div className={s.locationRow}>
-          <Input label={'Select your country'} placeholder={'Country'} disabled />
-          <Input label={'Select your city'} placeholder={'City'} disabled />
-        </div>
+          {/* Placeholder: real calendar date-picker is being built separately and will replace this input. */}
+          <Input label={'Date of birth'} placeholder={'dd.mm.yyyy'} disabled />
 
-        <div className={s.aboutMeField}>
+          {/* Placeholder: country/city picker library is still being chosen by the team. */}
+          <div className={s.locationRow}>
+            <Input label={'Select your country'} placeholder={'Country'} disabled />
+            <Input label={'Select your city'} placeholder={'City'} disabled />
+          </div>
+
           <FormTextArea
             control={control}
             name={'aboutMe'}
@@ -150,16 +136,11 @@ export const GeneralInformationForm = () => {
             maxLength={MAX_ABOUT_ME_LENGTH}
             aria-invalid={Boolean(errors.aboutMe)}
           />
-          <Typography variant={'caption1'} color={'var(--color-light-900)'} className={s.counter}>
-            {aboutMeValue?.length ?? 0}/{MAX_ABOUT_ME_LENGTH}
-          </Typography>
         </div>
       </div>
 
-      <hr className={s.divider} />
-
       <div className={s.actions}>
-        <Button type={'submit'} disabled={!isValid || isSaving || isProfileLoading}>
+        <Button type={'submit'} disabled={!isDirty || !isValid || isSaving || isProfileLoading}>
           Save changes
         </Button>
       </div>

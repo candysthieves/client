@@ -1,9 +1,27 @@
 @use '@/styles/mixins' as *;
 
+.content {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-dark-300);
+
+  @include media-tablet-small {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 .fields {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: $spacing-error;
+
+  min-width: 0;
 }
 
 .locationRow {
@@ -18,21 +36,6 @@
   @include media-mobile {
     flex-direction: column;
   }
-}
-
-.aboutMeField {
-  position: relative;
-}
-
-.counter {
-  margin-top: 0.25rem;
-  text-align: right;
-}
-
-.divider {
-  margin: 1.5rem 0;
-  border: none;
-  border-top: 1px solid var(--color-dark-300);
 }
 
 .actions {

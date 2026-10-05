@@ -1,6 +1,7 @@
 'use client'
 
 import { Avatar, AvatarBlock, Button, Close, Typography } from '@candy.thieves/ui-kit-lumos'
+import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 import type { Post, UserProfile } from '@/lib/model'
 import { PostActionMenu } from '@/components/Post/PostActionMenu/PostActionMenu'
@@ -36,7 +37,7 @@ export const MobilePostFeed = ({
   const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile ?? {}
 
   const isMobile = useIsMobileViewport()
-  const { isAuthenticated } = useAuth()
+  const { user } = useAuth()
   const postRefs = useRef<(HTMLElement | null)[]>([])
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export const MobilePostFeed = ({
 
       <div className={s.slides}>
         {posts.map((post, index) => {
+          const isAuthor = user?.id === post.author.id
           return (
             <article
               key={post.id}
@@ -65,23 +67,28 @@ export const MobilePostFeed = ({
               }}
             >
               <div className={s.author}>
-                <Avatar
-                  userName={profileUserName || post.author.username || ''}
-                  size={'s'}
-                  delayMs={0}
-                  src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
-                />
+                <Link
+                  href={`/profile/${post.author.id}`}
+                  className={s.userlink /* или актуальный класс этого блока */}
+                >
+                  <Avatar
+                    userName={profileUserName || post.author.username || ''}
+                    size={'s'}
+                    delayMs={0}
+                    src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
+                  />
 
-                <Typography variant={'subtitle2'}>
-                  {profileUserName || post.author.username || ''}
-                </Typography>
+                  <Typography variant={'subtitle2'}>
+                    {profileUserName || post.author.username || ''}
+                  </Typography>
+                </Link>
 
                 {/* TODO: When the posts backend is connected, restore `const isAuthor = !!user && user.id === post.id` and pass isAuthor here. */}
                 <PostActionMenu
-                  isAuthor={isAuthenticated}
+                  isAuthor={isAuthor}
                   onEdit={() => onEdit(index)}
                   onDelete={() => onDelete(post.id)}
-                  canEdit={canEdit}
+                  canEdit={canEdit && isAuthor}
                   deleteLabel={deleteLabel}
                 />
               </div>

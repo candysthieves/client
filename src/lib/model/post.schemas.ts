@@ -26,14 +26,34 @@ export const addPostStateSchema = z.object({
   locations: z.array(locationSchema),
 })
 
+export const editProfileAvatarSchema = z.object({
+  file: postFileSchema.nullable(),
+  step: z.enum(['preview', 'upload']),
+})
+
 export const addPostRequestSchema = z.object({
   files: z.array(z.instanceof(File)),
   description: z.string().max(500),
   locations: z.array(locationSchema),
 })
 
+export const updateAvatarRequestSchema = z.object({
+  file: z.instanceof(File),
+})
+
 export const addPostResponseSchema = z.object({
   postId: z.uuid(),
+})
+
+export const updateAvatarResponseSchema = z.object({
+  userId: z.string(),
+})
+
+export const imageMediaSchema = z.object({
+  fileId: z.uuid(),
+  url: z.url(),
+  width: z.number().nonnegative(),
+  height: z.number().nonnegative(),
 })
 
 export const postAuthorSchema = z.object({
@@ -52,6 +72,11 @@ export const postSchema = z.object({
   author: postAuthorSchema,
 })
 
+export const avatarSchema = z.object({
+  avatarUrl: imageMediaSchema.nullable(),
+  avatarPreviewUrl: imageMediaSchema.nullable(),
+})
+
 export const postImageSchema = z
   .instanceof(File)
   .refine(file => ALLOWED_IMAGE_TYPES.includes(file.type), 'Only JPEG, JPG, PNG images are allowed')
@@ -59,6 +84,10 @@ export const postImageSchema = z
 
 export const postCreatedEventSchema = z.object({
   postId: z.uuid('Invalid postID format in add post SSE response'),
+})
+
+export const avatarEditedEventSchema = z.object({
+  userId: z.string('Invalid userID format in edit avatar SSE response'),
 })
 
 export const commentSchema = z.object({

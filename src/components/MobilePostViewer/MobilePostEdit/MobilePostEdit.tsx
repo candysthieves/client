@@ -2,6 +2,7 @@
 
 import { Avatar, Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import type { Post, UserProfile } from '@/lib/model'
 import { PostDescriptionEditor } from '@/components/Post/PostDescriptionEditor/PostDescriptionEditor'
@@ -51,7 +52,7 @@ export const MobilePostEdit = ({ post, userProfile, onCancel, onSave, isSaving }
         </div>
       </div>
       <div className={s.editContent}>
-        <div className={s.editAuthor}>
+        <Link href={`/profile/${post.author.id}`} className={s.editAuthor}>
           <Avatar
             userName={profileUserName || post.author.username || ''}
             size={'s'}
@@ -62,7 +63,7 @@ export const MobilePostEdit = ({ post, userProfile, onCancel, onSave, isSaving }
           <Typography variant={'subtitle2'}>
             {profileUserName || post.author.username || ''}
           </Typography>
-        </div>
+        </Link>
 
         <PostDescriptionEditor
           value={description}

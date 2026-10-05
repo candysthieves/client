@@ -3,10 +3,14 @@ import {
   addPostRequestSchema,
   addPostResponseSchema,
   addPostStateSchema,
+  avatarEditedEventSchema,
   draftPostFileSchema,
+  editProfileAvatarSchema,
   locationSchema,
   postCreatedEventSchema,
   postFileSchema,
+  updateAvatarRequestSchema,
+  updateAvatarResponseSchema,
 } from '@/lib/model'
 
 // Posts
@@ -27,9 +31,11 @@ export type AddPostState = z.infer<typeof addPostStateSchema>
 //   description: string
 //   locations: Location[]
 // }
+export type EditProfileAvatarState = z.infer<typeof editProfileAvatarSchema>
 
 export type CreatePostStep = z.infer<typeof addPostStateSchema>['step']
 // type CreatePostStep = 'crop' | 'publication' | 'upload'
+export type EditProfileAvatarStep = z.infer<typeof editProfileAvatarSchema>['step']
 
 export type AddPostRequest = z.infer<typeof addPostRequestSchema>
 // type AddPostRequest = {
@@ -37,10 +43,14 @@ export type AddPostRequest = z.infer<typeof addPostRequestSchema>
 //   description: string
 //   locations: Location[]
 // }
+export type UpdateAvatarRequest = z.infer<typeof updateAvatarRequestSchema>
+
 export type AddPostResponse = z.infer<typeof addPostResponseSchema>
 // {
 //   "postId": string
 // }
+
+export type UpdateAvatarResponse = z.infer<typeof updateAvatarResponseSchema>
 
 export enum AspectRatio {
   PORTRAIT = 'portrait', // 4:5
@@ -49,3 +59,4 @@ export enum AspectRatio {
 }
 
 export type PostCreatedEvent = z.infer<typeof postCreatedEventSchema>
+export type AvatarEditedEvent = z.infer<typeof avatarEditedEventSchema>

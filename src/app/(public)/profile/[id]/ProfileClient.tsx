@@ -4,6 +4,7 @@ import { MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { ProfileActions } from '@/app/(public)/profile/[id]/ProfileActions/ProfileActions'
+import { ProfileSkeleton } from '@/app/(public)/profile/[id]/ProfileSkeleton'
 import { DeletedPosts } from '@/components/DeletedPosts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
@@ -16,7 +17,6 @@ import { useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
 import { useDeletedPost } from '@/lib/profile/queries/useDeletedPost'
 import { PostsFeed } from './PostsFeed'
 import s from './ProfileClient.module.scss'
-import { ProfileSkeleton } from './ProfileSkeleton'
 
 type ProfileClientProps = {
   userId: string
@@ -83,10 +83,6 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const handleClosePost = () => router.replace(`/profile/${userId}`)
   const handleLoadMorePosts = useCallback(() => void fetchNextPage(), [fetchNextPage])
 
-  if (isProfileLoading || isPostsLoading) {
-    return <ProfileSkeleton />
-  }
-
   if (!profile || isProfileError || (isPostsError && !profilePostsData)) {
     return (
       <section className={s.profileError} role={'alert'}>
@@ -103,55 +99,67 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   return (
     <>
       <div className={s.profile}>
-        <section className={s.profileHeader} aria-labelledby={'profile-name'}>
-          <MainAvatar
-            className={s.profileAvatar}
-            userName={profile.username ?? userId}
-            src={profile.avatarPreviewUrl?.url ?? ''}
-            size={'xxl'}
-            delayMs={0}
-          />
+        {isProfileLoading ? (
+          <ProfileSkeleton variant={'profile'} />
+        ) : (
+          profile && (
+            <section className={s.profileHeader} aria-labelledby={'profile-name'}>
+              <MainAvatar
+                className={s.profileAvatar}
+                userName={profile.username ?? userId}
+                src={profile.avatarPreviewUrl?.url ?? ''}
+                size={'xxl'}
+                delayMs={0}
+              />
 
-          <div className={s.profileInfo}>
-            <div className={s.profileTop}>
-              <Typography
-                id={'profile-name'}
-                className={s.profileName}
-                color={'white'}
-                variant={'h1'}
-              >
-                {profile.username}
-              </Typography>
+              <div className={s.profileInfo}>
+                <div className={s.profileTop}>
+                  <Typography
+                    id={'profile-name'}
+                    className={s.profileName}
+                    color={'white'}
+                    variant={'h1'}
+                  >
+                    {profile.username}
+                  </Typography>
 
-              {isAuth && <ProfileActions status={profile.viewerStatus} />}
-            </div>
+                  {isAuth && <ProfileActions status={profile.viewerStatus} />}
+                </div>
 
-            <dl className={s.stats}>
-              <div className={s.stat}>
-                <dt className={s.statLabel}>Publications</dt>
-                <dd className={s.statValue}>{profile.publicationsCount ?? 0}</dd>
+                <dl className={s.stats}>
+                  <div className={s.stat}>
+                    <dt className={s.statLabel}>Publications</dt>
+                    <dd className={s.statValue}>{profile.publicationsCount ?? 0}</dd>
+                  </div>
+                </dl>
+
+                <Typography className={s.about} variant={'body1'}>
+                  <span className={s.aboutLabel}>About me</span>
+                  {profile.description ?? ''}
+                </Typography>
               </div>
-            </dl>
-
-            <Typography className={s.about} variant={'body1'}>
-              <span className={s.aboutLabel}>About me</span>
-              {profile.description ?? ''}
-            </Typography>
-          </div>
-        </section>
-        {isOwner ? (
+            </section>
+          )
+        )}
+        {isProfileLoading ? (
+          <ProfileSkeleton variant={'posts-grid'} count={8} />
+        ) : isOwner ? (
           <ProfilePostTabs
             postsFeed={
-              <PostsFeed
-                hasNextPage={hasNextPage ?? false}
-                isLoading={isPostsLoading}
-                isLoadingNextPage={isFetchingNextPage}
-                isLoadMoreError={isFetchNextPageError}
-                key={userId}
-                onLoadMore={handleLoadMorePosts}
-                posts={profilePosts}
-                userId={userId}
-              />
+              isPostsLoading ? (
+                <ProfileSkeleton variant={'posts-grid'} count={4} />
+              ) : (
+                <PostsFeed
+                  hasNextPage={hasNextPage ?? false}
+                  isLoading={isPostsLoading}
+                  isLoadingNextPage={isFetchingNextPage}
+                  isLoadMoreError={isFetchNextPageError}
+                  key={userId}
+                  onLoadMore={handleLoadMorePosts}
+                  posts={profilePosts}
+                  userId={userId}
+                />
+              )
             }
             deletedPosts={
               <DeletedPosts
@@ -164,6 +172,8 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             }
             deletedPostsCount={deletedPosts.length}
           />
+        ) : isPostsLoading ? (
+          <ProfileSkeleton variant={'posts-grid'} count={8} />
         ) : (
           <PostsFeed
             hasNextPage={hasNextPage ?? false}
@@ -177,7 +187,6 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           />
         )}
       </div>
-
       {selectedPost &&
         profile &&
         (isMobile ? (

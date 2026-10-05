@@ -1,8 +1,17 @@
 import { Button, CircularProgress } from '@candy.thieves/ui-kit-lumos'
+import { useEffect, useState } from 'react'
+import { ToastError } from '@/components'
 import { PostFile } from '@/features/createPost'
 import { PreviewImage } from '@/features/editProfileAvatar/steps/PreviewStep/PreviewImage'
 import { useAvatarEvents } from '@/lib/hooks'
+import { cropImage } from '@/lib/utils/cropImage'
 import s from './PreviewStep.module.scss'
+
+type CroppedAvatar = {
+  fileId: string
+  file: File
+  url: string
+}
 
 type PreviewStepProps = {
   file: null | PostFile
@@ -20,34 +29,69 @@ export const PreviewStep = ({
   onAvatarUpdated,
   // apiRef,
 }: PreviewStepProps) => {
-  const imageUrl = file?.originalUrl ?? ''
-
-  const onSaveClickHandler = () => {
-    // TODO: change file check inside to new CENTERED AVATAR file check
-    if (!file) {
-      return
-    }
-    // TODO: CHANGE FILE PASSED TO CENTERED AVATAR in updateAvatarFile function
-    updateAvatarFile(file.file)
-  }
+  const [croppedAvatar, setCroppedAvatar] = useState<CroppedAvatar | null>(null)
 
   useAvatarEvents({ onAvatarUpdated })
 
+  useEffect(() => {
+    if (!file) {
+      return
+    }
+
+    const { id, file: sourceFile } = file
+
+    let isStale = false
+    let createdUrl = ''
+
+    cropImage(sourceFile)
+      .then(croppedFile => {
+        if (isStale) {
+          return
+        }
+
+        createdUrl = URL.createObjectURL(croppedFile)
+        setCroppedAvatar({ fileId: id, file: croppedFile, url: createdUrl })
+      })
+      .catch(() => {
+        if (!isStale) {
+          ToastError({
+            title: 'Avatar crop error',
+            messages: 'Failed to prepare the cropped avatar',
+          })
+        }
+      })
+
+    return () => {
+      isStale = true
+
+      if (createdUrl) {
+        URL.revokeObjectURL(createdUrl)
+      }
+    }
+  }, [file])
+
+  // Результат считается актуальным только для того файла, который обрезан
+  const cropped = file && croppedAvatar?.fileId === file.id ? croppedAvatar : null
+
+  const onSaveClickHandler = () => {
+    if (!cropped) {
+      return
+    }
+
+    updateAvatarFile(cropped.file)
+  }
+
   return (
     <div className={s.imageContent}>
-      {/* Replace the following blocks of code with a component that centers the avatar */}
-      <PreviewImage src={imageUrl} alt={`Avatar-preview-${file?.id}`} />
-      {/*<CropImage*/}
-      {/*  key={file.id}*/}
-      {/*  imageUrl={imageUrl}*/}
-      {/*  fileId={file.id}*/}
-      {/*  aspect={aspect}*/}
-      {/*  updateCroppedFile={updateCroppedFile}*/}
-      {/*  apiRef={apiRef}*/}
-      {/*></CropImage>*/}
+      <div className={s.imageWrapper}>
+        {cropped && <PreviewImage src={cropped.url} alt={`Avatar-preview-${cropped.fileId}`} />}
+
+        {cropped && <div className={s.cropOverlay} />}
+      </div>
+
       <Button
         onClick={onSaveClickHandler}
-        disabled={isPublishing}
+        disabled={isPublishing || !cropped}
         style={{
           alignSelf: 'flex-end',
           minWidth: '5.5rem',

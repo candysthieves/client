@@ -31,7 +31,7 @@ export const PreviewImage = ({ src, alt, className }: PreviewImageProps) => {
         src={src}
         alt={alt}
         width={332}
-        height={340}
+        height={332}
         className={clsx(className, s.imageItem, {
           [s.hidden]: isImgLoading,
         })}

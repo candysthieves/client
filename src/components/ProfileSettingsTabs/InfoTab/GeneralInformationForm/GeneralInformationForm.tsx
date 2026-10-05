@@ -1,9 +1,9 @@
 'use client'
 
-import { Button, Input } from '@candy.thieves/ui-kit-lumos'
+import { Button, Input, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { type ReactNode, useId } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { FormInput } from '@/components/FormInput'
 import { FormTextArea } from '@/components/FormTextArea'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
@@ -57,6 +57,9 @@ export const GeneralInformationForm = ({ profile, isProfileLoading, photoSlot }:
     values: profile ? toFormValues(profile) : undefined,
     resetOptions: { keepDirtyValues: true },
   })
+
+  const aboutMeLength = useWatch({ control, name: 'aboutMe' })?.length ?? 0
+  const isAboutMeLimitReached = aboutMeLength >= MAX_ABOUT_ME_LENGTH
 
   const handleSaveError = (error: Error) => {
     if (error instanceof ApiError && isErrorResponse(error.data)) {
@@ -131,13 +134,24 @@ export const GeneralInformationForm = ({ profile, isProfileLoading, photoSlot }:
             <Input label={'Select your city'} placeholder={'City'} disabled />
           </div>
 
-          <FormTextArea
-            control={control}
-            name={'aboutMe'}
-            label={'About Me'}
-            maxLength={MAX_ABOUT_ME_LENGTH}
-            aria-invalid={Boolean(errors.aboutMe)}
-          />
+          {/* Native maxLength blocks typing past the limit; the border and counter turn red once it is reached. */}
+          <div>
+            <FormTextArea
+              control={control}
+              name={'aboutMe'}
+              label={'About Me'}
+              maxLength={MAX_ABOUT_ME_LENGTH}
+              className={isAboutMeLimitReached ? s.limitReached : undefined}
+              aria-invalid={Boolean(errors.aboutMe)}
+            />
+            <Typography
+              variant={'caption1'}
+              color={isAboutMeLimitReached ? 'var(--color-danger-500)' : 'var(--color-light-900)'}
+              className={s.counter}
+            >
+              {aboutMeLength}/{MAX_ABOUT_ME_LENGTH}
+            </Typography>
+          </div>
         </form>
       </div>
 

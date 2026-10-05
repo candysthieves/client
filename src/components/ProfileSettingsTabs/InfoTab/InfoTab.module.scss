@@ -17,19 +17,28 @@
     grid-template-areas:
       'photo'
       'fields'
-      'divider'
       'actions';
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
-// ProfileAvatarEditor already has margin-top: 3rem, which in Figma is measured from the tabs, not from the padding.
+// ProfileAvatarEditor already has margin-top: 3rem; Figma measures the avatar from the tabs, not from the padding:
+// 3rem below the tabs on desktop, 1.5rem on mobile.
 .photo {
   grid-area: photo;
   margin-top: -1.5rem;
+
+  @include media-tablet-small {
+    justify-self: center;
+    margin-top: -3rem;
+  }
 }
 
 .divider {
   grid-area: divider;
   border-top: 1px solid var(--color-dark-300);
+
+  @include media-tablet-small {
+    display: none;
+  }
 }

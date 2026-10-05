@@ -42,4 +42,12 @@
   @include flex(flex, flex-end);
 
   grid-area: actions;
+
+  // Mobile layout has no divider: the full-width Save button sits 3rem below About Me.
+  // ui-kit Button replaces its own classes with a passed className, so the width is set from here.
+  @include media-tablet-small {
+    display: grid;
+    justify-content: stretch;
+    margin-top: 1.5rem;
+  }
 }

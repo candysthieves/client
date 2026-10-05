@@ -1,0 +1,35 @@
+@use '@/styles/mixins' as *;
+
+// GeneralInformationForm renders with display: contents and fills the "fields" and "actions" areas.
+.layout {
+  display: grid;
+  grid-template-areas:
+    'photo fields'
+    'divider divider'
+    'actions actions';
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.5rem 1.75rem;
+  align-items: start;
+
+  padding: 1.5rem 0 3rem;
+
+  @include media-tablet-small {
+    grid-template-areas:
+      'photo'
+      'fields'
+      'divider'
+      'actions';
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// ProfileAvatarEditor already has margin-top: 3rem, which in Figma is measured from the tabs, not from the padding.
+.photo {
+  grid-area: photo;
+  margin-top: -1.5rem;
+}
+
+.divider {
+  grid-area: divider;
+  border-top: 1px solid var(--color-dark-300);
+}

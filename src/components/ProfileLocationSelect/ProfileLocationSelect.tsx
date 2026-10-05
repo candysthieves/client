@@ -1,7 +1,8 @@
 'use client'
 
-import { Select, Typography } from '@candy.thieves/ui-kit-lumos'
+import { SearchableSelect, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useMemo } from 'react'
+import { SELECT_SEARCH_DEBOUNCE } from '@/constants'
 import { CityId, CountryId } from '@/lib/model'
 import { useCities, useCountries } from '@/lib/profileLocation'
 import s from './ProfileLocationSelect.module.scss'
@@ -66,11 +67,12 @@ export const ProfileLocationSelect = ({
   return (
     <div className={s.locationContainer} onBlur={onBlur}>
       <div className={s.selectItem}>
-        <Select
+        <SearchableSelect
           label={'Select your country'}
           placeholder={isCountriesPending ? 'Loading…' : 'Country'}
           options={countryOptions}
           value={value.countryId != null ? String(value.countryId) : undefined}
+          debounceDelay={SELECT_SEARCH_DEBOUNCE}
           onValueChange={handleCountryChange}
           disabled={disabled || isCountriesPending}
           aria-invalid={Boolean(countryError)}
@@ -91,13 +93,14 @@ export const ProfileLocationSelect = ({
       </div>
 
       <div className={s.selectItem}>
-        <Select
+        <SearchableSelect
           label={'Select your city'}
           placeholder={
             value.countryId == null ? 'Select country first' : isCitiesPending ? 'Loading…' : 'City'
           }
           options={cityOptions}
           value={value.cityId != null ? String(value.cityId) : undefined}
+          debounceDelay={SELECT_SEARCH_DEBOUNCE}
           onValueChange={handleCityChange}
           disabled={isCityDisabled}
           aria-invalid={Boolean(cityError)}

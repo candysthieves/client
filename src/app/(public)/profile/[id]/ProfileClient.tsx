@@ -9,7 +9,7 @@ import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer
 import { PostModal } from '@/components/PostModal/PostModal'
 import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
-import { useAuthMe } from '@/lib/auth'
+import { useAuth } from '@/lib/hooks'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
 import { usePost } from '@/lib/posts'
 import { useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
@@ -29,8 +29,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const searchParams = useSearchParams()
   const isMobile = useIsMobileViewport()
 
-  const { data: authMe, isHydrated } = useAuthMe()
-  const isAuth = isHydrated && !!authMe
+  const { isAuthenticated } = useAuth()
 
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
   const isOwner = profile?.viewerStatus === 'owner'
@@ -87,7 +86,6 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     return <ProfileSkeleton />
   }
 
-  // if (isProfileError || (isPostsError && !profilePostsData)) {
   if (!profile || isProfileError || (isPostsError && !profilePostsData)) {
     return (
       <section className={s.profileError} role={'alert'}>
@@ -124,7 +122,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
                 {profile.username}
               </Typography>
 
-              {isAuth && <ProfileActions status={profile.viewerStatus} />}
+              {isAuthenticated && <ProfileActions status={profile.viewerStatus} />}
             </div>
 
             <dl className={s.stats}>

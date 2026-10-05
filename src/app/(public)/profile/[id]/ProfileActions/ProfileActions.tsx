@@ -1,9 +1,6 @@
 import type { ViewerStatus } from '@/lib/model'
-import {
-  OwnerProfileActions,
-  UserProfileActions,
-  FriendProfileActions,
-} from '@/app/(public)/profile/[id]/ProfileActions'
+import { OwnerProfileActions } from '@/app/(public)/profile/[id]/ProfileActions'
+import { ViewerProfileActions } from '@/app/(public)/profile/[id]/ProfileActions/ViewerProfileActions'
 
 type ProfileActionsProps = {
   status: ViewerStatus
@@ -15,9 +12,10 @@ export function ProfileActions({ status }: ProfileActionsProps) {
       return <OwnerProfileActions />
 
     case 'user':
-      return <UserProfileActions />
-
     case 'friend':
-      return <FriendProfileActions />
+      return <ViewerProfileActions isFriend={status === 'friend'} />
+
+    default:
+      return null
   }
 }

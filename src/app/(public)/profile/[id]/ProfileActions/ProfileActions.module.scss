@@ -6,30 +6,27 @@
   align-items: center;
 
   box-sizing: border-box;
-
-  // width: 272px;          /* Общая ширина для двух кнопок */
   max-width: 100%;
 
   :global(button),
   :global(a) {
-    overflow: hidden !important;
+    overflow: hidden;
     flex: 1 1 auto;
-    flex-shrink: 1 !important;
+    flex-shrink: 1;
 
-    min-width: 0 !important;
+    min-width: 0;
 
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  // ВЛОЖЕННОСТЬ: Стили для мобильных экранов
   @include media-tablet-small {
     flex-direction: column;
     gap: 8px;
     width: 100%;
 
     > * {
-      width: 100% !important;
+      width: 100%;
     }
   }
 }
@@ -45,13 +42,13 @@
 
   button,
   a {
-    overflow: hidden !important;
+    overflow: hidden;
 
     width: 100%;
     min-width: 0;
     max-width: 100%;
 
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }

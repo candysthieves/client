@@ -28,7 +28,6 @@
     grid-template-columns: 7.5rem minmax(0, 1fr);
     grid-template-rows: auto auto auto;
     gap: 1rem 1.25rem;
-
     padding-bottom: 2rem;
   }
 }
@@ -175,13 +174,14 @@
   align-self: flex-start;
 
   width: 100%;
-  max-width: 37.5rem;
   margin: 0;
 
   font-size: var(--font-size-m) !important;
   line-height: var(--line-height-m);
   color: var(--color-light-100) !important;
   text-align: left;
+  word-break: break-all;
+  overflow-wrap: anywhere;
 
   @include media-tablet {
     font-size: var(--font-size-s) !important;

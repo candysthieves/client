@@ -29,7 +29,8 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const searchParams = useSearchParams()
   const isMobile = useIsMobileViewport()
 
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isHydrated } = useAuth()
+  const isAuth = isHydrated && isAuthenticated
 
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
   const isOwner = profile?.viewerStatus === 'owner'
@@ -122,7 +123,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
                 {profile.username}
               </Typography>
 
-              {isAuthenticated && <ProfileActions status={profile.viewerStatus} />}
+              {isAuth && <ProfileActions status={profile.viewerStatus} />}
             </div>
 
             <dl className={s.stats}>

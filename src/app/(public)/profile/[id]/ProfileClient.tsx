@@ -1,14 +1,15 @@
 'use client'
 
-import { Button, MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
-import Link from 'next/link'
+import { MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
+import { ProfileActions } from '@/app/(public)/profile/[id]/ProfileActions/ProfileActions'
 import { DeletedPosts } from '@/components/DeletedPosts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
 import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
+import { useAuth } from '@/lib/hooks'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
 import { usePost } from '@/lib/posts'
 import { useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
@@ -27,6 +28,9 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isMobile = useIsMobileViewport()
+
+  const { isAuthenticated, isHydrated } = useAuth()
+  const isAuth = isHydrated && isAuthenticated
 
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
   const isOwner = profile?.viewerStatus === 'owner'
@@ -83,7 +87,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     return <ProfileSkeleton />
   }
 
-  if (isProfileError || (isPostsError && !profilePostsData)) {
+  if (!profile || isProfileError || (isPostsError && !profilePostsData)) {
     return (
       <section className={s.profileError} role={'alert'}>
         <Typography color={'var(--color-light-100)'} variant={'h1'}>
@@ -102,32 +106,25 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
         <section className={s.profileHeader} aria-labelledby={'profile-name'}>
           <MainAvatar
             className={s.profileAvatar}
-            userName={profile?.username ?? userId}
-            src={profile?.avatarPreviewUrl?.url ?? ''}
+            userName={profile.username ?? userId}
+            src={profile.avatarPreviewUrl?.url ?? ''}
             size={'xxl'}
             delayMs={0}
           />
 
           <div className={s.profileInfo}>
-            <Typography
-              id={'profile-name'}
-              className={s.profileName}
-              color={'white'}
-              variant={'h1'}
-            >
-              {profile?.username ?? userId}
-            </Typography>
-
-            {isOwner && (
-              <Button
-                as={Link}
-                className={s.settingsButton}
-                href={'/settings'}
-                variant={'secondary'}
+            <div className={s.profileTop}>
+              <Typography
+                id={'profile-name'}
+                className={s.profileName}
+                color={'white'}
+                variant={'h1'}
               >
-                Profile Settings
-              </Button>
-            )}
+                {profile.username}
+              </Typography>
+
+              {isAuth && <ProfileActions status={profile.viewerStatus} />}
+            </div>
 
             <dl className={s.stats}>
               <div className={s.stat}>
@@ -201,7 +198,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           />
         ))}
 
-      {showCreateModal && isOwner && profile && <CreatePostModal userProfile={profile} />}
+      {showCreateModal && <CreatePostModal userProfile={profile} />}
     </>
   )
 }

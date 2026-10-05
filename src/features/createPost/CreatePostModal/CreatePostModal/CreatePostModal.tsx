@@ -217,7 +217,7 @@ export const CreatePostModal = ({ userProfile }: CreatePostModalProps) => {
     changeStep('upload')
   }
 
-  // ConfirmCloseCreatePostModal handlers
+  // ConfirmDeleteProfileAvatarModal handlers
   const handleConfirm = async () => {
     await saveToDraftHandler()
     closeCreation()
@@ -299,7 +299,7 @@ export const CreatePostModal = ({ userProfile }: CreatePostModalProps) => {
         publishingPostIdRef.current = postId
         setIsProcessing(true)
       },
-      onError: error => {
+      onError: () => {
         ToastError({
           title: 'Post publish Error',
           messages: 'Failed to publish post',

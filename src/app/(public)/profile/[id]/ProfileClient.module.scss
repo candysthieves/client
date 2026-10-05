@@ -2,49 +2,144 @@
 
 .profile {
   padding: 2.25rem 0 4rem;
+
+  @include media-tablet {
+    padding: 1.5rem 1.875rem 5.5rem;
+  }
+
+  @include media-tablet-small {
+    padding: 1.25rem 1rem 5.5rem;
+  }
 }
 
 .profileHeader {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: 12.75rem minmax(0, 1fr);
   gap: 2.375rem;
   align-items: start;
 
   padding-bottom: 3rem;
+
+  @include media-tablet {
+    gap: 1.5rem;
+  }
+
+  @include media-tablet-small {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    gap: 1rem 1.25rem;
+    padding-bottom: 2rem;
+  }
 }
 
-.profileAvatar,
-.skeletonAvatar {
+.profileAvatar {
   @include width-height(12.75rem);
+
+  grid-column: 1;
+  grid-row: 1;
+
+  @include media-tablet {
+    @include width-height(9rem);
+  }
+
+  @include media-tablet-small {
+    @include width-height(7.5rem);
+  }
 }
 
 .profileInfo {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1.5rem 2rem;
-  align-items: center;
-
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
   min-width: 0;
+
+  @include media-tablet-small {
+    display: contents;
+  }
+}
+
+.profileTop {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  min-width: 0;
+
+  @include media-tablet {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  @include media-tablet-small {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+
+    > div {
+      width: 100%;
+      min-width: 0;
+    }
+  }
 }
 
 .profileName {
-  color: var(--color-light-100);
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  flex: 1 1 auto;
+
+  min-width: 0;
+
+  font-size: var(--font-size-xl) !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @include media-tablet {
+    font-size: var(--font-size-m) !important;
+  }
+
+  @include media-tablet-small {
+    width: 100%;
+  }
 }
 
 .settingsButton {
+  flex: 0 0 auto;
   white-space: nowrap;
+
+  @include media-tablet-small {
+    justify-self: start;
+  }
 }
 
 .stats {
   display: flex;
-  grid-column: 1 / -1;
   gap: 3.5rem;
+
   margin: 0;
+  padding: 0;
+
+  color: var(--color-light-100) !important;
+  list-style: none;
+
+  @include media-tablet-small {
+    grid-column: 2;
+    grid-row: 1;
+    gap: 1.5rem;
+    align-self: center;
+    justify-content: flex-start;
+
+    min-width: 0;
+  }
 }
 
 .stat {
-  display: grid;
+  display: flex;
+  flex-direction: column-reverse;
   gap: 0.125rem;
   justify-items: start;
 }
@@ -61,22 +156,45 @@
 }
 
 .about {
-  grid-column: 1 / -1;
+  align-self: flex-start;
+
+  width: 100%;
   margin: 0;
+
+  font-size: var(--font-size-m) !important;
   line-height: var(--line-height-m);
-  color: var(--color-light-100);
+  color: var(--color-light-100) !important;
+  text-align: left;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+
+  @include media-tablet {
+    font-size: var(--font-size-s) !important;
+  }
+
+  @include media-tablet-small {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
 }
 
 .postsGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.75rem;
-}
 
-.skeletonGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.75rem;
+  @include media-desktop {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include media-tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include media-tablet-small {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
 }
 
 .postPreview {
@@ -90,48 +208,21 @@
 
   background: var(--color-dark-300);
   outline: none;
-}
 
-.postSkeleton {
-  display: block;
-  aspect-ratio: 1 / 1;
-}
-
-.postImageSkeleton {
-  position: absolute;
-  inset: 0;
-}
-
-.loadMoreError {
-  display: grid;
-  gap: 0.75rem;
-  justify-items: center;
-
-  margin-top: 1rem;
-
-  text-align: center;
-}
-
-@include media-desktop {
-  .postsGrid,
-  .skeletonGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-accent-500);
   }
-}
 
-.postPreview:focus-visible {
-  box-shadow: 0 0 0 2px var(--color-accent-500);
+  &:hover .postImage {
+    transform: scale(1.03);
+    opacity: 0.75;
+  }
 }
 
 .postImage {
   @include transition-basic(opacity, transform);
 
   object-fit: cover;
-}
-
-.postPreview:hover .postImage {
-  transform: scale(1.03);
-  opacity: 0.75;
 }
 
 .postPlaceholder {
@@ -152,139 +243,22 @@
   text-align: center;
 }
 
+.loadMoreError {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+
+  margin-top: 1rem;
+
+  text-align: center;
+}
+
 .profileError {
   display: grid;
   gap: 1rem;
   padding: 2.25rem 0 4rem;
-}
 
-.skeleton {
-  display: grid;
-  grid-template-columns: 12.75rem minmax(0, 1fr);
-  gap: 2.375rem;
-  padding: 2.25rem 0 4rem;
-}
-
-.skeletonAvatar,
-.skeletonLine,
-.skeletonLineShort,
-.skeletonText,
-.skeletonPost {
-  background: linear-gradient(
-    90deg,
-    var(--color-dark-300),
-    var(--color-dark-100),
-    var(--color-dark-300)
-  );
-  background-size: 200% 100%;
-  animation: pulse 1.4s ease-in-out infinite;
-}
-
-.skeletonAvatar {
-  border-radius: 50%;
-}
-
-.skeletonContent {
-  display: grid;
-  gap: 1rem;
-  align-content: start;
-}
-
-.skeletonLine {
-  @include width-height(min(18rem, 60%), 2.25rem);
-}
-
-.skeletonLineShort {
-  @include width-height(35%, 1.25rem);
-}
-
-.skeletonText {
-  @include width-height(100%, 4rem);
-}
-
-.skeletonGrid {
-  grid-column: 1 / -1;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-dark-300);
-}
-
-.skeletonPost {
-  aspect-ratio: 1 / 1;
-}
-
-@keyframes pulse {
-  0% {
-    background-position: 100% 0;
-  }
-
-  100% {
-    background-position: -100% 0;
-  }
-}
-
-@include media-tablet {
-  .profile,
-  .skeleton {
-    padding: 1.5rem 1.875rem 5.5rem;
-  }
-
-  .profileHeader {
-    gap: 1.5rem;
-  }
-
-  .profileAvatar,
-  .skeletonAvatar {
-    @include width-height(9rem);
-  }
-
-  .skeleton {
-    grid-template-columns: 9rem minmax(0, 1fr);
-  }
-
-  .postsGrid,
-  .skeletonGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@include media-tablet-small {
-  .profile,
-  .skeleton,
-  .profileError {
+  @include media-tablet-small {
     padding: 1.25rem 1rem 5.5rem;
-  }
-
-  .profileHeader,
-  .skeleton {
-    grid-template-columns: 1fr;
-  }
-
-  .profileHeader {
-    gap: 1.25rem;
-    padding-bottom: 2rem;
-  }
-
-  .profileAvatar,
-  .skeletonAvatar {
-    @include width-height(7.5rem);
-  }
-
-  .profileInfo {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .settingsButton {
-    justify-self: start;
-  }
-
-  .stats {
-    gap: 1.5rem;
-  }
-
-  .postsGrid,
-  .skeletonGrid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.5rem;
   }
 }

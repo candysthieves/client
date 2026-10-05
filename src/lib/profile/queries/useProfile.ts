@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { getUserProfile } from '@/lib/api'
-import { profileKeys } from '../profileKeys'
+import { profileKeys } from '@/lib/profile'
 
 export const useProfile = (userId: string, enabled = true) =>
   useQuery({

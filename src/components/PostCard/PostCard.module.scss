@@ -71,7 +71,10 @@
 }
 
 .username {
+  overflow: hidden;
   min-width: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .time {

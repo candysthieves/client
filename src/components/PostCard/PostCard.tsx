@@ -110,8 +110,10 @@ export const PostCard = ({
         </div>
       </Link>
       <Link href={`/profile/${userId}`} className={s.userRow}>
-        <Avatar userName={username} />
-        <Typography variant={'h3'}>{username}</Typography>
+        <Avatar className={s.avatar} userName={username} />
+        <Typography className={s.username} title={username} variant={'h3'}>
+          {username}
+        </Typography>
       </Link>
       <Typography className={s.time} color={'var(--color-light-900)'} variant={'caption1'}>
         {timeAgo}

@@ -23,8 +23,8 @@ export function useLogout() {
       queryClient.removeQueries({ queryKey: authKeys.me() })
       queryClient.removeQueries({ queryKey: avatarKeys.avatar() })
       queryClient.removeQueries({ queryKey: profileKeys.all }) // check if not correct
-      // add private profile later
-      queryClient.invalidateQueries({ queryKey: authKeys.me() }) // check if needed
+      // add private profile later// check if needed
+      queryClient.invalidateQueries({ queryKey: authKeys.me() })
     },
   })
 }

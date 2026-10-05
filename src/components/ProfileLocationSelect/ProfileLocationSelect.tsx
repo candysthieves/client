@@ -71,6 +71,7 @@ export const ProfileLocationSelect = ({
         onValueChange={handleCountryChange}
         disabled={disabled || isCountriesPending}
         aria-invalid={Boolean(error)}
+        viewportProps={{ className: s.locationViewport }}
       />
       <Select
         label={'Select your city'}
@@ -82,6 +83,7 @@ export const ProfileLocationSelect = ({
         onValueChange={handleCityChange}
         disabled={isCityDisabled}
         aria-invalid={Boolean(error)}
+        viewportProps={{ className: s.locationViewport }}
       />
 
       {error ? (

@@ -46,6 +46,7 @@ export const TestLocationForm = () => {
     </form>
   )
 }
+
 export default function Search() {
   return (
     <main>

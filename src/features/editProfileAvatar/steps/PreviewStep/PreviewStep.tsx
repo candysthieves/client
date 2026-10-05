@@ -1,6 +1,5 @@
 import { Button, CircularProgress } from '@candy.thieves/ui-kit-lumos'
 import { useEffect, useState } from 'react'
-import Skeleton from 'react-loading-skeleton'
 import { ToastError } from '@/components'
 import { PostFile } from '@/features/createPost'
 import { PreviewImage } from '@/features/editProfileAvatar/steps/PreviewStep/PreviewImage'

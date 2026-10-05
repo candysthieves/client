@@ -80,7 +80,8 @@ export const VALID_EDIT_PROFILE_FIELDS: EditProfileField[] = [
 
 export const PROFILE_SETTINGS_SAVED_MESSAGE = 'Your settings are saved!'
 
-export const UNDER_AGE_ERROR_MESSAGE = 'A user under 13 cannot create a profile.'
+export const MIN_USER_AGE = 13
+export const UNDER_AGE_ERROR_MESSAGE = `A user under ${MIN_USER_AGE} cannot create a profile.`
 
 export const SERVER_UNAVAILABLE_ERROR_TITLE = 'Error!'
 export const SERVER_UNAVAILABLE_ERROR_MESSAGE = 'Server is not available!'

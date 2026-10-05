@@ -1,8 +1,13 @@
 import { z } from 'zod'
 import { MAX_ABOUT_ME_LENGTH } from '@/constants'
-import { isUnder13 } from '@/lib/utils/isUnder13'
+import { isUnderAge } from '@/lib/utils/isUnderAge'
 import { usernameSchema } from './auth.schemas'
-import { NAME_PATTERN, NAME_PATTERN_MESSAGE, UNDER_AGE_ERROR_MESSAGE } from './constants'
+import {
+  MIN_USER_AGE,
+  NAME_PATTERN,
+  NAME_PATTERN_MESSAGE,
+  UNDER_AGE_ERROR_MESSAGE,
+} from './constants'
 
 // Empty first/last name is allowed: the user may save any single field without filling the rest.
 export const firstNameSchema = z
@@ -31,7 +36,7 @@ export const dateOfBirthInputSchema = z
   .superRefine((value, ctx) => {
     if (!value) return
 
-    if (isUnder13(value)) {
+    if (isUnderAge(value, MIN_USER_AGE)) {
       ctx.addIssue({
         code: 'custom',
         message: UNDER_AGE_ERROR_MESSAGE,

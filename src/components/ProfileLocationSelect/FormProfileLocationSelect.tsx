@@ -1,4 +1,4 @@
-import { type Control, Controller, type FieldPath, type FieldValues } from 'react-hook-form'
+import { type Control, type FieldPath, type FieldValues, useController } from 'react-hook-form'
 import {
   ProfileLocationSelect,
   ProfileLocationSelectProps,
@@ -11,48 +11,6 @@ export type FormProfileLocationSelectProps<T extends FieldValues> = {
   cityName: FieldPath<T>
   disabled?: boolean
 } & Omit<ProfileLocationSelectProps, 'onBlur' | 'onChange' | 'value'>
-//
-// export const FormProfileLocationSelect = <T extends FieldValues>({
-//   control,
-//   countryName,
-//   cityName,
-//   disabled,
-//   ...props
-// }: FormProfileLocationSelectProps<T>) => {
-//   return (
-//     <Controller
-//       control={control}
-//       name={countryName}
-//       render={({ field: countryField }) => (
-//         <Controller
-//           control={control}
-//           name={cityName}
-//           render={({ field: cityField, fieldState }) => (
-//             <ProfileLocationSelect
-//               value={{
-//                 countryId: (countryField.value as null | number) ?? null,
-//                 cityId: (cityField.value as null | number) ?? null,
-//               }}
-//               onChange={next => {
-//                 countryField.onChange(next.countryId)
-//                 cityField.onChange(next.cityId)
-//               }}
-//               onBlur={() => {
-//                 countryField.onBlur()
-//                 cityField.onBlur()
-//               }}
-//               disabled={disabled}
-//               error={fieldState.error?.message}
-//               {...props}
-//             />
-//           )}
-//         />
-//       )}
-//     />
-//   )
-// }
-
-import { useController } from 'react-hook-form'
 
 export const FormProfileLocationSelect = <T extends FieldValues>({
   control,

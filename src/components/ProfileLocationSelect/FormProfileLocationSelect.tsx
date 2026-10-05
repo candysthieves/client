@@ -84,7 +84,8 @@ export const FormProfileLocationSelect = <T extends FieldValues>({
       onChange={onChangeHandler}
       onBlur={onBlurHandler}
       disabled={disabled}
-      error={country.fieldState.error?.message ?? city.fieldState.error?.message}
+      countryError={country.fieldState.error?.message}
+      cityError={city.fieldState.error?.message}
     />
   )
 }

@@ -2,10 +2,6 @@ import type { ReactNode } from 'react'
 import {
   BookmarkOutline,
   LogOutOutline,
-  Person,
-  PersonOutline,
-  Search,
-  SearchOutline,
   SettingsOutline,
   TrendingUp,
   TrendingUpOutline,

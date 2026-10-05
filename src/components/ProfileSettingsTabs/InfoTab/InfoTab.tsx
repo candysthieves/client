@@ -1,22 +1,21 @@
 'use client'
 
 import { ProfileAvatarEditor } from '@/components/ProfileAvatarEditor'
-import { useAuth } from '@/lib/hooks'
-import { useProfile } from '@/lib/profile'
+import { useAvatar } from '@/lib/avatar'
+import { useMyProfile } from '@/lib/profile'
+import { GeneralInformationForm } from './GeneralInformationForm'
 
 export const InfoTab = () => {
-  // TODO: use here getMyProfile instead of next two qeuries:
-  const { user } = useAuth()
-  const {
-    data: TEMPORARY_PROFILE_DATA,
-    // isError: _isProfileError,
-    // isLoading: _isProfileLoading,
-  } = useProfile(user?.id ?? '')
+  // Load errors are reported by the global query error handler (showGlobalError).
+  const { data: profile, isPending: isProfileLoading } = useMyProfile()
+  // my-profile response has no avatar, so the initial photo comes from /users/my-avatar.
+  const { data: avatar } = useAvatar()
 
   return (
-    <div>
-      <ProfileAvatarEditor avatarSource={TEMPORARY_PROFILE_DATA?.avatarUrl?.url ?? null} />
-      {/*  TODO: add here profile general information form */}
-    </div>
+    <GeneralInformationForm
+      profile={profile}
+      isProfileLoading={isProfileLoading}
+      photoSlot={<ProfileAvatarEditor avatarSource={avatar?.avatarUrl?.url ?? null} />}
+    />
   )
 }

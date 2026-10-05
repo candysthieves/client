@@ -15,6 +15,10 @@
   }
 }
 
+.photo {
+  flex-shrink: 0;
+}
+
 .fields {
   display: flex;
   flex: 1;

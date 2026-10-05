@@ -1,8 +1,8 @@
 'use client'
 
-import type { ReactNode } from 'react'
 import { Button, Input } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { type ReactNode, useId } from 'react'
 import { useForm } from 'react-hook-form'
 import { FormInput } from '@/components/FormInput'
 import { FormTextArea } from '@/components/FormTextArea'
@@ -12,9 +12,10 @@ import { ApiError } from '@/lib/api'
 import {
   type EditProfileRequest,
   editProfileSchema,
+  type MyProfileResponse,
   PROFILE_SETTINGS_SAVED_MESSAGE,
 } from '@/lib/model'
-import { useMyProfile, useUpdateMyProfile } from '@/lib/profile'
+import { useUpdateMyProfile } from '@/lib/profile'
 import {
   getChangedProfileFields,
   isErrorResponse,
@@ -28,13 +29,14 @@ import {
 import s from './GeneralInformationForm.module.scss'
 
 type Props = {
-  // Rendered next to the fields, above the divider; the Save button stays below it.
+  profile?: MyProfileResponse
+  isProfileLoading: boolean
+  // Rendered next to the fields, above the divider, but outside <form>: ui-kit buttons default to type="submit".
   photoSlot?: ReactNode
 }
 
-export const GeneralInformationForm = ({ photoSlot }: Props) => {
-  // Load errors are reported by the global query error handler (showGlobalError).
-  const { data: profile, isPending: isProfileLoading } = useMyProfile()
+export const GeneralInformationForm = ({ profile, isProfileLoading, photoSlot }: Props) => {
+  const formId = useId()
   const { mutate: updateProfile, isPending: isSaving } = useUpdateMyProfile()
 
   const {
@@ -89,11 +91,11 @@ export const GeneralInformationForm = ({ photoSlot }: Props) => {
   })
 
   return (
-    <form onSubmit={onSubmit} noValidate>
+    <div>
       <div className={s.content}>
-        {photoSlot}
+        {photoSlot && <div className={s.photo}>{photoSlot}</div>}
 
-        <div className={s.fields}>
+        <form id={formId} className={s.fields} onSubmit={onSubmit} noValidate>
           <FormInput
             control={control}
             name={'username'}
@@ -136,14 +138,18 @@ export const GeneralInformationForm = ({ photoSlot }: Props) => {
             maxLength={MAX_ABOUT_ME_LENGTH}
             aria-invalid={Boolean(errors.aboutMe)}
           />
-        </div>
+        </form>
       </div>
 
       <div className={s.actions}>
-        <Button type={'submit'} disabled={!isDirty || !isValid || isSaving || isProfileLoading}>
+        <Button
+          type={'submit'}
+          form={formId}
+          disabled={!isDirty || !isValid || isSaving || isProfileLoading}
+        >
           Save changes
         </Button>
       </div>
-    </form>
+    </div>
   )
 }

@@ -11,10 +11,9 @@ import { ApiError } from '@/lib/api'
 import {
   type EditProfileRequest,
   editProfileSchema,
-  type MyProfileResponse,
   PROFILE_SETTINGS_SAVED_MESSAGE,
 } from '@/lib/model'
-import { useUpdateMyProfile } from '@/lib/profile'
+import { useMyProfile, useUpdateMyProfile } from '@/lib/profile'
 import {
   getChangedProfileFields,
   isErrorResponse,
@@ -27,12 +26,8 @@ import {
 } from '@/lib/utils'
 import s from './GeneralInformationForm.module.scss'
 
-type Props = {
-  profile?: MyProfileResponse
-  isProfileLoading: boolean
-}
-
-export const GeneralInformationForm = ({ profile, isProfileLoading }: Props) => {
+export const GeneralInformationForm = () => {
+  const { data: profile, isPending: isProfileLoading } = useMyProfile()
   const { mutate: updateProfile, isPending: isSaving } = useUpdateMyProfile()
 
   const {

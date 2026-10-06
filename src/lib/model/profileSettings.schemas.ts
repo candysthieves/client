@@ -47,44 +47,14 @@ export const dateOfBirthInputSchema = z
 // API: yyyy-mm-dd
 export const dateOfBirthApiSchema = z.iso.date().optional().nullable()
 
-// Placeholder fields: country and city are not yet backed by real pickers
-// (owned by other in-progress tasks), so for now they're just optional free-form strings.
-export const countrySchema = z.string().optional()
-export const citySchema = z.string().optional()
-
-// CHECK!!!
-// export const editProfileSchema = z.object({
-//   username: usernameSchema,
-//   firstName: firstNameSchema,
-//   lastName: lastNameSchema,
-//   dateOfBirth: dateOfBirthInputSchema,
-//   country: countrySchema,
-//   city: citySchema,
-//   aboutMe: aboutMeSchema,
-// })
-
-export const myProfileResponseSchema = z.object({
-  username: z.string(),
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
-  dateOfBirth: z.string().nullable(),
-  country: z.string().nullable(),
-  city: z.string().nullable(),
-  aboutMe: z.string().nullable(),
-})
-
-export const updateMyProfileSchema = myProfileResponseSchema.partial().extend({
-  dateOfBirth: dateOfBirthApiSchema,
-})
+export const countryIdSchema = z.number().int().positive().nullable() // check nullable() in response
+export const cityIdSchema = z.number().int().positive().nullable() // check nullable() in response
 
 export const locationCountrySchema = z.object({
   countryId: z.number().nonnegative(),
   countryNameRu: z.string(),
   countryNameEn: z.string(),
 })
-
-export const countryIdSchema = z.number().int().positive().nullable() // check nullable() in response
-export const cityIdSchema = z.number().int().positive().nullable() // check nullable() in response
 
 export const locationCitySchema = z.object({
   countryId: countryIdSchema,
@@ -93,15 +63,29 @@ export const locationCitySchema = z.object({
   cityNameEn: z.string(),
 })
 
+export const myProfileResponseSchema = z.object({
+  username: z.string(),
+  firstName: z.string().nullable(),
+  lastName: z.string().nullable(),
+  dateOfBirth: z.string().nullable(),
+  country: locationCountrySchema.nullable(),
+  city: locationCitySchema.nullable(),
+  aboutMe: z.string().nullable(),
+})
+
+export const updateMyProfileSchema = myProfileResponseSchema.partial().extend({
+  dateOfBirth: dateOfBirthApiSchema,
+})
+
 export const editProfileSchema = z
   .object({
-    // username: usernameSchema,            // uncomment later
-    // firstName: firstNameSchema,          // uncomment later
-    // lastName: lastNameSchema,            // uncomment later
-    // dateOfBirth: dateOfBirthSchema,      // uncomment later
+    username: usernameSchema,
+    firstName: firstNameSchema,
+    lastName: lastNameSchema,
+    dateOfBirth: dateOfBirthInputSchema,
     countryId: countryIdSchema,
     cityId: cityIdSchema,
-    // aboutMe: aboutMeSchema,              // uncomment later
+    aboutMe: aboutMeSchema,
   })
   .superRefine((data, ctx) => {
     if (data.countryId != null && data.cityId == null) {

@@ -6,6 +6,9 @@ export const toFormValues = (profile: MyProfileResponse): EditProfileRequest => 
   firstName: profile.firstName ?? '',
   lastName: profile.lastName ?? '',
   aboutMe: profile.aboutMe ?? '',
+  countryId: profile.country?.countryId ?? null,
+  cityId: profile.city?.cityId ?? null,
+  dateOfBirth: profile.dateOfBirth ?? '',
 })
 
 // Only changed fields are sent; a cleared optional field is sent as null.

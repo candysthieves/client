@@ -1,7 +1,7 @@
 'use client'
 
+import { GeneralInformationForm } from '@/components/GeneralInformationForm'
 import { ProfileAvatarEditor } from '@/components/ProfileAvatarEditor'
-import { GeneralInformationForm } from './GeneralInformationForm'
 import s from './InfoTab.module.scss'
 
 export const InfoTab = () => {

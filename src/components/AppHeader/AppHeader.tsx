@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { mobileHeaderItems } from '@/shared/navigation/mobileHeaderItems'
 
 export const AppHeader = () => {
   const { isAuthenticated } = useAuth()
@@ -25,6 +26,7 @@ export const AppHeader = () => {
   return (
     <Header
       isAuthenticated={isAuthenticated}
+      mobileAuthenticatedMenuItems={mobileHeaderItems}
       onLogInClick={signInHandler}
       onSignUpClick={signUpHandler}
       linkTag={Link}

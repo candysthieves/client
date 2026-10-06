@@ -52,15 +52,16 @@ export const dateOfBirthApiSchema = z.iso.date().optional().nullable()
 export const countrySchema = z.string().optional()
 export const citySchema = z.string().optional()
 
-export const editProfileSchema = z.object({
-  username: usernameSchema,
-  firstName: firstNameSchema,
-  lastName: lastNameSchema,
-  dateOfBirth: dateOfBirthInputSchema,
-  country: countrySchema,
-  city: citySchema,
-  aboutMe: aboutMeSchema,
-})
+// CHECK!!!
+// export const editProfileSchema = z.object({
+//   username: usernameSchema,
+//   firstName: firstNameSchema,
+//   lastName: lastNameSchema,
+//   dateOfBirth: dateOfBirthInputSchema,
+//   country: countrySchema,
+//   city: citySchema,
+//   aboutMe: aboutMeSchema,
+// })
 
 export const myProfileResponseSchema = z.object({
   username: z.string(),
@@ -75,3 +76,46 @@ export const myProfileResponseSchema = z.object({
 export const updateMyProfileSchema = myProfileResponseSchema.partial().extend({
   dateOfBirth: dateOfBirthApiSchema,
 })
+
+export const locationCountrySchema = z.object({
+  countryId: z.number().nonnegative(),
+  countryNameRu: z.string(),
+  countryNameEn: z.string(),
+})
+
+export const countryIdSchema = z.number().int().positive().nullable() // check nullable() in response
+export const cityIdSchema = z.number().int().positive().nullable() // check nullable() in response
+
+export const locationCitySchema = z.object({
+  countryId: countryIdSchema,
+  cityId: cityIdSchema,
+  cityNameRu: z.string(),
+  cityNameEn: z.string(),
+})
+
+export const editProfileSchema = z
+  .object({
+    // username: usernameSchema,            // uncomment later
+    // firstName: firstNameSchema,          // uncomment later
+    // lastName: lastNameSchema,            // uncomment later
+    // dateOfBirth: dateOfBirthSchema,      // uncomment later
+    countryId: countryIdSchema,
+    cityId: cityIdSchema,
+    // aboutMe: aboutMeSchema,              // uncomment later
+  })
+  .superRefine((data, ctx) => {
+    if (data.countryId != null && data.cityId == null) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['cityId'],
+        message: 'Select a city',
+      })
+    }
+    if (data.countryId == null && data.cityId != null) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['countryId'],
+        message: 'Select a country first',
+      })
+    }
+  })

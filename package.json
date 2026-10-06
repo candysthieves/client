@@ -22,7 +22,7 @@
     "dev:server": "nodemon src/json-server/index.js"
   },
   "dependencies": {
-    "@candy.thieves/ui-kit-lumos": "^0.0.57",
+    "@candy.thieves/ui-kit-lumos": "^0.0.59",
     "@eslint/js": "^10.0.1",
     "@hookform/resolvers": "^5.7.1",
     "@lottiefiles/dotlottie-react": "^0.19.16",

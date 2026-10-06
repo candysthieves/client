@@ -6,12 +6,14 @@ import {
 } from '@/lib/model'
 
 export const USERNAME_PATTERN = /^[A-Za-z0-9_-]+$/
-
+export const NAME_PATTERN = /^[A-Za-zА-Яа-яЁё' -]+$/
 export const PASSWORD_PATTERN =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!"#$%&'()*+,\-./:;<=>?@[\\\]^_{|}~]+$/
 
 export const USERNAME_PATTERN_MESSAGE =
   'Username may only include letters, numbers, underscores, and hyphens'
+
+export const NAME_PATTERN_MESSAGE = 'May only include Latin and Cyrillic letters'
 
 export const PASSWORD_PATTERN_MESSAGE = `Password must contain at least one uppercase / lowercase letter, one digit and may have one special character`
 

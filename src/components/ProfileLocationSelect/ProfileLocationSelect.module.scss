@@ -1,0 +1,56 @@
+@use '@/styles/mixins' as *;
+
+.locationContainer {
+  width: 100%;
+}
+
+.locationContainer {
+  gap: 1.5rem;
+  width: 100%;
+  margin-bottom: 1.5rem; // delete if form uses flex gap
+
+  @include flex(flex, flex-start, flex-start);
+
+  @include media-tablet {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.selectItem {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.locationSelect {
+  width: 100%;
+}
+
+.locationViewport {
+  scrollbar-color: var(--color-dark-300) transparent;
+  scrollbar-width: thin;
+  overflow-y: auto;
+  max-height: var(--radix-select-content-available-height);
+
+  &::-webkit-scrollbar {
+    width: 0.25rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0.9rem;
+    background: var(--color-dark-300);
+  }
+}
+
+.errorMessage {
+  position: absolute;
+
+  @include top-left(calc(100% + 0.25rem), 0);
+
+  z-index: 1;
+}

@@ -1,0 +1,13 @@
+@use '@/styles/mixins' as *;
+
+.infoContainer {
+  @include flex(flex, flex-start, flex-start);
+
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.column {
+  flex: 1;
+  min-width: 0;
+}

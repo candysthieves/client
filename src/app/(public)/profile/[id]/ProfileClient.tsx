@@ -33,7 +33,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const isAuth = isHydrated && isAuthenticated
 
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
-  const isOwner = profile?.viewerStatus === 'owner'
+  const isOwner = isAuth && profile?.viewerStatus === 'owner'
   const postType = searchParams.get('type')
   const isDeletedPost = postType === 'deleted'
 

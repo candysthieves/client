@@ -75,7 +75,7 @@ export const MobilePostFeed = ({
                     userName={profileUserName || post.author.username || ''}
                     size={'s'}
                     delayMs={0}
-                    src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
+                    src={avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''}
                   />
 
                   <Typography variant={'subtitle2'}>

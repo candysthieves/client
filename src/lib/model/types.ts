@@ -36,7 +36,8 @@ import {
   locationCountrySchema,
   editProfileSchema,
   myProfileResponseSchema,
-  updateMyProfileSchema,
+  updateMyProfileRequestSchema,
+  refinedEditProfileSchema,
 } from './profileSettings.schemas'
 import { usersCountResponseSchema } from './users.schemas'
 
@@ -61,8 +62,9 @@ export type ProfilePost = z.infer<typeof profilePostSchema>
 export type ProfilePostsResponse = z.infer<typeof profilePostsResponseSchema>
 export type UserProfile = z.infer<typeof userProfileSchema>
 export type EditProfileRequest = z.infer<typeof editProfileSchema>
+export type RefinedEditProfileRequest = z.infer<typeof refinedEditProfileSchema>
 export type MyProfileResponse = z.infer<typeof myProfileResponseSchema>
-export type UpdateMyProfileRequest = z.infer<typeof updateMyProfileSchema>
+export type UpdateMyProfileRequest = z.infer<typeof updateMyProfileRequestSchema>
 export type RegistrationErrorField = keyof RegistrationRequest
 export type LoginErrorField = 'credentials' | 'email'
 export type LoginField = keyof LoginRequest

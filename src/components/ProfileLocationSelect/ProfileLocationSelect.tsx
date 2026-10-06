@@ -49,20 +49,35 @@ export const ProfileLocationSelect = ({
   )
 
   const handleCountryChange = (newValue: string) => {
+    if (!newValue) return
+
     const newCountryId = Number(newValue)
+
     if (Number.isNaN(newCountryId)) return
-    onChange({ countryId: newCountryId, cityId: null })
+
+    onChange({
+      countryId: newCountryId,
+      cityId: null,
+    })
     // onBlur?.()
   }
 
   const handleCityChange = (newValue: string) => {
+    if (!newValue) return
+
     const newCityId = Number(newValue)
+
     if (Number.isNaN(newCityId)) return
-    onChange({ countryId: value.countryId, cityId: newCityId })
+
+    onChange({
+      countryId: value.countryId,
+      cityId: newCityId,
+    })
     // onBlur?.()
   }
 
   const isCityDisabled = disabled || value.countryId == null || isCitiesPending
+  const isNotLocationDataPending = !isCountriesPending || !isCitiesPending
 
   return (
     <div className={s.locationContainer} onBlur={onBlur}>
@@ -71,7 +86,8 @@ export const ProfileLocationSelect = ({
           label={'Select your country'}
           placeholder={isCountriesPending ? 'Loading…' : 'Country'}
           options={countryOptions}
-          value={value.countryId != null ? String(value.countryId) : undefined}
+          // value={value.countryId != null ? String(value.countryId) : undefined}
+          value={!isCountriesPending && value.countryId != null ? String(value.countryId) : ''}
           debounceDelay={SELECT_SEARCH_DEBOUNCE}
           onValueChange={handleCountryChange}
           disabled={disabled || isCountriesPending}
@@ -80,7 +96,7 @@ export const ProfileLocationSelect = ({
           viewportProps={{ className: s.locationViewport }}
         />
 
-        {countryError && (
+        {isNotLocationDataPending && countryError && (
           <Typography
             className={s.errorMessage}
             variant={'form-error'}
@@ -99,7 +115,8 @@ export const ProfileLocationSelect = ({
             value.countryId == null ? 'Select country first' : isCitiesPending ? 'Loading…' : 'City'
           }
           options={cityOptions}
-          value={value.cityId != null ? String(value.cityId) : undefined}
+          // value={value.cityId != null ? String(value.cityId) : undefined}
+          value={!isCitiesPending && value.cityId != null ? String(value.cityId) : ''}
           debounceDelay={SELECT_SEARCH_DEBOUNCE}
           onValueChange={handleCityChange}
           disabled={isCityDisabled}
@@ -108,7 +125,7 @@ export const ProfileLocationSelect = ({
           viewportProps={{ className: s.locationViewport }}
         />
 
-        {cityError && (
+        {isNotLocationDataPending && cityError && (
           <Typography
             className={s.errorMessage}
             variant={'form-error'}

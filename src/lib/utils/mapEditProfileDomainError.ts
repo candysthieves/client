@@ -32,6 +32,7 @@ export function mapEditProfileDomainError(
         type: 'server',
         message: DOMAIN_ERROR_USERNAME_ALREADY_EXISTS_MESSAGE,
       })
+
       return true
 
     default:

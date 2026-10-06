@@ -235,7 +235,7 @@
   aspect-ratio: 1 / 1;
   border-radius: 0.125rem;
 
-  background: var(--color-dark-300);
+  background: transparent;
   outline: none;
 
   &:focus-visible {
@@ -290,4 +290,16 @@
   @include media-tablet-small {
     padding: 1.25rem 1rem 5.5rem;
   }
+}
+
+.skeletonFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: inherit;
+}
+
+.skeletonFillContainer {
+  display: block;
+  height: 100%;
 }

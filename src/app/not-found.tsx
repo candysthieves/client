@@ -1,13 +1,13 @@
 import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
-import { RobotAnimation } from '@/components/RobotAnimation'
+import { UniversalLottie } from '@/components/UniversalLottie'
 import s from './not-found.module.scss'
 
 export default function NotFound() {
   return (
     <main className={s.notFoundContainer}>
       <div className={s.notFoundContent}>
-        <RobotAnimation className={s.animationWrapper} />
+        <UniversalLottie animationName={'robot-404-fixed'} className={s.animationWrapper} />
 
         <Typography variant={'h1'}>Page Not Found</Typography>
 

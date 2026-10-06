@@ -7,14 +7,24 @@ const LottiePlayer = dynamic(
   { ssr: false } // Отключаем SSR только для самого тяжелого плеера
 )
 
-interface RobotAnimationProps {
+export type LottieAnimationName = 'robot-404-fixed' | 'went-wrong'
+
+interface UniversalLottieProps {
+  animationName: LottieAnimationName
   className?: string
+  loop?: boolean
+  autoplay?: boolean
 }
 
-export const RobotAnimation = ({ className }: RobotAnimationProps) => {
+export function UniversalLottie({
+  animationName,
+  className,
+  loop = true,
+  autoplay = true,
+}: UniversalLottieProps) {
   return (
     <div className={className}>
-      <LottiePlayer src={'/animations/robot-404-fixed.lottie'} autoplay loop />
+      <LottiePlayer src={`/animations/${animationName}.lottie`} autoplay={autoplay} loop={loop} />
     </div>
   )
 }

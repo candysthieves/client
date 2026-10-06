@@ -6,33 +6,22 @@ import { useState } from 'react'
 import { ProfileAvatarModal } from '@/features/editProfileAvatar'
 import { ConfirmDeleteProfileAvatarModal } from '@/features/editProfileAvatar/EditProfileAvatarModal'
 import { avatarKeys, useAvatar, useDeleteAvatar } from '@/lib/avatar'
-import { useAuth } from '@/lib/hooks'
 import { Avatar } from '@/lib/model'
 import s from './ProfileAvatarEditor.module.scss'
 
 type ProfileAvatarEditorProps = {
-  avatarSource: null | string
   userName?: string
 }
 
-export const ProfileAvatarEditor = ({
-  avatarSource,
-  userName = 'UserName',
-}: ProfileAvatarEditorProps) => {
+export const ProfileAvatarEditor = ({ userName = 'UserName' }: ProfileAvatarEditorProps) => {
   const queryClient = useQueryClient()
+  const { data: avatarData } = useAvatar()
   const { mutate: deleteAvatar } = useDeleteAvatar()
 
   const [isAvatarEditModalOpen, setIsAvatarEditModalOpen] = useState(false)
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false)
-  // Включается только после подтверждения удаления. До этого момента
-  // getAvatar не вызывается вообще (чтобы не было конфликта с avatarSource полученным из родителя)
-  const [isAvatarQueryActive, setIsAvatarQueryActive] = useState(false)
 
-  const { data: avatarData } = useAvatar({ enabled: isAvatarQueryActive })
-
-  const resolvedAvatarSource = isAvatarQueryActive
-    ? (avatarData?.avatarUrl?.url ?? null)
-    : avatarSource
+  const resolvedAvatarSource = avatarData?.avatarUrl?.url ?? null
 
   const openProfileAvatarEditorModal = () => setIsAvatarEditModalOpen(true)
   const closeProfileAvatarEditorModal = () => {
@@ -50,10 +39,6 @@ export const ProfileAvatarEditor = ({
     openConfirmDeleteModal()
   }
 
-  const handleAvatarUpdated = () => {
-    setIsAvatarQueryActive(true)
-  }
-
   const handleConfirm = () => {
     /*
      * Перед переключением на avatar query кладём
@@ -61,13 +46,8 @@ export const ProfileAvatarEditor = ({
      */
     queryClient.setQueryData<Avatar | null>(
       avatarKeys.avatar(),
-      avatarSource ? ({ avatarUrl: { url: avatarSource } } as Avatar) : null
+      resolvedAvatarSource ? ({ avatarUrl: { url: resolvedAvatarSource } } as Avatar) : null
     )
-
-    /*
-     * Теперь запрос useAvatar становится активным.
-     */
-    setIsAvatarQueryActive(true)
 
     /*
      * useDeleteAvatar.onMutate ->
@@ -76,6 +56,7 @@ export const ProfileAvatarEditor = ({
     deleteAvatar()
     closeConfirmDeleteModal()
   }
+
   const isAvatarSet = !!resolvedAvatarSource
 
   return (
@@ -93,11 +74,7 @@ export const ProfileAvatarEditor = ({
         Select Profile Photo
       </Button>
 
-      <ProfileAvatarModal
-        open={isAvatarEditModalOpen}
-        onClose={closeProfileAvatarEditorModal}
-        onAvatarUpdated={handleAvatarUpdated}
-      />
+      <ProfileAvatarModal open={isAvatarEditModalOpen} onClose={closeProfileAvatarEditorModal} />
 
       <ConfirmDeleteProfileAvatarModal
         open={isConfirmDeleteModalOpen}

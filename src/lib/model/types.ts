@@ -1,12 +1,5 @@
 import { z } from 'zod'
 import {
-  cityIdSchema,
-  countryIdSchema,
-  editProfileSchema,
-  locationCitySchema,
-  locationCountrySchema,
-} from '@/lib/model/profileSettings.schemas'
-import {
   accessTokenResponseSchema,
   apiErrorResponseSchema,
   errorMessageSchema,
@@ -36,6 +29,15 @@ import {
   userProfileSchema,
   viewerStatusSchema,
 } from './profile.schemas'
+import {
+  cityIdSchema,
+  countryIdSchema,
+  locationCitySchema,
+  locationCountrySchema,
+  editProfileSchema,
+  myProfileResponseSchema,
+  updateMyProfileSchema,
+} from './profileSettings.schemas'
 import { usersCountResponseSchema } from './users.schemas'
 
 // Auth
@@ -58,12 +60,16 @@ export type UserResponse = z.infer<typeof userResponseSchema>
 export type ProfilePost = z.infer<typeof profilePostSchema>
 export type ProfilePostsResponse = z.infer<typeof profilePostsResponseSchema>
 export type UserProfile = z.infer<typeof userProfileSchema>
+export type EditProfileRequest = z.infer<typeof editProfileSchema>
+export type MyProfileResponse = z.infer<typeof myProfileResponseSchema>
+export type UpdateMyProfileRequest = z.infer<typeof updateMyProfileSchema>
 export type RegistrationErrorField = keyof RegistrationRequest
 export type LoginErrorField = 'credentials' | 'email'
 export type LoginField = keyof LoginRequest
 export type PasswordRecoveryField = keyof PasswordRecoveryRequest
 // export type AuthType = 'github' | 'google'
 export type NewPasswordField = keyof NewPasswordRequest
+export type EditProfileField = keyof EditProfileRequest
 export type DeletedPostItem = z.infer<typeof deletedPostItemSchema>
 export type GetDeletedPostsResponse = z.infer<typeof getDeletedPostsResponseSchema>
 export type UsersCountResponse = z.infer<typeof usersCountResponseSchema>
@@ -74,4 +80,3 @@ export type CountryId = z.infer<typeof countryIdSchema>
 export type CityId = z.infer<typeof cityIdSchema>
 export type LocationCountry = z.infer<typeof locationCountrySchema>
 export type LocationCity = z.infer<typeof locationCitySchema>
-export type EditProfileRequest = z.infer<typeof editProfileSchema>

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { getCities, getCountries } from '@/lib/api/profileLocation'
+import { getCountries } from '@/lib/api/profileLocation'
 import { locationKeys } from '@/lib/profileLocation'
 
 export const useCountries = () =>

@@ -8,15 +8,12 @@
   gap: 1.5rem;
   width: 100%;
 
-  // margin-bottom: 1.5rem; // delete if form uses flex gap
-
   @include flex(flex, flex-start, flex-start);
 
   @include media-desktop {
     gap: 0.5rem;
 
     label {
-      // display: none;
       font-size: 0.75em !important;
     }
   }
@@ -38,10 +35,6 @@
 
   @include media-desktop {
     gap: 0.5rem;
-
-    // &[data-placeholder] {
-    //  font-size: 0.75em;
-    // }
   }
 }
 

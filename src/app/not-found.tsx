@@ -1,7 +1,7 @@
 import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { UniversalLottie } from '@/components/UniversalLottie'
-import s from './not-found.module.scss'
+import s from './not-found-error.module.scss'
 
 export default function NotFound() {
   return (

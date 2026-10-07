@@ -5,6 +5,7 @@ import {
   RefinedEditProfileRequest,
   UpdateMyProfileRequest,
 } from '@/lib/model'
+import { apiDateToFormDate } from './profileDate'
 
 export const toFormValues = (profile: MyProfileResponse): EditProfileRequest => {
   return {
@@ -14,7 +15,7 @@ export const toFormValues = (profile: MyProfileResponse): EditProfileRequest => 
     aboutMe: profile.aboutMe ?? '',
     countryId: profile.country?.countryId ?? null,
     cityId: profile.city?.cityId ?? null,
-    dateOfBirth: profile.dateOfBirth ?? '',
+    dateOfBirth: apiDateToFormDate(profile.dateOfBirth),
   }
 }
 

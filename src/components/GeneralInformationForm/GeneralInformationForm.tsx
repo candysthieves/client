@@ -2,7 +2,6 @@
 
 import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { FormDatePicker } from '@/components/FormDatePicker'
 import { FormInput } from '@/components/FormInput'

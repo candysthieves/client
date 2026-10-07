@@ -50,15 +50,15 @@ export const GeneralInformationForm = () => {
       cityId: null,
       aboutMe: '',
     },
-    // values: profile ? toFormValues(profile) : undefined,
-    // resetOptions: { keepDirtyValues: true },
+    values: profile ? toFormValues(profile) : undefined,
+    resetOptions: { keepDirtyValues: true },
   })
 
-  useEffect(() => {
-    if (profile) {
-      reset(toFormValues(profile))
-    }
-  }, [profile, reset])
+  // useEffect(() => {
+  //   if (profile) {
+  //     reset(toFormValues(profile))
+  //   }
+  // }, [profile, reset])
 
   const aboutMeLength = useWatch({ control, name: 'aboutMe' })?.length ?? 0
   const isAboutMeLimitReached = aboutMeLength >= MAX_ABOUT_ME_LENGTH

@@ -9,13 +9,13 @@ import {
 
 export const getServerUserProfile = async (
   userId: string,
-  accessToken: string
+  accessToken?: null | string
 ): Promise<UserProfile> =>
   serverRequestValidated(getProfileUrl(userId), userProfileSchema, accessToken)
 
 export const getServerUserPosts = async (
   userId: string,
-  accessToken: string,
+  accessToken: null | string | undefined,
   cursor?: string
 ): Promise<ProfilePostsResponse> =>
   serverRequestValidated(

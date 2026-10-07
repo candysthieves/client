@@ -1,6 +1,7 @@
 'use client'
 
 import { MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { ProfileActions } from '@/app/(public)/profile/[id]/ProfileActions/ProfileActions'
@@ -11,8 +12,8 @@ import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
 import { useAuth } from '@/lib/hooks'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
-import { usePost } from '@/lib/posts'
-import { useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
+import { postsKeys, usePost } from '@/lib/posts'
+import { profileKeys, useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
 import { useDeletedPost } from '@/lib/profile/queries/useDeletedPost'
 import { PostsFeed } from './PostsFeed'
 import s from './ProfileClient.module.scss'
@@ -22,9 +23,13 @@ type ProfileClientProps = {
   userId: string
   postId?: string
   action?: string
+  /**
+   * The server prefetched the page without an access token (guest response).
+   */
+  prefetchedAsGuest?: boolean
 }
 
-export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
+export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: ProfileClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isMobile = useIsMobileViewport()
@@ -47,6 +52,22 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
   const { data: postDetails } = usePost(isDeletedPost ? undefined : postId)
+  const queryClient = useQueryClient()
+
+  /**
+   * The server prefetches without an access token when it cannot resolve one,
+   * so the hydrated response is a guest response (viewerStatus is not personalized).
+   * Refresh it as soon as the session is known to be authenticated.
+   */
+  useEffect(() => {
+    if (!prefetchedAsGuest || !isAuth) return
+
+    queryClient.invalidateQueries({ queryKey: profileKeys.detail(userId) })
+
+    if (postId && !isDeletedPost) {
+      queryClient.invalidateQueries({ queryKey: postsKeys.post(postId) })
+    }
+  }, [prefetchedAsGuest, isAuth, queryClient, userId, postId, isDeletedPost])
 
   const profilePosts = profilePostsData?.pages.flatMap(page => page.items) ?? []
   const {

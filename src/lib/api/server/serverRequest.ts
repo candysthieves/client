@@ -17,11 +17,14 @@ const readResponseData = async (response: Response): Promise<unknown> => {
  * Server-side request. The access token is passed explicitly,
  * because localStorage is not available on the server.
  *
+ * The token is optional: profile and post endpoints are public, so a guest
+ * is rendered with the same request without an Authorization header.
+ *
  * Personalized responses are never cached.
  */
 export const serverRequest = async (
   input: string,
-  accessToken: string,
+  accessToken?: null | string,
   init?: RequestInit
 ): Promise<unknown> => {
   const headers = new Headers(init?.headers)
@@ -50,6 +53,6 @@ export const serverRequest = async (
 export const serverRequestValidated = async <S extends z.ZodTypeAny>(
   url: string,
   schema: S,
-  accessToken: string,
+  accessToken?: null | string,
   init?: RequestInit
 ): Promise<z.infer<S>> => validateResponse(url, schema, await serverRequest(url, accessToken, init))

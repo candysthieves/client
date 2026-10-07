@@ -10,8 +10,10 @@ import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer
 import { PostModal } from '@/components/PostModal/PostModal'
 import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
+import { getUserProfile } from '@/lib/api'
 import { useAuth } from '@/lib/hooks'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
+import { UserProfile } from '@/lib/model'
 import { postsKeys, usePost } from '@/lib/posts'
 import { profileKeys, useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
 import { useDeletedPost } from '@/lib/profile/queries/useDeletedPost'
@@ -24,7 +26,8 @@ type ProfileClientProps = {
   postId?: string
   action?: string
   /**
-   * The server prefetched the page without an access token (guest response).
+   * Server could only fetch the profile as a guest because
+   * the access token is stored on the client.
    */
   prefetchedAsGuest?: boolean
 }
@@ -37,17 +40,17 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
   const { isAuthenticated, isHydrated } = useAuth()
   const isAuth = isHydrated && isAuthenticated
 
-  /**
-   * The server prefetches without an access token, so the hydrated response describes an
-   * anonymous viewer (viewerStatus is not personalized). Until the client refetches the
-   * profile with the current session, that response is a placeholder: without this gate an
-   * owner would briefly see the plain "user" action buttons after a reload.
-   */
-  const [personalizedProfileId, setPersonalizedProfileId] = useState<null | string>(null)
-  const isProfilePersonalized = isAuth && (!prefetchedAsGuest || personalizedProfileId === userId)
+  // Keeps the authenticated profile separate from the guest-prefetched profile.
+  const [personalizedProfile, setPersonalizedProfile] = useState<null | UserProfile>(null)
 
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
-  const isOwner = isProfilePersonalized && profile?.viewerStatus === 'owner'
+
+  // Use the authenticated profile when it has been loaded.
+  const displayedProfile = personalizedProfile ?? profile
+
+  const isProfilePersonalized = isAuth && (!prefetchedAsGuest || personalizedProfile !== null)
+
+  const isOwner = isProfilePersonalized && displayedProfile?.viewerStatus === 'owner'
   const postType = searchParams.get('type')
   const isDeletedPost = postType === 'deleted'
 
@@ -63,21 +66,29 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
   const { data: postDetails } = usePost(isDeletedPost ? undefined : postId)
   const queryClient = useQueryClient()
 
-  /**
-   * Replace the guest response with a personalized one as soon as the session is known to be
-   * authenticated; isProfilePersonalized only turns on once that refetch has resolved.
-   */
   useEffect(() => {
+    // Server data may be guest data, so refetch the profile after auth is ready.
     if (!prefetchedAsGuest || !isAuth) return
 
     let cancelled = false
 
-    void queryClient.invalidateQueries({ queryKey: profileKeys.detail(userId) }).then(() => {
-      if (!cancelled) setPersonalizedProfileId(userId)
-    })
+    void queryClient
+      .fetchQuery({
+        queryKey: profileKeys.detail(userId),
+        queryFn: () => getUserProfile(userId),
+        staleTime: 0,
+      })
+      .then(personalizedProfile => {
+        if (!cancelled) {
+          setPersonalizedProfile(personalizedProfile)
+        }
+      })
+      .catch(() => undefined)
 
     if (postId && !isDeletedPost) {
-      void queryClient.invalidateQueries({ queryKey: postsKeys.post(postId) })
+      void queryClient.invalidateQueries({
+        queryKey: postsKeys.post(postId),
+      })
     }
 
     return () => {
@@ -143,8 +154,8 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
         <section className={s.profileHeader} aria-labelledby={'profile-name'}>
           <MainAvatar
             className={s.profileAvatar}
-            userName={profile.username ?? userId}
-            src={profile.avatarPreviewUrl?.url ?? ''}
+            userName={displayedProfile?.username ?? userId}
+            src={displayedProfile?.avatarPreviewUrl?.url ?? ''}
             size={'xxl'}
             delayMs={0}
           />
@@ -157,10 +168,10 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
                 color={'white'}
                 variant={'h1'}
               >
-                {profile.username}
+                {displayedProfile?.username}
               </Typography>
 
-              {isProfilePersonalized && <ProfileActions status={profile.viewerStatus} />}
+              {isProfilePersonalized && <ProfileActions status={displayedProfile!.viewerStatus} />}
             </div>
 
             <dl className={s.stats}>
@@ -171,7 +182,7 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
             </dl>
 
             <Typography className={s.about} variant={'body1'}>
-              {profile?.description ?? ''}
+              {displayedProfile?.description ?? ''}
             </Typography>
           </div>
         </section>
@@ -235,7 +246,7 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
           />
         ))}
 
-      {showCreateModal && <CreatePostModal userProfile={profile} />}
+      {showCreateModal && <CreatePostModal userProfile={displayedProfile!} />}
     </>
   )
 }

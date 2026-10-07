@@ -2,6 +2,7 @@
 
 import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
 import { useForm, useWatch } from 'react-hook-form'
 import { FormDatePicker } from '@/components/FormDatePicker'
 import { FormInput } from '@/components/FormInput'
@@ -14,6 +15,7 @@ import {
   PROFILE_SETTINGS_SAVED_MESSAGE,
   RefinedEditProfileRequest,
   refinedEditProfileSchema,
+  UNDER_AGE_ERROR_MESSAGE,
 } from '@/lib/model'
 import { useMyProfile, useUpdateMyProfile } from '@/lib/profile'
 import {
@@ -62,6 +64,19 @@ export const GeneralInformationForm = () => {
 
   const aboutMeLength = useWatch({ control, name: 'aboutMe' })?.length ?? 0
   const isAboutMeLimitReached = aboutMeLength >= MAX_ABOUT_ME_LENGTH
+  const isUnderAge = errors.dateOfBirth?.message === UNDER_AGE_ERROR_MESSAGE
+
+  const dateOfBirthError = isUnderAge ? (
+    <>
+      {UNDER_AGE_ERROR_MESSAGE}{' '}
+      <Link
+        className={s.privacyPolicyLink}
+        href={'/privacy-policy?returnTo=%2Fsettings%3Fpart%3Dinfo'}
+      >
+        Privacy Policy
+      </Link>
+    </>
+  ) : undefined
 
   const handleSaveError = (error: Error) => {
     if (error instanceof ApiError && isErrorResponse(error.data)) {
@@ -132,6 +147,7 @@ export const GeneralInformationForm = () => {
           clearable
           maxDate={new Date()}
           className={s.dateOfBirth}
+          error={dateOfBirthError}
         />
 
         <FormProfileLocationSelect

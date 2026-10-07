@@ -7,9 +7,16 @@
 .locationContainer {
   gap: 1.5rem;
   width: 100%;
-  margin-bottom: 1.5rem; // delete if form uses flex gap
 
   @include flex(flex, flex-start, flex-start);
+
+  @include media-desktop {
+    gap: 0.5rem;
+
+    label {
+      font-size: 0.75em !important;
+    }
+  }
 
   @include media-tablet {
     flex-direction: column;
@@ -25,6 +32,10 @@
 
 .locationSelect {
   width: 100%;
+
+  @include media-desktop {
+    gap: 0.5rem;
+  }
 }
 
 .locationViewport {

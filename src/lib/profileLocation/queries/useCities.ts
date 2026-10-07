@@ -6,5 +6,5 @@ export const useCities = (countryId: null | number, options?: { enabled?: boolea
   useQuery({
     queryKey: locationKeys.cities(countryId ?? null),
     queryFn: () => getCities(countryId!),
-    enabled: !!countryId && (options?.enabled ?? true),
+    enabled: countryId != null && (options?.enabled ?? true),
   })

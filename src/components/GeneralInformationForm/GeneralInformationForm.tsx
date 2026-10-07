@@ -2,16 +2,18 @@
 
 import { Button, Input, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { FormInput } from '@/components/FormInput'
 import { FormTextArea } from '@/components/FormTextArea'
+import { FormProfileLocationSelect } from '@/components/ProfileLocationSelect'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
 import { MAX_ABOUT_ME_LENGTH } from '@/constants'
 import { ApiError } from '@/lib/api'
 import {
-  type EditProfileRequest,
-  editProfileSchema,
   PROFILE_SETTINGS_SAVED_MESSAGE,
+  RefinedEditProfileRequest,
+  refinedEditProfileSchema,
 } from '@/lib/model'
 import { useMyProfile, useUpdateMyProfile } from '@/lib/profile'
 import {
@@ -36,18 +38,27 @@ export const GeneralInformationForm = () => {
     setError,
     reset,
     formState: { errors, isValid, isDirty, dirtyFields },
-  } = useForm<EditProfileRequest>({
-    resolver: zodResolver(editProfileSchema),
+  } = useForm<RefinedEditProfileRequest>({
+    resolver: zodResolver(refinedEditProfileSchema),
     mode: 'onChange',
     defaultValues: {
       username: '',
       firstName: '',
       lastName: '',
+      dateOfBirth: '',
+      countryId: null,
+      cityId: null,
       aboutMe: '',
     },
     values: profile ? toFormValues(profile) : undefined,
     resetOptions: { keepDirtyValues: true },
   })
+
+  // useEffect(() => {
+  //   if (profile) {
+  //     reset(toFormValues(profile))
+  //   }
+  // }, [profile, reset])
 
   const aboutMeLength = useWatch({ control, name: 'aboutMe' })?.length ?? 0
   const isAboutMeLimitReached = aboutMeLength >= MAX_ABOUT_ME_LENGTH
@@ -117,11 +128,11 @@ export const GeneralInformationForm = () => {
         {/* Placeholder: real calendar date-picker is being built separately and will replace this input. */}
         <Input label={'Date of birth'} placeholder={'dd.mm.yyyy'} disabled />
 
-        {/* Placeholder: country/city picker library is still being chosen by the team. */}
-        <div className={s.locationRow}>
-          <Input label={'Select your country'} placeholder={'Country'} disabled />
-          <Input label={'Select your city'} placeholder={'City'} disabled />
-        </div>
+        <FormProfileLocationSelect
+          control={control}
+          countryName={'countryId'}
+          cityName={'cityId'}
+        />
 
         {/* Native maxLength blocks typing past the limit; the border and counter turn red once it is reached. */}
         <div>

@@ -34,7 +34,11 @@ export const MobilePostFeed = ({
   canEdit = true,
   deleteLabel = 'Delete Post',
 }: Props) => {
-  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile ?? {}
+  const {
+    id: userId,
+    username: profileUserName = userId,
+    avatarPreviewUrl: profileAvatarPreviewUrl,
+  } = userProfile ?? {}
 
   const isMobile = useIsMobileViewport()
   const { user } = useAuth()
@@ -75,7 +79,7 @@ export const MobilePostFeed = ({
                     userName={profileUserName || post.author.username || ''}
                     size={'s'}
                     delayMs={0}
-                    src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
+                    src={post.author.avatarPreviewUrl?.url || profileAvatarPreviewUrl?.url || ''}
                   />
 
                   <Typography variant={'subtitle2'}>

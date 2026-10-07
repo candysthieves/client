@@ -34,7 +34,11 @@ export const PostDetailsModal = ({
   canEdit = true,
   deleteLabel,
 }: Props) => {
-  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile ?? {}
+  const {
+    id: userId,
+    username: profileUserName = userId,
+    avatarPreviewUrl: profileAvatarPreviewUrl,
+  } = userProfile ?? {}
   const { user, isAuthenticated } = useAuth()
   const isMobileViewport = useIsMobileViewport()
   const isAuthor = !!user && user.id === (post.author?.id ?? userProfile?.id)
@@ -61,7 +65,7 @@ export const PostDetailsModal = ({
                 userName={profileUserName || post.author.username || ''}
                 size={'s'}
                 delayMs={0}
-                src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
+                src={post.author.avatarPreviewUrl?.url || profileAvatarPreviewUrl?.url || ''}
               />
 
               <Typography variant={'subtitle2'}>

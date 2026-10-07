@@ -17,7 +17,11 @@ type Props = {
 }
 
 export const MobilePostEdit = ({ post, userProfile, onCancel, onSave, isSaving }: Props) => {
-  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile ?? {}
+  const {
+    id: userId,
+    username: profileUserName = userId,
+    avatarPreviewUrl: profileAvatarPreviewUrl,
+  } = userProfile ?? {}
 
   const [description, setDescription] = useState(post.description ?? '')
 
@@ -57,7 +61,7 @@ export const MobilePostEdit = ({ post, userProfile, onCancel, onSave, isSaving }
             userName={profileUserName || post.author.username || ''}
             size={'s'}
             delayMs={0}
-            src={avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''}
+            src={post.author.avatarPreviewUrl?.url || profileAvatarPreviewUrl?.url || ''}
           />
 
           <Typography variant={'subtitle2'}>

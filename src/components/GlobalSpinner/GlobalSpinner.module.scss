@@ -1,6 +1,9 @@
 .spinnerContainer {
-  position: fixed;
-  z-index: 9999;
-  top: 2rem;
-  left: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
 }

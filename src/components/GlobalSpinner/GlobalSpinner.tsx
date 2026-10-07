@@ -7,7 +7,7 @@ import s from './GlobalSpinner.module.scss'
 export const GlobalSpinner = () => {
   return (
     <div className={s.spinnerContainer}>
-      <CircularProgress size={'md'} color={'primary'} className={s.spinner} />
+      <CircularProgress size={'lg'} color={'primary'} className={s.spinner} />
     </div>
   )
 }

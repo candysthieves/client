@@ -1,9 +1,10 @@
 'use client'
 
-import { Button, Input, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
+import { FormDatePicker } from '@/components/FormDatePicker'
 import { FormInput } from '@/components/FormInput'
 import { FormTextArea } from '@/components/FormTextArea'
 import { FormProfileLocationSelect } from '@/components/ProfileLocationSelect'
@@ -125,8 +126,13 @@ export const GeneralInformationForm = () => {
           aria-invalid={Boolean(errors.lastName)}
         />
 
-        {/* Placeholder: real calendar date-picker is being built separately and will replace this input. */}
-        <Input label={'Date of birth'} placeholder={'dd.mm.yyyy'} disabled />
+        <FormDatePicker
+          control={control}
+          name={'dateOfBirth'}
+          label={'Date of birth'}
+          clearable
+          maxDate={new Date()}
+        />
 
         <FormProfileLocationSelect
           control={control}

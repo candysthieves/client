@@ -3,6 +3,7 @@
 import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
+import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { FormDatePicker } from '@/components/FormDatePicker'
 import { FormInput } from '@/components/FormInput'
@@ -11,6 +12,7 @@ import { FormProfileLocationSelect } from '@/components/ProfileLocationSelect'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
 import { MAX_ABOUT_ME_LENGTH } from '@/constants'
 import { ApiError } from '@/lib/api'
+import { useAuth } from '@/lib/hooks'
 import {
   PROFILE_SETTINGS_SAVED_MESSAGE,
   RefinedEditProfileRequest,
@@ -30,15 +32,20 @@ import {
 } from '@/lib/utils'
 import s from './GeneralInformationForm.module.scss'
 
+const PROFILE_SETTINGS_DRAFT_KEY_PREFIX = 'profile-settings-draft:'
+
 export const GeneralInformationForm = () => {
   const { data: profile, isPending: isProfileLoading } = useMyProfile()
   const { mutate: updateProfile, isPending: isSaving } = useUpdateMyProfile()
+  const { user } = useAuth()
 
   const {
     control,
+    getValues,
     handleSubmit,
     setError,
     reset,
+    trigger,
     formState: { errors, isValid, isDirty, dirtyFields },
   } = useForm<RefinedEditProfileRequest>({
     resolver: zodResolver(refinedEditProfileSchema),
@@ -65,6 +72,29 @@ export const GeneralInformationForm = () => {
   const aboutMeLength = useWatch({ control, name: 'aboutMe' })?.length ?? 0
   const isAboutMeLimitReached = aboutMeLength >= MAX_ABOUT_ME_LENGTH
   const isUnderAge = errors.dateOfBirth?.message === UNDER_AGE_ERROR_MESSAGE
+  const draftKey = user?.id ? `${PROFILE_SETTINGS_DRAFT_KEY_PREFIX}${user.id}` : null
+
+  useEffect(() => {
+    if (!profile || !draftKey) return
+
+    const draft = sessionStorage.getItem(draftKey)
+
+    if (!draft) return
+
+    try {
+      reset(JSON.parse(draft) as RefinedEditProfileRequest, { keepDefaultValues: true })
+      sessionStorage.removeItem(draftKey)
+      void trigger()
+    } catch {
+      sessionStorage.removeItem(draftKey)
+    }
+  }, [draftKey, profile, reset, trigger])
+
+  const saveDraftBeforeOpeningPrivacyPolicy = () => {
+    if (draftKey) {
+      sessionStorage.setItem(draftKey, JSON.stringify(getValues()))
+    }
+  }
 
   const dateOfBirthError = isUnderAge ? (
     <>
@@ -72,6 +102,7 @@ export const GeneralInformationForm = () => {
       <Link
         className={s.privacyPolicyLink}
         href={'/privacy-policy?returnTo=%2Fsettings%3Fpart%3Dinfo'}
+        onClick={saveDraftBeforeOpeningPrivacyPolicy}
       >
         Privacy Policy
       </Link>
@@ -104,6 +135,7 @@ export const GeneralInformationForm = () => {
       onSuccess: savedProfile => {
         // Saved values become the new baseline, so the button is disabled until the next change.
         reset(toFormValues(savedProfile))
+        if (draftKey) sessionStorage.removeItem(draftKey)
         ToastSuccess({ message: PROFILE_SETTINGS_SAVED_MESSAGE })
       },
       onError: handleSaveError,

@@ -3,7 +3,7 @@
 import { MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ProfileActions } from '@/app/(public)/profile/[id]/ProfileActions/ProfileActions'
 import { DeletedPosts } from '@/components/DeletedPosts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
@@ -37,8 +37,17 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
   const { isAuthenticated, isHydrated } = useAuth()
   const isAuth = isHydrated && isAuthenticated
 
+  /**
+   * The server prefetches without an access token, so the hydrated response describes an
+   * anonymous viewer (viewerStatus is not personalized). Until the client refetches the
+   * profile with the current session, that response is a placeholder: without this gate an
+   * owner would briefly see the plain "user" action buttons after a reload.
+   */
+  const [personalizedProfileId, setPersonalizedProfileId] = useState<null | string>(null)
+  const isProfilePersonalized = isAuth && (!prefetchedAsGuest || personalizedProfileId === userId)
+
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
-  const isOwner = isAuth && profile?.viewerStatus === 'owner'
+  const isOwner = isProfilePersonalized && profile?.viewerStatus === 'owner'
   const postType = searchParams.get('type')
   const isDeletedPost = postType === 'deleted'
 
@@ -55,17 +64,24 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
   const queryClient = useQueryClient()
 
   /**
-   * The server prefetches without an access token when it cannot resolve one,
-   * so the hydrated response is a guest response (viewerStatus is not personalized).
-   * Refresh it as soon as the session is known to be authenticated.
+   * Replace the guest response with a personalized one as soon as the session is known to be
+   * authenticated; isProfilePersonalized only turns on once that refetch has resolved.
    */
   useEffect(() => {
     if (!prefetchedAsGuest || !isAuth) return
 
-    queryClient.invalidateQueries({ queryKey: profileKeys.detail(userId) })
+    let cancelled = false
+
+    void queryClient.invalidateQueries({ queryKey: profileKeys.detail(userId) }).then(() => {
+      if (!cancelled) setPersonalizedProfileId(userId)
+    })
 
     if (postId && !isDeletedPost) {
-      queryClient.invalidateQueries({ queryKey: postsKeys.post(postId) })
+      void queryClient.invalidateQueries({ queryKey: postsKeys.post(postId) })
+    }
+
+    return () => {
+      cancelled = true
     }
   }, [prefetchedAsGuest, isAuth, queryClient, userId, postId, isDeletedPost])
 
@@ -144,7 +160,7 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
                 {profile.username}
               </Typography>
 
-              {isAuth && <ProfileActions status={profile.viewerStatus} />}
+              {isProfilePersonalized && <ProfileActions status={profile.viewerStatus} />}
             </div>
 
             <dl className={s.stats}>

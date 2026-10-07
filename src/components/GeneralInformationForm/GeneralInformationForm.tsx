@@ -63,12 +63,6 @@ export const GeneralInformationForm = () => {
     resetOptions: { keepDirtyValues: true },
   })
 
-  // useEffect(() => {
-  //   if (profile) {
-  //     reset(toFormValues(profile))
-  //   }
-  // }, [profile, reset])
-
   const aboutMeLength = useWatch({ control, name: 'aboutMe' })?.length ?? 0
   const isAboutMeLimitReached = aboutMeLength >= MAX_ABOUT_ME_LENGTH
   const isUnderAge = errors.dateOfBirth?.message === UNDER_AGE_ERROR_MESSAGE

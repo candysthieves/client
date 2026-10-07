@@ -16,7 +16,6 @@ const INITIAL_COLLAPSED_LENGTH = 60
 
 const IMAGE_WIDTH = 234
 const IMAGE_HEIGHT = 240
-const COLLAPSED_CAPTION_HEIGHT = 72 // .captionWrapper's fixed height (4.5rem), in px
 const MIN_EXPANDED_IMAGE_HEIGHT = 60
 
 type PostCardProps = {
@@ -48,7 +47,7 @@ export const PostCard = ({
   const validImages = useMemo(() => images.filter(image => image?.url), [images])
   const slides = useMemo(() => validImages.map(image => image.url), [validImages])
 
-  const { maxLength, collapsedText, text, expandedHeight } = useReadMoreClamp(
+  const { maxLength, collapsedText, text, expandedHeight, collapsedHeight } = useReadMoreClamp(
     captionWrapperRef,
     `.${s.caption}`,
     caption,
@@ -79,7 +78,7 @@ export const PostCard = ({
   const collapsedImageHeight = (imageWidth * IMAGE_HEIGHT) / IMAGE_WIDTH
   const expandedImageHeight = Math.max(
     MIN_EXPANDED_IMAGE_HEIGHT,
-    collapsedImageHeight - (expandedHeight - COLLAPSED_CAPTION_HEIGHT)
+    collapsedImageHeight - (expandedHeight - collapsedHeight)
   )
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {

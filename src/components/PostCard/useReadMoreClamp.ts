@@ -15,6 +15,8 @@ type ReadMoreClamp = {
   text: string
   /** Max height (px) of the expanded text — the same for every post, so cards stay aligned. */
   expandedHeight: number
+  /** Height (px) of the container while collapsed. */
+  collapsedHeight: number
 }
 
 const HEIGHT_TOLERANCE_PX = 1
@@ -39,6 +41,7 @@ export const useReadMoreClamp = (
   }: ReadMoreClampOptions
 ): ReadMoreClamp => {
   const [clamp, setClamp] = useState<ReadMoreClamp>({
+    collapsedHeight: 0,
     collapsedText: text,
     expandedHeight: 0,
     maxLength: initialMaxLength,
@@ -125,13 +128,15 @@ export const useReadMoreClamp = (
         return
       }
 
+      const collapsedHeight = container.clientHeight
       const collapsedLength = longestFittingLength(
-        container.clientHeight + HEIGHT_TOLERANCE_PX,
+        collapsedHeight + HEIGHT_TOLERANCE_PX,
         collapsedReserve
       )
 
       if (collapsedLength >= text.length) {
         setClamp({
+          collapsedHeight,
           collapsedText: text,
           expandedHeight,
           maxLength: text.length,
@@ -145,6 +150,7 @@ export const useReadMoreClamp = (
       const collapsedCut = truncate(collapsedLength)
 
       setClamp({
+        collapsedHeight,
         collapsedText: `${collapsedCut} ${text.slice(collapsedCut.length).trimStart()}`,
         expandedHeight,
         maxLength: collapsedCut.length + 1,

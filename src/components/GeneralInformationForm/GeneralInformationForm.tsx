@@ -131,6 +131,7 @@ export const GeneralInformationForm = () => {
           label={'Date of birth'}
           clearable
           maxDate={new Date()}
+          className={s.dateOfBirth}
         />
 
         <FormProfileLocationSelect

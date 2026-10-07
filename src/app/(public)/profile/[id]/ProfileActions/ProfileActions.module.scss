@@ -1,0 +1,54 @@
+@use '@/styles/mixins' as *;
+
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  box-sizing: border-box;
+  max-width: 100%;
+
+  :global(button),
+  :global(a) {
+    overflow: hidden;
+    flex: 1 1 auto;
+    flex-shrink: 1;
+
+    min-width: 0;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @include media-tablet-small {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+
+    > * {
+      width: 100%;
+    }
+  }
+}
+
+.buttons {
+  display: flex;
+  box-sizing: border-box;
+  max-width: 100%;
+
+  @include media-tablet {
+    display: none;
+  }
+
+  button,
+  a {
+    overflow: hidden;
+
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

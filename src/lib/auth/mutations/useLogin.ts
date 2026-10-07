@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { login } from '@/lib/api'
 import { authKeys } from '@/lib/auth'
 import { ACCESS_TOKEN_LS_KEY, LoginRequest } from '@/lib/model'
+import { profileKeys } from '@/lib/profile'
 
 export function useLogin() {
   const queryClient = useQueryClient()
@@ -16,6 +17,9 @@ export function useLogin() {
 
       queryClient.invalidateQueries({
         queryKey: authKeys.me(),
+      })
+      queryClient.invalidateQueries({
+        queryKey: profileKeys.all,
       })
     },
   })

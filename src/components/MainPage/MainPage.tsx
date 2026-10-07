@@ -50,6 +50,7 @@ export const MainPage = () => {
               key={post.id}
               postId={post.id}
               username={post.author.username}
+              avatarSrc={post.author.avatarPreviewUrl?.url}
             />
           ))}
         </div>

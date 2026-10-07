@@ -24,6 +24,13 @@
   input {
     outline: none !important;
   }
+
+  @include media-tablet {
+    margin-top: 1.125rem;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+  }
 }
 
 .fieldsGroup {

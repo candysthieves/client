@@ -291,3 +291,53 @@
     padding: 1.25rem 1rem 5.5rem;
   }
 }
+
+.error {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 60vh;
+  padding: 2rem 0 4rem;
+
+  text-align: center;
+
+  @include media-tablet {
+    padding: 1.5rem 1.875rem 5.5rem;
+  }
+
+  @include media-tablet-small {
+    gap: 1rem;
+    padding: 1.25rem 1rem 5.5rem;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+
+  @include media-tablet-small {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+}
+
+.animationWrapper,
+.animationPlaceholder {
+  @include width-height(25rem);
+
+  @include media-mobile {
+    @include width-height(15rem);
+
+    margin-bottom: 1rem;
+  }
+}
+
+.animationWrapper {
+  position: relative;
+}

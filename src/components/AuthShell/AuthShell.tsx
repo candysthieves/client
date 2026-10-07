@@ -11,12 +11,7 @@ import { AuthShellContent } from './AuthShellContent'
 export function AuthShell({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, isHydrated } = useAuth()
 
-  if (!isHydrated || isLoading)
-    return (
-      <div>
-        <GlobalSpinner />
-      </div>
-    )
+  if (!isHydrated || isLoading) return <GlobalSpinner />
 
   return (
     <>

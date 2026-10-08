@@ -1,18 +1,21 @@
 'use client'
 
 import { MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ProfileActions } from '@/app/(public)/profile/[id]/ProfileActions/ProfileActions'
 import { DeletedPosts } from '@/components/DeletedPosts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
 import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
+import { getUserProfile } from '@/lib/api'
 import { useAuth } from '@/lib/hooks'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
-import { usePost } from '@/lib/posts'
-import { useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
+import { UserProfile } from '@/lib/model'
+import { postsKeys, usePost } from '@/lib/posts'
+import { profileKeys, useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
 import { useDeletedPost } from '@/lib/profile/queries/useDeletedPost'
 import { PostsFeed } from './PostsFeed'
 import { PostsFeedSkeleton } from './PostsFeed/PostsFeedSkeleton'
@@ -33,8 +36,17 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const { isAuthenticated, isHydrated } = useAuth()
   const isAuth = isHydrated && isAuthenticated
 
+  // Keeps the authenticated profile separate from the guest-prefetched profile.
+  const [personalizedProfile, setPersonalizedProfile] = useState<null | UserProfile>(null)
+
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
-  const isOwner = profile?.viewerStatus === 'owner'
+
+  // Use the authenticated profile when it has been loaded.
+  const displayedProfile = personalizedProfile ?? profile
+
+  const isProfilePersonalized = isAuth && personalizedProfile !== null
+
+  const isOwner = isProfilePersonalized && displayedProfile?.viewerStatus === 'owner'
   const postType = searchParams.get('type')
   const isDeletedPost = postType === 'deleted'
 
@@ -48,6 +60,37 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
   const { data: postDetails } = usePost(isDeletedPost ? undefined : postId)
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    // The server prefetches as a guest, so the profile is re-fetched once auth is ready.
+    if (!isAuth) return
+
+    let cancelled = false
+
+    void queryClient
+      .fetchQuery({
+        queryKey: profileKeys.detail(userId),
+        queryFn: () => getUserProfile(userId),
+        staleTime: 0,
+      })
+      .then(personalizedProfile => {
+        if (!cancelled) {
+          setPersonalizedProfile(personalizedProfile)
+        }
+      })
+      .catch(() => undefined)
+
+    if (postId && !isDeletedPost) {
+      void queryClient.invalidateQueries({
+        queryKey: postsKeys.post(postId),
+      })
+    }
+
+    return () => {
+      cancelled = true
+    }
+  }, [isAuth, queryClient, userId, postId, isDeletedPost])
 
   const profilePosts = profilePostsData?.pages.flatMap(page => page.items) ?? []
   const {
@@ -120,8 +163,8 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             <section className={s.profileHeader} aria-labelledby={'profile-name'}>
               <MainAvatar
                 className={s.profileAvatar}
-                userName={profile.username ?? userId}
-                src={profile.avatarPreviewUrl?.url ?? ''}
+                userName={displayedProfile?.username ?? userId}
+                src={displayedProfile?.avatarPreviewUrl?.url ?? ''}
                 size={'xxl'}
                 delayMs={0}
               />
@@ -134,22 +177,23 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
                     color={'white'}
                     variant={'h1'}
                   >
-                    {profile.username}
+                    {displayedProfile?.username}
                   </Typography>
 
-                  {isAuth && <ProfileActions status={profile.viewerStatus} />}
+                  {isProfilePersonalized && (
+                    <ProfileActions status={displayedProfile!.viewerStatus} />
+                  )}
                 </div>
 
                 <dl className={s.stats}>
                   <div className={s.stat}>
+                    <dd className={s.statValue}>{profile?.publicationsCount ?? 0}</dd>
                     <dt className={s.statLabel}>Publications</dt>
-                    <dd className={s.statValue}>{profile.publicationsCount ?? 0}</dd>
                   </div>
                 </dl>
 
                 <Typography className={s.about} variant={'body1'}>
-                  <span className={s.aboutLabel}>About me</span>
-                  {profile.description ?? ''}
+                  {displayedProfile?.description ?? ''}
                 </Typography>
               </div>
             </section>
@@ -197,7 +241,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           />
         ))}
 
-      {showCreateModal && <CreatePostModal userProfile={profile} />}
+      {showCreateModal && <CreatePostModal userProfile={displayedProfile!} />}
     </>
   )
 }

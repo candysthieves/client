@@ -18,7 +18,7 @@ export function useLogin() {
       queryClient.invalidateQueries({
         queryKey: authKeys.me(),
       })
-      queryClient.invalidateQueries({
+      queryClient.removeQueries({
         queryKey: profileKeys.all,
       })
     },

@@ -14,26 +14,17 @@ const readResponseData = async (response: Response): Promise<unknown> => {
 }
 
 /**
- * Server-side request. The access token is passed explicitly,
- * because localStorage is not available on the server.
+ * Server-side request. The access token is never available here: it lives in
+ * localStorage on the client, and the HttpOnly refresh cookie belongs to the API domain.
  *
- * The token is optional: profile and post endpoints are public, so a guest
- * is rendered with the same request without an Authorization header.
+ * Profile and post endpoints are public, so the same request is sent for every viewer.
  *
- * Personalized responses are never cached.
+ * Responses are never cached.
  */
-export const serverRequest = async (
-  input: string,
-  accessToken?: null | string,
-  init?: RequestInit
-): Promise<unknown> => {
+export const serverRequest = async (input: string, init?: RequestInit): Promise<unknown> => {
   const headers = new Headers(init?.headers)
 
   headers.set('Accept', 'application/json')
-
-  if (accessToken) {
-    headers.set('Authorization', `Bearer ${accessToken}`)
-  }
 
   const response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, {
     ...init,
@@ -53,6 +44,5 @@ export const serverRequest = async (
 export const serverRequestValidated = async <S extends z.ZodTypeAny>(
   url: string,
   schema: S,
-  accessToken?: null | string,
   init?: RequestInit
-): Promise<z.infer<S>> => validateResponse(url, schema, await serverRequest(url, accessToken, init))
+): Promise<z.infer<S>> => validateResponse(url, schema, await serverRequest(url, init))

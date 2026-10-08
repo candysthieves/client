@@ -25,14 +25,9 @@ type ProfileClientProps = {
   userId: string
   postId?: string
   action?: string
-  /**
-   * Server could only fetch the profile as a guest because
-   * the access token is stored on the client.
-   */
-  prefetchedAsGuest?: boolean
 }
 
-export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: ProfileClientProps) {
+export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isMobile = useIsMobileViewport()
@@ -48,7 +43,7 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
   // Use the authenticated profile when it has been loaded.
   const displayedProfile = personalizedProfile ?? profile
 
-  const isProfilePersonalized = isAuth && (!prefetchedAsGuest || personalizedProfile !== null)
+  const isProfilePersonalized = isAuth && personalizedProfile !== null
 
   const isOwner = isProfilePersonalized && displayedProfile?.viewerStatus === 'owner'
   const postType = searchParams.get('type')
@@ -67,8 +62,8 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    // Server data may be guest data, so refetch the profile after auth is ready.
-    if (!prefetchedAsGuest || !isAuth) return
+    // The server prefetches as a guest, so the profile is re-fetched once auth is ready.
+    if (!isAuth) return
 
     let cancelled = false
 
@@ -94,7 +89,7 @@ export function ProfileClient({ userId, postId, action, prefetchedAsGuest }: Pro
     return () => {
       cancelled = true
     }
-  }, [prefetchedAsGuest, isAuth, queryClient, userId, postId, isDeletedPost])
+  }, [isAuth, queryClient, userId, postId, isDeletedPost])
 
   const profilePosts = profilePostsData?.pages.flatMap(page => page.items) ?? []
   const {

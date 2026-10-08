@@ -7,19 +7,11 @@ import {
   type UserProfile,
 } from '@/lib/model'
 
-export const getServerUserProfile = async (
-  userId: string,
-  accessToken?: null | string
-): Promise<UserProfile> =>
-  serverRequestValidated(getProfileUrl(userId), userProfileSchema, accessToken)
+export const getServerUserProfile = async (userId: string): Promise<UserProfile> =>
+  serverRequestValidated(getProfileUrl(userId), userProfileSchema)
 
 export const getServerUserPosts = async (
   userId: string,
-  accessToken: null | string | undefined,
   cursor?: string
 ): Promise<ProfilePostsResponse> =>
-  serverRequestValidated(
-    getProfilePostsUrl(userId, cursor),
-    profilePostsResponseSchema,
-    accessToken
-  )
+  serverRequestValidated(getProfilePostsUrl(userId, cursor), profilePostsResponseSchema)

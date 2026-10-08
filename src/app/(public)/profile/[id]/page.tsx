@@ -3,12 +3,7 @@ import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 import type { ProfilePostsResponse } from '@/lib/model'
 import { ProfileClient } from '@/app/(public)/profile/[id]/ProfileClient'
-import {
-  getServerAccessToken,
-  getServerPost,
-  getServerUserPosts,
-  getServerUserProfile,
-} from '@/lib/api/server'
+import { getServerPost, getServerUserPosts, getServerUserProfile } from '@/lib/api/server'
 import { postsKeys } from '@/lib/posts/postKeys'
 import { profileKeys } from '@/lib/profile/profileKeys'
 
@@ -48,26 +43,25 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
   const queryClient = new QueryClient()
 
   /**
-   * Access token is stored in localStorage, so it is not always available on the server.
-   * When the HttpOnly refresh cookie is visible we get a new one and prefetch a
-   * personalized response.
+   * Profile and post endpoints are public, so the page is prefetched as a guest:
+   * the server renders filled HTML instead of a loading stub that is filled after
+   * JavaScript runs in the browser.
    *
-   * Profile and post endpoints are public, so we prefetch even without a token:
-   * a guest receives the filled HTML from the server instead of a loading stub
-   * that is filled after JavaScript runs in the browser.
+   * The access token lives in localStorage and is not available here, and the
+   * HttpOnly refresh cookie belongs to the API domain, so an authenticated viewer
+   * is re-fetched on the client after hydration (see ProfileClient).
    */
-  const accessToken = await getServerAccessToken()
 
   // Deleted posts are owner-only, they are fetched by the client after the auth state is known
   await Promise.all([
     queryClient.prefetchQuery({
       queryKey: profileKeys.detail(userId),
-      queryFn: () => getServerUserProfile(userId, accessToken),
+      queryFn: () => getServerUserProfile(userId),
       retry: false,
     }),
     queryClient.prefetchInfiniteQuery({
       queryKey: profileKeys.posts(userId),
-      queryFn: ({ pageParam }) => getServerUserPosts(userId, accessToken, pageParam),
+      queryFn: ({ pageParam }) => getServerUserPosts(userId, pageParam),
       initialPageParam: undefined as string | undefined,
       getNextPageParam: (lastPage: ProfilePostsResponse) =>
         lastPage.hasNextPage ? (lastPage.nextCursor ?? undefined) : undefined,
@@ -77,7 +71,7 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
       ? [
           queryClient.prefetchQuery({
             queryKey: postsKeys.post(postId),
-            queryFn: () => getServerPost(postId, accessToken),
+            queryFn: () => getServerPost(postId),
             retry: false,
           }),
         ]
@@ -87,12 +81,7 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Suspense fallback={null}>
-        <ProfileClient
-          userId={userId}
-          postId={postId}
-          action={action}
-          prefetchedAsGuest={!accessToken}
-        />
+        <ProfileClient userId={userId} postId={postId} action={action} />
       </Suspense>
     </HydrationBoundary>
   )

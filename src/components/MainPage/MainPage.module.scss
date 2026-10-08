@@ -32,3 +32,9 @@
 
   color: var(--color-light-100);
 }
+
+.postCardSkeleton {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

@@ -1,10 +1,14 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
+import { MainPageSkeleton } from '@/components/MainPage/MainPageSkeleton'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostCard } from '@/components/PostCard'
 import { PostModal } from '@/components/PostModal/PostModal'
-import { RegisteredUsersCounter } from '@/components/RegisteredUsersCounter'
+import {
+  RegisteredUsersCounter,
+  RegisteredUsersCounterSkeleton,
+} from '@/components/RegisteredUsersCounter'
 import { LATEST_POSTS_LIMIT, useFeedPosts } from '@/lib/feed'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
@@ -17,8 +21,16 @@ export const MainPage = () => {
   const isMobile = useIsMobileViewport()
   const { user } = useAuth()
 
-  const { data: usersCount, isError: isUsersCountError } = useUsersCount()
-  const { data: posts, isError: isPostsError } = useFeedPosts(LATEST_POSTS_LIMIT)
+  const {
+    data: usersCount,
+    isError: isUsersCountError,
+    isLoading: isUsersCountLoading,
+  } = useUsersCount()
+  const {
+    data: posts,
+    isError: isPostsError,
+    isLoading: isPostsLoading,
+  } = useFeedPosts(LATEST_POSTS_LIMIT)
 
   const postList = posts ?? []
 
@@ -31,15 +43,21 @@ export const MainPage = () => {
 
   return (
     <div className={s.root}>
-      {isUsersCountError ? (
-        <p className={s.errorMessage}>Failed to load registered users count</p>
-      ) : (
+      {isUsersCountLoading && <RegisteredUsersCounterSkeleton />}
+
+      {isUsersCountError && <p className={s.errorMessage}>Failed to load registered users count</p>}
+
+      {!isUsersCountLoading && !isUsersCountError && (
         <RegisteredUsersCounter count={usersCount?.count ?? 0} />
       )}
 
-      {isPostsError ? (
+      {isPostsLoading && <MainPageSkeleton limit={LATEST_POSTS_LIMIT || 4} />}
+
+      {isPostsError && (
         <p className={s.errorMessage}>Failed to load posts. Try refreshing the page.</p>
-      ) : (
+      )}
+
+      {!isPostsLoading && !isPostsError && (
         <div className={s.postsGrid} data-hidden={!!selectedPost}>
           {postList.map(post => (
             <PostCard

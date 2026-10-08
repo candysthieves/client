@@ -24,6 +24,7 @@ type PostCardProps = {
   images: ImageData[]
   userId: string
   username: string
+  avatarSrc?: null | string
   createdAt: string
   caption: string
 }
@@ -37,6 +38,7 @@ export const PostCard = ({
   userId,
   images,
   username,
+  avatarSrc,
   createdAt,
   caption,
 }: PostCardProps) => {
@@ -110,7 +112,7 @@ export const PostCard = ({
         </div>
       </Link>
       <Link href={`/profile/${userId}`} className={s.userRow}>
-        <Avatar userName={username} />
+        <Avatar src={avatarSrc ?? ''} userName={username} />
         <Typography variant={'h3'}>{username}</Typography>
       </Link>
       <Typography className={s.time} color={'var(--color-light-900)'} variant={'caption1'}>

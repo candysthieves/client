@@ -5,7 +5,7 @@ type RegisteredUsersCounterProps = {
   minDigits?: number
 }
 
-const COUNTER_DIGIT_PLACE_VALUE = 6
+export const COUNTER_DIGIT_PLACE_VALUE = 6
 
 export const RegisteredUsersCounter = ({
   count,

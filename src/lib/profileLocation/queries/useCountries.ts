@@ -3,4 +3,7 @@ import { getCountries } from '@/lib/api/profileLocation'
 import { locationKeys } from '@/lib/profileLocation'
 
 export const useCountries = () =>
-  useQuery({ queryKey: locationKeys.countries(), queryFn: () => getCountries() })
+  useQuery({
+    queryKey: locationKeys.countries(),
+    queryFn: () => getCountries(),
+  })

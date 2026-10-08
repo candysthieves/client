@@ -1,0 +1,8 @@
+@use '@/styles/mixins' as *;
+
+.spinnerContainer {
+  @include flex(flex, center, center);
+  @include width-height(100vw, 100vh);
+
+  box-sizing: border-box;
+}

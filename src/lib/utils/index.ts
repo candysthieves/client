@@ -25,4 +25,10 @@ export { showGlobalError } from './showGlobalError'
 export { isServerUnavailableError } from './isServerUnavailableError'
 export { showServerUnavailableToast } from './showServerUnavailableToast'
 export { toFormValues, getChangedProfileFields } from './profileFormValues'
+export {
+  apiDateToFormDate,
+  formDateToApiDate,
+  formDateToPickerDate,
+  pickerDateToFormDate,
+} from './profileDate'
 export { isUnderAge } from './isUnderAge'

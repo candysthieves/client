@@ -70,11 +70,13 @@ export const VALID_NEW_PASSWORD_FIELDS = [
   'newPasswordConfirmation',
 ] as const
 
-// Date of birth, country and city are not sent yet, so backend errors can only target these fields.
 export const VALID_EDIT_PROFILE_FIELDS: EditProfileField[] = [
   'username',
   'firstName',
   'lastName',
+  'dateOfBirth',
+  'countryId',
+  'cityId',
   'aboutMe',
 ] as const
 

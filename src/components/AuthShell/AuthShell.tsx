@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense } from 'react'
+import { GlobalSpinner } from '@/components'
 import { AppHeader } from '@/components/AppHeader'
 import { GlobalLoader } from '@/components/GlobalLoader/GlobalLoader'
 import { useAuth } from '@/lib/hooks'
@@ -10,7 +11,7 @@ import { AuthShellContent } from './AuthShellContent'
 export function AuthShell({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, isHydrated } = useAuth()
 
-  if (!isHydrated || isLoading) return <div>Loading...</div>
+  if (!isHydrated || isLoading) return <GlobalSpinner />
 
   return (
     <>

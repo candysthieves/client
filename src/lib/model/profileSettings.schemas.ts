@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { MAX_ABOUT_ME_LENGTH } from '@/constants'
-import { isUnderAge } from '@/lib/utils/isUnderAge'
+import { isUnderAge } from '@/lib/utils'
 import { usernameSchema } from './auth.schemas'
 import {
   MIN_USER_AGE,
@@ -51,55 +51,56 @@ export const countryIdSchema = z.number().int().positive().nullable() // check n
 export const cityIdSchema = z.number().int().positive().nullable() // check nullable() in response
 
 export const locationCountrySchema = z.object({
-  countryId: z.number().nonnegative(),
+  countryId: countryIdSchema,
   countryNameRu: z.string(),
   countryNameEn: z.string(),
 })
 
 export const locationCitySchema = z.object({
   countryId: countryIdSchema,
-  cityId: cityIdSchema,
+  cityId: cityIdSchema.nullable(),
   cityNameRu: z.string(),
   cityNameEn: z.string(),
 })
 
+// Response
 export const myProfileResponseSchema = z.object({
-  username: z.string(),
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
-  dateOfBirth: z.string().nullable(),
+  username: usernameSchema,
+  firstName: firstNameSchema.nullable(),
+  lastName: lastNameSchema.nullable(),
+  dateOfBirth: dateOfBirthApiSchema,
   country: locationCountrySchema.nullable(),
   city: locationCitySchema.nullable(),
-  aboutMe: z.string().nullable(),
+  aboutMe: aboutMeSchema.nullable(),
 })
 
-export const updateMyProfileSchema = myProfileResponseSchema.partial().extend({
-  dateOfBirth: dateOfBirthApiSchema,
+// React hook form inputs validation schema
+export const editProfileSchema = z.object({
+  username: usernameSchema,
+  firstName: firstNameSchema.nullable(),
+  lastName: lastNameSchema.nullable(),
+  dateOfBirth: dateOfBirthInputSchema.nullable(),
+  countryId: countryIdSchema.nullable(),
+  cityId: cityIdSchema.nullable(),
+  aboutMe: aboutMeSchema.nullable(),
 })
 
-export const editProfileSchema = z
-  .object({
-    username: usernameSchema,
-    firstName: firstNameSchema,
-    lastName: lastNameSchema,
-    dateOfBirth: dateOfBirthInputSchema,
-    countryId: countryIdSchema,
-    cityId: cityIdSchema,
-    aboutMe: aboutMeSchema,
-  })
-  .superRefine((data, ctx) => {
-    if (data.countryId != null && data.cityId == null) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['cityId'],
-        message: 'Select a city',
-      })
-    }
-    if (data.countryId == null && data.cityId != null) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['countryId'],
-        message: 'Select a country first',
-      })
-    }
-  })
+export const refinedEditProfileSchema = editProfileSchema.superRefine((data, ctx) => {
+  if (data.countryId != null && data.cityId == null) {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['cityId'],
+      message: 'Select a city',
+    })
+  }
+  if (data.countryId == null && data.cityId != null) {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['countryId'],
+      message: 'Select a country first',
+    })
+  }
+})
+
+// Request
+export const updateMyProfileRequestSchema = editProfileSchema.partial()

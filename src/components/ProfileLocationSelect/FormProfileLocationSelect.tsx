@@ -1,4 +1,4 @@
-import { type Control, type FieldPath, type FieldValues, useController } from 'react-hook-form'
+import { Control, FieldPath, FieldValues, useController } from 'react-hook-form'
 import {
   ProfileLocationSelect,
   ProfileLocationSelectProps,
@@ -18,22 +18,22 @@ export const FormProfileLocationSelect = <T extends FieldValues>({
   cityName,
   disabled,
 }: FormProfileLocationSelectProps<T>) => {
-  const country = useController({ control, name: countryName })
-  const city = useController({ control, name: cityName })
+  const countryIdControl = useController({ control, name: countryName })
+  const cityIdControl = useController({ control, name: cityName })
 
   const locationValue: ProfileLocationValue = {
-    countryId: (country.field.value as null | number) ?? null,
-    cityId: (city.field.value as null | number) ?? null,
+    countryId: (countryIdControl.field.value as null | number) ?? null,
+    cityId: (cityIdControl.field.value as null | number) ?? null,
   }
 
   const onChangeHandler = (next: ProfileLocationValue) => {
-    country.field.onChange(next.countryId)
-    city.field.onChange(next.cityId)
+    countryIdControl.field.onChange(next.countryId)
+    cityIdControl.field.onChange(next.cityId)
   }
 
   const onBlurHandler = () => {
-    country.field.onBlur()
-    city.field.onBlur()
+    countryIdControl.field.onBlur()
+    cityIdControl.field.onBlur()
   }
 
   return (
@@ -42,8 +42,8 @@ export const FormProfileLocationSelect = <T extends FieldValues>({
       onChange={onChangeHandler}
       onBlur={onBlurHandler}
       disabled={disabled}
-      countryError={country.fieldState.error?.message}
-      cityError={city.fieldState.error?.message}
+      countryError={countryIdControl.fieldState.error?.message}
+      cityError={cityIdControl.fieldState.error?.message}
     />
   )
 }

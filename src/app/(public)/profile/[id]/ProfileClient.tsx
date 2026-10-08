@@ -15,8 +15,9 @@ import { usePost } from '@/lib/posts'
 import { useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
 import { useDeletedPost } from '@/lib/profile/queries/useDeletedPost'
 import { PostsFeed } from './PostsFeed'
+import { PostsFeedSkeleton } from './PostsFeed/PostsFeedSkeleton'
 import s from './ProfileClient.module.scss'
-import { ProfileSkeleton } from './ProfileSkeleton'
+import { ProfileHeaderSkeleton } from './ProfileHeader/ProfileHeaderSkeleton'
 
 type ProfileClientProps = {
   userId: string
@@ -83,76 +84,82 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const handleClosePost = () => router.replace(`/profile/${userId}`)
   const handleLoadMorePosts = useCallback(() => void fetchNextPage(), [fetchNextPage])
 
-  if (isProfileLoading || isPostsLoading) {
-    return <ProfileSkeleton />
-  }
-
-  if (!profile || isProfileError || (isPostsError && !profilePostsData)) {
+  if (isProfileError || (isPostsError && !profilePostsData)) {
     return (
       <section className={s.profileError} role={'alert'}>
         <Typography color={'var(--color-light-100)'} variant={'h1'}>
           Unable to load profile
         </Typography>
         <Typography color={'var(--color-light-900)'} variant={'body1'}>
-          Please try again later.
+          Profile not found. Please check the link or try again later
         </Typography>
       </section>
     )
   }
-
+  const postsFeed = isPostsLoading ? (
+    <PostsFeedSkeleton count={8} />
+  ) : (
+    <PostsFeed
+      hasNextPage={hasNextPage ?? false}
+      isLoading={isPostsLoading}
+      isLoadingNextPage={isFetchingNextPage}
+      isLoadMoreError={isFetchNextPageError}
+      key={userId}
+      onLoadMore={handleLoadMorePosts}
+      posts={profilePosts}
+      userId={userId}
+    />
+  )
   return (
     <>
       <div className={s.profile}>
-        <section className={s.profileHeader} aria-labelledby={'profile-name'}>
-          <MainAvatar
-            className={s.profileAvatar}
-            userName={profile.username ?? userId}
-            src={profile.avatarPreviewUrl?.url ?? ''}
-            size={'xxl'}
-            delayMs={0}
-          />
-
-          <div className={s.profileInfo}>
-            <div className={s.profileTop}>
-              <Typography
-                id={'profile-name'}
-                className={s.profileName}
-                color={'white'}
-                variant={'h1'}
-              >
-                {profile.username}
-              </Typography>
-
-              {isAuth && <ProfileActions status={profile.viewerStatus} />}
-            </div>
-
-            <dl className={s.stats}>
-              <div className={s.stat}>
-                <dt className={s.statLabel}>Publications</dt>
-                <dd className={s.statValue}>{profile.publicationsCount ?? 0}</dd>
-              </div>
-            </dl>
-
-            <Typography className={s.about} variant={'body1'}>
-              <span className={s.aboutLabel}>About me</span>
-              {profile.description ?? ''}
-            </Typography>
-          </div>
-        </section>
-        {isOwner ? (
-          <ProfilePostTabs
-            postsFeed={
-              <PostsFeed
-                hasNextPage={hasNextPage ?? false}
-                isLoading={isPostsLoading}
-                isLoadingNextPage={isFetchingNextPage}
-                isLoadMoreError={isFetchNextPageError}
-                key={userId}
-                onLoadMore={handleLoadMorePosts}
-                posts={profilePosts}
-                userId={userId}
+        {isProfileLoading ? (
+          <ProfileHeaderSkeleton userId={userId} />
+        ) : (
+          profile && (
+            <section className={s.profileHeader} aria-labelledby={'profile-name'}>
+              <MainAvatar
+                className={s.profileAvatar}
+                userName={profile.username ?? userId}
+                src={profile.avatarPreviewUrl?.url ?? ''}
+                size={'xxl'}
+                delayMs={0}
               />
-            }
+
+              <div className={s.profileInfo}>
+                <div className={s.profileTop}>
+                  <Typography
+                    id={'profile-name'}
+                    className={s.profileName}
+                    color={'white'}
+                    variant={'h1'}
+                  >
+                    {profile.username}
+                  </Typography>
+
+                  {isAuth && <ProfileActions status={profile.viewerStatus} />}
+                </div>
+
+                <dl className={s.stats}>
+                  <div className={s.stat}>
+                    <dt className={s.statLabel}>Publications</dt>
+                    <dd className={s.statValue}>{profile.publicationsCount ?? 0}</dd>
+                  </div>
+                </dl>
+
+                <Typography className={s.about} variant={'body1'}>
+                  <span className={s.aboutLabel}>About me</span>
+                  {profile.description ?? ''}
+                </Typography>
+              </div>
+            </section>
+          )
+        )}
+        {isPostsLoading ? (
+          <PostsFeedSkeleton count={8} />
+        ) : isOwner ? (
+          <ProfilePostTabs
+            postsFeed={postsFeed}
             deletedPosts={
               <DeletedPosts
                 key={deletedPosts.map(post => post.id).join(',')}
@@ -165,16 +172,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
             deletedPostsCount={deletedPosts.length}
           />
         ) : (
-          <PostsFeed
-            hasNextPage={hasNextPage ?? false}
-            isLoading={isPostsLoading}
-            isLoadingNextPage={isFetchingNextPage}
-            isLoadMoreError={isFetchNextPageError}
-            key={userId}
-            onLoadMore={handleLoadMorePosts}
-            posts={profilePosts}
-            userId={userId}
-          />
+          postsFeed
         )}
       </div>
 

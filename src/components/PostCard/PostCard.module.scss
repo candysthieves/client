@@ -71,7 +71,14 @@
 }
 
 .username {
+  overflow: hidden;
+
   min-width: 0;
+
+  // shrinks from 16px at 1280px to 14px at 768px
+  font-size: clamp(var(--font-size-s), 0.65rem + 0.39vw, var(--font-size-m)) !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .time {
@@ -81,12 +88,24 @@
 .captionWrapper {
   overflow: hidden;
   flex-shrink: 0;
-  height: 4.5rem;
+
+  // always 3 lines, whatever the font size
+  height: 3lh;
+
+  // shrinks from 14px at 1280px to 12px at 768px
+  font-size: clamp(var(--font-size-xs), 0.55rem + 0.39vw, var(--font-size-s));
+  line-height: var(--line-height-l);
 }
 
 .caption {
   display: block;
   overflow-wrap: anywhere;
+
+  &,
+  button {
+    font-size: inherit !important;
+    line-height: inherit !important;
+  }
 }
 
 .root[data-expanded='true'] {

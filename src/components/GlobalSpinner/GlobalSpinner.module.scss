@@ -1,9 +1,8 @@
+@use '@/styles/mixins' as *;
+
 .spinnerContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex(flex, center, center);
+  @include width-height(100vw, 100vh);
 
   box-sizing: border-box;
-  width: 100vw;
-  height: 100vh;
 }

@@ -91,7 +91,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           Unable to load profile
         </Typography>
         <Typography color={'var(--color-light-900)'} variant={'body1'}>
-          Please try again later.
+          Profile not found. Please check the link or try again later
         </Typography>
       </section>
     )

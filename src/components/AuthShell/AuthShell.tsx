@@ -16,6 +16,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
    * otherwise the whole page would be replaced by a loading stub and SSR HTML would be lost.
    */
   const isSessionResolved = isHydrated && !isLoading
+  // if (!isHydrated || isLoading) return <GlobalSpinner />
 
   return (
     <>

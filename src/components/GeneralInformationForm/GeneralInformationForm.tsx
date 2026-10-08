@@ -170,7 +170,6 @@ export const GeneralInformationForm = () => {
           control={control}
           name={'dateOfBirth'}
           label={'Date of birth'}
-          clearable
           maxDate={new Date()}
           className={s.dateOfBirth}
           error={dateOfBirthError}

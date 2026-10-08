@@ -1,19 +1,23 @@
 'use client'
 
-import { Button, Input, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
 import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
+import { FormDatePicker } from '@/components/FormDatePicker'
 import { FormInput } from '@/components/FormInput'
 import { FormTextArea } from '@/components/FormTextArea'
 import { FormProfileLocationSelect } from '@/components/ProfileLocationSelect'
 import { ToastError, ToastSuccess } from '@/components/Toast/Toast'
 import { MAX_ABOUT_ME_LENGTH } from '@/constants'
 import { ApiError } from '@/lib/api'
+import { useAuth } from '@/lib/hooks'
 import {
   PROFILE_SETTINGS_SAVED_MESSAGE,
   RefinedEditProfileRequest,
   refinedEditProfileSchema,
+  UNDER_AGE_ERROR_MESSAGE,
 } from '@/lib/model'
 import { useMyProfile, useUpdateMyProfile } from '@/lib/profile'
 import {
@@ -28,15 +32,20 @@ import {
 } from '@/lib/utils'
 import s from './GeneralInformationForm.module.scss'
 
+const PROFILE_SETTINGS_DRAFT_KEY_PREFIX = 'profile-settings-draft:'
+
 export const GeneralInformationForm = () => {
   const { data: profile, isPending: isProfileLoading } = useMyProfile()
   const { mutate: updateProfile, isPending: isSaving } = useUpdateMyProfile()
+  const { user } = useAuth()
 
   const {
     control,
+    getValues,
     handleSubmit,
     setError,
     reset,
+    trigger,
     formState: { errors, isValid, isDirty, dirtyFields },
   } = useForm<RefinedEditProfileRequest>({
     resolver: zodResolver(refinedEditProfileSchema),
@@ -54,14 +63,45 @@ export const GeneralInformationForm = () => {
     resetOptions: { keepDirtyValues: true },
   })
 
-  // useEffect(() => {
-  //   if (profile) {
-  //     reset(toFormValues(profile))
-  //   }
-  // }, [profile, reset])
-
   const aboutMeLength = useWatch({ control, name: 'aboutMe' })?.length ?? 0
   const isAboutMeLimitReached = aboutMeLength >= MAX_ABOUT_ME_LENGTH
+  const isUnderAge = errors.dateOfBirth?.message === UNDER_AGE_ERROR_MESSAGE
+  const draftKey = user?.id ? `${PROFILE_SETTINGS_DRAFT_KEY_PREFIX}${user.id}` : null
+
+  useEffect(() => {
+    if (!profile || !draftKey) return
+
+    const draft = sessionStorage.getItem(draftKey)
+
+    if (!draft) return
+
+    try {
+      reset(JSON.parse(draft) as RefinedEditProfileRequest, { keepDefaultValues: true })
+      sessionStorage.removeItem(draftKey)
+      void trigger()
+    } catch {
+      sessionStorage.removeItem(draftKey)
+    }
+  }, [draftKey, profile, reset, trigger])
+
+  const saveDraftBeforeOpeningPrivacyPolicy = () => {
+    if (draftKey) {
+      sessionStorage.setItem(draftKey, JSON.stringify(getValues()))
+    }
+  }
+
+  const dateOfBirthError = isUnderAge ? (
+    <>
+      {UNDER_AGE_ERROR_MESSAGE}{' '}
+      <Link
+        className={s.privacyPolicyLink}
+        href={'/privacy-policy?returnTo=%2Fsettings%3Fpart%3Dinfo'}
+        onClick={saveDraftBeforeOpeningPrivacyPolicy}
+      >
+        Privacy Policy
+      </Link>
+    </>
+  ) : undefined
 
   const handleSaveError = (error: Error) => {
     if (error instanceof ApiError && isErrorResponse(error.data)) {
@@ -89,6 +129,7 @@ export const GeneralInformationForm = () => {
       onSuccess: savedProfile => {
         // Saved values become the new baseline, so the button is disabled until the next change.
         reset(toFormValues(savedProfile))
+        if (draftKey) sessionStorage.removeItem(draftKey)
         ToastSuccess({ message: PROFILE_SETTINGS_SAVED_MESSAGE })
       },
       onError: handleSaveError,
@@ -125,8 +166,15 @@ export const GeneralInformationForm = () => {
           aria-invalid={Boolean(errors.lastName)}
         />
 
-        {/* Placeholder: real calendar date-picker is being built separately and will replace this input. */}
-        <Input label={'Date of birth'} placeholder={'dd.mm.yyyy'} disabled />
+        <FormDatePicker
+          control={control}
+          name={'dateOfBirth'}
+          label={'Date of birth'}
+          clearable
+          maxDate={new Date()}
+          className={s.dateOfBirth}
+          error={dateOfBirthError}
+        />
 
         <FormProfileLocationSelect
           control={control}

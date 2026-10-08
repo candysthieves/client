@@ -5,6 +5,7 @@ import {
   RefinedEditProfileRequest,
   UpdateMyProfileRequest,
 } from '@/lib/model'
+import { apiDateToFormDate, formDateToApiDate } from './profileDate'
 
 export const toFormValues = (profile: MyProfileResponse): EditProfileRequest => {
   return {
@@ -14,12 +15,11 @@ export const toFormValues = (profile: MyProfileResponse): EditProfileRequest => 
     aboutMe: profile.aboutMe ?? '',
     countryId: profile.country?.countryId ?? null,
     cityId: profile.city?.cityId ?? null,
-    dateOfBirth: profile.dateOfBirth ?? '',
+    dateOfBirth: apiDateToFormDate(profile.dateOfBirth),
   }
 }
 
 // Only changed fields are sent; a cleared optional field is sent as null.
-// Date of birth, country and city are visual placeholders for now and are not sent.
 export const getChangedProfileFields = (
   values: EditProfileRequest,
   dirtyFields: Partial<Readonly<FieldNamesMarkedBoolean<RefinedEditProfileRequest>>>
@@ -32,7 +32,11 @@ export const getChangedProfileFields = (
   if (dirtyFields.aboutMe) changed.aboutMe = values.aboutMe || null
   if (dirtyFields.countryId) changed.countryId = values.countryId || null
   if (dirtyFields.cityId) changed.cityId = values.cityId || null
-  if (dirtyFields.dateOfBirth) changed.dateOfBirth = values.dateOfBirth || null
+  if (dirtyFields.dateOfBirth) {
+    const dateOfBirth = formDateToApiDate(values.dateOfBirth ?? '')
+
+    if (dateOfBirth !== undefined) changed.dateOfBirth = dateOfBirth
+  }
 
   return changed
 }

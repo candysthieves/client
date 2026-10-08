@@ -1,7 +1,6 @@
 'use client'
 
 import { Suspense } from 'react'
-import { GlobalSpinner } from '@/components'
 import { AppHeader } from '@/components/AppHeader'
 import { GlobalLoader } from '@/components/GlobalLoader/GlobalLoader'
 import { useAuth } from '@/lib/hooks'
@@ -17,7 +16,6 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
    * otherwise the whole page would be replaced by a loading stub and SSR HTML would be lost.
    */
   const isSessionResolved = isHydrated && !isLoading
-  if (!isHydrated || isLoading) return <GlobalSpinner />
 
   return (
     <>

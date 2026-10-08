@@ -2,12 +2,23 @@ import { ArrowBackOutline, clsx, Typography } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import s from './page.module.scss'
 
-export default function TermsOfServicePage() {
+const PROFILE_SETTINGS_RETURN_TO = '/settings?part=info'
+
+type PrivacyPolicyPageProps = {
+  searchParams: Promise<{ returnTo?: string }> | { returnTo?: string }
+}
+
+export default async function TermsOfServicePage({ searchParams }: PrivacyPolicyPageProps) {
+  const { returnTo } = await searchParams
+  const isProfileSettingsReturn = returnTo === PROFILE_SETTINGS_RETURN_TO
+  const backHref = isProfileSettingsReturn ? PROFILE_SETTINGS_RETURN_TO : '/sign-up'
+  const backLabel = isProfileSettingsReturn ? 'Back to Profile Settings' : 'Back to Sign Up'
+
   return (
     <div className={s.container}>
-      <Link href={'/sign-up'} className={clsx('typography-body1', s.backLink)}>
+      <Link href={backHref} className={clsx('typography-body1', s.backLink)}>
         <ArrowBackOutline />
-        Back to Sign Up
+        {backLabel}
       </Link>
 
       <div className={s.content}>

@@ -32,7 +32,11 @@ export const EditPostModal = ({
   onSave,
   isSaving,
 }: Props) => {
-  const { id: userId, username: profileUserName = userId, avatarPreviewUrl } = userProfile ?? {}
+  const {
+    id: userId,
+    username: profileUserName = userId,
+    avatarPreviewUrl: profileAvatarPreviewUrl,
+  } = userProfile ?? {}
 
   const initialDescription = post.description ?? ''
   const [description, setDescription] = useState(initialDescription)
@@ -105,7 +109,7 @@ export const EditPostModal = ({
                 userName={profileUserName || post.author.username || ''}
                 size={'s'}
                 delayMs={0}
-                src={avatarPreviewUrl?.url || ''} // TODO add here later avatarPreviewUrl?.url || post.author.avatarPreviewUrl?.url || ''
+                src={post.author.avatarPreviewUrl?.url || profileAvatarPreviewUrl?.url || ''}
               />
 
               <Typography variant={'subtitle2'}>

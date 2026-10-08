@@ -16,7 +16,6 @@ const INITIAL_COLLAPSED_LENGTH = 60
 
 const IMAGE_WIDTH = 234
 const IMAGE_HEIGHT = 240
-const COLLAPSED_CAPTION_HEIGHT = 72 // .captionWrapper's fixed height (4.5rem), in px
 const MIN_EXPANDED_IMAGE_HEIGHT = 60
 
 type PostCardProps = {
@@ -24,6 +23,7 @@ type PostCardProps = {
   images: ImageData[]
   userId: string
   username: string
+  avatarSrc?: null | string
   createdAt: string
   caption: string
 }
@@ -37,6 +37,7 @@ export const PostCard = ({
   userId,
   images,
   username,
+  avatarSrc,
   createdAt,
   caption,
 }: PostCardProps) => {
@@ -48,7 +49,7 @@ export const PostCard = ({
   const validImages = useMemo(() => images.filter(image => image?.url), [images])
   const slides = useMemo(() => validImages.map(image => image.url), [validImages])
 
-  const { maxLength, collapsedText, text, expandedHeight } = useReadMoreClamp(
+  const { maxLength, collapsedText, text, expandedHeight, collapsedHeight } = useReadMoreClamp(
     captionWrapperRef,
     `.${s.caption}`,
     caption,
@@ -79,7 +80,7 @@ export const PostCard = ({
   const collapsedImageHeight = (imageWidth * IMAGE_HEIGHT) / IMAGE_WIDTH
   const expandedImageHeight = Math.max(
     MIN_EXPANDED_IMAGE_HEIGHT,
-    collapsedImageHeight - (expandedHeight - COLLAPSED_CAPTION_HEIGHT)
+    collapsedImageHeight - (expandedHeight - collapsedHeight)
   )
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -110,8 +111,10 @@ export const PostCard = ({
         </div>
       </Link>
       <Link href={`/profile/${userId}`} className={s.userRow}>
-        <Avatar userName={username} />
-        <Typography variant={'h3'}>{username}</Typography>
+        <Avatar className={s.avatar} src={avatarSrc ?? ''} userName={username} />
+        <Typography className={s.username} title={username} variant={'h3'}>
+          {username}
+        </Typography>
       </Link>
       <Typography className={s.time} color={'var(--color-light-900)'} variant={'caption1'}>
         {timeAgo}

@@ -4,6 +4,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import '../styles/index.scss'
 import { ReactNode } from 'react'
 import { AuthShell, ClientLayout } from '@/components'
+import { AppSkeleton } from '@/components/AppSkeleton/AppSkeleton'
 
 export const metadata: Metadata = {
   title: 'Client',
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang={'en'}>
       <body>
         <ClientLayout>
-          <AuthShell>{children}</AuthShell>
+          <AppSkeleton>
+            <AuthShell>{children}</AuthShell>
+          </AppSkeleton>
         </ClientLayout>
       </body>
     </html>

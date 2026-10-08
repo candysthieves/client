@@ -1,0 +1,61 @@
+@use '@/styles/mixins' as *;
+
+// .fields and .actions are grid items of the InfoTab layout (see InfoTab.module.scss).
+.form {
+  display: contents;
+}
+
+.fields {
+  display: flex;
+  grid-area: fields;
+  flex-direction: column;
+  gap: $spacing-error;
+
+  min-width: 0;
+}
+
+.dateOfBirth {
+  width: 100%;
+}
+
+.privacyPolicyLink {
+  color: inherit;
+}
+
+.locationRow {
+  display: flex;
+  gap: $spacing-error;
+
+  > * {
+    flex: 1 0 0;
+    min-width: 0;
+  }
+
+  @include media-mobile {
+    flex-direction: column;
+  }
+}
+
+.limitReached {
+  border-color: var(--color-danger-500) !important;
+  box-shadow: none !important;
+}
+
+.counter {
+  margin-top: 0.25rem;
+  text-align: right;
+}
+
+.actions {
+  @include flex(flex, flex-end);
+
+  grid-area: actions;
+
+  // Mobile layout has no divider: the full-width Save button sits 3rem below About Me.
+  // ui-kit Button replaces its own classes with a passed className, so the width is set from here.
+  @include media-tablet-small {
+    display: grid;
+    justify-content: stretch;
+    margin-top: 1.5rem;
+  }
+}

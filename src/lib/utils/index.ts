@@ -15,8 +15,20 @@ export { mapPasswordRecoveryDomainError } from './mapPasswordRecoveryDomainError
 export { mapPasswordRecoveryValidationError } from './mapPasswordRecoveryValidationError'
 export { mapNewPasswordDomainError } from './mapNewPasswordDomainError'
 export { mapNewPasswordValidationError } from './mapNewPasswordValidationError'
+export { mapEditProfileDomainError } from './mapEditProfileDomainError'
+export { mapEditProfileValidationError } from './mapEditProfileValidationError'
 export { isError } from './isError'
 export * from './createPostDraft'
 export { createCroppedImage } from './createCroppedImage'
 export { formatPostDate } from './formatPostDate'
 export { showGlobalError } from './showGlobalError'
+export { isServerUnavailableError } from './isServerUnavailableError'
+export { showServerUnavailableToast } from './showServerUnavailableToast'
+export { toFormValues, getChangedProfileFields } from './profileFormValues'
+export {
+  apiDateToFormDate,
+  formDateToApiDate,
+  formDateToPickerDate,
+  pickerDateToFormDate,
+} from './profileDate'
+export { isUnderAge } from './isUnderAge'

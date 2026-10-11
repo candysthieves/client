@@ -36,6 +36,13 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const { isAuthenticated, isHydrated } = useAuth()
   const isAuth = isHydrated && isAuthenticated
 
+  console.log('[ProfileClient] Auth state:', {
+    isAuthenticated,
+    isHydrated,
+    isAuth,
+    userId,
+  })
+
   // Keeps the authenticated profile separate from the guest-prefetched profile.
   const [personalizedProfile, setPersonalizedProfile] = useState<null | UserProfile>(null)
 
@@ -50,6 +57,19 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const postType = searchParams.get('type')
   const isDeletedPost = postType === 'deleted'
 
+  console.log('[ProfileClient] Profile state:', {
+    userId,
+    isProfileLoading,
+    isProfileError,
+    guestProfileExists: !!profile,
+    guestViewerStatus: profile?.viewerStatus,
+    personalizedProfileExists: !!personalizedProfile,
+    personalizedViewerStatus: personalizedProfile?.viewerStatus,
+    displayedViewerStatus: displayedProfile?.viewerStatus,
+    isProfilePersonalized,
+    isOwner,
+  })
+
   const {
     data: profilePostsData,
     fetchNextPage,
@@ -63,23 +83,90 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    // The server prefetches as a guest, so the profile is re-fetched once auth is ready.
-    if (!isAuth) return
+    const unsubscribe = queryClient.getQueryCache().subscribe(event => {
+      if (event.query.queryKey[0] === 'profile') {
+        console.log('[ProfileClient] Query cache event:', {
+          type: event.type,
+          queryKey: event.query.queryKey,
+          status: event.query.state.status,
+          fetchStatus: event.query.state.fetchStatus,
+          error: event.query.state.error,
+          dataUpdatedAt: event.query.state.dataUpdatedAt,
+        })
+      }
+    })
+
+    return unsubscribe
+  }, [queryClient])
+
+  useEffect(() => {
+    console.log('[ProfileClient] Auth effect triggered:', {
+      userId,
+      isHydrated,
+      isAuthenticated,
+      isAuth,
+      postId,
+      isDeletedPost,
+    })
+
+    if (!isAuth) {
+      console.log('[ProfileClient] Profile request skipped: not authenticated')
+      return
+    }
 
     let cancelled = false
+
+    console.log('[ProfileClient] Starting personalized profile fetch', {
+      userId,
+      queryKey: profileKeys.detail(userId),
+      cachedProfile: queryClient.getQueryData(profileKeys.detail(userId)),
+    })
 
     void queryClient
       .fetchQuery({
         queryKey: profileKeys.detail(userId),
-        queryFn: () => getUserProfile(userId),
+        queryFn: async () => {
+          console.log('[ProfileClient] getUserProfile START', { userId })
+
+          try {
+            const result = await getUserProfile(userId)
+
+            console.log('[ProfileClient] getUserProfile SUCCESS', {
+              userId,
+              username: result.username,
+              viewerStatus: result.viewerStatus,
+            })
+
+            return result
+          } catch (error) {
+            console.error('[ProfileClient] getUserProfile FAILED', {
+              userId,
+              error,
+            })
+
+            throw error
+          }
+        },
         staleTime: 0,
       })
-      .then(personalizedProfile => {
+      .then(result => {
+        console.log('[ProfileClient] fetchQuery RESOLVED', {
+          userId,
+          cancelled,
+          viewerStatus: result.viewerStatus,
+        })
+
         if (!cancelled) {
-          setPersonalizedProfile(personalizedProfile)
+          setPersonalizedProfile(result)
         }
       })
-      .catch(() => undefined)
+      .catch(error => {
+        console.error('[ProfileClient] fetchQuery FAILED', {
+          userId,
+          cancelled,
+          error,
+        })
+      })
 
     if (postId && !isDeletedPost) {
       void queryClient.invalidateQueries({
@@ -89,8 +176,13 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
 
     return () => {
       cancelled = true
+
+      console.log('[ProfileClient] Auth effect CLEANUP', {
+        userId,
+        postId,
+      })
     }
-  }, [isAuth, queryClient, userId, postId, isDeletedPost])
+  }, [isAuth, isHydrated, isAuthenticated, queryClient, userId, postId, isDeletedPost])
 
   const profilePosts = profilePostsData?.pages.flatMap(page => page.items) ?? []
   const {

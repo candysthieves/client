@@ -25,7 +25,7 @@ export const mobileHeaderItems: NavigationItem[] = [
   },
   {
     activeIcon: <TrendingUpOutline />,
-    href: (userId: string) => `/profile/${userId}?action=create`,
+    href: '/statistics',
     icon: <TrendingUp />,
     id: 'statistics',
     label: 'Statistics',
@@ -33,14 +33,14 @@ export const mobileHeaderItems: NavigationItem[] = [
 
   {
     activeIcon: <BookmarkOutline />,
-    href: (userId: string) => `/profile/${userId}?action=create`,
+    href: '/favorites',
     icon: <BookmarkOutline />,
     id: 'favorites',
     label: 'Favorites',
   },
   {
     activeIcon: <LogOutOutline />,
-    href: '/search',
+    href: '/favorites',
     icon: <LogOutOutline />,
     id: 'logOut',
     label: 'Log Out',

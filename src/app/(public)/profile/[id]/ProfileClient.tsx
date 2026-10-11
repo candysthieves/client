@@ -33,7 +33,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const searchParams = useSearchParams()
   const isMobile = useIsMobileViewport()
 
-  const { isAuthenticated, isHydrated } = useAuth()
+  const { isAuthenticated, isHydrated, user } = useAuth()
   const isAuth = isHydrated && isAuthenticated
 
   console.log('[ProfileClient] Auth state:', {
@@ -115,6 +115,13 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     }
 
     let cancelled = false
+
+    console.log('[ProfileClient] Ownership check:', {
+      profileUserId: userId,
+      currentUserId: user?.id,
+      isAuthenticated,
+      isHydrated,
+    })
 
     console.log('[ProfileClient] Starting personalized profile fetch', {
       userId,

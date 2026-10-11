@@ -205,7 +205,20 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
     headers: createHeaders(token),
   })
 
+  console.log('[API request] Initial', {
+    url: input,
+    hasAccessToken: Boolean(accessToken),
+    method: init?.method ?? 'GET',
+    timestamp: new Date().toISOString(),
+  })
+
   let response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, createRequestInit(accessToken))
+
+  console.log('[API response] Initial', {
+    url: input,
+    status: response.status,
+    ok: response.ok,
+  })
 
   // let response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, {
   //   ...init,
@@ -267,6 +280,13 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
      * 401 + code 74 / 498 + code 74 means that the access token is invalid/expired - is used to refresh access token.
      * Start refresh-token flow. Only these 401 / 498 errors trigger access-token refresh
      */
+
+    console.warn('[API auth error]', {
+      url: input,
+      status: response.status,
+      isAccessTokenError: isAccessTokenError(errorData),
+      errorData,
+    })
     if (isAccessTokenError(errorData)) {
       try {
         /**
@@ -276,8 +296,34 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
          * Other requests wait for the same Promise.
          */
         if (!refreshPromise) {
-          refreshPromise = refreshAccessToken().finally(() => {
-            refreshPromise = null
+          console.log('[API refresh] Starting', {
+            url: input,
+            status: response.status,
+          })
+
+          refreshPromise = refreshAccessToken()
+            .then(token => {
+              console.log('[API refresh] Success', {
+                url: input,
+                hasNewAccessToken: Boolean(token),
+              })
+
+              return token
+            })
+            .catch(error => {
+              console.error('[API refresh] Failed', {
+                url: input,
+                error,
+              })
+
+              throw error
+            })
+            .finally(() => {
+              refreshPromise = null
+            })
+        } else {
+          console.log('[API refresh] Waiting for existing refresh', {
+            url: input,
           })
         }
         // waiting of the Promise ends
@@ -302,7 +348,18 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
         //     ...init?.headers,
         //   },
         // })
+        console.log('[API request] Retry after refresh', {
+          url: input,
+          hasNewAccessToken: Boolean(newAccessToken),
+        })
+
         response = await fetch(`${NEXT_PUBLIC_API_URL}${input}`, createRequestInit(newAccessToken))
+
+        console.log('[API response] Retry after refresh', {
+          url: input,
+          status: response.status,
+          ok: response.ok,
+        })
       } catch (error) {
         /**
          * Refresh failed.
@@ -313,6 +370,11 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
          * Therefore, the refresh token is no longer valid and
          * the access token must be removed from localStorage.
          */
+        console.error('[API refresh] Request failed; removing access token', {
+          url: input,
+          originalStatus: response.status,
+          error,
+        })
 
         localStorage.removeItem(ACCESS_TOKEN_LS_KEY)
 

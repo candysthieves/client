@@ -16,8 +16,27 @@ import {
 
 export { PROFILE_POSTS_PAGE_SIZE } from '@/lib/api/profileUrls'
 
-export const getUserProfile = (userId: string): Promise<UserProfile> =>
-  requestValidated(getProfileUrl(userId), userProfileSchema)
+// export const getUserProfile = (userId: string): Promise<UserProfile> =>
+//   requestValidated(getProfileUrl(userId), userProfileSchema)
+
+export const getUserProfile = async (userId: string): Promise<UserProfile> => {
+  console.log('[getUserProfile] START', { userId })
+
+  try {
+    const profile = await requestValidated(getProfileUrl(userId), userProfileSchema)
+
+    console.log('[getUserProfile] SUCCESS', {
+      userId,
+      username: profile.username,
+      viewerStatus: profile.viewerStatus,
+    })
+
+    return profile
+  } catch (error) {
+    console.error('[getUserProfile] FAILED', { userId, error })
+    throw error
+  }
+}
 
 export const getUserPosts = (userId: string, cursor?: string): Promise<ProfilePostsResponse> =>
   requestValidated(getProfilePostsUrl(userId, cursor), profilePostsResponseSchema)

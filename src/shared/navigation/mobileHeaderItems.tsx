@@ -40,7 +40,6 @@ export const mobileHeaderItems: NavigationItem[] = [
   },
   {
     activeIcon: <LogOutOutline />,
-    href: '/favorites',
     icon: <LogOutOutline />,
     id: 'logOut',
     label: 'Log Out',

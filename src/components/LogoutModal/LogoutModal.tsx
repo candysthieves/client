@@ -21,7 +21,7 @@ export const LogoutModal = ({ open, onClose, onSuccess }: LogoutModalProps) => {
     logoutUser(undefined, {
       onSuccess: () => {
         onSuccess?.()
-
+        onClose()
         ToastWarning({
           title: 'Signed out successfully',
           message: 'You have been successfully signed out. See you soon!',

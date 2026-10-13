@@ -33,32 +33,11 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const searchParams = useSearchParams()
   const isMobile = useIsMobileViewport()
 
-  const { isAuthenticated, isHydrated, user } = useAuth()
+  const { isAuthenticated, isHydrated } = useAuth()
   const isAuth = isHydrated && isAuthenticated
-
-  console.log('[ProfileClient] Auth state', {
-    profileUserId: userId,
-    currentUserId: user?.id,
-    isAuthenticated,
-    isHydrated,
-    isAuth,
-    idsMatch: String(user?.id) === String(userId),
-  })
 
   // Keeps the authenticated profile separate from the guest-prefetched profile.
   const [personalizedProfile, setPersonalizedProfile] = useState<null | UserProfile>(null)
-
-  useEffect(() => {
-    console.log('[ProfileClient] Personalized profile state changed', {
-      profileUserId: userId,
-      currentUserId: user?.id,
-      exists: personalizedProfile !== null,
-      profileId: personalizedProfile?.id,
-      username: personalizedProfile?.username,
-      viewerStatus: personalizedProfile?.viewerStatus,
-      isAuth,
-    })
-  }, [personalizedProfile, user?.id, userId, isAuth])
 
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
 
@@ -70,30 +49,6 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const isOwner = isProfilePersonalized && displayedProfile?.viewerStatus === 'owner'
   const postType = searchParams.get('type')
   const isDeletedPost = postType === 'deleted'
-
-  console.log('[ProfileClient] Ownership decision', {
-    userId,
-    currentUserId: user?.id,
-    isAuth,
-    isProfilePersonalized,
-    personalizedViewerStatus: personalizedProfile?.viewerStatus,
-    displayedViewerStatus: displayedProfile?.viewerStatus,
-    isOwner,
-    showCreateModal: isOwner && action === 'create' && !postId,
-  })
-
-  console.log('[ProfileClient] Profile state:', {
-    userId,
-    isProfileLoading,
-    isProfileError,
-    guestProfileExists: !!profile,
-    guestViewerStatus: profile?.viewerStatus,
-    personalizedProfileExists: !!personalizedProfile,
-    personalizedViewerStatus: personalizedProfile?.viewerStatus,
-    displayedViewerStatus: displayedProfile?.viewerStatus,
-    isProfilePersonalized,
-    isOwner,
-  })
 
   const {
     data: profilePostsData,
@@ -108,134 +63,36 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    const unsubscribe = queryClient.getQueryCache().subscribe(event => {
-      const queryKey = event.query.queryKey
-
-      if (queryKey[0] !== 'profiles') return
-
-      const data = event.query.state.data as undefined | UserProfile
-
-      console.log('[ProfileClient] Query cache event', {
-        type: event.type,
-        queryKey,
-        queryHash: event.query.queryHash,
-        status: event.query.state.status,
-        fetchStatus: event.query.state.fetchStatus,
-        error: event.query.state.error,
-        dataUpdatedAt: event.query.state.dataUpdatedAt,
-        dataExists: !!data,
-        cachedUsername: data?.username,
-        cachedViewerStatus: data?.viewerStatus,
-      })
-    })
-
-    return unsubscribe
-  }, [queryClient])
-
-  useEffect(() => {
-    console.log('[ProfileClient] Auth effect triggered:', {
-      userId,
-      isHydrated,
-      isAuthenticated,
-      isAuth,
-      postId,
-      isDeletedPost,
-    })
-
     if (!isAuth) {
-      console.log('[ProfileClient] Profile request skipped: not authenticated')
       return
     }
 
     let cancelled = false
 
-    console.log('[ProfileClient] Ownership check:', {
-      profileUserId: userId,
-      currentUserId: user?.id,
-      isAuthenticated,
-      isHydrated,
-    })
-
-    console.log('[ProfileClient] Starting personalized profile fetch', {
-      userId,
-      queryKey: profileKeys.detail(userId),
-      cachedProfile: queryClient.getQueryData(profileKeys.detail(userId)),
-    })
-
     const queryKey = profileKeys.detail(userId)
-    const cached = queryClient.getQueryState(queryKey)
 
-    const cachedData = queryClient.getQueryData<UserProfile>(queryKey)
+    const loadPersonalizedProfile = async () => {
+      await queryClient.invalidateQueries({
+        queryKey,
+        refetchType: 'none',
+      })
 
-    console.log('[ProfileClient] Before fetchQuery', {
-      userId,
-      currentUserId: user?.id,
-      idsMatch: String(user?.id) === String(userId),
-      queryKey,
-      status: cached?.status,
-      fetchStatus: cached?.fetchStatus,
-      dataUpdatedAt: cached?.dataUpdatedAt,
-      isInvalidated: cached?.isInvalidated,
-      cachedDataExists: !!cachedData,
-      cachedUsername: cachedData?.username,
-      cachedViewerStatus: cachedData?.viewerStatus,
-    })
-    void queryClient
-      .fetchQuery({
-        queryKey: profileKeys.detail(userId),
-        queryFn: async () => {
-          console.log('[ProfileClient] getUserProfile START', { userId })
+      if (cancelled) {
+        return
+      }
 
-          try {
-            const result = await getUserProfile(userId)
-
-            console.log('[ProfileClient] getUserProfile SUCCESS', {
-              userId,
-              currentUserId: user?.id,
-              username: result.username,
-              viewerStatus: result.viewerStatus,
-              profileId: result.id,
-            })
-
-            return result
-          } catch (error) {
-            console.error('[ProfileClient] getUserProfile FAILED', {
-              userId,
-              error,
-            })
-
-            throw error
-          }
-        },
+      const result = await queryClient.fetchQuery({
+        queryKey,
+        queryFn: () => getUserProfile(userId),
         staleTime: 0,
       })
-      .then(result => {
-        console.log('[ProfileClient] fetchQuery RESOLVED', {
-          userId,
-          currentUserId: user?.id,
-          cancelled,
-          username: result.username,
-          viewerStatus: result.viewerStatus,
-          queryDataViewerStatus: queryClient.getQueryData<UserProfile>(profileKeys.detail(userId))
-            ?.viewerStatus,
-        })
 
-        if (!cancelled) {
-          console.log('[ProfileClient] Setting personalized profile', {
-            userId,
-            viewerStatus: result.viewerStatus,
-          })
+      if (!cancelled) {
+        setPersonalizedProfile(result)
+      }
+    }
 
-          setPersonalizedProfile(result)
-        }
-      })
-      .catch(error => {
-        console.error('[ProfileClient] fetchQuery FAILED', {
-          userId,
-          cancelled,
-          error,
-        })
-      })
+    void loadPersonalizedProfile().catch(() => undefined)
 
     if (postId && !isDeletedPost) {
       void queryClient.invalidateQueries({
@@ -245,11 +102,6 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
 
     return () => {
       cancelled = true
-
-      console.log('[ProfileClient] Auth effect CLEANUP', {
-        userId,
-        postId,
-      })
     }
   }, [isAuth, isHydrated, isAuthenticated, queryClient, userId, postId, isDeletedPost])
 

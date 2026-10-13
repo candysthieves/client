@@ -1,4 +1,4 @@
-import { CreditCard, PersonAdd, Pin, Heart } from '@candy.thieves/ui-kit-lumos'
+import { BillPay, AssignUser, Devices, PaymentSettings } from '@candy.thieves/ui-kit-lumos'
 import { ComponentPropsWithoutRef, ComponentType } from 'react'
 
 export const SETTINGS_PARTS = ['info', 'devices', 'subscriptions', 'payments'] as const
@@ -17,8 +17,8 @@ export const SETTINGS_TAB_LABELS: Record<SettingsPart, string> = {
 type TabIconComponent = ComponentType<ComponentPropsWithoutRef<'svg'>> // или ComponentType<{}>
 
 export const SETTINGS_TAB_ICONS: Record<SettingsPart, TabIconComponent> = {
-  info: PersonAdd,
-  devices: Pin,
-  subscriptions: Heart,
-  payments: CreditCard,
+  info: PaymentSettings,
+  devices: Devices,
+  subscriptions: AssignUser,
+  payments: BillPay,
 }

@@ -1,14 +1,12 @@
 'use client'
 
-import { Typography } from '@candy.thieves/ui-kit-lumos'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ProfileHeader } from '@/app/(public)/profile/[id]/ProfileHeader/ProfileHeader'
-import { DeletedPosts } from '@/components/DeletedPosts'
+import { ProfilePostContent } from '@/app/(public)/profile/[id]/ProfilePostContent/ProfilePostContent'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
-import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { CreatePostModal } from '@/features/createPost'
 import { getUserProfile } from '@/lib/api'
 import { useAuth } from '@/lib/hooks'
@@ -17,8 +15,6 @@ import { UserProfile } from '@/lib/model'
 import { postsKeys, usePost } from '@/lib/posts'
 import { profileKeys, useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
 import { useDeletedPost } from '@/lib/profile/queries/useDeletedPost'
-import { PostsFeed } from './PostsFeed'
-import { PostsFeedSkeleton } from './PostsFeed/PostsFeedSkeleton'
 import s from './ProfileClient.module.scss'
 import { ProfileHeaderSkeleton } from './ProfileHeader/ProfileHeaderSkeleton'
 
@@ -138,34 +134,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
 
   const showCreateModal = isOwner && action === 'create' && !postId
   const handleClosePost = () => router.replace(`/profile/${userId}`)
-  const handleLoadMorePosts = useCallback(() => void fetchNextPage(), [fetchNextPage])
 
-  if (isProfileError || (isPostsError && !profilePostsData)) {
-    return (
-      <section className={s.profileError} role={'alert'}>
-        <Typography color={'var(--color-light-100)'} variant={'h1'}>
-          Unable to load profile
-        </Typography>
-        <Typography color={'var(--color-light-900)'} variant={'body1'}>
-          Profile not found. Please check the link or try again later
-        </Typography>
-      </section>
-    )
-  }
-  const postsFeed = isPostsLoading ? (
-    <PostsFeedSkeleton count={8} />
-  ) : (
-    <PostsFeed
-      hasNextPage={hasNextPage ?? false}
-      isLoading={isPostsLoading}
-      isLoadingNextPage={isFetchingNextPage}
-      isLoadMoreError={isFetchNextPageError}
-      key={userId}
-      onLoadMore={handleLoadMorePosts}
-      posts={profilePosts}
-      userId={userId}
-    />
-  )
   return (
     <>
       <div className={s.profile}>
@@ -181,25 +150,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           )
         )}
 
-        {isPostsLoading ? (
-          <PostsFeedSkeleton count={8} />
-        ) : isOwner ? (
-          <ProfilePostTabs
-            postsFeed={postsFeed}
-            deletedPosts={
-              <DeletedPosts
-                key={deletedPosts.map(post => post.id).join(',')}
-                posts={deletedPosts}
-                userId={userId}
-                isError={isDeletedPostsError}
-                isLoading={isDeletedPostsLoading}
-              />
-            }
-            deletedPostsCount={deletedPosts.length}
-          />
-        ) : (
-          postsFeed
-        )}
+        <ProfilePostContent userId={userId} isOwner={isOwner} />
       </div>
 
       {selectedPost &&

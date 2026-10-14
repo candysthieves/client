@@ -1,10 +1,10 @@
 'use client'
 
-import { MainAvatar, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Typography } from '@candy.thieves/ui-kit-lumos'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
-import { ProfileActions } from '@/app/(public)/profile/[id]/ProfileActions/ProfileActions'
+import { ProfileHeader } from '@/app/(public)/profile/[id]/ProfileHeader/ProfileHeader'
 import { DeletedPosts } from '@/components/DeletedPosts'
 import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
 import { PostModal } from '@/components/PostModal/PostModal'
@@ -173,45 +173,14 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
           <ProfileHeaderSkeleton userId={userId} />
         ) : (
           profile && (
-            <section className={s.profileHeader} aria-labelledby={'profile-name'}>
-              <MainAvatar
-                className={s.profileAvatar}
-                userName={displayedProfile?.username ?? userId}
-                src={displayedProfile?.avatarPreviewUrl?.url ?? ''}
-                size={'xxl'}
-                delayMs={0}
-              />
-
-              <div className={s.profileInfo}>
-                <div className={s.profileTop}>
-                  <Typography
-                    id={'profile-name'}
-                    className={s.profileName}
-                    color={'white'}
-                    variant={'h1'}
-                  >
-                    {displayedProfile?.username}
-                  </Typography>
-
-                  {isProfilePersonalized && (
-                    <ProfileActions status={displayedProfile!.viewerStatus} />
-                  )}
-                </div>
-
-                <dl className={s.stats}>
-                  <div className={s.stat}>
-                    <dd className={s.statValue}>{profile?.publicationsCount ?? 0}</dd>
-                    <dt className={s.statLabel}>Publications</dt>
-                  </div>
-                </dl>
-
-                <Typography className={s.about} variant={'body1'}>
-                  {displayedProfile?.description ?? ''}
-                </Typography>
-              </div>
-            </section>
+            <ProfileHeader
+              profile={displayedProfile ?? profile}
+              userId={userId}
+              isPersonalized={isProfilePersonalized}
+            />
           )
         )}
+
         {isPostsLoading ? (
           <PostsFeedSkeleton count={8} />
         ) : isOwner ? (

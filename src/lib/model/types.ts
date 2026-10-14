@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import {
   accessTokenResponseSchema,
+  accountTypeSchema,
   apiErrorResponseSchema,
   errorMessageSchema,
   loginResponseSchema,
@@ -57,6 +58,7 @@ export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirm
 export type RegistrationRequest = z.infer<typeof registrationSchema>
 export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEmailSchema>
 export type ValidatePasswordRecoveryCodeRequest = z.infer<typeof validatePasswordRecoveryCodeSchema>
+export type AccountType = z.infer<typeof accountTypeSchema>
 export type UserResponse = z.infer<typeof userResponseSchema>
 export type ProfilePost = z.infer<typeof profilePostSchema>
 export type ProfilePostsResponse = z.infer<typeof profilePostsResponseSchema>

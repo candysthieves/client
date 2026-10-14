@@ -108,6 +108,8 @@ export const apiErrorResponseSchema = z.object({
   errorsMessages: z.array(errorMessageSchema),
 })
 
+export const accountTypeSchema = z.enum(['Personal', 'Business'])
+
 export const userResponseSchema = z.object({
   id: z.string(),
   email: emailSchema,
@@ -115,4 +117,5 @@ export const userResponseSchema = z.object({
   firstName: z.string().nullable(),
   lastName: z.string().nullable(),
   isEmailConfirmed: z.boolean(),
+  subscription_type: accountTypeSchema,
 })

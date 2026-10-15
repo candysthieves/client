@@ -108,7 +108,9 @@ export const apiErrorResponseSchema = z.object({
   errorsMessages: z.array(errorMessageSchema),
 })
 
-export const accountTypeSchema = z.enum(['Personal', 'Business'])
+export const accountTypeSchema = z.enum(['Personal', 'Business'], {
+  error: 'Please select an account type',
+})
 
 export const userResponseSchema = z.object({
   id: z.string(),

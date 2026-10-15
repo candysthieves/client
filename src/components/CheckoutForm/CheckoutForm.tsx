@@ -1,0 +1,126 @@
+'use client'
+
+import { Button, Cards, clsx, Stripe, Typography, YooKassa } from '@candy.thieves/ui-kit-lumos'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useQueryClient } from '@tanstack/react-query'
+import { useMemo } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { FormRadioGroup } from '@/components/FormRadioGroup'
+import { authKeys } from '@/lib/auth'
+import { CheckoutFormData, PaymentService, UserResponse } from '@/lib/model'
+import { checkoutSchema } from '@/lib/model/subscriptions.schemas'
+import { useAvailableAccountTypes } from '@/lib/subscriptions'
+import { useSubscriptionCosts } from '@/lib/subscriptions/queries/useSubscriptionCosts'
+import { getTariffLabel } from '@/lib/utils'
+import s from './CheckoutForm.module.scss'
+
+export const CheckoutForm = () => {
+  const queryClient = useQueryClient()
+  const userAccountType = queryClient.getQueryData<UserResponse>(authKeys.me())?.subscription_type
+
+  const { control, handleSubmit } = useForm<CheckoutFormData>({
+    resolver: zodResolver(checkoutSchema),
+    defaultValues: {
+      accountType: userAccountType ?? 'Personal',
+      subscriptionPlan: 'Daily',
+    },
+  })
+
+  const accountType = useWatch({
+    control,
+    name: 'accountType',
+  })
+
+  const { data: availableAccountTypes } = useAvailableAccountTypes()
+  const { data: subscriptionCosts } = useSubscriptionCosts(accountType)
+
+  const accountTypeOptions = useMemo(
+    () =>
+      availableAccountTypes?.map(({ type }) => ({
+        value: type,
+        label: type,
+      })) ?? [],
+    [availableAccountTypes]
+  )
+
+  const subscriptionPlanOptions = useMemo(
+    () =>
+      subscriptionCosts?.map(({ tariff_name, priceInMinorUnits, currency, durationDays }) => ({
+        value: tariff_name,
+        label: getTariffLabel(tariff_name, priceInMinorUnits, currency),
+      })) ?? [],
+    [subscriptionCosts]
+  )
+
+  const onSubmit = (data: CheckoutFormData, paymentProvider: PaymentService) => {
+    console.log(`Send request to ${paymentProvider}:`, data)
+  }
+
+  return (
+    <form className={s.subscriptionForm}>
+      <div className={s.accountContent}>
+        <Typography
+          className={s.title}
+          variant={'h3'}
+          color={'var(--color-light-100)'}
+          mb={'0.375rem'}
+        >
+          Account type:
+        </Typography>
+
+        <Cards className={clsx(s.subscriptionRadio, s.account)}>
+          <FormRadioGroup control={control} name={'accountType'} options={accountTypeOptions} />
+        </Cards>
+      </div>
+
+      {subscriptionPlanOptions.length > 0 && (
+        <>
+          <div className={s.costsContent}>
+            <Typography
+              className={s.title}
+              variant={'h3'}
+              color={'var(--color-light-100)'}
+              mb={'0.375rem'}
+            >
+              Your subscription costs:
+            </Typography>
+
+            <Cards className={clsx(s.subscriptionRadio, s.costs)}>
+              <FormRadioGroup
+                control={control}
+                name={'subscriptionPlan'}
+                options={subscriptionPlanOptions}
+              />
+            </Cards>
+          </div>
+
+          <div className={s.subscriptionControls}>
+            <Button
+              type={'button'}
+              variant={'text'}
+              onClick={handleSubmit(data => onSubmit(data, 'Yookassa'))}
+              className={s.serviceButton}
+              aria-label={'Payment service: Yookassa'}
+            >
+              <YooKassa size={64} />
+            </Button>
+
+            <Typography variant={'caption2'} color={'var(--color-light-100)'}>
+              or
+            </Typography>
+
+            <Button
+              type={'button'}
+              variant={'text'}
+              onClick={handleSubmit(data => onSubmit(data, 'Stripe'))}
+              className={s.serviceButton}
+              aria-label={'Payment service: Stripe'}
+            >
+              <Stripe size={64} />
+            </Button>
+          </div>
+        </>
+      )}
+    </form>
+  )
+}

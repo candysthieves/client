@@ -9,12 +9,13 @@ import { useAuth } from '@/lib/hooks/useAuth'
 import { mobileHeaderItems } from '@/shared/navigation/mobileHeaderItems'
 
 export const AppHeader = () => {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
   const router = useRouter()
   const [logoutOpen, setLogoutOpen] = useState(false)
 
   useEffect(() => {
     console.log('🔄 AppHeader: isAuthenticated =', isAuthenticated)
+    console.log('🔄 User =', user)
   }, [isAuthenticated])
 
   const signInHandler = () => {

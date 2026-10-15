@@ -1,0 +1,71 @@
+@use '@/styles/mixins' as *;
+
+.subscriptionForm {
+  flex-direction: column;
+  width: 100%;
+  margin-top: 1.875rem;
+
+  @include flex(flex, flex-start, flex-start);
+}
+
+.accountContent,
+.costsContent {
+  width: 100%;
+}
+
+.accountContent {
+  margin-bottom: 2.6rem;
+}
+
+.costsContent {
+  margin-bottom: 1.5rem;
+}
+
+// .costs {
+// display: block;
+// }
+
+// .title {
+// display: block;
+// }
+
+.subscriptionRadio {
+  padding: 0.375rem 0.75rem;
+}
+
+// .account {
+// display: block;
+// }
+
+// .costs {
+// display: block;
+// }
+
+.subscriptionControls {
+  @include flex(flex, center, center);
+
+  flex-direction: row;
+  gap: 2.5rem; // 3.375rem
+  align-self: flex-end;
+  height: 4rem;
+}
+
+.serviceButton {
+  @include flex(inline-flex, center, center);
+
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+
+  @include transition-basic(transform, opacity);
+
+  svg {
+    display: block;
+  }
+
+  &:hover {
+    transform: scale(1.04);
+    opacity: 0.8;
+  }
+}

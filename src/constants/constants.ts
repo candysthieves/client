@@ -1,3 +1,5 @@
+import { SubscriptionType } from '@/lib/model'
+
 export const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
 // TODO: Remove this mock server URL when the posts backend is ready.
 export const NEXT_PUBLIC_POSTS_API_URL =
@@ -14,3 +16,10 @@ export const MAX_ABOUT_ME_LENGTH = 200
 export const HOME_PAGE_REFETCH_INTERVAL_MS = 60 * 1000
 export const TIME_AGO_TICK_INTERVAL_MS = 60 * 1000
 export const SELECT_SEARCH_DEBOUNCE = 600
+
+export const TARIFF_LABELS: Record<SubscriptionType, string> = {
+  Daily: '1 Day',
+  Weekly: '7 Days',
+  Monthly: 'month',
+  Quarterly: '3 months',
+}

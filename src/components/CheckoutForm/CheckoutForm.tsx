@@ -47,7 +47,7 @@ export const CheckoutForm = ({ onSubmit }: CheckoutFormProps) => {
 
   const subscriptionPlanOptions = useMemo(
     () =>
-      subscriptionCosts?.map(({ tariff_name, priceInMinorUnits, currency, durationDays }) => ({
+      subscriptionCosts?.map(({ tariff_name, priceInMinorUnits, currency }) => ({
         value: tariff_name,
         label: getTariffLabel(tariff_name, priceInMinorUnits, currency),
       })) ?? [],

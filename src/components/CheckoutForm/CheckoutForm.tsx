@@ -2,12 +2,11 @@
 
 import { Button, Cards, clsx, Stripe, Typography, YooKassa } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { FormRadioGroup } from '@/components/FormRadioGroup'
-import { authKeys } from '@/lib/auth'
-import { CheckoutFormData, PaymentService, UserResponse } from '@/lib/model'
+import { useAuth } from '@/lib/hooks'
+import { CheckoutFormData, PaymentService } from '@/lib/model'
 import { checkoutSchema } from '@/lib/model/subscriptions.schemas'
 import { useAvailableAccountTypes } from '@/lib/subscriptions'
 import { useSubscriptionCosts } from '@/lib/subscriptions/queries/useSubscriptionCosts'
@@ -19,13 +18,12 @@ type CheckoutFormProps = {
 }
 
 export const CheckoutForm = ({ onSubmit }: CheckoutFormProps) => {
-  const queryClient = useQueryClient()
-  const userAccountType = queryClient.getQueryData<UserResponse>(authKeys.me())?.subscription_type
+  const { user } = useAuth()
 
   const { control, handleSubmit } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
-      accountType: userAccountType ?? 'Personal',
+      accountType: user?.subscription_type ?? 'Personal',
       subscriptionPlan: 'Daily',
     },
   })

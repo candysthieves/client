@@ -11,7 +11,7 @@
 }
 
 .controls {
-  @include flex(flex, flex-end, сenter);
+  @include flex(flex, flex-end, center);
 
   gap: 1.25rem; // 1.5rem in mockup
 

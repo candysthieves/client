@@ -1,6 +1,18 @@
 import { z } from 'zod'
 import {
+  availableAccountTypeSchema,
+  availableAccountTypesResponseSchema,
+  checkoutSchema,
+  createPaymentStateSchema,
+  paymentServiceSchema,
+  paymentStatusSchema,
+  subscriptionSchema,
+  subscriptionsResponseSchema,
+  subscriptionTypeSchema,
+} from '@/lib/model/subscriptions.schemas'
+import {
   accessTokenResponseSchema,
+  accountTypeSchema,
   apiErrorResponseSchema,
   errorMessageSchema,
   loginResponseSchema,
@@ -16,12 +28,12 @@ import {
 import { feedPostsResponseSchema } from './feed.schemas'
 import { imageSchema } from './image.schemas'
 import {
+  avatarSchema,
   commentSchema,
-  postAuthorSchema,
-  postSchema,
   deletedPostItemSchema,
   getDeletedPostsResponseSchema,
-  avatarSchema,
+  postAuthorSchema,
+  postSchema,
 } from './post.schemas'
 import {
   profilePostSchema,
@@ -32,12 +44,12 @@ import {
 import {
   cityIdSchema,
   countryIdSchema,
+  editProfileSchema,
   locationCitySchema,
   locationCountrySchema,
-  editProfileSchema,
   myProfileResponseSchema,
-  updateMyProfileRequestSchema,
   refinedEditProfileSchema,
+  updateMyProfileRequestSchema,
 } from './profileSettings.schemas'
 import { usersCountResponseSchema } from './users.schemas'
 
@@ -57,6 +69,8 @@ export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirm
 export type RegistrationRequest = z.infer<typeof registrationSchema>
 export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEmailSchema>
 export type ValidatePasswordRecoveryCodeRequest = z.infer<typeof validatePasswordRecoveryCodeSchema>
+export type AccountType = z.infer<typeof accountTypeSchema>
+export type SubscriptionType = z.infer<typeof subscriptionTypeSchema>
 export type UserResponse = z.infer<typeof userResponseSchema>
 export type ProfilePost = z.infer<typeof profilePostSchema>
 export type ProfilePostsResponse = z.infer<typeof profilePostsResponseSchema>
@@ -82,3 +96,12 @@ export type CountryId = z.infer<typeof countryIdSchema>
 export type CityId = z.infer<typeof cityIdSchema>
 export type LocationCountry = z.infer<typeof locationCountrySchema>
 export type LocationCity = z.infer<typeof locationCitySchema>
+// Subscriptions
+export type AvailableAccountType = z.infer<typeof availableAccountTypeSchema>
+export type AvailableAccountTypesResponse = z.infer<typeof availableAccountTypesResponseSchema>
+export type CheckoutFormData = z.infer<typeof checkoutSchema>
+export type Subscription = z.infer<typeof subscriptionSchema>
+export type SubscriptionsResponse = z.infer<typeof subscriptionsResponseSchema>
+export type PaymentService = z.infer<typeof paymentServiceSchema>
+export type CreatePaymentState = z.infer<typeof createPaymentStateSchema>
+export type PaymentStatus = z.infer<typeof paymentStatusSchema>

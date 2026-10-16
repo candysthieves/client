@@ -1,0 +1,13 @@
+@use '@/styles/mixins' as *;
+
+.radioContainer {
+  position: relative;
+}
+
+.errorMessage {
+  position: absolute;
+
+  @include top-left(calc(100% + 0.25rem), 0);
+
+  z-index: 1;
+}

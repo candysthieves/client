@@ -20,8 +20,8 @@ export const SELECT_SEARCH_DEBOUNCE = 600
 export const TARIFF_LABELS: Record<SubscriptionType, string> = {
   Daily: '1 Day',
   Weekly: '7 Days',
-  Monthly: 'month',
-  Quarterly: '3 months',
+  Monthly: 'Month',
+  Quarterly: '3 Months',
 }
 
 export const PAYMENT_SUCCESS_NOTIFICATION = 'Payment was successful!'

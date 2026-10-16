@@ -72,7 +72,7 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     const queryKey = profileKeys.detail(userId)
 
     const loadPersonalizedProfile = async () => {
-      await queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({
         queryKey,
         refetchType: 'none',
       })

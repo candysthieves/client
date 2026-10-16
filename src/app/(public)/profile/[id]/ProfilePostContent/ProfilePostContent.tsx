@@ -1,13 +1,11 @@
 'use client'
 
-import { Typography } from '@candy.thieves/ui-kit-lumos'
 import { useCallback } from 'react'
 import { PostsFeed } from '@/app/(public)/profile/[id]/PostsFeed'
 import { PostsFeedSkeleton } from '@/app/(public)/profile/[id]/PostsFeed/PostsFeedSkeleton'
 import { DeletedPosts } from '@/components/DeletedPosts'
 import { ProfilePostTabs } from '@/components/ProfilePostTabs'
 import { useDeletedPosts, useProfilePosts } from '@/lib/profile'
-import s from './ProfilePostContent.module.scss'
 
 type ProfilePostContentProps = {
   userId: string
@@ -20,7 +18,6 @@ export function ProfilePostContent({ userId, isOwner }: ProfilePostContentProps)
     fetchNextPage,
     hasNextPage,
     isFetchNextPageError,
-    isError: isPostsError,
     isFetchingNextPage,
     isLoading: isPostsLoading,
   } = useProfilePosts(userId)
@@ -35,19 +32,6 @@ export function ProfilePostContent({ userId, isOwner }: ProfilePostContentProps)
 
   const profilePosts = profilePostsData?.pages.flatMap(page => page.items) ?? []
   const deletedPosts = deletedPostsResponse?.items ?? []
-
-  if (isPostsError && !profilePostsData) {
-    return (
-      <section className={s.postsError} role={'alert'}>
-        <Typography color={'var(--color-light-100)'} variant={'h1'}>
-          Unable to load profile
-        </Typography>
-        <Typography color={'var(--color-light-900)'} variant={'body1'}>
-          Profile not found. Please check the link or try again later
-        </Typography>
-      </section>
-    )
-  }
 
   const postsFeed = isPostsLoading ? (
     <PostsFeedSkeleton count={8} />

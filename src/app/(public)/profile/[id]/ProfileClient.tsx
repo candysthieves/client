@@ -1,20 +1,17 @@
 'use client'
 
+import { Typography } from '@candy.thieves/ui-kit-lumos'
 import { useQueryClient } from '@tanstack/react-query'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { ProfileHeader } from '@/app/(public)/profile/[id]/ProfileHeader/ProfileHeader'
 import { ProfilePostContent } from '@/app/(public)/profile/[id]/ProfilePostContent/ProfilePostContent'
-import { MobilePostViewer } from '@/components/MobilePostViewer/MobilePostViewer'
-import { PostModal } from '@/components/PostModal/PostModal'
-import { CreatePostModal } from '@/features/createPost'
+import { ProfilePostModals } from '@/app/(public)/profile/[id]/ProfilePostModals/ProfilePostModals'
 import { getUserProfile } from '@/lib/api'
 import { useAuth } from '@/lib/hooks'
-import { useIsMobileViewport } from '@/lib/hooks/useIsMobileViewport'
 import { UserProfile } from '@/lib/model'
-import { postsKeys, usePost } from '@/lib/posts'
-import { profileKeys, useDeletedPosts, useProfile, useProfilePosts } from '@/lib/profile'
-import { useDeletedPost } from '@/lib/profile/queries/useDeletedPost'
+import { postsKeys } from '@/lib/posts'
+import { profileKeys, useProfile } from '@/lib/profile'
 import s from './ProfileClient.module.scss'
 import { ProfileHeaderSkeleton } from './ProfileHeader/ProfileHeaderSkeleton'
 
@@ -25,46 +22,32 @@ type ProfileClientProps = {
 }
 
 export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
-  const router = useRouter()
   const searchParams = useSearchParams()
-  const isMobile = useIsMobileViewport()
 
   const { isAuthenticated, isHydrated } = useAuth()
   const isAuth = isHydrated && isAuthenticated
 
-  // Keeps the authenticated profile separate from the guest-prefetched profile.
   const [personalizedProfile, setPersonalizedProfile] = useState<null | UserProfile>(null)
 
   const { data: profile, isError: isProfileError, isLoading: isProfileLoading } = useProfile(userId)
 
-  // Use the authenticated profile when it has been loaded.
   const displayedProfile = personalizedProfile ?? profile
 
   const isProfilePersonalized = isAuth && personalizedProfile !== null
-
   const isOwner = isProfilePersonalized && displayedProfile?.viewerStatus === 'owner'
+
   const postType = searchParams.get('type')
   const isDeletedPost = postType === 'deleted'
 
-  const {
-    data: profilePostsData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchNextPageError,
-    isError: isPostsError,
-    isFetchingNextPage,
-    isLoading: isPostsLoading,
-  } = useProfilePosts(userId)
-  const { data: postDetails } = usePost(isDeletedPost ? undefined : postId)
   const queryClient = useQueryClient()
 
+  // Этот эффект оставляем — он отвечает за синхронизацию кэша профиля при авторизации
   useEffect(() => {
     if (!isAuth) {
       return
     }
 
     let cancelled = false
-
     const queryKey = profileKeys.detail(userId)
 
     const loadPersonalizedProfile = async () => {
@@ -101,40 +84,18 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
     }
   }, [isAuth, isHydrated, isAuthenticated, queryClient, userId, postId, isDeletedPost])
 
-  const profilePosts = profilePostsData?.pages.flatMap(page => page.items) ?? []
-  const {
-    data: deletedPostsResponse,
-    isError: isDeletedPostsError,
-    isLoading: isDeletedPostsLoading,
-  } = useDeletedPosts(userId, isOwner)
-
-  const deletedPosts = deletedPostsResponse?.items ?? []
-  const { data: requestedDeletedPostResponse } = useDeletedPost(
-    userId,
-    postId,
-    isOwner && isDeletedPost
-  )
-
-  useEffect(() => {
-    if (!isDeletedPost && postDetails && postDetails.author?.id !== userId) {
-      router.replace(`/profile/${userId}`)
-    }
-  }, [postDetails, router, userId, isDeletedPost])
-
-  const modalPost = postDetails?.id === postId ? postDetails : null
-  const selectedPublishedPost = modalPost ?? profilePosts.find(post => post.id === postId)
-  const selectedDeletedPost =
-    requestedDeletedPostResponse ?? deletedPosts.find(post => post.id === postId)
-  const selectedPost = isDeletedPost ? selectedDeletedPost : selectedPublishedPost
-
-  const mobilePosts = isDeletedPost ? deletedPosts : profilePosts
-
-  const currentPostIndex = mobilePosts.findIndex(post => post.id === postId)
-  const mobileStartIndex = currentPostIndex !== -1 ? currentPostIndex : 0
-
-  const showCreateModal = isOwner && action === 'create' && !postId
-  const handleClosePost = () => router.replace(`/profile/${userId}`)
-
+  if (isProfileError) {
+    return (
+      <section className={s.profileError} role={'alert'}>
+        <Typography color={'var(--color-light-100)'} variant={'h1'}>
+          Unable to load profile
+        </Typography>
+        <Typography color={'var(--color-light-900)'} variant={'body1'}>
+          Profile not found. Please check the link or try again later
+        </Typography>
+      </section>
+    )
+  }
   return (
     <>
       <div className={s.profile}>
@@ -153,28 +114,16 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
         <ProfilePostContent userId={userId} isOwner={isOwner} />
       </div>
 
-      {selectedPost &&
-        profile &&
-        (isMobile ? (
-          <MobilePostViewer
-            userProfile={profile}
-            onClose={handleClosePost}
-            posts={mobilePosts}
-            startIndex={mobileStartIndex}
-            userId={userId}
-            mode={isDeletedPost ? 'deleted' : 'published'}
-          />
-        ) : (
-          <PostModal
-            userProfile={profile}
-            post={selectedPost}
-            mode={isDeletedPost ? 'deleted' : 'published'}
-            open
-            onClose={handleClosePost}
-          />
-        ))}
-
-      {showCreateModal && <CreatePostModal userProfile={displayedProfile!} />}
+      {profile && (
+        <ProfilePostModals
+          userId={userId}
+          postId={postId}
+          action={action}
+          isOwner={isOwner}
+          profile={profile}
+          displayedProfile={displayedProfile ?? profile}
+        />
+      )}
     </>
   )
 }

@@ -3,6 +3,7 @@ import {
   availableAccountTypeSchema,
   availableAccountTypesResponseSchema,
   checkoutSchema,
+  createPaymentStateSchema,
   paymentServiceSchema,
   subscriptionSchema,
   subscriptionsResponseSchema,
@@ -101,3 +102,4 @@ export type CheckoutFormData = z.infer<typeof checkoutSchema>
 export type Subscription = z.infer<typeof subscriptionSchema>
 export type SubscriptionsResponse = z.infer<typeof subscriptionsResponseSchema>
 export type PaymentService = z.infer<typeof paymentServiceSchema>
+export type CreatePaymentState = z.infer<typeof createPaymentStateSchema>

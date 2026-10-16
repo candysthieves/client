@@ -14,7 +14,11 @@ import { useSubscriptionCosts } from '@/lib/subscriptions/queries/useSubscriptio
 import { getTariffLabel } from '@/lib/utils'
 import s from './CheckoutForm.module.scss'
 
-export const CheckoutForm = () => {
+type CheckoutFormProps = {
+  onSubmit: (data: CheckoutFormData, paymentProvider: PaymentService) => void
+}
+
+export const CheckoutForm = ({ onSubmit }: CheckoutFormProps) => {
   const queryClient = useQueryClient()
   const userAccountType = queryClient.getQueryData<UserResponse>(authKeys.me())?.subscription_type
 
@@ -52,8 +56,8 @@ export const CheckoutForm = () => {
     [subscriptionCosts]
   )
 
-  const onSubmit = (data: CheckoutFormData, paymentProvider: PaymentService) => {
-    console.log(`Send request to ${paymentProvider}:`, data)
+  const onSubmitHandler = (data: CheckoutFormData, paymentProvider: PaymentService) => {
+    onSubmit(data, paymentProvider)
   }
 
   return (
@@ -98,7 +102,7 @@ export const CheckoutForm = () => {
             <Button
               type={'button'}
               variant={'text'}
-              onClick={handleSubmit(data => onSubmit(data, 'Yookassa'))}
+              onClick={handleSubmit(data => onSubmitHandler(data, 'Yookassa'))}
               className={s.serviceButton}
               aria-label={'Payment service: Yookassa'}
             >
@@ -112,7 +116,7 @@ export const CheckoutForm = () => {
             <Button
               type={'button'}
               variant={'text'}
-              onClick={handleSubmit(data => onSubmit(data, 'Stripe'))}
+              onClick={handleSubmit(data => onSubmitHandler(data, 'Stripe'))}
               className={s.serviceButton}
               aria-label={'Payment service: Stripe'}
             >

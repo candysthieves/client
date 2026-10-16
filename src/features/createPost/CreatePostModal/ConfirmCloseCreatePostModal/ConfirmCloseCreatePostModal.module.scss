@@ -11,7 +11,7 @@
 }
 
 .controls {
-  @include flex(flex, space-between, сenter);
+  @include flex(flex, space-between, center);
 
   button {
     min-width: 6.75rem;

@@ -1,0 +1,23 @@
+@use '@/styles/mixins' as *;
+
+.modal {
+  width: min($modal-width-s, calc(100vw - 2rem));
+}
+
+.confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+}
+
+.controls {
+  @include flex(flex, space-between, center);
+}
+
+:has(> .checkbox) {
+  &:hover,
+  &:focus-within,
+  &:active {
+    background-color: unset;
+  }
+}

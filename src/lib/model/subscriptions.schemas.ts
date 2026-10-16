@@ -31,3 +31,8 @@ export const subscriptionSchema = z.object({
 export const subscriptionsResponseSchema = z.array(subscriptionSchema)
 
 export const paymentServiceSchema = z.enum(['Yookassa', 'Stripe'])
+
+export const createPaymentStateSchema = z.object({
+  paymentService: paymentServiceSchema.nullable(),
+  subscriptionData: checkoutSchema.nullable(),
+})

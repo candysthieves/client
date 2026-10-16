@@ -23,3 +23,6 @@ export const TARIFF_LABELS: Record<SubscriptionType, string> = {
   Monthly: 'month',
   Quarterly: '3 months',
 }
+
+export const PAYMENT_SUCCESS_NOTIFICATION = 'Payment was successful!'
+export const PAYMENT_ERROR_NOTIFICATION = 'Transaction failed. Please, write to support'

@@ -29,15 +29,13 @@ export const CreatePaymentModal = ({ open, onConfirm, onCloseClick }: CreatePaym
         </Typography>
 
         <div className={s.controls}>
-          <div>
-            <Checkbox
-              id={'createPaymentCheckbox'}
-              label={'I agree'}
-              checked={checked}
-              onCheckedChange={setChecked}
-              className={s.checkbox}
-            />
-          </div>
+          <Checkbox
+            id={'createPaymentCheckbox'}
+            label={'I agree'}
+            checked={checked}
+            onCheckedChange={setChecked}
+            className={s.checkbox}
+          />
 
           <Button type={'button'} variant={'primary'} onClick={onConfirm} disabled={!checked}>
             OK

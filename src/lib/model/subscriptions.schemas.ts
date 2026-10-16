@@ -36,3 +36,5 @@ export const createPaymentStateSchema = z.object({
   paymentService: paymentServiceSchema.nullable(),
   subscriptionData: checkoutSchema.nullable(),
 })
+
+export const paymentStatusSchema = z.enum(['Error', 'Success']).nullable()

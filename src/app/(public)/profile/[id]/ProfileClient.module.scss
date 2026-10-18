@@ -12,15 +12,6 @@
   }
 }
 
-.settingsButton {
-  flex: 0 0 auto;
-  white-space: nowrap;
-
-  @include media-tablet-small {
-    justify-self: start;
-  }
-}
-
 .postsGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

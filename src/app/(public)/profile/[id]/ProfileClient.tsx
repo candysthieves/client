@@ -41,7 +41,6 @@ export function ProfileClient({ userId, postId, action }: ProfileClientProps) {
 
   const queryClient = useQueryClient()
 
-  // Этот эффект оставляем — он отвечает за синхронизацию кэша профиля при авторизации
   useEffect(() => {
     if (!isAuth) {
       return

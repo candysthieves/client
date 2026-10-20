@@ -47,12 +47,10 @@
 }
 
 .profileTop {
-  display: flex;
+  @include flex(flex, space-between, center);
+
   flex-wrap: wrap;
   gap: 1rem;
-  align-items: center;
-  justify-content: space-between;
-
   width: 100%;
   min-width: 0;
 

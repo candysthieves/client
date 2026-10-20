@@ -98,11 +98,10 @@
 }
 
 .error {
-  display: flex;
+  @include flex(flex, center, center);
+
   flex-direction: column;
   gap: 1.5rem;
-  align-items: center;
-  justify-content: center;
 
   min-height: 60vh;
   padding: 2rem 0 4rem;
@@ -120,10 +119,10 @@
 }
 
 .actions {
-  display: flex;
+  @include flex(flex, center);
+
   flex-wrap: wrap;
   gap: 1rem;
-  justify-content: center;
 
   @include media-tablet-small {
     flex-direction: column;

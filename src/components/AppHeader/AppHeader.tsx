@@ -3,7 +3,7 @@
 import { Header } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { LogoutModal } from '@/components'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { mobileHeaderItems } from '@/shared/navigation/mobileHeaderItems'
@@ -12,10 +12,6 @@ export const AppHeader = () => {
   const { isAuthenticated } = useAuth()
   const router = useRouter()
   const [logoutOpen, setLogoutOpen] = useState(false)
-
-  useEffect(() => {
-    console.log('🔄 AppHeader: isAuthenticated =', isAuthenticated)
-  }, [isAuthenticated])
 
   const signInHandler = () => {
     router.push('/sign-in')

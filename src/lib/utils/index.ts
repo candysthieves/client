@@ -32,3 +32,4 @@ export {
   pickerDateToFormDate,
 } from './profileDate'
 export { isUnderAge } from './isUnderAge'
+export { getTariffLabel } from './getTariffLabel'

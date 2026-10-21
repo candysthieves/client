@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - SCRUM-000-update-ci-cd-to-self-hosted-runner
 
   pull_request:
     branches:
@@ -70,31 +71,10 @@ jobs:
 
   deploy:
     if: github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, lumos-production]
     environment: production
     needs: build-and-push
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Copy Docker Compose file
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ vars.DEPLOY_HOST }}
-          username: ${{ vars.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-          source: "docker-compose.yml"
-          target: "/opt/lumos"
-
-      - name: Deploy to server
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ vars.DEPLOY_HOST }}
-          username: ${{ vars.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-          script: |
-            cd /opt/lumos
-            docker compose pull app
-            docker compose up -d app
-            docker image prune -a -f
+      - name: Deploy latest image
+        run: /opt/lumos/deploy.sh

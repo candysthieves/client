@@ -1,6 +1,6 @@
 import Skeleton from 'react-loading-skeleton'
 import { ProfileActionsSkeleton } from '@/app/(public)/profile/[id]/ProfileActions/ProfileActionsSkeleton'
-import s from '../ProfileClient.module.scss'
+import s from './ProfileHeader.module.scss'
 
 type ProfileHeaderSkeletonProps = {
   userId: string

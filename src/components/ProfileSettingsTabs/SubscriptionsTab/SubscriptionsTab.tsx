@@ -22,6 +22,8 @@ export const SubscriptionsTab = () => {
     setIsConfirmOpen(false)
   }
 
+  console.log('Migration to new server completed')
+
   const closeNotification = () => setPaymentStatus(null)
 
   const onSubmitHandler = (data: CheckoutFormData, paymentProvider: PaymentService) => {

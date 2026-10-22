@@ -22,7 +22,7 @@ export const SubscriptionsTab = () => {
     setIsConfirmOpen(false)
   }
 
-  console.log('Migration to new server completed')
+  console.log('Migration to new server completed. Check deploy')
 
   const closeNotification = () => setPaymentStatus(null)
 

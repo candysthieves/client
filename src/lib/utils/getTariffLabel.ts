@@ -6,6 +6,8 @@ export const getTariffLabel = (
   priceInMinorUnits: number,
   currency: string
 ) => {
+  if (tariff_name === '') return ''
+
   const hasCents = priceInMinorUnits % 100 !== 0
 
   const price = new Intl.NumberFormat('en-US', {

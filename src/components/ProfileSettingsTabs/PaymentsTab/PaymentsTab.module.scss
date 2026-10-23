@@ -1,0 +1,28 @@
+@use '@/styles/mixins' as *;
+
+.wrapper {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.error {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.empty {
+  @include flex(flex, center, center);
+
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.emptyTitle {
+  @include media-tablet-small {
+    font-size: var(--font-size-m) !important;
+  }
+}

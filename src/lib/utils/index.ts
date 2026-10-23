@@ -33,3 +33,4 @@ export {
 } from './profileDate'
 export { isUnderAge } from './isUnderAge'
 export { getTariffLabel } from './getTariffLabel'
+export { isValidUrl } from './isValidUrl'

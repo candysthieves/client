@@ -1,12 +1,143 @@
+// 'use client'
+//
+// import { Button, Cards, clsx, Stripe, Typography, YooKassa } from '@candy.thieves/ui-kit-lumos'
+// import { zodResolver } from '@hookform/resolvers/zod'
+// import { useMemo } from 'react'
+// import { useForm, useWatch } from 'react-hook-form'
+// import { FormRadioGroup } from '@/components/FormRadioGroup'
+// import { useAuth } from '@/lib/hooks'
+// import { CheckoutFormData, PaymentService } from '@/lib/model'
+// import { checkoutSchema } from '@/lib/model/subscriptions.schemas'
+// import { useAvailableAccountTypes } from '@/lib/subscriptions'
+// import { useSubscriptionCosts } from '@/lib/subscriptions/queries/useSubscriptionCosts'
+// import { getTariffLabel } from '@/lib/utils'
+// import s from './CheckoutForm.module.scss'
+//
+// type CheckoutFormProps = {
+//   onSubmit: (data: CheckoutFormData, paymentProvider: PaymentService) => void
+// }
+//
+// export const CheckoutForm = ({ onSubmit }: CheckoutFormProps) => {
+//   const { user } = useAuth()
+//
+//   const { control, handleSubmit } = useForm<CheckoutFormData>({
+//     resolver: zodResolver(checkoutSchema),
+//     defaultValues: {
+//       accountType: user?.subscription_type ?? 'Personal',
+//       tariffId: '',
+//     },
+//   })
+//
+//   const accountType = useWatch({
+//     control,
+//     name: 'accountType',
+//   })
+//
+//   const { data: availableAccountTypes } = useAvailableAccountTypes()
+//   const { data: subscriptionCosts } = useSubscriptionCosts(accountType)
+//
+//   const accountTypeOptions = useMemo(
+//     () =>
+//       availableAccountTypes?.map(({ type }) => ({
+//         value: type,
+//         label: type,
+//       })) ?? [],
+//     [availableAccountTypes]
+//   )
+//
+//   const subscriptionPlanOptions = useMemo(
+//     () =>
+//       subscriptionCosts?.map(({ tariff_name, priceInMinorUnits, currency }) => ({
+//         value: tariff_name,
+//         label: getTariffLabel(tariff_name, priceInMinorUnits, currency),
+//       })) ?? [],
+//     [subscriptionCosts]
+//   )
+//
+//   const onSubmitHandler = (data: CheckoutFormData, paymentProvider: PaymentService) => {
+//     // onSubmit(data, paymentProvider)
+//
+//     console.log(data)
+//   }
+//
+//   return (
+//     <form className={s.subscriptionForm}>
+//       <div className={s.accountContent}>
+//         <Typography
+//           className={s.title}
+//           variant={'h3'}
+//           color={'var(--color-light-100)'}
+//           mb={'0.375rem'}
+//         >
+//           Account type:
+//         </Typography>
+//
+//         <Cards className={clsx(s.subscriptionRadio, s.account)}>
+//           <FormRadioGroup control={control} name={'accountType'} options={accountTypeOptions} />
+//         </Cards>
+//       </div>
+//
+//       {subscriptionPlanOptions.length > 0 && (
+//         <>
+//           <div className={s.costsContent}>
+//             <Typography
+//               className={s.title}
+//               variant={'h3'}
+//               color={'var(--color-light-100)'}
+//               mb={'0.375rem'}
+//             >
+//               Your subscription costs:
+//             </Typography>
+//
+//             <Cards className={clsx(s.subscriptionRadio, s.costs)}>
+//               <FormRadioGroup
+//                 control={control}
+//                 name={'tariffId'}
+//                 options={subscriptionPlanOptions}
+//               />
+//             </Cards>
+//           </div>
+//
+//           <div className={s.subscriptionControls}>
+//             <Button
+//               type={'button'}
+//               variant={'text'}
+//               onClick={handleSubmit(data => onSubmitHandler(data, 'Yookassa'))}
+//               className={s.serviceButton}
+//               aria-label={'Payment service: Yookassa'}
+//             >
+//               <YooKassa size={64} />
+//             </Button>
+//
+//             <Typography variant={'caption2'} color={'var(--color-light-100)'}>
+//               or
+//             </Typography>
+//
+//             <Button
+//               type={'button'}
+//               variant={'text'}
+//               onClick={handleSubmit(data => onSubmitHandler(data, 'Stripe'))}
+//               className={s.serviceButton}
+//               aria-label={'Payment service: Stripe'}
+//             >
+//               <Stripe size={64} />
+//             </Button>
+//           </div>
+//         </>
+//       )}
+//     </form>
+//   )
+// }
+
 'use client'
 
 import { Button, Cards, clsx, Stripe, Typography, YooKassa } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { FormRadioGroup } from '@/components/FormRadioGroup'
 import { useAuth } from '@/lib/hooks'
-import { CheckoutFormData, PaymentService } from '@/lib/model'
+import { CheckoutFormData, PaymentService, PaymentSessionRequest } from '@/lib/model'
 import { checkoutSchema } from '@/lib/model/subscriptions.schemas'
 import { useAvailableAccountTypes } from '@/lib/subscriptions'
 import { useSubscriptionCosts } from '@/lib/subscriptions/queries/useSubscriptionCosts'
@@ -14,17 +145,18 @@ import { getTariffLabel } from '@/lib/utils'
 import s from './CheckoutForm.module.scss'
 
 type CheckoutFormProps = {
-  onSubmit: (data: CheckoutFormData, paymentProvider: PaymentService) => void
+  onSubmitAction: (data: PaymentSessionRequest) => void
 }
 
-export const CheckoutForm = ({ onSubmit }: CheckoutFormProps) => {
+export const CheckoutForm = ({ onSubmitAction }: CheckoutFormProps) => {
   const { user } = useAuth()
 
-  const { control, handleSubmit } = useForm<CheckoutFormData>({
+  // Достаем setValue и getValues
+  const { control, handleSubmit, setValue, getValues } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
       accountType: user?.subscription_type ?? 'Personal',
-      subscriptionPlan: 'Daily',
+      tariff: '',
     },
   })
 
@@ -54,8 +186,36 @@ export const CheckoutForm = ({ onSubmit }: CheckoutFormProps) => {
     [subscriptionCosts]
   )
 
+  // LOGIC FOR THE AUTOMATIC SELECTION OF THE FIRST TARIFF PLAN
+  useEffect(() => {
+    if (subscriptionPlanOptions.length > 0) {
+      const currentTariff = getValues('tariff')
+
+      // check whether the currently selected ID is present in the new list of tariffs
+      const isValidTariff = subscriptionPlanOptions.some(option => option.value === currentTariff)
+
+      // If the current plan is invalid (for example, an empty string upon initial load,
+      // or the plan does not exist for a new account type), set it to the first one
+      if (!isValidTariff) {
+        setValue('tariff', subscriptionPlanOptions[0].value, {
+          shouldValidate: true,
+          shouldDirty: true,
+        })
+      }
+    }
+  }, [subscriptionPlanOptions, setValue, getValues])
+
   const onSubmitHandler = (data: CheckoutFormData, paymentProvider: PaymentService) => {
-    onSubmit(data, paymentProvider)
+    const selectedTariff = subscriptionCosts?.find(
+      subscription => subscription.tariff_name === data.tariff
+    )
+
+    const paymentData: PaymentSessionRequest = {
+      provider: paymentProvider,
+      tariffId: selectedTariff?.id ?? '',
+    }
+
+    onSubmitAction(paymentData)
   }
 
   return (
@@ -88,11 +248,7 @@ export const CheckoutForm = ({ onSubmit }: CheckoutFormProps) => {
             </Typography>
 
             <Cards className={clsx(s.subscriptionRadio, s.costs)}>
-              <FormRadioGroup
-                control={control}
-                name={'subscriptionPlan'}
-                options={subscriptionPlanOptions}
-              />
+              <FormRadioGroup control={control} name={'tariff'} options={subscriptionPlanOptions} />
             </Cards>
           </div>
 
@@ -100,9 +256,9 @@ export const CheckoutForm = ({ onSubmit }: CheckoutFormProps) => {
             <Button
               type={'button'}
               variant={'text'}
-              onClick={handleSubmit(data => onSubmitHandler(data, 'Yookassa'))}
+              onClick={handleSubmit(data => onSubmitHandler(data, 'YOOKASSA'))}
               className={s.serviceButton}
-              aria-label={'Payment service: Yookassa'}
+              aria-label={'Payment service: YOOKASSA'}
             >
               <YooKassa size={64} />
             </Button>
@@ -114,9 +270,9 @@ export const CheckoutForm = ({ onSubmit }: CheckoutFormProps) => {
             <Button
               type={'button'}
               variant={'text'}
-              onClick={handleSubmit(data => onSubmitHandler(data, 'Stripe'))}
+              onClick={handleSubmit(data => onSubmitHandler(data, 'STRIPE'))}
               className={s.serviceButton}
-              aria-label={'Payment service: Stripe'}
+              aria-label={'Payment service: STRIPE'}
             >
               <Stripe size={64} />
             </Button>

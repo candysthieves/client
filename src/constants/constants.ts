@@ -1,4 +1,4 @@
-import { SubscriptionType } from '@/lib/model'
+import { SubscriptionLabels } from '@/lib/model'
 
 export const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
 // TODO: Remove this mock server URL when the posts backend is ready.
@@ -17,12 +17,18 @@ export const HOME_PAGE_REFETCH_INTERVAL_MS = 60 * 1000
 export const TIME_AGO_TICK_INTERVAL_MS = 60 * 1000
 export const SELECT_SEARCH_DEBOUNCE = 600
 
-export const TARIFF_LABELS: Record<SubscriptionType, string> = {
+export const TARIFF_LABELS: Record<SubscriptionLabels, string> = {
   Daily: '1 Day',
   Weekly: '7 Days',
   Monthly: 'Month',
   Quarterly: '3 Months',
 }
 
-export const PAYMENT_SUCCESS_NOTIFICATION = 'Payment was successful!'
-export const PAYMENT_ERROR_NOTIFICATION = 'Transaction failed. Please, write to support'
+export const PAYMENT_SUCCESS_TITLE = 'Payment Created'
+export const PAYMENT_ERROR_TITLE = 'Payment Error'
+
+// export const PAYMENT_SUCCESS_NOTIFICATION = 'Redirecting you to the payment page. Please do not close the tab!'
+export const PAYMENT_SUCCESS_NOTIFICATION =
+  'Payment page opened in a new tab. Please, finish your payment and close this modal to return to the app'
+export const PAYMENT_ERROR_NOTIFICATION =
+  'Failed to create a payment session or retrieve the payment URL. Please try again later'

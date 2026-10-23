@@ -1,7 +1,12 @@
 'use client'
 
 import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
-import { PAYMENT_ERROR_NOTIFICATION, PAYMENT_SUCCESS_NOTIFICATION } from '@/constants'
+import {
+  PAYMENT_ERROR_NOTIFICATION,
+  PAYMENT_ERROR_TITLE,
+  PAYMENT_SUCCESS_NOTIFICATION,
+  PAYMENT_SUCCESS_TITLE,
+} from '@/constants'
 import { PaymentStatus } from '@/lib/model'
 import s from './NotificationModal.module.scss'
 
@@ -14,10 +19,11 @@ type NotificationModalProps = {
 
 export const NotificationModal = ({
   open,
+  status,
   onConfirm,
   onCloseClick,
-  status,
 }: NotificationModalProps) => {
+  const paymentTitle = status === 'Success' ? PAYMENT_SUCCESS_TITLE : PAYMENT_ERROR_TITLE
   const paymentMessage =
     status === 'Success' ? PAYMENT_SUCCESS_NOTIFICATION : PAYMENT_ERROR_NOTIFICATION
 
@@ -25,7 +31,7 @@ export const NotificationModal = ({
     <Modal
       open={open}
       onClose={onCloseClick}
-      modalTitle={status}
+      modalTitle={paymentTitle}
       size={'s'}
       showHeader
       className={s.modal}
@@ -34,7 +40,6 @@ export const NotificationModal = ({
         <Typography variant={'subtitle1'} color={'var(--color-light-100)'}>
           {paymentMessage}
         </Typography>
-
         <div className={s.controls}>
           <Button type={'button'} variant={'primary'} fullWidth onClick={onConfirm}>
             OK

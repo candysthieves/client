@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { getSubscriptionCosts } from '@/lib/api/subscriptions'
+import { getSubscriptionCosts } from '@/lib/api'
 import { AccountType } from '@/lib/model'
 import { subscriptionKeys } from '@/lib/subscriptions/subscriptionKeys'
 

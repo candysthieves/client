@@ -1,20 +1,25 @@
 'use client'
 
+import { CircularProgress } from '@candy.thieves/ui-kit-lumos'
 import { useState } from 'react'
 import { CheckoutForm } from '@/components/CheckoutForm'
 import { CreatePaymentModal } from '@/components/CheckoutForm/CreatePaymentModal/CreatePaymentModal'
 import { NotificationModal } from '@/components/CheckoutForm/NotificationModal/NotificationModal'
-import { CheckoutFormData, CreatePaymentState, PaymentService, PaymentStatus } from '@/lib/model'
+import { CreatePaymentState, PaymentSessionRequest, PaymentStatus } from '@/lib/model'
+import { useCreatePayment } from '@/lib/payments'
+import { isValidUrl } from '@/lib/utils'
+import s from './SubscriptionsTab.module.scss'
 
 export const initialPaymentState: CreatePaymentState = {
-  paymentService: null,
-  subscriptionData: null,
+  provider: null,
+  tariffId: '',
 }
 
 export const SubscriptionsTab = () => {
   const [paymentState, setPaymentState] = useState<CreatePaymentState>(initialPaymentState)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(null)
+  const { mutate: sendPaymentRequest, isPending: isPaymentSending } = useCreatePayment()
 
   const openConfirm = () => setIsConfirmOpen(true)
   const closeConfirm = () => {
@@ -24,36 +29,57 @@ export const SubscriptionsTab = () => {
 
   const closeNotification = () => setPaymentStatus(null)
 
-  const onSubmitHandler = (data: CheckoutFormData, paymentProvider: PaymentService) => {
+  const onSubmitHandler = (data: PaymentSessionRequest) => {
     setPaymentState({
-      paymentService: paymentProvider,
-      subscriptionData: data,
+      provider: data.provider,
+      tariffId: data.tariffId,
     })
+    // Pass updated state data to confirm payment Modal window
     openConfirm()
-    console.log(`Send request to ${paymentProvider}:`, data)
   }
 
   const sendServicePaymentRequest = async () => {
-    if (!paymentState.paymentService || !paymentState.subscriptionData) return
+    if (!paymentState.provider || !paymentState.tariffId) return
 
-    // TODO: add logic for payment service request sending
-    // try {
-    //   await createPayment({
-    //     service: paymentState.paymentService,
-    //     ...paymentState.subscriptionData,
-    //   })
-    //   setPaymentStatus('Success')
-    // } catch {
-    //   setPaymentStatus('Error')
-    // }
+    const payload: PaymentSessionRequest = {
+      provider: paymentState.provider,
+      tariffId: paymentState.tariffId,
+    }
 
-    closeConfirm()
-    console.log('sendServicePaymentRequest', paymentState)
+    // Open payment service link in new tab
+    const newWindow = window.open('', '_blank')
+
+    sendPaymentRequest(payload, {
+      onSuccess: data => {
+        if (!isValidUrl(data.paymentUrl)) {
+          newWindow?.close()
+          closeConfirm()
+          setPaymentStatus('Error')
+          return
+        }
+
+        // URL is valid -> redirect to this URL
+        closeConfirm()
+        setPaymentStatus('Success')
+
+        if (newWindow) {
+          newWindow.location.href = data.paymentUrl
+        } else {
+          // If the new tab blocked by browser, open link in the current tab
+          window.location.href = data.paymentUrl
+        }
+      },
+      onError: () => {
+        newWindow?.close()
+        closeConfirm()
+        setPaymentStatus('Error')
+      },
+    })
   }
 
   return (
-    <>
-      <CheckoutForm onSubmit={onSubmitHandler} />
+    <div className={s.subscriptionContent}>
+      <CheckoutForm onSubmitAction={onSubmitHandler} />
 
       <NotificationModal
         open={!!paymentStatus}
@@ -64,9 +90,14 @@ export const SubscriptionsTab = () => {
 
       <CreatePaymentModal
         open={isConfirmOpen}
+        isLoading={isPaymentSending}
         onConfirm={sendServicePaymentRequest}
-        onCloseClick={closeConfirm}
+        onCloseClick={isPaymentSending ? undefined : closeConfirm}
       />
-    </>
+
+      {isPaymentSending && (
+        <CircularProgress size={'lg'} color={'success'} className={s.loadSpinner} />
+      )}
+    </div>
   )
 }

@@ -1,13 +1,13 @@
 import { z } from 'zod'
 import { accountTypeSchema } from '@/lib/model/auth.schemas'
 
-export const subscriptionTypeSchema = z.enum(['Daily', 'Weekly', 'Monthly', 'Quarterly'], {
+export const subscriptionTypeSchema = z.enum(['Daily', 'Weekly', 'Monthly', 'Quarterly', ''], {
   error: 'Please select a subscription plan',
 })
 
 export const checkoutSchema = z.object({
   accountType: accountTypeSchema,
-  subscriptionPlan: subscriptionTypeSchema,
+  tariff: subscriptionTypeSchema,
 })
 
 export const currencyTypeSchema = z.enum(['USD', 'EUR', 'RUB'])
@@ -25,16 +25,7 @@ export const subscriptionSchema = z.object({
   durationDays: z.number().int().positive(),
   priceInMinorUnits: z.number().int().positive(),
   currency: currencyTypeSchema, // 'USD', 'EUR', 'RUB'
-  priceUnit: priceUnitTypeSchema, // 'CENT', 'KOPECK'
+  priceUnit: priceUnitTypeSchema, // ToDo delete later
 })
 
 export const subscriptionsResponseSchema = z.array(subscriptionSchema)
-
-export const paymentServiceSchema = z.enum(['Yookassa', 'Stripe'])
-
-export const createPaymentStateSchema = z.object({
-  paymentService: paymentServiceSchema.nullable(),
-  subscriptionData: checkoutSchema.nullable(),
-})
-
-export const paymentStatusSchema = z.enum(['Error', 'Success']).nullable()

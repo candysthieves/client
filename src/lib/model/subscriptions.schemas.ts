@@ -38,3 +38,18 @@ export const createPaymentStateSchema = z.object({
 })
 
 export const paymentStatusSchema = z.enum(['Error', 'Success']).nullable()
+
+export const subscriptionHistoryPaymentServiceSchema = z.enum(['STRIPE', 'YOOKASSA'])
+
+export const subscriptionHistoryItemSchema = z.object({
+  id: z.string(),
+  date: z.string(),
+  paymentDate: z.string(),
+  subscriptionEndDate: z.string(),
+  price: z.number().nonnegative(),
+  subscriptionName: subscriptionTypeSchema,
+  subscriptionType: accountTypeSchema,
+  paymentService: subscriptionHistoryPaymentServiceSchema,
+})
+
+export const subscriptionHistoryResponseSchema = z.array(subscriptionHistoryItemSchema)

@@ -6,6 +6,8 @@ import {
   createPaymentStateSchema,
   paymentServiceSchema,
   paymentStatusSchema,
+  subscriptionHistoryItemSchema,
+  subscriptionHistoryResponseSchema,
   subscriptionSchema,
   subscriptionsResponseSchema,
   subscriptionTypeSchema,
@@ -105,3 +107,5 @@ export type SubscriptionsResponse = z.infer<typeof subscriptionsResponseSchema>
 export type PaymentService = z.infer<typeof paymentServiceSchema>
 export type CreatePaymentState = z.infer<typeof createPaymentStateSchema>
 export type PaymentStatus = z.infer<typeof paymentStatusSchema>
+export type SubscriptionHistoryItem = z.infer<typeof subscriptionHistoryItemSchema>
+export type SubscriptionHistoryResponse = z.infer<typeof subscriptionHistoryResponseSchema>

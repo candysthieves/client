@@ -17,3 +17,5 @@ export const paymentSessionResponseSchema = z.object({
   paymentId: z.string(),
   paymentUrl: z.url({ protocol: /^https?$/ }),
 })
+
+export const paymentErrorFieldSchema = z.enum(['provider', 'token', 'tariffId'])

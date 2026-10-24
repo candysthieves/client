@@ -11,6 +11,8 @@ import {
   VALID_NEW_PASSWORD_FIELDS,
   VALID_REGISTRATION_FIELDS,
   VALID_EDIT_PROFILE_FIELDS,
+  VALID_PAYMENT_ERROR_FIELDS,
+  PaymentErrorField,
 } from '@/lib/model'
 
 // isValidRegistrationField === isValidErrorRegistrationField согласно ответам от бэкенда
@@ -42,4 +44,9 @@ export const isValidNewPasswordField = (field: string): field is NewPasswordFiel
 // используем для setError соотвествующего поля формы General Information при Validation / Domain Error
 export const isValidEditProfileField = (field: string): field is EditProfileField => {
   return VALID_EDIT_PROFILE_FIELDS.includes(field as EditProfileField)
+}
+
+// Используем для проверки payment provider service name (STRIPE or YOOKASSA)
+export const isValidPaymentProviderField = (field: string): field is PaymentErrorField => {
+  return VALID_PAYMENT_ERROR_FIELDS.includes(field as PaymentErrorField)
 }

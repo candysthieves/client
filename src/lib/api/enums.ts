@@ -30,10 +30,12 @@ export enum ErrorStatus {
   // ACCESS TOKEN
   AccessTokenInvalid = 73,
   AccessTokenExpired = 74,
-  //SESSIONS
+  // SESSIONS
   SessionNotFound = 80,
   SessionUserMismatch = 82,
   SessionAccessForbidden = 83,
+  // PAYMENTS
+  TariffNotFound = 90,
 }
 
 //   EmailAlreadyExists = 23, register

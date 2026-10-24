@@ -3,6 +3,7 @@ import {
   LoginErrorField,
   LoginField,
   PasswordRecoveryField,
+  PaymentErrorField,
   RegistrationErrorField,
 } from '@/lib/model'
 
@@ -80,6 +81,12 @@ export const VALID_EDIT_PROFILE_FIELDS: EditProfileField[] = [
   'aboutMe',
 ] as const
 
+export const VALID_PAYMENT_ERROR_FIELDS: PaymentErrorField[] = [
+  'provider',
+  'token',
+  'tariffId',
+] as const
+
 export const PROFILE_SETTINGS_SAVED_MESSAGE = 'Your settings are saved!'
 
 export const MIN_USER_AGE = 13
@@ -87,3 +94,6 @@ export const UNDER_AGE_ERROR_MESSAGE = `A user under ${MIN_USER_AGE} cannot crea
 
 export const SERVER_UNAVAILABLE_ERROR_TITLE = 'Error!'
 export const SERVER_UNAVAILABLE_ERROR_MESSAGE = 'Server is not available!'
+
+export const PAYMENT_VERIFICATION_ERROR_TITLE = 'Payment service Error'
+export const PAYMENT_VERIFICATION_ERROR_MESSAGE = 'Provider must be either STRIPE or YOOKASSA'

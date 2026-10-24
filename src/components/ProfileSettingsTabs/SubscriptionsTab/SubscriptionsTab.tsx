@@ -2,12 +2,19 @@
 
 import { CircularProgress } from '@candy.thieves/ui-kit-lumos'
 import { useState } from 'react'
+import { ToastError } from '@/components'
 import { CheckoutForm } from '@/components/CheckoutForm'
 import { CreatePaymentModal } from '@/components/CheckoutForm/CreatePaymentModal/CreatePaymentModal'
 import { NotificationModal } from '@/components/CheckoutForm/NotificationModal/NotificationModal'
+import { ApiError } from '@/lib/api'
 import { CreatePaymentState, PaymentSessionRequest, PaymentStatus } from '@/lib/model'
 import { useCreatePayment } from '@/lib/payments'
-import { isValidUrl } from '@/lib/utils'
+import {
+  isErrorResponse,
+  isValidUrl,
+  mapPaymentDomainError,
+  mapPaymentValidationError,
+} from '@/lib/utils'
 import s from './SubscriptionsTab.module.scss'
 
 export const initialPaymentState: CreatePaymentState = {
@@ -69,10 +76,30 @@ export const SubscriptionsTab = () => {
           window.location.href = data.paymentUrl
         }
       },
-      onError: () => {
+      onError: error => {
         newWindow?.close()
         closeConfirm()
         setPaymentStatus('Error')
+
+        if (error instanceof ApiError && isErrorResponse(error.data)) {
+          const isValidationError = mapPaymentValidationError(error)
+          const isDomainError = mapPaymentDomainError(error)
+
+          if (isValidationError) {
+            ToastError({
+              title: 'Validation Error',
+              messages: error.data.errorsMessages,
+            })
+          } else if (isDomainError) {
+            // Show domain errors
+            ToastError({
+              title: 'Domain Error',
+              messages: error.data.errorsMessages,
+            })
+          }
+          return
+        }
+        ToastError({ messages: 'Something went wrong. Please try again.' })
       },
     })
   }

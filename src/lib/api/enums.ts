@@ -36,6 +36,8 @@ export enum ErrorStatus {
   SessionAccessForbidden = 83,
   // PAYMENTS
   TariffNotFound = 90,
+  SubscriptionNotFound = 94,
+  PaymentServiceUnavailable = 95,
 }
 
 //   EmailAlreadyExists = 23, register

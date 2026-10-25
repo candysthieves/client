@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { getSubscriptionCosts } from '@/lib/api'
 import { AccountType } from '@/lib/model'
-import { subscriptionKeys } from '@/lib/subscriptions/subscriptionKeys'
+import { subscriptionKeys } from '@/lib/subscriptions'
 
 export const useSubscriptionCosts = (accountType: AccountType) =>
   useQuery({

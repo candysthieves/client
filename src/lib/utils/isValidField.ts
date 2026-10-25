@@ -13,6 +13,8 @@ import {
   VALID_EDIT_PROFILE_FIELDS,
   VALID_PAYMENT_ERROR_FIELDS,
   PaymentErrorField,
+  CurrentSubscriptionErrorField,
+  currentSubscriptionErrorFieldSchema,
 } from '@/lib/model'
 
 // isValidRegistrationField === isValidErrorRegistrationField согласно ответам от бэкенда
@@ -49,4 +51,11 @@ export const isValidEditProfileField = (field: string): field is EditProfileFiel
 // Используем для проверки payment provider service name (STRIPE or YOOKASSA)
 export const isValidPaymentProviderField = (field: string): field is PaymentErrorField => {
   return VALID_PAYMENT_ERROR_FIELDS.includes(field as PaymentErrorField)
+}
+
+// Используем для проверки subscription при отмене Auto-Renewal у Current Subscription
+export const isValidCurrentSubscriptionField = (
+  field: string
+): field is CurrentSubscriptionErrorField => {
+  return currentSubscriptionErrorFieldSchema.safeParse(field).success
 }

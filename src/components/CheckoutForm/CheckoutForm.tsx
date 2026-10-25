@@ -98,7 +98,7 @@ export const CheckoutForm = ({ onSubmitAction }: CheckoutFormProps) => {
           Account type:
         </Typography>
 
-        <Cards className={clsx(s.subscriptionRadio, s.account)}>
+        <Cards className={s.subscriptionRadio}>
           <FormRadioGroup control={control} name={'accountType'} options={accountTypeOptions} />
         </Cards>
       </div>
@@ -106,16 +106,11 @@ export const CheckoutForm = ({ onSubmitAction }: CheckoutFormProps) => {
       {subscriptionPlanOptions.length > 0 && (
         <>
           <div className={s.costsContent}>
-            <Typography
-              className={s.title}
-              variant={'h3'}
-              color={'var(--color-light-100)'}
-              mb={'0.375rem'}
-            >
+            <Typography variant={'h3'} color={'var(--color-light-100)'} mb={'0.375rem'}>
               Your subscription costs:
             </Typography>
 
-            <Cards className={clsx(s.subscriptionRadio, s.costs)}>
+            <Cards className={s.subscriptionRadio}>
               <FormRadioGroup control={control} name={'tariff'} options={subscriptionPlanOptions} />
             </Cards>
           </div>

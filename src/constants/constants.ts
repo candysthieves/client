@@ -32,3 +32,7 @@ export const PAYMENT_SUCCESS_NOTIFICATION =
   'Payment page opened in a new tab. Please, finish your payment and close this modal to return to the app'
 export const PAYMENT_ERROR_NOTIFICATION =
   'Failed to create a payment session or retrieve the payment URL. Please try again later'
+
+export const SUBSCRIPTION_AUTO_RENEW_OFF_MESSAGE = 'Subscription auto-renewal is disabled'
+export const SUBSCRIPTION_AUTO_RENEW_OFF_EXPIRED_MESSAGE =
+  "Auto-renewal is disabled. Please select and purchase a new subscription plan. You'll lose access on"

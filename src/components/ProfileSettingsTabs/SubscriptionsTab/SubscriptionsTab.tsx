@@ -6,6 +6,7 @@ import { ToastError } from '@/components'
 import { CheckoutForm } from '@/components/CheckoutForm'
 import { CreatePaymentModal } from '@/components/CheckoutForm/CreatePaymentModal/CreatePaymentModal'
 import { NotificationModal } from '@/components/CheckoutForm/NotificationModal/NotificationModal'
+import { CurrentSubscription } from '@/components/CurrentSubscription'
 import { ApiError } from '@/lib/api'
 import { CreatePaymentState, PaymentSessionRequest, PaymentStatus } from '@/lib/model'
 import { useCreatePayment } from '@/lib/payments'
@@ -106,6 +107,7 @@ export const SubscriptionsTab = () => {
 
   return (
     <div className={s.subscriptionContent}>
+      <CurrentSubscription />
       <CheckoutForm onSubmitAction={onSubmitHandler} />
 
       <NotificationModal

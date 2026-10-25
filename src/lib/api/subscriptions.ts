@@ -1,5 +1,12 @@
+import { request } from '@/lib/api/request'
 import { requestValidated } from '@/lib/api/requestValidated'
-import { AccountType, AvailableAccountTypesResponse, SubscriptionsResponse } from '@/lib/model'
+import {
+  AccountType,
+  AvailableAccountTypesResponse,
+  CurrentSubscriptionResponse,
+  currentSubscriptionResponseSchema,
+  SubscriptionsResponse,
+} from '@/lib/model'
 import {
   availableAccountTypesResponseSchema,
   subscriptionsResponseSchema,
@@ -18,3 +25,11 @@ export const getSubscriptionCosts = (accountType: AccountType): Promise<Subscrip
 
 export const _getSubscriptionCosts = (accountType: AccountType): Promise<SubscriptionsResponse> =>
   requestValidated(`/tariffs?type=${accountType}`, subscriptionsResponseSchema)
+
+export const getCurrentSubscription = (): Promise<CurrentSubscriptionResponse> =>
+  requestValidated(`/subscriptions/current`, currentSubscriptionResponseSchema)
+
+export const cancelCurrentSubscription = () =>
+  request<void>(`/subscriptions/current`, {
+    method: 'DELETE',
+  })

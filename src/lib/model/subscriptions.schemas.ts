@@ -29,3 +29,10 @@ export const subscriptionSchema = z.object({
 })
 
 export const subscriptionsResponseSchema = z.array(subscriptionSchema)
+
+export const currentSubscriptionResponseSchema = z.object({
+  expirationDate: z.string().nullable(),
+  nextChangeDate: z.string().nullable(),
+})
+
+export const currentSubscriptionErrorFieldSchema = z.literal('subscription')

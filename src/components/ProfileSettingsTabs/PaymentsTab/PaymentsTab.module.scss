@@ -9,7 +9,7 @@
   overflow-x: auto;
   width: 100%;
 
-  @include media-tablet {
+  @include media-tablet-large {
     display: none;
   }
 }
@@ -17,7 +17,7 @@
 .cardsWrapper {
   display: none;
 
-  @include media-tablet {
+  @include media-tablet-large {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.75rem;

@@ -33,3 +33,5 @@ export {
 } from './profileDate'
 export { isUnderAge } from './isUnderAge'
 export { getTariffLabel } from './getTariffLabel'
+export { formatPaymentDate } from './formatPaymentDate'
+export { formatPrice } from './formatPrice'

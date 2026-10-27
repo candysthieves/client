@@ -24,14 +24,27 @@ export const TARIFF_LABELS: Record<SubscriptionLabels, string> = {
   Quarterly: '3 Months',
 }
 
-export const PAYMENT_SUCCESS_TITLE = 'Payment Created'
-export const PAYMENT_ERROR_TITLE = 'Payment Error'
+// REDIRECT TO PAYMENT SERVICE MODAL WINDOW CONTENT
+export const PAYMENT_SESSION_SUCCESS_TITLE = 'Payment Session Created'
+export const PAYMENT_SESSION_ERROR_TITLE = 'Payment Session Error'
 
 // export const PAYMENT_SUCCESS_NOTIFICATION = 'Redirecting you to the payment page. Please do not close the tab!'
-export const PAYMENT_SUCCESS_NOTIFICATION =
+export const PAYMENT_SESSION_SUCCESS_NOTIFICATION =
   'Payment page opened in a new tab. Please, finish your payment and close this modal to return to the app'
-export const PAYMENT_ERROR_NOTIFICATION =
+export const PAYMENT_SESSION_ERROR_NOTIFICATION =
   'Failed to create a payment session or retrieve the payment URL. Please try again later'
+
+// RECEIVED PAYMENT PROCESSED MODAL WINDOW CONTENT
+// export const PAYMENT_SUCCESS_TITLE = 'Payment Created'
+// export const PAYMENT_ERROR_TITLE = 'Payment Processing Error'
+export const PAYMENT_MODAL_SUCCESS_BUTTON_TEXT = 'OK'
+export const PAYMENT_MODAL_ERROR_BUTTON_TEXT = 'Back to payment'
+export const PAYMENT_SUCCESS_NOTIFICATION = 'Payment was successful!'
+export const PAYMENT_ERROR_NOTIFICATION = 'Transaction failed, please try again'
+
+// RECEIVED PAYMENT PROCESSED TOAST CONTENT
+export const PAYMENT_SUCCESS_TOAST = 'Payment created successfully'
+export const PAYMENT_ERROR_TOAST = 'Failed to create a payment. Please try again later'
 
 export const SUBSCRIPTION_AUTO_RENEW_OFF_MESSAGE = 'Subscription auto-renewal is disabled'
 export const SUBSCRIPTION_AUTO_RENEW_OFF_EXPIRED_MESSAGE =

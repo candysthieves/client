@@ -3,35 +3,36 @@
 import { Button, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import {
   PAYMENT_ERROR_NOTIFICATION,
-  PAYMENT_ERROR_TITLE,
+  PAYMENT_MODAL_ERROR_BUTTON_TEXT,
+  PAYMENT_MODAL_SUCCESS_BUTTON_TEXT,
   PAYMENT_SUCCESS_NOTIFICATION,
-  PAYMENT_SUCCESS_TITLE,
 } from '@/constants'
 import { PaymentStatus } from '@/lib/model'
-import s from './NotificationModal.module.scss'
+import s from './RedirectToPaymentServiceNotificationModal.module.scss'
 
-type NotificationModalProps = {
+type PaymentProcessedNotificationModalProps = {
   open: boolean
   status: PaymentStatus
   onConfirm: () => void
   onCloseClick: () => void
 }
 
-export const NotificationModal = ({
+export const PaymentProcessedNotificationModal = ({
   open,
   status,
   onConfirm,
   onCloseClick,
-}: NotificationModalProps) => {
-  const paymentTitle = status === 'Success' ? PAYMENT_SUCCESS_TITLE : PAYMENT_ERROR_TITLE
+}: PaymentProcessedNotificationModalProps) => {
   const paymentMessage =
     status === 'Success' ? PAYMENT_SUCCESS_NOTIFICATION : PAYMENT_ERROR_NOTIFICATION
+  const modalSubmitButtonTitle =
+    status === 'Success' ? PAYMENT_MODAL_SUCCESS_BUTTON_TEXT : PAYMENT_MODAL_ERROR_BUTTON_TEXT
 
   return (
     <Modal
       open={open}
       onClose={onCloseClick}
-      modalTitle={paymentTitle}
+      modalTitle={status}
       size={'s'}
       showHeader
       className={s.modal}
@@ -42,7 +43,7 @@ export const NotificationModal = ({
         </Typography>
         <div className={s.controls}>
           <Button type={'button'} variant={'primary'} fullWidth onClick={onConfirm}>
-            OK
+            {modalSubmitButtonTitle}
           </Button>
         </div>
       </div>

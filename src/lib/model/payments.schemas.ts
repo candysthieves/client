@@ -19,3 +19,8 @@ export const paymentSessionResponseSchema = z.object({
 })
 
 export const paymentErrorFieldSchema = z.enum(['provider', 'token', 'tariffId'])
+
+export const paymentProcessedEventSchema = z.object({
+  userId: z.string('Invalid userID format in payment processed SSE response'),
+  status: z.string('Invalid status format in payment processed SSE response'), // TODO change later
+})

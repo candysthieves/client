@@ -36,3 +36,4 @@ export {
 export { isUnderAge } from './isUnderAge'
 export { getTariffLabel } from './getTariffLabel'
 export { isValidUrl } from './isValidUrl'
+export { formatPrice } from './formatPrice'

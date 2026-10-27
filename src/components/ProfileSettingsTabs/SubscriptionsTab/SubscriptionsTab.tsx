@@ -1,13 +1,18 @@
 'use client'
 
 import { CircularProgress } from '@candy.thieves/ui-kit-lumos'
-import { useState } from 'react'
-import { ToastError } from '@/components'
+import { useQueryClient } from '@tanstack/react-query'
+import { useCallback, useState } from 'react'
+import { ToastError, ToastSuccess } from '@/components'
 import { CheckoutForm } from '@/components/CheckoutForm'
 import { CreatePaymentModal } from '@/components/CheckoutForm/CreatePaymentModal/CreatePaymentModal'
-import { NotificationModal } from '@/components/CheckoutForm/NotificationModal/NotificationModal'
+import { PaymentProcessedNotificationModal } from '@/components/CheckoutForm/PaymentProcessedNotificationModal/PaymentProcessedNotificationModal'
+import { RedirectToPaymentServiceNotificationModal } from '@/components/CheckoutForm/RedirectToPaymentServiceNotificationModal/RedirectToPaymentServiceNotificationModal'
 import { CurrentSubscription } from '@/components/CurrentSubscription'
+import { PAYMENT_ERROR_TOAST, PAYMENT_SUCCESS_TOAST } from '@/constants'
 import { ApiError } from '@/lib/api'
+import { authKeys } from '@/lib/auth'
+import { useAuth, usePaymentEvents } from '@/lib/hooks'
 import { CreatePaymentState, PaymentSessionRequest, PaymentStatus } from '@/lib/model'
 import { useCreatePayment } from '@/lib/payments'
 import {
@@ -24,10 +29,15 @@ export const initialPaymentState: CreatePaymentState = {
 }
 
 export const SubscriptionsTab = () => {
+  const { user } = useAuth()
   const [paymentState, setPaymentState] = useState<CreatePaymentState>(initialPaymentState)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+
+  const [paymentSessionStatus, setPaymentSessionStatus] = useState<PaymentStatus>(null)
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(null)
+
   const { mutate: sendPaymentRequest, isPending: isPaymentSending } = useCreatePayment()
+  const queryClient = useQueryClient()
 
   const openConfirm = () => setIsConfirmOpen(true)
   const closeConfirm = () => {
@@ -35,7 +45,8 @@ export const SubscriptionsTab = () => {
     setIsConfirmOpen(false)
   }
 
-  const closeNotification = () => setPaymentStatus(null)
+  const closeRedirectToPaymentServiceNotification = () => setPaymentSessionStatus(null)
+  const closePaymentProcessedNotification = () => setPaymentStatus(null)
 
   const onSubmitHandler = (data: PaymentSessionRequest) => {
     setPaymentState({
@@ -62,13 +73,13 @@ export const SubscriptionsTab = () => {
         if (!isValidUrl(data.paymentUrl)) {
           newWindow?.close()
           closeConfirm()
-          setPaymentStatus('Error')
+          setPaymentSessionStatus('Error')
           return
         }
 
         // URL is valid -> redirect to this URL
         closeConfirm()
-        setPaymentStatus('Success')
+        setPaymentSessionStatus('Success')
 
         if (newWindow) {
           newWindow.location.href = data.paymentUrl
@@ -80,7 +91,7 @@ export const SubscriptionsTab = () => {
       onError: error => {
         newWindow?.close()
         closeConfirm()
-        setPaymentStatus('Error')
+        setPaymentSessionStatus('Error')
 
         if (error instanceof ApiError && isErrorResponse(error.data)) {
           const isValidationError = mapPaymentValidationError(error)
@@ -105,16 +116,61 @@ export const SubscriptionsTab = () => {
     })
   }
 
+  // Invalidate GET meAuth, payments history requests when SSE message came with success,
+  // then close RedirectToPaymentServiceNotificationModal window
+  // and open PaymentProcessedNotificationModal
+  const handlePaymentProcessed = useCallback(
+    async (userId: string, status: string) => {
+      if (userId !== user?.id) {
+        return
+      }
+
+      if (status === 'Success') {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: authKeys.me() }),
+          // queryClient.invalidateQueries({ queryKey: subscriptionKeys.costs(accountType) }), // delete
+          // queryClient.invalidateQueries({ queryKey: subscriptionKeys.history() }), // TODO add later
+        ])
+
+        setPaymentStatus(status) // setPaymentStatus('Success') - move setPaymentStatus(status) under closeRedirectToPaymentServiceNotification()
+
+        ToastSuccess({
+          title: 'Success!',
+          message: PAYMENT_SUCCESS_TOAST,
+        })
+      } else if (status === 'Error') {
+        ToastError({
+          title: 'Error!',
+          messages: PAYMENT_ERROR_TOAST,
+        })
+
+        setPaymentStatus(status) // setPaymentStatus('Error') - move setPaymentStatus(status) under closeRedirectToPaymentServiceNotification()
+      }
+
+      closeRedirectToPaymentServiceNotification()
+    },
+    [queryClient, user?.id]
+  )
+
+  usePaymentEvents({ handlePaymentProcessed })
+
   return (
     <div className={s.subscriptionContent}>
       <CurrentSubscription />
       <CheckoutForm onSubmitAction={onSubmitHandler} />
 
-      <NotificationModal
+      <RedirectToPaymentServiceNotificationModal
+        open={!!paymentSessionStatus}
+        status={paymentSessionStatus}
+        onConfirm={closeRedirectToPaymentServiceNotification}
+        onCloseClick={closeRedirectToPaymentServiceNotification}
+      />
+
+      <PaymentProcessedNotificationModal
         open={!!paymentStatus}
         status={paymentStatus}
-        onConfirm={closeNotification}
-        onCloseClick={closeNotification}
+        onConfirm={closePaymentProcessedNotification}
+        onCloseClick={closePaymentProcessedNotification}
       />
 
       <CreatePaymentModal

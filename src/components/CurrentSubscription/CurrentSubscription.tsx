@@ -1,4 +1,4 @@
-import { Cards, Checkbox, Tooltip, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Cards, Checkbox, clsx, Tooltip, Typography } from '@candy.thieves/ui-kit-lumos'
 import { ToastError, ToastSuccess } from '@/components'
 import {
   SUBSCRIPTION_AUTO_RENEW_OFF_EXPIRED_MESSAGE,
@@ -23,15 +23,15 @@ export const CurrentSubscription = () => {
 
   const isLoading = isCurrentSubscriptionLoading || isCurrentSubscriptionCanceling
 
-  const isActiveSubscription = currentSubscription?.expirationDate
-  const isAutoRenewableSubscription = currentSubscription?.nextChangeDate
+  const activeSubscription = currentSubscription?.expirationDate
+  const autoRenewableSubscription = currentSubscription?.nextChangeDate
 
-  // const isActiveSubscription = '22.12.2002'
-  // const isAutoRenewableSubscription = false
-  // const isAutoRenewableSubscription = '23.12.2002'
+  // const activeSubscription = '22.12.2002'
+  // const autoRenewableSubscription = true
+  // const autoRenewableSubscription = '23.12.2002'
 
   if (isLoading) return <div>Загрузка подписки...</div>
-  if (!isActiveSubscription) return null
+  if (!activeSubscription) return null
 
   const disabledSubscriptionAutoRenew = () => {
     cancelCurrentSubscription(undefined, {
@@ -58,8 +58,8 @@ export const CurrentSubscription = () => {
     })
   }
 
-  const tooltipMessage = !isAutoRenewableSubscription
-    ? `${SUBSCRIPTION_AUTO_RENEW_OFF_EXPIRED_MESSAGE} ${isActiveSubscription}`
+  const tooltipMessage = !autoRenewableSubscription
+    ? `${SUBSCRIPTION_AUTO_RENEW_OFF_EXPIRED_MESSAGE} ${activeSubscription}`
     : ''
 
   return (
@@ -79,36 +79,47 @@ export const CurrentSubscription = () => {
             Expire at
           </Typography>
           <Typography variant={'caption2'} color={'var(--color-light-100)'}>
-            {isActiveSubscription}
+            {activeSubscription}
           </Typography>
         </div>
 
         <div className={s.dateItem}>
           <Typography
             variant={'body1'}
-            color={
-              isAutoRenewableSubscription ? 'var(--color-light-900)' : 'var(--color-danger-500)'
-            }
+            color={autoRenewableSubscription ? 'var(--color-light-900)' : 'var(--color-danger-500)'}
           >
             Next payment
           </Typography>
-          <Typography variant={'caption2'} color={'var(--color-light-100)'}>
-            {isAutoRenewableSubscription
-              ? isAutoRenewableSubscription
-              : SUBSCRIPTION_AUTO_RENEW_OFF_MESSAGE}
+          <Typography variant={'caption2'} color={'var(--color-light-100)'} className={s.dateValue}>
+            {autoRenewableSubscription
+              ? autoRenewableSubscription
+              : // : SUBSCRIPTION_AUTO_RENEW_OFF_MESSAGE}
+                '\u2014'}
           </Typography>
         </div>
       </Cards>
 
       <Tooltip content={tooltipMessage}>
-        <Checkbox
-          id={'autoRenewalCheckbox'}
-          label={'Auto - Renewal'}
-          disabled={!isAutoRenewableSubscription || isLoading}
-          checked={!!isAutoRenewableSubscription}
-          onCheckedChange={disabledSubscriptionAutoRenew}
-          className={s.renewalCheckbox}
-        />
+        {/*<Checkbox*/}
+        {/*  id={'autoRenewalCheckbox'}*/}
+        {/*  label={'Auto - Renewal'}*/}
+        {/*  disabled={!autoRenewableSubscription || isLoading}*/}
+        {/*  checked={!!autoRenewableSubscription}*/}
+        {/*  onCheckedChange={disabledSubscriptionAutoRenew}*/}
+        {/*  className={s.renewalCheckbox}*/}
+        {/*/>*/}
+
+        <div className={clsx(!autoRenewableSubscription && s.disabled)}>
+          <Button
+            id={'autoRenewalCheckbox'}
+            variant={autoRenewableSubscription ? 'primary' : 'outlined'}
+            color={'var(--color-light-100)'}
+            onClick={disabledSubscriptionAutoRenew}
+            disabled={!autoRenewableSubscription || isLoading}
+          >
+            {autoRenewableSubscription ? 'Auto - Renewal enabled' : 'Auto - Renewal disabled'}
+          </Button>
+        </div>
       </Tooltip>
     </div>
   )

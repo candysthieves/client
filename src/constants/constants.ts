@@ -48,4 +48,4 @@ export const PAYMENT_ERROR_TOAST = 'Failed to create a payment. Please try again
 
 export const SUBSCRIPTION_AUTO_RENEW_OFF_MESSAGE = 'Subscription auto-renewal is disabled'
 export const SUBSCRIPTION_AUTO_RENEW_OFF_EXPIRED_MESSAGE =
-  "Auto-renewal is disabled. Please select and purchase a new subscription plan. You'll lose access on"
+  'Automatic subscription renewal is disabled. To continue using the service after expiration, please purchase a new plan. Your current subscription remains active until '

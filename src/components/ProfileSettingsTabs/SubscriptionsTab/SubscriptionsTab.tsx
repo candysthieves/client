@@ -135,12 +135,12 @@ export const SubscriptionsTab = () => {
         setPaymentStatus(status) // setPaymentStatus('Success') - move setPaymentStatus(status) under closeRedirectToPaymentServiceNotification()
 
         ToastSuccess({
-          title: 'Success!',
+          title: status,
           message: PAYMENT_SUCCESS_TOAST,
         })
       } else if (status === 'Error') {
         ToastError({
-          title: 'Error!',
+          title: status,
           messages: PAYMENT_ERROR_TOAST,
         })
 
@@ -157,6 +157,7 @@ export const SubscriptionsTab = () => {
   return (
     <div className={s.subscriptionContent}>
       <CurrentSubscription />
+
       <CheckoutForm onSubmitAction={onSubmitHandler} />
 
       <RedirectToPaymentServiceNotificationModal

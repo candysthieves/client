@@ -10,7 +10,7 @@
   margin-bottom: 1.25rem;
   padding: 0.75rem 1.25rem;
 
-  @include flex(flex, flex-start, center);
+  @include flex(flex, flex-start, flex-start);
 
   @include media-tablet-small {
     flex-direction: column;
@@ -35,10 +35,18 @@
   }
 }
 
-:has(> .renewalCheckbox) {
-  &:hover,
-  &:focus-within,
-  &:active {
-    background-color: unset;
-  }
+.dateValue {
+  align-self: center;
 }
+
+.disabled {
+  cursor: not-allowed;
+}
+
+// :has(> .renewalCheckbox) {
+//  &:hover,
+//  &:focus-within,
+//  &:active {
+//    background-color: unset;
+//  }
+// }

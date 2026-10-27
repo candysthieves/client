@@ -10,13 +10,12 @@
 import Skeleton from 'react-loading-skeleton'
 import s from './PaymentsTab.module.scss'
 
-const SKELETON_ROWS_COUNT = 8
-
 type PaymentsTabSkeletonProps = {
   columns: readonly string[]
+  rowsCount: number
 }
 
-export const PaymentsTabSkeleton = ({ columns }: PaymentsTabSkeletonProps) => {
+export const PaymentsTabSkeleton = ({ columns, rowsCount }: PaymentsTabSkeletonProps) => {
   return (
     <div className={s.wrapper} aria-busy>
       <div className={s.tableWrapper}>
@@ -29,7 +28,7 @@ export const PaymentsTabSkeleton = ({ columns }: PaymentsTabSkeletonProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Array.from({ length: SKELETON_ROWS_COUNT }, (_, rowIndex) => (
+            {Array.from({ length: rowsCount }, (_, rowIndex) => (
               <TableRow key={rowIndex}>
                 {columns.map(column => (
                   <TableCell key={column}>
@@ -43,7 +42,7 @@ export const PaymentsTabSkeleton = ({ columns }: PaymentsTabSkeletonProps) => {
       </div>
 
       <div className={s.cardsWrapper}>
-        {Array.from({ length: SKELETON_ROWS_COUNT }, (_, rowIndex) => (
+        {Array.from({ length: rowsCount }, (_, rowIndex) => (
           <Cards className={s.card} key={rowIndex}>
             {columns.map(column => (
               <div className={s.cardRow} key={column}>

@@ -4,7 +4,7 @@ import { useSubscriptionHistory } from '@/lib/subscriptions/queries/useSubscript
 import { PaymentsEmptyState } from './PaymentsEmptyState'
 import { PaymentsError } from './PaymentsError'
 import { PaymentsListMobile } from './PaymentsListMobile'
-import { PAYMENTS_TABLE_COLUMNS } from './PaymentsTab.constants'
+import { PAYMENTS_PAGE_SIZE, PAYMENTS_TABLE_COLUMNS } from './PaymentsTab.constants'
 import s from './PaymentsTab.module.scss'
 import { PaymentsTableDesktop } from './PaymentsTableDesktop'
 import { PaymentsTabSkeleton } from './PaymentsTabSkeleton'
@@ -13,7 +13,7 @@ export const PaymentsTab = () => {
   const { data, isLoading, isError } = useSubscriptionHistory()
 
   if (isLoading) {
-    return <PaymentsTabSkeleton columns={PAYMENTS_TABLE_COLUMNS} />
+    return <PaymentsTabSkeleton columns={PAYMENTS_TABLE_COLUMNS} rowsCount={PAYMENTS_PAGE_SIZE} />
   }
 
   if (isError || !data) {
@@ -26,8 +26,8 @@ export const PaymentsTab = () => {
 
   return (
     <div className={s.wrapper}>
-      <PaymentsTableDesktop data={data} />
-      <PaymentsListMobile data={data} />
+      <PaymentsTableDesktop items={data} />
+      <PaymentsListMobile items={data} />
     </div>
   )
 }

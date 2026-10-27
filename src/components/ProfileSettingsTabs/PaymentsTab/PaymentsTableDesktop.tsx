@@ -12,10 +12,10 @@ import { PAYMENTS_TABLE_COLUMNS } from './PaymentsTab.constants'
 import s from './PaymentsTab.module.scss'
 
 type PaymentsTableDesktopProps = {
-  data: SubscriptionHistoryItem[]
+  items: SubscriptionHistoryItem[]
 }
 
-export const PaymentsTableDesktop = ({ data }: PaymentsTableDesktopProps) => {
+export const PaymentsTableDesktop = ({ items }: PaymentsTableDesktopProps) => {
   return (
     <div className={s.tableWrapper}>
       <Table>
@@ -27,7 +27,7 @@ export const PaymentsTableDesktop = ({ data }: PaymentsTableDesktopProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map(item => (
+          {items.map(item => (
             <TableRow key={item.id}>
               <TableCell>{formatPaymentDate(item.paymentDate)}</TableCell>
               <TableCell>{formatPaymentDate(item.subscriptionEndDate)}</TableCell>

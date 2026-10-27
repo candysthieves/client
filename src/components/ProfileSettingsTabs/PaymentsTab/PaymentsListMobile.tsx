@@ -4,13 +4,13 @@ import { formatPaymentDate, formatPrice } from '@/lib/utils'
 import s from './PaymentsTab.module.scss'
 
 type PaymentsListMobileProps = {
-  data: SubscriptionHistoryItem[]
+  items: SubscriptionHistoryItem[]
 }
 
-export const PaymentsListMobile = ({ data }: PaymentsListMobileProps) => {
+export const PaymentsListMobile = ({ items }: PaymentsListMobileProps) => {
   return (
     <div className={s.cardsWrapper}>
-      {data.map(item => (
+      {items.map(item => (
         <Cards className={s.card} key={item.id}>
           <div className={s.cardRow}>
             <Typography variant={'body2'} color={'var(--color-light-100)'}>

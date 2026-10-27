@@ -27,6 +27,7 @@ import {
 } from './auth.schemas'
 import { feedPostsResponseSchema } from './feed.schemas'
 import { imageSchema } from './image.schemas'
+import { notificationSchema } from './notification.schemas'
 import {
   avatarSchema,
   commentSchema,
@@ -65,6 +66,7 @@ export type Post = z.infer<typeof postSchema>
 export type PostAuthor = z.infer<typeof postAuthorSchema>
 export type Avatar = z.infer<typeof avatarSchema>
 export type Comment = z.infer<typeof commentSchema>
+export type AppNotification = z.infer<typeof notificationSchema>
 export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirmationSchema>
 export type RegistrationRequest = z.infer<typeof registrationSchema>
 export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEmailSchema>

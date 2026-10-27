@@ -22,6 +22,8 @@ export const TARIFF_LABELS: Record<SubscriptionType, string> = {
   Weekly: '7 Days',
   Monthly: 'Month',
   Quarterly: '3 Months',
+  Test: 'Test',
+  '': '',
 }
 
 export const PAYMENT_SUCCESS_NOTIFICATION = 'Payment was successful!'

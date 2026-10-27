@@ -20,14 +20,14 @@ export const PaymentsTab = () => {
     return <PaymentsError />
   }
 
-  if (data.length === 0) {
+  if (data.items.length === 0) {
     return <PaymentsEmptyState />
   }
 
   return (
     <div className={s.wrapper}>
-      <PaymentsTableDesktop items={data} />
-      <PaymentsListMobile items={data} />
+      <PaymentsTableDesktop items={data.items} />
+      <PaymentsListMobile items={data.items} />
     </div>
   )
 }

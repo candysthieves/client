@@ -29,11 +29,14 @@ export const PaymentsTableDesktop = ({ items }: PaymentsTableDesktopProps) => {
         <TableBody>
           {items.map(item => (
             <TableRow key={item.id}>
-              <TableCell>{formatPaymentDate(item.paymentDate)}</TableCell>
-              <TableCell>{formatPaymentDate(item.subscriptionEndDate)}</TableCell>
-              <TableCell>{formatPrice(item.priceInMinorUnits, item.currency)}</TableCell>
+              <TableCell>{item.paymentDate ? formatPaymentDate(item.paymentDate) : '—'}</TableCell>
+              <TableCell>
+                {item.subscriptionEndDate ? formatPaymentDate(item.subscriptionEndDate) : '—'}
+              </TableCell>
+              <TableCell>{formatPrice(item.price, item.currency)}</TableCell>
               <TableCell>{item.subscriptionName}</TableCell>
               <TableCell>{item.paymentService}</TableCell>
+              <TableCell>{item.status}</TableCell>
             </TableRow>
           ))}
         </TableBody>

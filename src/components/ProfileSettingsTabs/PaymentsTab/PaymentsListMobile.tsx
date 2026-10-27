@@ -17,7 +17,7 @@ export const PaymentsListMobile = ({ items }: PaymentsListMobileProps) => {
               {'Date of payment:'}
             </Typography>
             <Typography variant={'body3'} color={'var(--color-light-100)'}>
-              {formatPaymentDate(item.paymentDate)}
+              {item.paymentDate ? formatPaymentDate(item.paymentDate) : '—'}
             </Typography>
           </div>
 
@@ -26,7 +26,7 @@ export const PaymentsListMobile = ({ items }: PaymentsListMobileProps) => {
               {'End date of subscription:'}
             </Typography>
             <Typography variant={'body3'} color={'var(--color-light-100)'}>
-              {formatPaymentDate(item.subscriptionEndDate)}
+              {item.subscriptionEndDate ? formatPaymentDate(item.subscriptionEndDate) : '—'}
             </Typography>
           </div>
 
@@ -44,7 +44,7 @@ export const PaymentsListMobile = ({ items }: PaymentsListMobileProps) => {
               {'Price'}
             </Typography>
             <Typography variant={'body3'} color={'var(--color-light-100)'}>
-              {formatPrice(item.priceInMinorUnits, item.currency)}
+              {formatPrice(item.price, item.currency)}
             </Typography>
           </div>
 
@@ -54,6 +54,15 @@ export const PaymentsListMobile = ({ items }: PaymentsListMobileProps) => {
             </Typography>
             <Typography variant={'body3'} color={'var(--color-light-100)'}>
               {item.paymentService}
+            </Typography>
+          </div>
+
+          <div className={s.cardRow}>
+            <Typography variant={'body2'} color={'var(--color-light-100)'}>
+              {'Status:'}
+            </Typography>
+            <Typography variant={'body3'} color={'var(--color-light-100)'}>
+              {item.status}
             </Typography>
           </div>
         </Cards>

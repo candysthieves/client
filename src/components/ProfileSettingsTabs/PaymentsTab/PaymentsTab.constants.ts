@@ -1,4 +1,4 @@
-export const PAYMENTS_PAGE_SIZE = 8
+export const PAYMENTS_PAGE_SIZE = 10
 
 export const PAYMENTS_TABLE_COLUMNS = [
   'Date of payment',
@@ -6,4 +6,5 @@ export const PAYMENTS_TABLE_COLUMNS = [
   'Price',
   'Subscription Type',
   'Payment Type',
+  'Status',
 ] as const

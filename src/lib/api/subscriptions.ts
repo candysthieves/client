@@ -1,7 +1,13 @@
 import { requestValidated } from '@/lib/api/requestValidated'
-import { AccountType, AvailableAccountTypesResponse, SubscriptionsResponse } from '@/lib/model'
+import {
+  AccountType,
+  AvailableAccountTypesResponse,
+  SubscriptionHistoryResponse,
+  SubscriptionsResponse,
+} from '@/lib/model'
 import {
   availableAccountTypesResponseSchema,
+  subscriptionHistoryResponseSchema,
   subscriptionsResponseSchema,
 } from '@/lib/model/subscriptions.schemas'
 
@@ -18,3 +24,6 @@ export const getSubscriptionCosts = (accountType: AccountType): Promise<Subscrip
 
 export const _getSubscriptionCosts = (accountType: AccountType): Promise<SubscriptionsResponse> =>
   requestValidated(`/tariffs?type=${accountType}`, subscriptionsResponseSchema)
+
+export const getSubscriptionHistory = (): Promise<SubscriptionHistoryResponse> =>
+  requestValidated('/subscriptions/history', subscriptionHistoryResponseSchema)

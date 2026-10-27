@@ -8,7 +8,7 @@ import {
   PAYMENT_SUCCESS_NOTIFICATION,
 } from '@/constants'
 import { PaymentStatus } from '@/lib/model'
-import s from './RedirectToPaymentServiceNotificationModal.module.scss'
+import s from './PaymentProcessedNotificationModal.module.scss'
 
 type PaymentProcessedNotificationModalProps = {
   open: boolean

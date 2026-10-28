@@ -32,7 +32,7 @@ export const PaymentProcessedNotificationModal = ({
     <Modal
       open={open}
       onClose={onCloseClick}
-      modalTitle={status}
+      modalTitle={`Payment ${status}`}
       size={'s'}
       showHeader
       className={s.modal}

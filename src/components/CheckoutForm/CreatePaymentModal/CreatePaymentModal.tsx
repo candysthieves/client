@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Checkbox, CircularProgress, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Checkbox, Modal, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useState } from 'react'
 import s from './CreatePaymentModal.module.scss'
 
@@ -19,10 +19,20 @@ export const CreatePaymentModal = ({
 }: CreatePaymentModalProps) => {
   const [checked, setChecked] = useState(false)
 
+  const onCloseHandler = () => {
+    onCloseClick?.()
+    setChecked(false)
+  }
+
+  const onConfirmHandler = () => {
+    onConfirm()
+    setChecked(false)
+  }
+
   return (
     <Modal
       open={open}
-      onClose={() => onCloseClick?.()}
+      onClose={onCloseHandler}
       modalTitle={'Create payment'}
       size={'s'}
       showHeader
@@ -46,7 +56,7 @@ export const CreatePaymentModal = ({
           <Button
             type={'button'}
             variant={'primary'}
-            onClick={onConfirm}
+            onClick={onConfirmHandler}
             disabled={!checked || isLoading}
           >
             OK

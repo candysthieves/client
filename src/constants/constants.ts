@@ -18,6 +18,7 @@ export const TIME_AGO_TICK_INTERVAL_MS = 60 * 1000
 export const SELECT_SEARCH_DEBOUNCE = 600
 
 export const TARIFF_LABELS: Record<SubscriptionLabels, string> = {
+  Test: '5 Minutes (Test)',
   Daily: '1 Day',
   Weekly: '7 Days',
   Monthly: 'Month',

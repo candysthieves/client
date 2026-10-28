@@ -34,41 +34,9 @@ export enum ErrorStatus {
   SessionNotFound = 80,
   SessionUserMismatch = 82,
   SessionAccessForbidden = 83,
-  // PAYMENTS
+  // SUBSCRIPTIONS / PAYMENTS
   TariffNotFound = 90,
+  SubscriptionStillProcessing = 93,
   SubscriptionNotFound = 94,
-  PaymentServiceUnavailable = 95,
+  PaymentServiceUnavailable = 95, // TODO check 95 or 96
 }
-
-//   EmailAlreadyExists = 23, register
-//   UsernameAlreadyExists = 30, register
-//   PasswordsNotMatch = 53, register
-
-//   EmailNotExists = 21, verify / login
-//   EmailAlreadyConfirmed = 20 verify
-
-//   EmailNotConfirmed = 22, login
-//   UserNotFound = 33, login
-//   InvalidCredentials = 51, login
-//   RecaptchaInvalid = 52, forgot password
-
-// {
-//   "code": 74,
-//   "errorsMessages": [
-//   {
-//     "field": "token",
-//     "message": "Access token has expired"
-//   }
-// ]
-// }
-
-// Нет Access token в LS при отправке запроса
-// {
-//   "code":80,
-//   "errorsMessages": [
-//     {
-//       "field":"session",
-//       "message":"Session not found"
-//     }
-//     ]
-// }

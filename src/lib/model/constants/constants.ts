@@ -85,6 +85,7 @@ export const VALID_PAYMENT_ERROR_FIELDS: PaymentErrorField[] = [
   'provider',
   'token',
   'tariffId',
+  'subscription',
 ] as const
 
 export const PROFILE_SETTINGS_SAVED_MESSAGE = 'Your settings are saved!'

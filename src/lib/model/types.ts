@@ -11,6 +11,7 @@ import {
   paymentSessionRequestSchema,
   paymentSessionResponseSchema,
   paymentStatusSchema,
+  processedPaymentStatusSchema,
   subscriptionSchema,
   subscriptionsResponseSchema,
   subscriptionTypeSchema,
@@ -116,4 +117,5 @@ export type PaymentService = z.infer<typeof paymentServiceSchema>
 export type CreatePaymentState = z.infer<typeof createPaymentStateSchema>
 export type PaymentSessionRequest = z.infer<typeof paymentSessionRequestSchema>
 export type PaymentSessionResponse = z.infer<typeof paymentSessionResponseSchema>
+export type ProcessedPaymentStatus = z.infer<typeof processedPaymentStatusSchema>
 export type PaymentErrorField = z.infer<typeof paymentErrorFieldSchema>

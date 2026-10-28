@@ -13,7 +13,12 @@ import { PAYMENT_ERROR_TOAST, PAYMENT_SUCCESS_TOAST } from '@/constants'
 import { ApiError } from '@/lib/api'
 import { authKeys } from '@/lib/auth'
 import { useAuth, usePaymentEvents } from '@/lib/hooks'
-import { CreatePaymentState, PaymentSessionRequest, PaymentStatus } from '@/lib/model'
+import {
+  CreatePaymentState,
+  PaymentSessionRequest,
+  PaymentStatus,
+  ProcessedPaymentStatus,
+} from '@/lib/model'
 import { useCreatePayment } from '@/lib/payments'
 import {
   isErrorResponse,
@@ -34,7 +39,7 @@ export const SubscriptionsTab = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   const [paymentSessionStatus, setPaymentSessionStatus] = useState<PaymentStatus>(null)
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(null)
+  const [paymentStatus, setPaymentStatus] = useState<ProcessedPaymentStatus>(null)
 
   const { mutate: sendPaymentRequest, isPending: isPaymentSending } = useCreatePayment()
   const queryClient = useQueryClient()
@@ -120,31 +125,31 @@ export const SubscriptionsTab = () => {
   // then close RedirectToPaymentServiceNotificationModal window
   // and open PaymentProcessedNotificationModal
   const handlePaymentProcessed = useCallback(
-    async (userId: string, status: string) => {
-      if (userId !== user?.id) {
+    async (userId: string, paymentStatus: ProcessedPaymentStatus) => {
+      if (userId !== user?.id || !paymentStatus) {
         return
       }
 
-      if (status === 'Success') {
+      if (paymentStatus === 'completed') {
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: authKeys.me() }),
           // queryClient.invalidateQueries({ queryKey: subscriptionKeys.costs(accountType) }), // delete
           // queryClient.invalidateQueries({ queryKey: subscriptionKeys.history() }), // TODO add later
         ])
 
-        setPaymentStatus(status) // setPaymentStatus('Success') - move setPaymentStatus(status) under closeRedirectToPaymentServiceNotification()
+        setPaymentStatus(paymentStatus) // setPaymentStatus('Success') - move setPaymentStatus(status) under closeRedirectToPaymentServiceNotification()
 
         ToastSuccess({
-          title: status,
+          title: `Payment ${paymentStatus}`,
           message: PAYMENT_SUCCESS_TOAST,
         })
-      } else if (status === 'Error') {
+      } else if (paymentStatus === 'canceled') {
         ToastError({
-          title: status,
+          title: `Payment ${paymentStatus}`,
           messages: PAYMENT_ERROR_TOAST,
         })
 
-        setPaymentStatus(status) // setPaymentStatus('Error') - move setPaymentStatus(status) under closeRedirectToPaymentServiceNotification()
+        setPaymentStatus(paymentStatus) // setPaymentStatus('Error') - move setPaymentStatus(status) under closeRedirectToPaymentServiceNotification()
       }
 
       closeRedirectToPaymentServiceNotification()
@@ -160,6 +165,7 @@ export const SubscriptionsTab = () => {
 
       <CheckoutForm onSubmitAction={onSubmitHandler} />
 
+      {/* MODAL WINDOWS*/}
       <RedirectToPaymentServiceNotificationModal
         open={!!paymentSessionStatus}
         status={paymentSessionStatus}

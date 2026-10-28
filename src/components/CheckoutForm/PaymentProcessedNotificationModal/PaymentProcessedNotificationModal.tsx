@@ -7,12 +7,12 @@ import {
   PAYMENT_MODAL_SUCCESS_BUTTON_TEXT,
   PAYMENT_SUCCESS_NOTIFICATION,
 } from '@/constants'
-import { PaymentStatus } from '@/lib/model'
+import { ProcessedPaymentStatus } from '@/lib/model'
 import s from './PaymentProcessedNotificationModal.module.scss'
 
 type PaymentProcessedNotificationModalProps = {
   open: boolean
-  status: PaymentStatus
+  status: ProcessedPaymentStatus
   onConfirm: () => void
   onCloseClick: () => void
 }
@@ -24,9 +24,9 @@ export const PaymentProcessedNotificationModal = ({
   onCloseClick,
 }: PaymentProcessedNotificationModalProps) => {
   const paymentMessage =
-    status === 'Success' ? PAYMENT_SUCCESS_NOTIFICATION : PAYMENT_ERROR_NOTIFICATION
+    status === 'completed' ? PAYMENT_SUCCESS_NOTIFICATION : PAYMENT_ERROR_NOTIFICATION
   const modalSubmitButtonTitle =
-    status === 'Success' ? PAYMENT_MODAL_SUCCESS_BUTTON_TEXT : PAYMENT_MODAL_ERROR_BUTTON_TEXT
+    status === 'completed' ? PAYMENT_MODAL_SUCCESS_BUTTON_TEXT : PAYMENT_MODAL_ERROR_BUTTON_TEXT
 
   return (
     <Modal

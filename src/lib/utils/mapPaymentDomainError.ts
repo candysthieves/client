@@ -25,6 +25,7 @@ export function mapPaymentDomainError(error: ApiError): boolean {
     case ErrorStatus.AccessTokenInvalid:
     case ErrorStatus.AccessTokenExpired:
     case ErrorStatus.TariffNotFound:
+    case ErrorStatus.SubscriptionStillProcessing:
       return true
     default:
       return false
@@ -34,3 +35,4 @@ export function mapPaymentDomainError(error: ApiError): boolean {
 // 73
 // 74
 // 90
+// 93

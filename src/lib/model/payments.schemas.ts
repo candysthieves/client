@@ -18,9 +18,15 @@ export const paymentSessionResponseSchema = z.object({
   paymentUrl: z.url({ protocol: /^https?$/ }),
 })
 
-export const paymentErrorFieldSchema = z.enum(['provider', 'token', 'tariffId'])
+export const paymentErrorFieldSchema = z.enum(['provider', 'token', 'tariffId', 'subscription'])
+
+export const processedPaymentStatusSchema = z
+  .enum(['completed', 'canceled'], {
+    message: 'Invalid status format in payment processed SSE response',
+  })
+  .nullable() // SSE response message
 
 export const paymentProcessedEventSchema = z.object({
   userId: z.string('Invalid userID format in payment processed SSE response'),
-  status: z.string('Invalid status format in payment processed SSE response'), // TODO change later
+  paymentStatus: processedPaymentStatusSchema,
 })

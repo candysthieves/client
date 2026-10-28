@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Cards, clsx, Stripe, Typography, YooKassa } from '@candy.thieves/ui-kit-lumos'
+import { Button, Cards, Stripe, Typography, YooKassa } from '@candy.thieves/ui-kit-lumos'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -47,9 +47,9 @@ export const CheckoutForm = ({ onSubmitAction }: CheckoutFormProps) => {
 
   const subscriptionPlanOptions = useMemo(
     () =>
-      subscriptionCosts?.map(({ tariff_name, priceInMinorUnits, currency }) => ({
+      subscriptionCosts?.map(({ tariff_name, price, currency }) => ({
         value: tariff_name,
-        label: getTariffLabel(tariff_name, priceInMinorUnits, currency),
+        label: getTariffLabel(tariff_name, price, currency),
       })) ?? [],
     [subscriptionCosts]
   )

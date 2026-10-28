@@ -1,9 +1,6 @@
-import { Button, Cards, Checkbox, clsx, Tooltip, Typography } from '@candy.thieves/ui-kit-lumos'
+import { Button, Cards, clsx, Tooltip, Typography } from '@candy.thieves/ui-kit-lumos'
 import { ToastError, ToastSuccess } from '@/components'
-import {
-  SUBSCRIPTION_AUTO_RENEW_OFF_EXPIRED_MESSAGE,
-  SUBSCRIPTION_AUTO_RENEW_OFF_MESSAGE,
-} from '@/constants'
+import { SUBSCRIPTION_AUTO_RENEW_OFF_EXPIRED_MESSAGE } from '@/constants'
 import { ApiError } from '@/lib/api'
 import {
   CURRENT_SUBSCRIPTION_CANCEL_SUCCESS_MESSAGE,
@@ -11,7 +8,7 @@ import {
 } from '@/lib/model'
 import { useCancelCurrentSubscription } from '@/lib/subscriptions/mutations/useCancelCurrentSubscription'
 import { useCurrentSubscription } from '@/lib/subscriptions/queries/useCurrentSubscription'
-import { isErrorResponse } from '@/lib/utils'
+import { formatDate, isErrorResponse } from '@/lib/utils'
 import { mapCurrentSubscriptionDomainError } from '@/lib/utils/mapCurrentSubscriptionDomainError'
 import s from './CurrentSubscription.module.scss'
 
@@ -28,10 +25,19 @@ export const CurrentSubscription = () => {
 
   // const activeSubscription = '22.12.2002'
   // const autoRenewableSubscription = true
-  // const autoRenewableSubscription = '23.12.2002'
+  // const autoRenewableSubscription = '2026-11-03T17:47:55.000Z'
 
   if (isLoading) return <div>Загрузка подписки...</div>
   if (!activeSubscription) return null
+
+  const formattedSubscriptionExpirationDate = formatDate(currentSubscription?.expirationDate, {
+    timeZone: 'UTC',
+  })
+
+  const formattedSubscriptionNextPaymentDate = formatDate(autoRenewableSubscription, {
+    fallback: '\u2014',
+    timeZone: 'UTC',
+  })
 
   const disabledSubscriptionAutoRenew = () => {
     cancelCurrentSubscription(undefined, {
@@ -59,7 +65,7 @@ export const CurrentSubscription = () => {
   }
 
   const tooltipMessage = !autoRenewableSubscription
-    ? `${SUBSCRIPTION_AUTO_RENEW_OFF_EXPIRED_MESSAGE} ${activeSubscription}`
+    ? `${SUBSCRIPTION_AUTO_RENEW_OFF_EXPIRED_MESSAGE} ${formattedSubscriptionExpirationDate}`
     : ''
 
   return (
@@ -79,7 +85,7 @@ export const CurrentSubscription = () => {
             Expire at
           </Typography>
           <Typography variant={'caption2'} color={'var(--color-light-100)'}>
-            {activeSubscription}
+            {formattedSubscriptionExpirationDate}
           </Typography>
         </div>
 
@@ -92,7 +98,7 @@ export const CurrentSubscription = () => {
           </Typography>
           <Typography variant={'caption2'} color={'var(--color-light-100)'} className={s.dateValue}>
             {autoRenewableSubscription
-              ? autoRenewableSubscription
+              ? formattedSubscriptionNextPaymentDate
               : // : SUBSCRIPTION_AUTO_RENEW_OFF_MESSAGE}
                 '\u2014'}
           </Typography>

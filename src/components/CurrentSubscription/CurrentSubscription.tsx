@@ -1,5 +1,6 @@
 import { Button, Cards, clsx, Tooltip, Typography } from '@candy.thieves/ui-kit-lumos'
 import { ToastError, ToastSuccess } from '@/components'
+import { CurrentSubscriptionSkeleton } from '@/components/CurrentSubscription/CurrentSubscriptionSkeleton'
 import { SUBSCRIPTION_AUTO_RENEW_OFF_EXPIRED_MESSAGE } from '@/constants'
 import { ApiError } from '@/lib/api'
 import {
@@ -23,11 +24,7 @@ export const CurrentSubscription = () => {
   const activeSubscription = currentSubscription?.expirationDate
   const autoRenewableSubscription = currentSubscription?.nextChangeDate
 
-  // const activeSubscription = '22.12.2002'
-  // const autoRenewableSubscription = true
-  // const autoRenewableSubscription = '2026-11-03T17:47:55.000Z'
-
-  if (isLoading) return <div>Загрузка подписки...</div>
+  if (isLoading) return <CurrentSubscriptionSkeleton />
   if (!activeSubscription) return null
 
   const formattedSubscriptionExpirationDate = formatDate(currentSubscription?.expirationDate, {
@@ -97,24 +94,12 @@ export const CurrentSubscription = () => {
             Next payment
           </Typography>
           <Typography variant={'caption2'} color={'var(--color-light-100)'} className={s.dateValue}>
-            {autoRenewableSubscription
-              ? formattedSubscriptionNextPaymentDate
-              : // : SUBSCRIPTION_AUTO_RENEW_OFF_MESSAGE}
-                '\u2014'}
+            {autoRenewableSubscription ? formattedSubscriptionNextPaymentDate : '\u2014'}
           </Typography>
         </div>
       </Cards>
 
       <Tooltip content={tooltipMessage}>
-        {/*<Checkbox*/}
-        {/*  id={'autoRenewalCheckbox'}*/}
-        {/*  label={'Auto - Renewal'}*/}
-        {/*  disabled={!autoRenewableSubscription || isLoading}*/}
-        {/*  checked={!!autoRenewableSubscription}*/}
-        {/*  onCheckedChange={disabledSubscriptionAutoRenew}*/}
-        {/*  className={s.renewalCheckbox}*/}
-        {/*/>*/}
-
         <div className={clsx(!autoRenewableSubscription && s.disabled)}>
           <Button
             id={'autoRenewalCheckbox'}

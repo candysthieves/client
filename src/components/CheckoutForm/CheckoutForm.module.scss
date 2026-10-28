@@ -56,3 +56,28 @@
     opacity: 1;
   }
 }
+
+// CheckoutFormSkeleton
+.costsForm {
+  flex-direction: column;
+  width: 100%;
+
+  @include flex(flex, flex-start, flex-start);
+}
+
+.subscriptionRadioSkeleton {
+  padding: 0.75rem;
+}
+
+.title {
+  display: block;
+  margin-bottom: -1rem;
+}
+
+.options {
+  @include flex(flex, flex-start, flex-start);
+
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}

@@ -4,6 +4,10 @@ import { Button, Cards, Stripe, Typography, YooKassa } from '@candy.thieves/ui-k
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
+import {
+  AccountFormSkeleton,
+  CostsFormSkeleton,
+} from '@/components/CheckoutForm/CheckoutFormSkeleton'
 import { FormRadioGroup } from '@/components/FormRadioGroup'
 import { useAuth } from '@/lib/hooks'
 import { CheckoutFormData, PaymentService, PaymentSessionRequest } from '@/lib/model'
@@ -42,8 +46,10 @@ export const CheckoutForm = ({ onSubmitAction }: CheckoutFormProps) => {
     name: 'accountType',
   })
 
-  const { data: availableAccountTypes } = useAvailableAccountTypes()
-  const { data: subscriptionCosts } = useSubscriptionCosts(accountType)
+  const { data: availableAccountTypes, isPending: isAccountTypesPending } =
+    useAvailableAccountTypes()
+  const { data: subscriptionCosts, isPending: isSubscriptionCostsPending } =
+    useSubscriptionCosts(accountType)
 
   const accountTypeOptions = useMemo(
     () =>
@@ -93,6 +99,19 @@ export const CheckoutForm = ({ onSubmitAction }: CheckoutFormProps) => {
     }
 
     onSubmitAction(paymentData)
+  }
+
+  if (isAccountTypesPending) {
+    return <AccountFormSkeleton />
+  }
+
+  if (isSubscriptionCostsPending) {
+    return (
+      <>
+        <AccountFormSkeleton />
+        <CostsFormSkeleton />
+      </>
+    )
   }
 
   return (

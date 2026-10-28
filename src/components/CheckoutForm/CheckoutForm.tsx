@@ -28,6 +28,15 @@ export const CheckoutForm = ({ onSubmitAction }: CheckoutFormProps) => {
     },
   })
 
+  // Logic for the automatic change back from Business to Personal after authMe 'subscription_type' change
+  useEffect(() => {
+    if (user?.subscription_type) {
+      setValue('accountType', user.subscription_type, {
+        shouldValidate: true,
+      })
+    }
+  }, [user?.subscription_type, setValue])
+
   const accountType = useWatch({
     control,
     name: 'accountType',

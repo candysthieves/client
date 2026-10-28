@@ -20,6 +20,7 @@ import {
   ProcessedPaymentStatus,
 } from '@/lib/model'
 import { useCreatePayment } from '@/lib/payments'
+import { subscriptionKeys } from '@/lib/subscriptions'
 import {
   isErrorResponse,
   isValidUrl,
@@ -133,8 +134,8 @@ export const SubscriptionsTab = () => {
       if (paymentStatus === 'completed') {
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: authKeys.me() }),
-          // queryClient.invalidateQueries({ queryKey: subscriptionKeys.costs(accountType) }), // delete
-          // queryClient.invalidateQueries({ queryKey: subscriptionKeys.history() }), // TODO add later
+          queryClient.invalidateQueries({ queryKey: subscriptionKeys.current() }),
+          queryClient.invalidateQueries({ queryKey: subscriptionKeys.history() }),
         ])
 
         setPaymentStatus(paymentStatus) // setPaymentStatus('Success') - move setPaymentStatus(status) under closeRedirectToPaymentServiceNotification()

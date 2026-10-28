@@ -1,26 +1,31 @@
-type PaymentSuccessPageProps = {
-  searchParams: Promise<{
-    paymentId?: string
-    session_id?: string
-  }>
-}
+import { Button, Typography } from '@candy.thieves/ui-kit-lumos'
+import Link from 'next/link'
+import { UniversalLottie } from '@/components/UniversalLottie'
+import s from './payment-result.module.scss'
 
-export default async function PaymentSuccessPage({ searchParams }: PaymentSuccessPageProps) {
-  const { paymentId, session_id } = await searchParams
-
-  if (!paymentId || !session_id) {
-    return (
-      <main>
-        <h1>Не удалось проверить платеж</h1>
-        <p>В ссылке отсутствуют необходимые параметры.</p>
-      </main>
-    )
-  }
-
+export default function PaymentResult() {
   return (
-    <main>
-      <h1>Возврат после оплаты</h1>
-      <p>Проверяем статус платежа…</p>
+    <main className={s.paymentResultContainer}>
+      <div className={s.paymentResultContent}>
+        <Typography variant={'h2'} className={s.title}>
+          Thank you!
+        </Typography>
+
+        <Typography variant={'body1'} color={'var(--color-light-900)'} className={s.description}>
+          We&apos;ve received your request. Your payment status will be confirmed shortly. This may
+          take a few moments.
+        </Typography>
+
+        <UniversalLottie animationName={'payment'} className={s.animationWrapper} loop={false} />
+        <div className={s.actions}>
+          <Button as={Link} href={'/settings?part=subscriptions'} variant={'primary'}>
+            Back to payment
+          </Button>
+          <Button as={Link} href={'/'} variant={'outlined'}>
+            Go to home
+          </Button>
+        </div>
+      </div>
     </main>
   )
 }

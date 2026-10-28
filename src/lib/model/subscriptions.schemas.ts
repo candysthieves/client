@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { accountTypeSchema } from '@/lib/model/auth.schemas'
+import { paymentServiceSchema } from '@/lib/model/payments.schemas'
 
 export const subscriptionTypeSchema = z.enum(
   ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Test', ''],
@@ -37,3 +38,29 @@ export const currentSubscriptionResponseSchema = z.object({
 })
 
 export const currentSubscriptionErrorFieldSchema = z.literal('subscription')
+
+export const subscriptionHistoryStatusSchema = z.enum([
+  'pending',
+  'succeeded',
+  'canceled',
+  'failed',
+])
+
+export const subscriptionHistoryItemSchema = z.object({
+  id: z.string(),
+  paymentDate: z.string().nullable(),
+  subscriptionEndDate: z.string().nullable(),
+  price: z.number().int().nonnegative(),
+  currency: currencyTypeSchema,
+  subscriptionName: subscriptionTypeSchema,
+  subscriptionType: accountTypeSchema,
+  paymentService: paymentServiceSchema,
+  status: subscriptionHistoryStatusSchema,
+})
+
+export const subscriptionHistoryResponseSchema = z.object({
+  items: z.array(subscriptionHistoryItemSchema),
+  totalCount: z.number().int().nonnegative(),
+  page: z.number().int().positive(),
+  pageSize: z.number().int().positive(),
+})

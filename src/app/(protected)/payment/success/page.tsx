@@ -7,7 +7,7 @@ export default function PaymentResult() {
   return (
     <main className={s.paymentResultContainer}>
       <div className={s.paymentResultContent}>
-        <Typography variant={'h1'} className={s.title}>
+        <Typography variant={'h2'} className={s.title}>
           Thank you!
         </Typography>
 
@@ -16,10 +16,10 @@ export default function PaymentResult() {
           take a few moments.
         </Typography>
 
-        <UniversalLottie animationName={'payment'} className={s.animationWrapper} />
+        <UniversalLottie animationName={'payment'} className={s.animationWrapper} loop={false} />
         <div className={s.actions}>
           <Button as={Link} href={'/settings?part=subscriptions'} variant={'primary'}>
-            Try again
+            Back to payment
           </Button>
           <Button as={Link} href={'/'} variant={'outlined'}>
             Go to home

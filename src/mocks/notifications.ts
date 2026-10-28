@@ -47,6 +47,6 @@ export const mockNotifications: AppNotification[] = [
     title: 'New notification',
     message: 'Your subscription expires in 7 days',
     createdAt: '1 час назад',
-    isRead: true,
+    isRead: false,
   },
 ]

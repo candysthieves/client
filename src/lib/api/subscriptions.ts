@@ -28,8 +28,23 @@ export const getSubscriptionCosts = (accountType: AccountType): Promise<Subscrip
 export const _getSubscriptionCosts = (accountType: AccountType): Promise<SubscriptionsResponse> =>
   requestValidated(`/tariffs?type=${accountType}`, subscriptionsResponseSchema)
 
-export const getSubscriptionHistory = (): Promise<SubscriptionHistoryResponse> =>
-  requestValidated('/subscriptions/history', subscriptionHistoryResponseSchema)
+const DEFAULT_PAGE = 1
+const DEFAULT_PAGE_SIZE = 8
+
+export const getSubscriptionHistory = (
+  page: number = DEFAULT_PAGE,
+  pageSize: number = DEFAULT_PAGE_SIZE
+): Promise<SubscriptionHistoryResponse> => {
+  const searchParams = new URLSearchParams({
+    page: String(page ?? DEFAULT_PAGE),
+    pageSize: String(pageSize ?? DEFAULT_PAGE_SIZE),
+  })
+
+  return requestValidated(
+    `/subscriptions/history?${searchParams.toString()}`,
+    subscriptionHistoryResponseSchema
+  )
+}
 
 export const getCurrentSubscription = (): Promise<CurrentSubscriptionResponse> =>
   requestValidated(`/subscriptions/current`, currentSubscriptionResponseSchema)

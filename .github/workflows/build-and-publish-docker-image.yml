@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - dev
-      - SCRUM-000-update-ci-cd-to-self-hosted-runner
+      - feature/SCRUM-236-client-redirect-to-payment-service
 
   pull_request:
     branches:

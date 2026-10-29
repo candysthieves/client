@@ -4,16 +4,21 @@ import {
   availableAccountTypesResponseSchema,
   checkoutSchema,
   createPaymentStateSchema,
+  currentSubscriptionErrorFieldSchema,
+  currentSubscriptionResponseSchema,
+  paymentErrorFieldSchema,
   paymentServiceSchema,
+  paymentSessionRequestSchema,
+  paymentSessionResponseSchema,
   paymentStatusSchema,
+  processedPaymentStatusSchema,
   subscriptionHistoryItemSchema,
-  subscriptionHistoryPaymentServiceSchema,
   subscriptionHistoryResponseSchema,
   subscriptionHistoryStatusSchema,
   subscriptionSchema,
   subscriptionsResponseSchema,
   subscriptionTypeSchema,
-} from '@/lib/model/subscriptions.schemas'
+} from '@/lib/model'
 import {
   accessTokenResponseSchema,
   accountTypeSchema,
@@ -75,6 +80,7 @@ export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEm
 export type ValidatePasswordRecoveryCodeRequest = z.infer<typeof validatePasswordRecoveryCodeSchema>
 export type AccountType = z.infer<typeof accountTypeSchema>
 export type SubscriptionType = z.infer<typeof subscriptionTypeSchema>
+export type SubscriptionLabels = Exclude<SubscriptionType, ''>
 export type UserResponse = z.infer<typeof userResponseSchema>
 export type ProfilePost = z.infer<typeof profilePostSchema>
 export type ProfilePostsResponse = z.infer<typeof profilePostsResponseSchema>
@@ -106,12 +112,17 @@ export type AvailableAccountTypesResponse = z.infer<typeof availableAccountTypes
 export type CheckoutFormData = z.infer<typeof checkoutSchema>
 export type Subscription = z.infer<typeof subscriptionSchema>
 export type SubscriptionsResponse = z.infer<typeof subscriptionsResponseSchema>
+export type CurrentSubscriptionResponse = z.infer<typeof currentSubscriptionResponseSchema>
+export type CurrentSubscriptionErrorField = z.infer<typeof currentSubscriptionErrorFieldSchema>
+// Payments
+export type PaymentStatus = z.infer<typeof paymentStatusSchema>
 export type PaymentService = z.infer<typeof paymentServiceSchema>
 export type CreatePaymentState = z.infer<typeof createPaymentStateSchema>
-export type PaymentStatus = z.infer<typeof paymentStatusSchema>
-export type SubscriptionHistoryPaymentService = z.infer<
-  typeof subscriptionHistoryPaymentServiceSchema
->
+
 export type SubscriptionHistoryStatus = z.infer<typeof subscriptionHistoryStatusSchema>
 export type SubscriptionHistoryItem = z.infer<typeof subscriptionHistoryItemSchema>
 export type SubscriptionHistoryResponse = z.infer<typeof subscriptionHistoryResponseSchema>
+export type PaymentSessionRequest = z.infer<typeof paymentSessionRequestSchema>
+export type PaymentSessionResponse = z.infer<typeof paymentSessionResponseSchema>
+export type ProcessedPaymentStatus = z.infer<typeof processedPaymentStatusSchema>
+export type PaymentErrorField = z.infer<typeof paymentErrorFieldSchema>

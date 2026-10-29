@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { accountTypeSchema } from '@/lib/model/auth.schemas'
+import { paymentServiceSchema } from '@/lib/model/payments.schemas'
 
 export const subscriptionTypeSchema = z.enum(
   ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Test', ''],
@@ -10,11 +11,10 @@ export const subscriptionTypeSchema = z.enum(
 
 export const checkoutSchema = z.object({
   accountType: accountTypeSchema,
-  subscriptionPlan: subscriptionTypeSchema,
+  tariff: subscriptionTypeSchema,
 })
 
 export const currencyTypeSchema = z.enum(['USD', 'EUR', 'RUB'])
-export const priceUnitTypeSchema = z.enum(['CENT', 'KOPECK'])
 
 export const availableAccountTypeSchema = z.object({
   type: accountTypeSchema,
@@ -24,24 +24,21 @@ export const availableAccountTypesResponseSchema = z.array(availableAccountTypeS
 
 export const subscriptionSchema = z.object({
   id: z.string(),
-  tariff_name: subscriptionTypeSchema, // 'Daily', 'Weekly', 'Monthly'
+  tariff_name: subscriptionTypeSchema,
   durationDays: z.number().positive(),
   price: z.number().int().positive(),
-  currency: currencyTypeSchema, // 'USD', 'EUR', 'RUB'
+  currency: currencyTypeSchema,
 })
 
 export const subscriptionsResponseSchema = z.array(subscriptionSchema)
 
-export const paymentServiceSchema = z.enum(['Yookassa', 'Stripe'])
-
-export const createPaymentStateSchema = z.object({
-  paymentService: paymentServiceSchema.nullable(),
-  subscriptionData: checkoutSchema.nullable(),
+export const currentSubscriptionResponseSchema = z.object({
+  expirationDate: z.string().nullable(),
+  nextChangeDate: z.string().nullable(),
 })
 
-export const paymentStatusSchema = z.enum(['Error', 'Success']).nullable()
+export const currentSubscriptionErrorFieldSchema = z.literal('subscription')
 
-export const subscriptionHistoryPaymentServiceSchema = z.enum(['STRIPE', 'YOOKASSA'])
 export const subscriptionHistoryStatusSchema = z.enum([
   'pending',
   'succeeded',
@@ -57,7 +54,7 @@ export const subscriptionHistoryItemSchema = z.object({
   currency: currencyTypeSchema,
   subscriptionName: subscriptionTypeSchema,
   subscriptionType: accountTypeSchema,
-  paymentService: subscriptionHistoryPaymentServiceSchema,
+  paymentService: paymentServiceSchema,
   status: subscriptionHistoryStatusSchema,
 })
 

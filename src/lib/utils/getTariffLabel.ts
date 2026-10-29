@@ -1,18 +1,9 @@
 import { TARIFF_LABELS } from '@/constants'
 import { SubscriptionType } from '@/lib/model'
+import { formatPrice } from '@/lib/utils/formatPrice'
 
-export const getTariffLabel = (
-  tariff_name: SubscriptionType,
-  priceInMinorUnits: number,
-  currency: string
-) => {
-  const hasCents = priceInMinorUnits % 100 !== 0
-
-  const price = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: hasCents ? 2 : 0,
-  }).format(priceInMinorUnits / 100)
-
-  return `${price} per ${TARIFF_LABELS[tariff_name]}`
+export const getTariffLabel = (tariff_name: SubscriptionType, price: number, currency: string) => {
+  if (tariff_name === '') return ''
+  const priceFormatted = formatPrice(price, currency)
+  return `${priceFormatted} per ${TARIFF_LABELS[tariff_name]}`
 }

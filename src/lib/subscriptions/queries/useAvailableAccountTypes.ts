@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { getAvailableAccountTypes } from '@/lib/api/subscriptions'
-import { subscriptionKeys } from '@/lib/subscriptions/subscriptionKeys'
+import { getAvailableAccountTypes } from '@/lib/api'
+import { subscriptionKeys } from '@/lib/subscriptions'
 
 export const useAvailableAccountTypes = () =>
   useQuery({

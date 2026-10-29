@@ -1,7 +1,10 @@
+import { request } from '@/lib/api/request'
 import { requestValidated } from '@/lib/api/requestValidated'
 import {
   AccountType,
   AvailableAccountTypesResponse,
+  CurrentSubscriptionResponse,
+  currentSubscriptionResponseSchema,
   SubscriptionHistoryResponse,
   SubscriptionsResponse,
 } from '@/lib/model'
@@ -42,3 +45,11 @@ export const getSubscriptionHistory = (
     subscriptionHistoryResponseSchema
   )
 }
+
+export const getCurrentSubscription = (): Promise<CurrentSubscriptionResponse> =>
+  requestValidated(`/subscriptions/current`, currentSubscriptionResponseSchema)
+
+export const cancelCurrentSubscription = () =>
+  request<void>(`/subscriptions/current`, {
+    method: 'DELETE',
+  })

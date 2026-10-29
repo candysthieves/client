@@ -5,6 +5,8 @@ export const subscriptionKeys = {
   types: () => [...subscriptionKeys.all, 'types'] as const,
   costs: (accountType: AccountType) => [...subscriptionKeys.all, 'costs', accountType] as const,
   current: () => [...subscriptionKeys.all, 'current'] as const,
-  history: (page: number, pageSize: number) =>
-    [...subscriptionKeys.all, 'history', page, pageSize] as const,
+  history: (page?: number, pageSize?: number) =>
+    page === undefined || pageSize === undefined
+      ? ([...subscriptionKeys.all, 'history'] as const)
+      : ([...subscriptionKeys.all, 'history', page, pageSize] as const),
 }

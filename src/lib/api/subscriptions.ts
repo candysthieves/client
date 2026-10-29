@@ -25,5 +25,17 @@ export const getSubscriptionCosts = (accountType: AccountType): Promise<Subscrip
 export const _getSubscriptionCosts = (accountType: AccountType): Promise<SubscriptionsResponse> =>
   requestValidated(`/tariffs?type=${accountType}`, subscriptionsResponseSchema)
 
-export const getSubscriptionHistory = (): Promise<SubscriptionHistoryResponse> =>
-  requestValidated('/subscriptions/history', subscriptionHistoryResponseSchema)
+export const getSubscriptionHistory = (
+  page: number,
+  pageSize: number
+): Promise<SubscriptionHistoryResponse> => {
+  const searchParams = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize),
+  })
+
+  return requestValidated(
+    `/subscriptions/history?${searchParams.toString()}`,
+    subscriptionHistoryResponseSchema
+  )
+}

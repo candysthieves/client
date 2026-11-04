@@ -2,6 +2,7 @@
 
 import { useQueryClient } from '@tanstack/react-query'
 import { ReactNode, useEffect } from 'react'
+import { ToastSuccess, ToastWarning } from '@/components'
 import { socket } from '@/lib/api/socket/socket'
 import { useLogout } from '@/lib/auth'
 import { notificationMessageTotalCountSchema } from '@/lib/model/notifications.schemas'
@@ -22,6 +23,11 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       if (!result.success) return
 
       queryClient.setQueryData(notificationKeys.unreadCount(), result.data.count)
+
+      ToastSuccess({
+        title: 'New notifications',
+        message: 'You have unread notifications!',
+      })
     }
 
     const handleConnect = () => {

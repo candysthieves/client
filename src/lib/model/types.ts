@@ -20,6 +20,12 @@ import {
   subscriptionTypeSchema,
 } from '@/lib/model'
 import {
+  notificationMessageResponseSchema,
+  notificationMessageSchema,
+  notificationMessageTotalCountSchema,
+  notificationTypeSchema,
+} from '@/lib/model/notifications.schemas'
+import {
   accessTokenResponseSchema,
   accountTypeSchema,
   apiErrorResponseSchema,
@@ -126,3 +132,8 @@ export type PaymentSessionRequest = z.infer<typeof paymentSessionRequestSchema>
 export type PaymentSessionResponse = z.infer<typeof paymentSessionResponseSchema>
 export type ProcessedPaymentStatus = z.infer<typeof processedPaymentStatusSchema>
 export type PaymentErrorField = z.infer<typeof paymentErrorFieldSchema>
+// Notifications
+export type NotificationMessageTotalCount = z.infer<typeof notificationMessageTotalCountSchema>
+export type NotificationType = z.infer<typeof notificationTypeSchema>
+export type NotificationMessage = z.infer<typeof notificationMessageSchema>
+export type NotificationMessageResponseSchema = z.infer<typeof notificationMessageResponseSchema>

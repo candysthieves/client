@@ -1,0 +1,92 @@
+@use '@/styles/mixins' as *;
+
+$panel-width: 22rem;
+$list-height: 26.5rem;
+$beak-size: 0.75rem;
+
+// How far the panel overlaps the bottom of the header
+$panel-overlap: 0.5rem;
+
+// Mirrors the ui-kit Header container: the bell is the last item at its right padding edge
+$header-container-padding-right: 4rem;
+
+// The panel sticks out past the bell's right edge, and the beak points at the bell's center
+$panel-offset-right: 0.75rem;
+$beak-offset-right: 1.5rem;
+
+.anchor {
+  pointer-events: none;
+
+  position: absolute;
+  top: calc(100% - $panel-overlap);
+  right: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: flex-end;
+
+  max-width: $desktop-width;
+  margin: 0 auto;
+  padding-right: calc($header-container-padding-right - $panel-offset-right);
+
+  @include media-tablet {
+    display: none;
+  }
+}
+
+.panel {
+  pointer-events: auto;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  width: $panel-width;
+  padding: 1rem;
+  border: 1px solid var(--color-dark-100);
+  border-radius: 0.25rem;
+
+  color: var(--color-light-100);
+
+  background-color: var(--color-dark-500);
+  box-shadow: 0 0.25rem 0.25rem rgb(0 0 0 / 10%);
+
+  &::before {
+    content: '';
+
+    position: absolute;
+    top: calc($beak-size / -2);
+    right: $beak-offset-right;
+    transform: translateX(50%) rotate(45deg);
+
+    border-top: 1px solid var(--color-dark-100);
+    border-left: 1px solid var(--color-dark-100);
+
+    background-color: var(--color-dark-500);
+
+    @include width-height($beak-size);
+  }
+}
+
+.list {
+  height: $list-height;
+}
+
+.item {
+  margin-right: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--color-dark-100);
+}
+
+.itemHeader {
+  display: flex;
+  gap: 0.25rem;
+  align-items: baseline;
+}
+
+// caption1 renders an inline span, which would take the parent's taller line height
+.date {
+  display: block;
+}

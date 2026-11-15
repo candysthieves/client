@@ -1,33 +1,21 @@
 @use '@/styles/mixins' as *;
 
-$panel-width: 22rem;
-$list-height: 26.5rem;
-$beak-size: 0.75rem;
-
-// How far the panel overlaps the bottom of the header
-$panel-overlap: 0.5rem;
-
-// Mirrors the ui-kit Header container: the bell is the last item at its right padding edge
-$header-container-padding-right: 4rem;
-
-// The panel sticks out past the bell's right edge, and the beak points at the bell's center
-$panel-offset-right: 0.75rem;
-$beak-offset-right: 1.5rem;
-
 .anchor {
+  @include flex(flex, flex-end);
+
   pointer-events: none;
 
   position: absolute;
-  top: calc(100% - $panel-overlap);
+  z-index: 5;
+  top: calc(100% - $notification-panel-overlap);
   right: 0;
   left: 0;
 
-  display: flex;
-  justify-content: flex-end;
-
   max-width: $desktop-width;
   margin: 0 auto;
-  padding-right: calc($header-container-padding-right - $panel-offset-right);
+  padding-right: calc(
+    $notification-header-container-padding-right - $notification-panel-offset-right
+  );
 
   @include media-tablet {
     display: none;
@@ -43,7 +31,7 @@ $beak-offset-right: 1.5rem;
   flex-direction: column;
   gap: 0.75rem;
 
-  width: $panel-width;
+  width: $notification-panel-width;
   padding: 1rem;
   border: 1px solid var(--color-dark-100);
   border-radius: 0.25rem;
@@ -57,8 +45,9 @@ $beak-offset-right: 1.5rem;
     content: '';
 
     position: absolute;
-    top: calc($beak-size / -2);
-    right: $beak-offset-right;
+
+    @include top-right(calc($notification-beak-size / -2), $notification-beak-offset-right);
+
     transform: translateX(50%) rotate(45deg);
 
     border-top: 1px solid var(--color-dark-100);
@@ -66,12 +55,12 @@ $beak-offset-right: 1.5rem;
 
     background-color: var(--color-dark-500);
 
-    @include width-height($beak-size);
+    @include width-height($notification-beak-size);
   }
 }
 
 .list {
-  height: $list-height;
+  height: $notification-list-height;
 }
 
 .item {
@@ -86,7 +75,6 @@ $beak-offset-right: 1.5rem;
   align-items: baseline;
 }
 
-// caption1 renders an inline span, which would take the parent's taller line height
 .date {
   display: block;
 }

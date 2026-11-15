@@ -2,12 +2,12 @@
 
 import { Typography } from '@candy.thieves/ui-kit-lumos'
 import { useRef } from 'react'
-import type { AppNotification } from '@/lib/model'
 import { useMarkAsViewed } from '@/lib/hooks'
+import { NOTIFICATION_NEW_LABEL, NotificationMessage } from '@/lib/model'
 import s from './NotificationsDropdown.module.scss'
 
 type Props = {
-  notification: AppNotification
+  notification: NotificationMessage
   onRead: (id: string) => void
 }
 
@@ -21,7 +21,7 @@ export const NotificationItem = ({ notification, onRead }: Props) => {
         <Typography variant={'body3'}>{notification.title}</Typography>
         {!notification.isRead && (
           <Typography variant={'caption1'} color={'var(--color-accent-500)'}>
-            Новое
+            {NOTIFICATION_NEW_LABEL}
           </Typography>
         )}
       </div>

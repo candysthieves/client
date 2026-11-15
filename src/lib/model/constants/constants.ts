@@ -87,3 +87,6 @@ export const UNDER_AGE_ERROR_MESSAGE = `A user under ${MIN_USER_AGE} cannot crea
 
 export const SERVER_UNAVAILABLE_ERROR_TITLE = 'Error!'
 export const SERVER_UNAVAILABLE_ERROR_MESSAGE = 'Server is not available!'
+
+export const NOTIFICATIONS_TITLE = 'Notifications'
+export const NOTIFICATION_NEW_LABEL = 'New'

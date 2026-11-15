@@ -1,12 +1,12 @@
 'use client'
 
 import { Scroll, Typography } from '@candy.thieves/ui-kit-lumos'
-import type { AppNotification } from '@/lib/model'
+import { NotificationMessage, NOTIFICATIONS_TITLE } from '@/lib/model'
 import { NotificationItem } from './NotificationItem'
 import s from './NotificationsDropdown.module.scss'
 
 type Props = {
-  notifications: AppNotification[]
+  notifications: NotificationMessage[]
   onRead: (id: string) => void
 }
 
@@ -14,7 +14,7 @@ export const NotificationsDropdown = ({ notifications, onRead }: Props) => {
   return (
     <div className={s.anchor}>
       <div className={s.panel}>
-        <Typography variant={'h3'}>Уведомления</Typography>
+        <Typography variant={'h3'}>{NOTIFICATIONS_TITLE}</Typography>
         <div className={s.list}>
           <Scroll orientation={'vertical'}>
             {notifications.map(item => (

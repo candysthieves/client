@@ -27,7 +27,12 @@ import {
 } from './auth.schemas'
 import { feedPostsResponseSchema } from './feed.schemas'
 import { imageSchema } from './image.schemas'
-import { notificationSchema } from './notification.schemas'
+import {
+  notificationMessageResponseSchema,
+  notificationMessageSchema,
+  notificationMessageTotalCountSchema,
+  notificationTypeSchema,
+} from './notifications.schemas'
 import {
   avatarSchema,
   commentSchema,
@@ -66,7 +71,6 @@ export type Post = z.infer<typeof postSchema>
 export type PostAuthor = z.infer<typeof postAuthorSchema>
 export type Avatar = z.infer<typeof avatarSchema>
 export type Comment = z.infer<typeof commentSchema>
-export type AppNotification = z.infer<typeof notificationSchema>
 export type RegistrationConfirmationRequest = z.infer<typeof registrationConfirmationSchema>
 export type RegistrationRequest = z.infer<typeof registrationSchema>
 export type ResendConfirmationEmailRequest = z.infer<typeof resendConfirmationEmailSchema>
@@ -107,3 +111,8 @@ export type SubscriptionsResponse = z.infer<typeof subscriptionsResponseSchema>
 export type PaymentService = z.infer<typeof paymentServiceSchema>
 export type CreatePaymentState = z.infer<typeof createPaymentStateSchema>
 export type PaymentStatus = z.infer<typeof paymentStatusSchema>
+// Notifications
+export type NotificationMessageTotalCount = z.infer<typeof notificationMessageTotalCountSchema>
+export type NotificationType = z.infer<typeof notificationTypeSchema>
+export type NotificationMessage = z.infer<typeof notificationMessageSchema>
+export type NotificationMessageResponseSchema = z.infer<typeof notificationMessageResponseSchema>

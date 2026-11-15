@@ -1,0 +1,12 @@
+@use '@/styles/mixins' as *;
+
+.subscriptionContent {
+  position: relative;
+}
+
+.loadSpinner {
+  @include top-left(50%, 49%);
+
+  position: fixed;
+  z-index: 9999;
+}

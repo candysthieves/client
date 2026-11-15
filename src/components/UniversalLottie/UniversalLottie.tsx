@@ -7,7 +7,7 @@ const LottiePlayer = dynamic(
   { ssr: false } // Отключаем SSR только для самого тяжелого плеера
 )
 
-export type LottieAnimationName = 'robot-404-fixed' | 'went-wrong'
+export type LottieAnimationName = 'payment' | 'robot-404-fixed' | 'went-wrong'
 
 interface UniversalLottieProps {
   animationName: LottieAnimationName

@@ -1,0 +1,64 @@
+@use '@/styles/mixins' as *;
+
+.currentSubscription {
+  margin-top: 1.875rem;
+}
+
+.subscriptionDates {
+  flex-direction: row;
+  gap: 3rem;
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1.25rem;
+
+  @include flex(flex, flex-start, flex-start);
+
+  @include media-tablet-small {
+    flex-direction: column;
+
+    @include flex(flex, center, flex-start);
+
+    gap: 0.75rem;
+  }
+}
+
+.dateItem {
+  @include flex(flex, center, flex-start);
+
+  flex-direction: column;
+  gap: 0.75rem;
+
+  @include media-tablet-small {
+    @include flex(flex, space-between, center);
+
+    flex-direction: row;
+    width: 100%;
+  }
+}
+
+.dateValue {
+  align-self: center;
+}
+
+.disabled {
+  cursor: not-allowed;
+}
+
+// CurrentSubscriptionSkeleton
+.currentSubscriptionSkeleton {
+  margin-top: 1.875rem;
+  margin-bottom: -1.6rem;
+}
+
+.subscriptionDatesSkeleton {
+  margin-bottom: 1.25rem;
+  padding: 0.5rem 1.25rem;
+}
+
+.title {
+  margin-bottom: 0.375rem;
+}
+
+.button {
+  display: block;
+  border-radius: 4px;
+}

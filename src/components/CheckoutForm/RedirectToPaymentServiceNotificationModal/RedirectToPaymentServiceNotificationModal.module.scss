@@ -1,0 +1,11 @@
+@use '@/styles/mixins' as *;
+
+.modal {
+  width: min($modal-width-s, calc(100vw - 2rem));
+}
+
+.notification {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem; // 3.375rem
+}

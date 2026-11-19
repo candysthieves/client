@@ -37,6 +37,12 @@ import {
 import { feedPostsResponseSchema } from './feed.schemas'
 import { imageSchema } from './image.schemas'
 import {
+  notificationMessageResponseSchema,
+  notificationMessageSchema,
+  notificationMessageTotalCountSchema,
+  notificationTypeSchema,
+} from './notifications.schemas'
+import {
   avatarSchema,
   commentSchema,
   deletedPostItemSchema,
@@ -126,3 +132,8 @@ export type PaymentSessionRequest = z.infer<typeof paymentSessionRequestSchema>
 export type PaymentSessionResponse = z.infer<typeof paymentSessionResponseSchema>
 export type ProcessedPaymentStatus = z.infer<typeof processedPaymentStatusSchema>
 export type PaymentErrorField = z.infer<typeof paymentErrorFieldSchema>
+// Notifications
+export type NotificationMessageTotalCount = z.infer<typeof notificationMessageTotalCountSchema>
+export type NotificationType = z.infer<typeof notificationTypeSchema>
+export type NotificationMessage = z.infer<typeof notificationMessageSchema>
+export type NotificationMessageResponseSchema = z.infer<typeof notificationMessageResponseSchema>

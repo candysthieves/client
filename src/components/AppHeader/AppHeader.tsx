@@ -6,14 +6,15 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState, useRef } from 'react'
 import { LogoutModal, NotificationsDropdown } from '@/components'
 import { useAuth } from '@/lib/hooks/useAuth'
-import { mockNotifications } from '@/mocks/notifications'
+import { useMarkNotificationsAsRead, useNotifications } from '@/lib/notifications'
 import { mobileHeaderItems } from '@/shared/navigation/mobileHeaderItems'
 
 export const AppHeader = () => {
   const { isAuthenticated } = useAuth()
+  const { data: notifications = [], isLoading, isError } = useNotifications()
+  const { mutate: markAsRead } = useMarkNotificationsAsRead()
   const router = useRouter()
   const [logoutOpen, setLogoutOpen] = useState(false)
-  const [notifications, setNotifications] = useState(mockNotifications)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const notificationsRef = useRef<HTMLDivElement>(null)
 
@@ -29,13 +30,8 @@ export const AppHeader = () => {
     item.id === 'logOut' ? { ...item, onSelect: () => setLogoutOpen(true) } : item
   )
 
-  const unreadCount = notifications.filter(item => !item.isRead).length
   const notificationClickHandler = () => {
     setIsNotificationsOpen(prev => !prev)
-  }
-
-  const markAsRead = (id: string) => {
-    setNotifications(prev => prev.map(item => (item.id === id ? { ...item, isRead: true } : item)))
   }
 
   useEffect(() => {
@@ -64,14 +60,18 @@ export const AppHeader = () => {
         <Header
           isAuthenticated={isAuthenticated}
           mobileAuthenticatedMenuItems={authenticatedMenuItems}
-          notificationCount={unreadCount}
           onNotificationClick={notificationClickHandler}
           onLogInClick={signInHandler}
           onSignUpClick={signUpHandler}
           linkTag={Link}
         />
         {isNotificationsOpen && (
-          <NotificationsDropdown notifications={notifications} onRead={markAsRead} />
+          <NotificationsDropdown
+            notifications={notifications}
+            onRead={markAsRead}
+            isLoading={isLoading}
+            isError={isError}
+          />
         )}
       </div>
       <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />

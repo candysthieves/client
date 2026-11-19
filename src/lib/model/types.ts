@@ -20,6 +20,12 @@ import {
   subscriptionTypeSchema,
 } from '@/lib/model'
 import {
+  notificationMessageResponseSchema,
+  notificationMessageSchema,
+  notificationMessageTotalCountSchema,
+  notificationTypeSchema,
+} from '@/lib/model/notifications.schemas'
+import {
   accessTokenResponseSchema,
   accountTypeSchema,
   apiErrorResponseSchema,

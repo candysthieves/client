@@ -170,7 +170,7 @@ import { ACCESS_TOKEN_LS_KEY } from '@/lib/model'
 import { isAccessTokenError, isErrorResponse, refreshAccessToken } from '@/lib/utils'
 import { ApiError } from './apiError'
 
-let refreshPromise: null | Promise<string> = null
+// let refreshPromise: null | Promise<string> = null
 
 export async function request<T>(input: string, init?: RequestInit): Promise<T> {
   const accessToken =
@@ -276,14 +276,7 @@ export async function request<T>(input: string, init?: RequestInit): Promise<T> 
          *
          * Other requests wait for the same Promise.
          */
-        if (!refreshPromise) {
-          refreshPromise = refreshAccessToken().finally(() => {
-            refreshPromise = null
-          })
-        }
-        // waiting of the Promise ends
-
-        const newAccessToken = await refreshPromise
+        const newAccessToken = await refreshAccessToken()
 
         /**
          * Retry the original request with the new access token.

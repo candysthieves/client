@@ -9,7 +9,11 @@ type ProfileHeaderSkeletonProps = {
 export function ProfileHeaderSkeleton({ userId }: ProfileHeaderSkeletonProps) {
   return (
     <section className={s.profileHeader} aria-busy>
-      <Skeleton circle className={s.skeletonFill} containerClassName={s.profileAvatar} />
+      <Skeleton
+        circle
+        className={s.skeletonFill}
+        containerClassName={`${s.profileAvatar} ${s.profileAvatarSkeleton}`}
+      />
 
       <div className={s.profileInfo}>
         <div className={s.profileTop}>

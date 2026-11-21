@@ -8,19 +8,40 @@ import s from './NotificationsDropdown.module.scss'
 type Props = {
   notifications: NotificationMessage[]
   onRead: (id: string) => void
+  isLoading?: boolean
+  isError?: boolean
 }
 
-export const NotificationsDropdown = ({ notifications, onRead }: Props) => {
+export const NotificationsDropdown = ({
+  notifications,
+  onRead,
+  isLoading = false,
+  isError = false,
+}: Props) => {
   return (
     <div className={s.anchor}>
       <div className={s.panel}>
         <Typography variant={'h3'}>{NOTIFICATIONS_TITLE}</Typography>
         <div className={s.list}>
-          <Scroll orientation={'vertical'}>
-            {notifications.map(item => (
-              <NotificationItem key={item.id} notification={item} onRead={onRead} />
-            ))}
-          </Scroll>
+          {isLoading ? (
+            <Typography variant={'body1'} color={'var(--color-light-900)'} align={'center'}>
+              Loading notifications...
+            </Typography>
+          ) : isError ? (
+            <Typography variant={'body1'} color={'var(--color-light-900)'} align={'center'}>
+              Failed to load notifications
+            </Typography>
+          ) : notifications.length === 0 ? (
+            <Typography variant={'body1'} color={'var(--color-light-900)'} align={'center'}>
+              No notifications
+            </Typography>
+          ) : (
+            <Scroll orientation={'vertical'}>
+              {notifications.map(item => (
+                <NotificationItem key={item.id} notification={item} onRead={onRead} />
+              ))}
+            </Scroll>
+          )}
         </div>
       </div>
     </div>

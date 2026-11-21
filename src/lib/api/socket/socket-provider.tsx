@@ -83,47 +83,24 @@
 
 'use client'
 
-import { useQueryClient } from '@tanstack/react-query'
 import { ReactNode, useEffect } from 'react'
-import { ToastError } from '@/components'
 import { socket } from '@/lib/api/socket/socket'
 import { useLogout } from '@/lib/auth'
+import { useRequestUnreadCount } from '@/lib/hooks'
 import { ACCESS_TOKEN_LS_KEY } from '@/lib/model'
-import { notificationMessageTotalCountResponseSchema } from '@/lib/model/notifications.schemas'
-import { notificationKeys } from '@/lib/notifications'
 import { isAccessTokenError, refreshAccessToken } from '@/lib/utils'
 
 export function SocketProvider({ children }: { children: ReactNode }) {
-  const queryClient = useQueryClient()
+  const requestUnreadCount = useRequestUnreadCount()
   const { mutate: logout } = useLogout()
 
   useEffect(() => {
     let isMounted = true
     let socketRefreshPromise: null | Promise<string> = null
 
-    const handleUnreadCount = (response: unknown) => {
-      if (!isMounted) return
-
-      const result = notificationMessageTotalCountResponseSchema.safeParse(response)
-
-      if (!result.success) {
-        ToastError({
-          title: 'Invalid unread count payload',
-          messages: result.error.issues.map(issue => ({
-            field: issue.path.join('.'),
-            message: issue.message,
-          })),
-        })
-
-        return
-      }
-
-      queryClient.setQueryData(notificationKeys.unreadCount(), result.data.data)
-    }
-
     const handleConnect = () => {
-      // Запрашиваем у Backend актуальное количество непрочитанных уведомлений по Websocket
-      socket.emit('notifications:unread-count', handleUnreadCount)
+      // TODO refactor to Switch logic or add hooks when chat messages will be added
+      requestUnreadCount()
     }
 
     const handleConnectError = async (error: Error & { data?: unknown }) => {
@@ -172,7 +149,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
       socket.disconnect()
     }
-  }, [logout, queryClient])
+  }, [logout, requestUnreadCount])
 
   return children
 }

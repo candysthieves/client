@@ -43,6 +43,12 @@ import {
 import { feedPostsResponseSchema } from './feed.schemas'
 import { imageSchema } from './image.schemas'
 import {
+  notificationMessageResponseSchema,
+  notificationMessageSchema,
+  notificationMessageTotalCountSchema,
+  notificationTypeSchema,
+} from './notifications.schemas'
+import {
   avatarSchema,
   commentSchema,
   deletedPostItemSchema,

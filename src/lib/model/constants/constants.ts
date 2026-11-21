@@ -102,3 +102,6 @@ export const PAYMENT_VERIFICATION_ERROR_MESSAGE = 'Provider must be either STRIP
 export const CURRENT_SUBSCRIPTION_CANCEL_SUCCESS_TITLE = 'Success - Auto-renewal disabled'
 export const CURRENT_SUBSCRIPTION_CANCEL_SUCCESS_MESSAGE =
   'Your subscription will not be renewed automatically'
+
+export const NOTIFICATIONS_TITLE = 'Notifications'
+export const NOTIFICATION_NEW_LABEL = 'New'

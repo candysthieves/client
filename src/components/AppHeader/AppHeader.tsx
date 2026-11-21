@@ -3,10 +3,11 @@
 import { Header } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { LogoutModal } from '@/components'
+import { useEffect, useState, useRef } from 'react'
+import { LogoutModal, NotificationsDropdown } from '@/components'
 import { useUnreadCount } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { mockNotifications } from '@/mocks/notifications'
 import { mobileHeaderItems } from '@/shared/navigation/mobileHeaderItems'
 
 export const AppHeader = () => {
@@ -14,6 +15,9 @@ export const AppHeader = () => {
   const { data: unreadCount } = useUnreadCount()
   const router = useRouter()
   const [logoutOpen, setLogoutOpen] = useState(false)
+  const [notifications, setNotifications] = useState(mockNotifications)
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+  const notificationsRef = useRef<HTMLDivElement>(null)
 
   const signInHandler = () => {
     router.push('/sign-in')
@@ -28,20 +32,49 @@ export const AppHeader = () => {
   )
 
   const notificationClickHandler = () => {
-    console.log('notificationClickHandler fired')
+    setIsNotificationsOpen(prev => !prev)
   }
+
+  const markAsRead = (id: string) => {
+    setNotifications(prev => prev.map(item => (item.id === id ? { ...item, isRead: true } : item)))
+  }
+
+  useEffect(() => {
+    if (!isNotificationsOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsNotificationsOpen(false)
+      }
+    }
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!notificationsRef.current?.contains(e.target as Node)) {
+        setIsNotificationsOpen(false)
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isNotificationsOpen])
 
   return (
     <>
-      <Header
-        isAuthenticated={isAuthenticated}
-        mobileAuthenticatedMenuItems={authenticatedMenuItems}
-        onLogInClick={signInHandler}
-        onSignUpClick={signUpHandler}
-        linkTag={Link}
-        notificationCount={unreadCount.count}
-        onNotificationClick={notificationClickHandler}
-      />
+      <div ref={notificationsRef}>
+        <Header
+          isAuthenticated={isAuthenticated}
+          mobileAuthenticatedMenuItems={authenticatedMenuItems}
+          notificationCount={unreadCount.count}
+          onNotificationClick={notificationClickHandler}
+          onLogInClick={signInHandler}
+          onSignUpClick={signUpHandler}
+          linkTag={Link}
+        />
+        {isNotificationsOpen && (
+          <NotificationsDropdown notifications={notifications} onRead={markAsRead} />
+        )}
+      </div>
       <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
     </>
   )

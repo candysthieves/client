@@ -1,11 +1,95 @@
+// 'use client'
+//
+// import { useQueryClient } from '@tanstack/react-query'
+// import { ReactNode, useEffect } from 'react'
+// import { ToastError } from '@/components'
+// import { socket } from '@/lib/api/socket/socket'
+// import { useLogout } from '@/lib/auth'
+// import {
+//   notificationMessageTotalCountResponseSchema,
+//   notificationMessageTotalCountSchema,
+// } from '@/lib/model/notifications.schemas'
+// import { notificationKeys } from '@/lib/notifications'
+// import { isAccessTokenError, refreshAccessToken } from '@/lib/utils'
+//
+// export function SocketProvider({ children }: { children: ReactNode }) {
+//   const queryClient = useQueryClient()
+//   const { mutate: logout } = useLogout()
+//
+//   useEffect(() => {
+//     let isMounted = true
+//     let socketRefreshPromise: null | Promise<string> = null
+//
+//     const handleUnreadCount = (response: unknown) => {
+//       if (!isMounted) return
+//
+//       // TODO change later to type field when chat messages will be added
+//       const result = notificationMessageTotalCountResponseSchema.safeParse(response)
+//
+//       if (!result.success) {
+//         console.error('Invalid unread count payload:', result.error)
+//         ToastError({
+//           title: 'Invalid unread count payload',
+//           messages: result.error && '',
+//         })
+//         return
+//       }
+//
+//       queryClient.setQueryData(notificationKeys.unreadCount(), result.data.data)
+//     }
+//
+//     const handleConnectError = async (error: Error & { data?: unknown }) => {
+//       if (!isAccessTokenError(error.data)) return
+//
+//       if (socketRefreshPromise) return
+//
+//       socketRefreshPromise = refreshAccessToken()
+//
+//       try {
+//         const newAccessToken = await socketRefreshPromise
+//
+//         if (!isMounted) return
+//
+//         socket.auth = {
+//           token: newAccessToken,
+//         }
+//
+//         socket.connect()
+//       } catch (error) {
+//         if (isMounted) {
+//           console.error('Socket authentication failed:', error)
+//           logout()
+//         }
+//       } finally {
+//         socketRefreshPromise = null
+//       }
+//     }
+//
+//     socket.on('connect_error', handleConnectError)
+//
+//     socket.connect()
+//     socket.emit('notifications:unread-count', handleUnreadCount)
+//
+//     return () => {
+//       isMounted = false
+//       socket.off('connect_error', handleConnectError)
+//
+//       socket.disconnect()
+//     }
+//   }, [logout, queryClient])
+//
+//   return children
+// }
+
 'use client'
 
 import { useQueryClient } from '@tanstack/react-query'
 import { ReactNode, useEffect } from 'react'
-import { ToastSuccess, ToastWarning } from '@/components'
+import { ToastError } from '@/components'
 import { socket } from '@/lib/api/socket/socket'
 import { useLogout } from '@/lib/auth'
-import { notificationMessageTotalCountSchema } from '@/lib/model/notifications.schemas'
+import { ACCESS_TOKEN_LS_KEY } from '@/lib/model'
+import { notificationMessageTotalCountResponseSchema } from '@/lib/model/notifications.schemas'
 import { notificationKeys } from '@/lib/notifications'
 import { isAccessTokenError, refreshAccessToken } from '@/lib/utils'
 
@@ -17,21 +101,29 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     let isMounted = true
     let socketRefreshPromise: null | Promise<string> = null
 
-    const handleUnreadCount = (data: unknown) => {
-      const result = notificationMessageTotalCountSchema.safeParse(data)
+    const handleUnreadCount = (response: unknown) => {
+      if (!isMounted) return
 
-      if (!result.success) return
+      const result = notificationMessageTotalCountResponseSchema.safeParse(response)
 
-      queryClient.setQueryData(notificationKeys.unreadCount(), result.data.count)
+      if (!result.success) {
+        ToastError({
+          title: 'Invalid unread count payload',
+          messages: result.error.issues.map(issue => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        })
 
-      ToastSuccess({
-        title: 'New notifications',
-        message: 'You have unread notifications!',
-      })
+        return
+      }
+
+      queryClient.setQueryData(notificationKeys.unreadCount(), result.data.data)
     }
 
     const handleConnect = () => {
-      socket.emit('get_new_message') // TODO check later backend messages
+      // Запрашиваем у Backend актуальное количество непрочитанных уведомлений по Websocket
+      socket.emit('notifications:unread-count', handleUnreadCount)
     }
 
     const handleConnectError = async (error: Error & { data?: unknown }) => {
@@ -42,11 +134,15 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       socketRefreshPromise = refreshAccessToken()
 
       try {
-        await socketRefreshPromise
+        const newAccessToken = await socketRefreshPromise
 
-        if (isMounted) {
-          socket.connect()
+        if (!isMounted) return
+
+        socket.auth = {
+          token: newAccessToken,
         }
+
+        socket.connect()
       } catch (error) {
         if (isMounted) {
           console.error('Socket authentication failed:', error)
@@ -57,16 +153,21 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    socket.on('new_message', handleUnreadCount)
-    socket.on('connect', handleConnect) // TODO check later backend messages
+    socket.on('connect', handleConnect)
     socket.on('connect_error', handleConnectError)
+
+    // Берём актуальный токен после авторизации, а не тот,
+    // который мог быть прочитан при инициализации модуля socket.ts
+    socket.auth = {
+      token: localStorage.getItem(ACCESS_TOKEN_LS_KEY),
+    }
 
     socket.connect()
 
     return () => {
       isMounted = false
-      socket.off('new_message', handleUnreadCount)
-      socket.off('connect', handleConnect) // Запрос 'get_new_message' отправляю внутри connect, чтобы гарантировать, что соединение уже установлено
+
+      socket.off('connect', handleConnect)
       socket.off('connect_error', handleConnectError)
 
       socket.disconnect()
@@ -77,11 +178,14 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 }
 
 // SocketProvider монтируется после успешной авторизации
-// Socket.IO подключается с актуальным access token
-// При connect отправляется get_new_message
-// Backend отправляет new_message
-// Frontend валидирует данные через Zod
-// Счётчик Notification обновляется через queryClient.setQueryData
-// При ошибке access token выполняется refreshAccessToken()
-// При успехе Socket.IO переподключается
-// При подтверждённой недействительности refresh token вызывается logout()
+// Socket.IO подключается через Websocket с access token
+// Отправляется запрос unread-count
+// получает ответ через Socket.IO callback - Backend возвращает { data: { count: number } }
+// Frontend валидирует response через Zod
+// Счётчик уведомлений сохраняется в TanStack Query cache (queryClient.setQueryData() обновляет cache)
+// AppHeader автоматически перерисовывается
+// Header получает notificationCount={7}
+// Error:
+// 1 При ошибке access token выполняется refreshAccessToken()
+// 2 При успешном обновлении токена Socket.IO переподключается
+// 3 При неудачном обновлении refresh token вызывается logout()

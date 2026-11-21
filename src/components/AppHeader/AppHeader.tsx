@@ -5,11 +5,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { LogoutModal } from '@/components'
+import { useUnreadCount } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { mobileHeaderItems } from '@/shared/navigation/mobileHeaderItems'
 
 export const AppHeader = () => {
   const { isAuthenticated } = useAuth()
+  const { data: unreadCount } = useUnreadCount()
   const router = useRouter()
   const [logoutOpen, setLogoutOpen] = useState(false)
 
@@ -25,6 +27,10 @@ export const AppHeader = () => {
     item.id === 'logOut' ? { ...item, onSelect: () => setLogoutOpen(true) } : item
   )
 
+  const notificationClickHandler = () => {
+    console.log('notificationClickHandler fired')
+  }
+
   return (
     <>
       <Header
@@ -33,6 +39,8 @@ export const AppHeader = () => {
         onLogInClick={signInHandler}
         onSignUpClick={signUpHandler}
         linkTag={Link}
+        notificationCount={unreadCount.count}
+        onNotificationClick={notificationClickHandler}
       />
       <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
     </>

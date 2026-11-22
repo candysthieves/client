@@ -31,7 +31,7 @@
 
 import { NEXT_PUBLIC_API_URL } from '@/constants'
 import { ApiError } from '@/lib/api'
-import { ACCESS_TOKEN_LS_KEY, AccessTokenResponse, accessTokenResponseSchema } from '@/lib/model'
+import { ACCESS_TOKEN_LS_KEY, AccessTokenResponse } from '@/lib/model'
 
 let refreshPromise: null | Promise<string> = null
 

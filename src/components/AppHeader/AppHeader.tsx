@@ -3,19 +3,21 @@
 import { Header } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { LogoutModal, NotificationsDropdown } from '@/components'
-import { useUnreadCount } from '@/lib/hooks'
+import { useRequestUnreadCount, useUnreadCount } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
-import { mockNotifications } from '@/mocks/notifications'
+import { useMarkNotificationsAsRead, useNotifications } from '@/lib/notifications'
 import { mobileHeaderItems } from '@/shared/navigation/mobileHeaderItems'
 
 export const AppHeader = () => {
   const { isAuthenticated } = useAuth()
   const { data: unreadCount } = useUnreadCount()
+  const requestUnreadCount = useRequestUnreadCount()
+  const { data: notifications = [], isLoading, isError } = useNotifications()
+  const { mutate: markAsRead } = useMarkNotificationsAsRead()
   const router = useRouter()
   const [logoutOpen, setLogoutOpen] = useState(false)
-  const [notifications, setNotifications] = useState(mockNotifications)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const notificationsRef = useRef<HTMLDivElement>(null)
 
@@ -35,8 +37,13 @@ export const AppHeader = () => {
     setIsNotificationsOpen(prev => !prev)
   }
 
-  const markAsRead = (id: string) => {
-    setNotifications(prev => prev.map(item => (item.id === id ? { ...item, isRead: true } : item)))
+  const notificationReadHandler = (ids: string[], onError?: () => void) => {
+    markAsRead(ids, {
+      onSuccess: () => {
+        requestUnreadCount()
+      },
+      onError,
+    })
   }
 
   useEffect(() => {
@@ -72,7 +79,12 @@ export const AppHeader = () => {
           linkTag={Link}
         />
         {isNotificationsOpen && (
-          <NotificationsDropdown notifications={notifications} onRead={markAsRead} />
+          <NotificationsDropdown
+            notifications={notifications}
+            onRead={notificationReadHandler}
+            isLoading={isLoading}
+            isError={isError}
+          />
         )}
       </div>
       <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />

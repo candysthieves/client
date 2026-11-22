@@ -162,25 +162,9 @@ span.skeletonFill {
   line-height: inherit;
 }
 
-span.profileAvatar {
+span.profileAvatarSkeleton {
   display: block;
-  grid-column: 1;
-  grid-row: 1;
-
-  width: 12.75rem;
-  height: 12.75rem;
-
   line-height: 1;
-
-  @include media-tablet {
-    width: 9rem;
-    height: 9rem;
-  }
-
-  @include media-tablet-small {
-    width: 7.5rem;
-    height: 7.5rem;
-  }
 
   > span {
     display: block;

@@ -15,7 +15,6 @@ export const notificationTypeSchema = z.enum(['PAYMENT', 'MESSAGE'], {
 
 export const notificationMessageSchema = z.object({
   id: z.uuid(),
-  userId: z.string(),
   type: notificationTypeSchema,
   title: z.string(),
   message: z.string(),

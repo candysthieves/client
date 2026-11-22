@@ -84,7 +84,7 @@ server.post('/posts', upload.array('files'), (req, res) => {
     let parsedLocations = []
     try {
       parsedLocations = locations ? JSON.parse(locations) : []
-    } catch (e) {
+    } catch {
       parsedLocations = []
     }
 
@@ -93,7 +93,7 @@ server.post('/posts', upload.array('files'), (req, res) => {
     let existingFilesArray = []
     try {
       existingFilesArray = existingFiles ? JSON.parse(existingFiles) : []
-    } catch (e) {
+    } catch {
       existingFilesArray = []
     }
 

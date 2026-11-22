@@ -34,6 +34,10 @@ export const AppHeader = () => {
     setIsNotificationsOpen(prev => !prev)
   }
 
+  const notificationReadHandler = (ids: string[], onError?: () => void) => {
+    markAsRead(ids, { onError })
+  }
+
   useEffect(() => {
     if (!isNotificationsOpen) return
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -60,6 +64,7 @@ export const AppHeader = () => {
         <Header
           isAuthenticated={isAuthenticated}
           mobileAuthenticatedMenuItems={authenticatedMenuItems}
+          notificationCount={notifications.filter(notification => !notification.isRead).length}
           onNotificationClick={notificationClickHandler}
           onLogInClick={signInHandler}
           onSignUpClick={signUpHandler}
@@ -68,7 +73,7 @@ export const AppHeader = () => {
         {isNotificationsOpen && (
           <NotificationsDropdown
             notifications={notifications}
-            onRead={markAsRead}
+            onRead={notificationReadHandler}
             isLoading={isLoading}
             isError={isError}
           />

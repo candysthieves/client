@@ -7,11 +7,13 @@ export const useMarkNotificationsAsRead = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) => markNotificationsAsRead([id]),
-    onSuccess: (_, id) => {
+    mutationFn: (ids: string[]) => markNotificationsAsRead(ids),
+    onSuccess: (_, ids) => {
+      const readIds = new Set(ids)
+
       queryClient.setQueryData<NotificationMessage[]>(notificationKeys.list(), notifications =>
         notifications?.map(notification =>
-          notification.id === id ? { ...notification, isRead: true } : notification
+          readIds.has(notification.id) ? { ...notification, isRead: true } : notification
         )
       )
     },

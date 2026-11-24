@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - dev
-      - feature/SCRUM-236-client-redirect-to-payment-service
+      - feature/SCRUM-251-refactor-websocket-client-to-new-contract
 
   pull_request:
     branches:

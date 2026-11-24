@@ -9,8 +9,6 @@ This is a platform for creating and publishing short photo stories with a focus 
 
 🍭 Developed by team **Candy Thieves**:
 
-**PM** - _Yana Korotenko_
-
 **Team-lead** - _Vladislav Kravchenko_
 
 **Front-end:**

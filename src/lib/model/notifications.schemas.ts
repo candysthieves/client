@@ -3,10 +3,11 @@ import { z } from 'zod'
 export const notificationMessageTotalCountSchema = z.object({
   count: z.number().int().nonnegative(),
 })
-// type: new_message
-// {
-//   count:3
-// }
+
+export const notificationMessageTotalCountResponseSchema = z.object({
+  data: notificationMessageTotalCountSchema,
+  error: z.string().nullable(),
+})
 
 export const notificationTypeSchema = z.enum(['PAYMENT', 'MESSAGE'], {
   message: 'Invalid notification message type in websocket notification response',

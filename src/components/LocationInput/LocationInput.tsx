@@ -6,7 +6,7 @@ import {
   PinOutline,
   Typography,
 } from '@candy.thieves/ui-kit-lumos'
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { Location, PostFile } from '@/features/createPost'
 import s from './LocationInput.module.scss'
 
@@ -35,10 +35,13 @@ export const LocationInput = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
 
-  const updateLocations = (nextLocations: Location[]) => {
-    setLocations(nextLocations)
-    onLocationChange(nextLocations)
-  }
+  const updateLocations = useCallback(
+    (nextLocations: Location[]) => {
+      setLocations(nextLocations)
+      onLocationChange(nextLocations)
+    },
+    [onLocationChange]
+  )
 
   // Confirm editing by clicking outside the input
   useEffect(() => {

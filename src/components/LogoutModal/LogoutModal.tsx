@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ToastWarning } from '@/components/Toast/Toast'
 import { useLogout } from '@/lib/auth'
 import { clearPostDraft } from '@/lib/utils'
-import s from './LogoutModal.module.css'
+import s from './LogoutModal.module.scss'
 
 type LogoutModalProps = {
   open: boolean

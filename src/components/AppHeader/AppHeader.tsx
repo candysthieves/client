@@ -3,14 +3,17 @@
 import { Header } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { LogoutModal, NotificationsDropdown } from '@/components'
+import { useRequestUnreadCount, useUnreadCount } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { useMarkNotificationsAsRead, useNotifications } from '@/lib/notifications'
 import { mobileHeaderItems } from '@/shared/navigation/mobileHeaderItems'
 
 export const AppHeader = () => {
   const { isAuthenticated } = useAuth()
+  const { data: unreadCount } = useUnreadCount()
+  const requestUnreadCount = useRequestUnreadCount()
   const { data: notifications = [], isLoading, isError } = useNotifications()
   const { mutate: markAsRead } = useMarkNotificationsAsRead()
   const router = useRouter()
@@ -35,7 +38,12 @@ export const AppHeader = () => {
   }
 
   const notificationReadHandler = (ids: string[], onError?: () => void) => {
-    markAsRead(ids, { onError })
+    markAsRead(ids, {
+      onSuccess: () => {
+        requestUnreadCount()
+      },
+      onError,
+    })
   }
 
   useEffect(() => {
@@ -64,7 +72,7 @@ export const AppHeader = () => {
         <Header
           isAuthenticated={isAuthenticated}
           mobileAuthenticatedMenuItems={authenticatedMenuItems}
-          notificationCount={notifications.filter(notification => !notification.isRead).length}
+          notificationCount={unreadCount.count}
           onNotificationClick={notificationClickHandler}
           onLogInClick={signInHandler}
           onSignUpClick={signUpHandler}

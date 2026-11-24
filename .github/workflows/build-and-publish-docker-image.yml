@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - dev
-      - feature/SCRUM-236-client-redirect-to-payment-service
+      - feature/SCRUM-251-refactor-websocket-client-to-new-contract
 
   pull_request:
     branches:
@@ -68,6 +68,7 @@ jobs:
           build-args: |
             NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
             NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${{ vars.NEXT_PUBLIC_RECAPTCHA_SITE_KEY }}
+            NEXT_PUBLIC_SOCKET_URL=${{ vars.NEXT_PUBLIC_SOCKET_URL }}
 
   deploy:
     if: github.event_name == 'push'

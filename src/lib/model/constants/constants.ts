@@ -105,3 +105,5 @@ export const CURRENT_SUBSCRIPTION_CANCEL_SUCCESS_MESSAGE =
 
 export const NOTIFICATIONS_TITLE = 'Notifications'
 export const NOTIFICATION_NEW_LABEL = 'New'
+
+export const NOTIFICATIONS_PAGE_SIZE = 4

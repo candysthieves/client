@@ -4,7 +4,7 @@ import { Scroll, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef } from 'react'
 import { NotificationMessage, NOTIFICATIONS_TITLE } from '@/lib/model'
-import { notificationKeys } from '@/lib/notifications'
+import { updateNotificationsCache } from '@/lib/notifications'
 import { NotificationItem } from './NotificationItem'
 import s from './NotificationsDropdown.module.scss'
 
@@ -39,10 +39,8 @@ export const NotificationsDropdown = ({
       onReadRef.current(ids, () => {
         pendingIdsRef.current = [...new Set([...ids, ...pendingIdsRef.current])]
 
-        queryClient.setQueryData<NotificationMessage[]>(notificationKeys.list(), current =>
-          current?.map(notification =>
-            ids.includes(notification.id) ? { ...notification, isRead: false } : notification
-          )
+        updateNotificationsCache(queryClient, notification =>
+          ids.includes(notification.id) ? { ...notification, isRead: false } : notification
         )
       })
     },
@@ -62,10 +60,8 @@ export const NotificationsDropdown = ({
     viewedIdsRef.current.add(id)
     pendingIdsRef.current.push(id)
 
-    queryClient.setQueryData<NotificationMessage[]>(notificationKeys.list(), current =>
-      current?.map(notification =>
-        notification.id === id ? { ...notification, isRead: true } : notification
-      )
+    updateNotificationsCache(queryClient, notification =>
+      notification.id === id ? { ...notification, isRead: true } : notification
     )
 
     const unreadIds = notifications

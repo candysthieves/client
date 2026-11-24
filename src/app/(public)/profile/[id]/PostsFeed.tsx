@@ -1,9 +1,10 @@
 'use client'
 
 import { Typography } from '@candy.thieves/ui-kit-lumos'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import type { Post } from '@/lib/model'
 import { PROFILE_POSTS_PAGE_SIZE } from '@/lib/api'
+import { useInfiniteScroll } from '@/lib/hooks'
 import { PostPreview } from './PostPreview'
 import s from './ProfileClient.module.scss'
 
@@ -35,26 +36,12 @@ export function PostsFeed({
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const isEmpty = posts.length === 0
 
-  useEffect(() => {
-    const loadMoreElement = loadMoreRef.current
-
-    if (!loadMoreElement || !hasNextPage || isLoadingNextPage || isLoadMoreError) {
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0]?.isIntersecting) {
-          onLoadMore()
-        }
-      },
-      { rootMargin: '0px' }
-    )
-
-    observer.observe(loadMoreElement)
-
-    return () => observer.disconnect()
-  }, [hasNextPage, isLoadingNextPage, isLoadMoreError, onLoadMore])
+  useInfiniteScroll(loadMoreRef, {
+    hasNextPage,
+    isLoadingNextPage,
+    isLoadMoreError,
+    onLoadMore,
+  })
 
   return (
     <section className={isEmpty ? s.emptyPosts : s.postsSection} aria-label={'Posts'}>

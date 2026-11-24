@@ -3,6 +3,7 @@
 import { Scroll, Typography } from '@candy.thieves/ui-kit-lumos'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef } from 'react'
+import { useInfiniteScroll } from '@/lib/hooks'
 import { NotificationMessage, NOTIFICATIONS_TITLE } from '@/lib/model'
 import { updateNotificationsCache } from '@/lib/notifications'
 import { NotificationItem } from './NotificationItem'
@@ -11,20 +12,36 @@ import s from './NotificationsDropdown.module.scss'
 type Props = {
   notifications: NotificationMessage[]
   onRead: (ids: string[], onError?: () => void) => void
+  onLoadMore: () => void
+  hasNextPage?: boolean
   isLoading?: boolean
   isError?: boolean
+  isLoadingNextPage?: boolean
+  isLoadMoreError?: boolean
 }
 
 export const NotificationsDropdown = ({
   notifications,
   onRead,
+  onLoadMore,
+  hasNextPage = false,
   isLoading = false,
   isError = false,
+  isLoadingNextPage = false,
+  isLoadMoreError = false,
 }: Props) => {
   const queryClient = useQueryClient()
   const pendingIdsRef = useRef<string[]>([])
   const viewedIdsRef = useRef<Set<string>>(new Set())
   const onReadRef = useRef(onRead)
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+
+  useInfiniteScroll(loadMoreRef, {
+    hasNextPage,
+    isLoadingNextPage,
+    isLoadMoreError,
+    onLoadMore,
+  })
 
   useEffect(() => {
     onReadRef.current = onRead
@@ -97,6 +114,24 @@ export const NotificationsDropdown = ({
               {notifications.map(item => (
                 <NotificationItem key={item.id} notification={item} onRead={handleViewed} />
               ))}
+
+              {hasNextPage && (
+                <>
+                  {isLoadingNextPage && (
+                    <Typography variant={'body1'} color={'var(--color-light-900)'} align={'center'}>
+                      Loading...
+                    </Typography>
+                  )}
+
+                  {isLoadMoreError && (
+                    <Typography variant={'body1'} color={'var(--color-light-900)'} align={'center'}>
+                      Failed to load more notifications
+                    </Typography>
+                  )}
+
+                  <div ref={loadMoreRef} />
+                </>
+              )}
             </Scroll>
           )}
         </div>

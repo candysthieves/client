@@ -3,7 +3,7 @@
 import { Header } from '@candy.thieves/ui-kit-lumos'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { LogoutModal, NotificationsDropdown } from '@/components'
 import { useRequestUnreadCount, useUnreadCount } from '@/lib/hooks'
 import { useAuth } from '@/lib/hooks/useAuth'
@@ -14,7 +14,15 @@ export const AppHeader = () => {
   const { isAuthenticated } = useAuth()
   const { data: unreadCount } = useUnreadCount()
   const requestUnreadCount = useRequestUnreadCount()
-  const { data: notifications = [], isLoading, isError } = useNotifications()
+  const {
+    data: notifications = [],
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetchNextPageError,
+  } = useNotifications()
   const { mutate: markAsRead } = useMarkNotificationsAsRead()
   const router = useRouter()
   const [logoutOpen, setLogoutOpen] = useState(false)
@@ -37,6 +45,7 @@ export const AppHeader = () => {
     setIsNotificationsOpen(prev => !prev)
   }
 
+  const loadMoreNotificationsHandler = useCallback(() => void fetchNextPage(), [fetchNextPage])
   const notificationReadHandler = (ids: string[], onError?: () => void) => {
     markAsRead(ids, {
       onSuccess: () => {
@@ -82,8 +91,12 @@ export const AppHeader = () => {
           <NotificationsDropdown
             notifications={notifications}
             onRead={notificationReadHandler}
+            onLoadMore={loadMoreNotificationsHandler}
+            hasNextPage={hasNextPage}
             isLoading={isLoading}
             isError={isError}
+            isLoadingNextPage={isFetchingNextPage}
+            isLoadMoreError={isFetchNextPageError}
           />
         )}
       </div>

@@ -47,8 +47,13 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       }
     }
 
+    const handleWindowFocus = () => {
+      requestUnreadCount()
+    }
+
     socket.on('connect', handleConnect)
     socket.on('connect_error', handleConnectError)
+    window.addEventListener('focus', handleWindowFocus)
 
     // Берём актуальный токен после авторизации, а не тот,
     // который мог быть прочитан при инициализации модуля socket.ts
@@ -63,6 +68,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
       socket.off('connect', handleConnect)
       socket.off('connect_error', handleConnectError)
+      window.removeEventListener('focus', handleWindowFocus)
 
       socket.disconnect()
     }

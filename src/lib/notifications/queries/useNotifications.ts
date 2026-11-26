@@ -16,5 +16,6 @@ export const useNotifications = () => {
       lastPage.hasMore ? (lastPage.nextCursor ?? undefined) : undefined,
     select: data => data.pages.flatMap(page => page.items),
     enabled: isAuthenticated,
+    refetchOnWindowFocus: 'always',
   })
 }

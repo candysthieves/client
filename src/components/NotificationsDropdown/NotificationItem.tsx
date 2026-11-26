@@ -4,6 +4,7 @@ import { Typography } from '@candy.thieves/ui-kit-lumos'
 import { useRef } from 'react'
 import { useMarkAsViewed } from '@/lib/hooks'
 import { NOTIFICATION_NEW_LABEL, NotificationMessage } from '@/lib/model'
+import { formatNotificationDate } from '@/lib/utils'
 import s from './NotificationsDropdown.module.scss'
 
 type Props = {
@@ -27,7 +28,7 @@ export const NotificationItem = ({ notification, onRead }: Props) => {
       </div>
       <Typography variant={'body1'}>{notification.message}</Typography>
       <Typography variant={'caption1'} color={'var(--color-light-900)'} className={s.date}>
-        {notification.createdAt}
+        {formatNotificationDate(notification.createdAt)}
       </Typography>
     </div>
   )

@@ -18,7 +18,8 @@
   );
 
   @include media-tablet {
-    display: none;
+    // display: none;
+    margin-left: 1.5rem;
   }
 }
 

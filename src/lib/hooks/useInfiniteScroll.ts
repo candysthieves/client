@@ -7,6 +7,23 @@ type InfiniteScrollOptions = {
   onLoadMore: () => void
 }
 
+const SCROLLABLE_OVERFLOW = /(auto|scroll|overlay)/
+const LOAD_MORE_ROOT_MARGIN = '0px 0px 50px 0px'
+
+const getScrollParent = (element: HTMLElement): HTMLElement | null => {
+  let parent = element.parentElement
+
+  while (parent && parent !== document.body) {
+    if (SCROLLABLE_OVERFLOW.test(getComputedStyle(parent).overflowY)) {
+      return parent
+    }
+
+    parent = parent.parentElement
+  }
+
+  return null
+}
+
 export const useInfiniteScroll = (
   ref: RefObject<HTMLElement | null>,
   { hasNextPage, isLoadingNextPage, isLoadMoreError, onLoadMore }: InfiniteScrollOptions
@@ -24,7 +41,7 @@ export const useInfiniteScroll = (
           onLoadMore()
         }
       },
-      { rootMargin: '0px' }
+      { root: getScrollParent(loadMoreElement), rootMargin: LOAD_MORE_ROOT_MARGIN }
     )
 
     observer.observe(loadMoreElement)

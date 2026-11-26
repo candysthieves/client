@@ -10,5 +10,6 @@ export const useNotifications = () => {
     queryKey: notificationKeys.list(),
     queryFn: () => getAllNotifications(),
     enabled: isAuthenticated,
+    refetchOnWindowFocus: 'always',
   })
 }

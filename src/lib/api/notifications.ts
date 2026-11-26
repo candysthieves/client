@@ -1,6 +1,6 @@
 import { request } from '@/lib/api/request'
 import { requestValidated } from '@/lib/api/requestValidated'
-import { notificationMessageResponseSchema, NotificationMessage } from '@/lib/model'
+import { notificationMessageResponseSchema, NotificationMessageResponseSchema } from '@/lib/model'
 
 type GetNotificationsParams = {
   pageSize?: number
@@ -10,7 +10,7 @@ type GetNotificationsParams = {
 export const getAllNotifications = (
   { pageSize, cursor }: GetNotificationsParams = {},
   init?: RequestInit
-): Promise<NotificationMessage[]> => {
+): Promise<NotificationMessageResponseSchema> => {
   const searchParams = new URLSearchParams()
 
   if (pageSize !== undefined) {
@@ -28,7 +28,7 @@ export const getAllNotifications = (
     `/notifications/all${resultQuery}`,
     notificationMessageResponseSchema,
     init
-  ).then(data => data.items)
+  )
 }
 
 export const markNotificationsAsRead = (ids: string[]): Promise<void> =>

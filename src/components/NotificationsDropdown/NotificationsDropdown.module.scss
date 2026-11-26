@@ -62,6 +62,10 @@
 
 .list {
   height: $notification-list-height;
+
+  :global([class*='_scrollArea_']) {
+    overscroll-behavior: contain;
+  }
 }
 
 .item {
